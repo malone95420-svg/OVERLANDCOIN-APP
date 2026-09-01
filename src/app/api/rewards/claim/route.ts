@@ -13,6 +13,7 @@ import { blockdag } from "@/lib/chain";
 import { getClaim, isCompletionClaimed, recordClaim } from "@/lib/claimsLedger";
 import { getQuestById } from "@/lib/quests";
 import { TOKEN } from "@/lib/token";
+import { blockdagHttpRpcUrls, isKnownGoodBlockdagRpc } from "@/lib/blockdagRpc";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -74,9 +75,10 @@ function normalizePrivateKey(raw: string): Hex {
 
 function rpcUrls(): string[] {
   const envRpc = process.env.REWARD_RPC_URL?.trim();
-  const list = [envRpc, TOKEN.rpcUrl, TOKEN.rpcFallback, TOKEN.rpcAlt].filter(
-    (u): u is string => Boolean(u),
-  );
+  const list = [
+    envRpc && isKnownGoodBlockdagRpc(envRpc) ? envRpc : undefined,
+    ...blockdagHttpRpcUrls(),
+  ].filter((u): u is string => Boolean(u));
   return [...new Set(list)];
 }
 

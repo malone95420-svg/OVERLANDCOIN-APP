@@ -4,7 +4,7 @@
 `/home/box/agent-data/agents/ae1214f9-2ba5-4622-9895-085008aceab1/secrets/`  
 (mode `700` / files `600`). Public addresses are in `addresses-only.txt` there.
 
-RPC: `https://rpc.west.bdag-us.org/` (fallback `https://rpc.bdagscan.com/`)  
+RPC: `https://rpc.west.bdag-us.org/` (fallback `https://rpc.blockdag.engineering/` — never `rpc.bdagscan.com`)  
 OLC ERC-20: `0x4DF1041EA978fcFF8997f9BFd5302E65100d7f27` (18 decimals)  
 Explorer: https://explorer.blockdag.engineering
 

@@ -3,13 +3,10 @@
  * Matches TOKEN in src/lib/token.ts (chainId 1404).
  */
 import { defineChain } from "viem";
+import { blockdagHttpRpcUrls } from "./blockdagRpc";
 import { TOKEN } from "./token";
 
-const rpcUrls = [
-  TOKEN.rpcUrl,
-  TOKEN.rpcFallback,
-  TOKEN.rpcAlt,
-].filter((u, i, arr) => u && arr.indexOf(u) === i);
+const rpcUrls = blockdagHttpRpcUrls();
 
 export const blockdag = defineChain({
   id: TOKEN.chainId,
@@ -34,7 +31,7 @@ export const blockdag = defineChain({
   },
 });
 
-/** EIP-3085 params for wallet_addEthereumChain */
+/** EIP-3085 params for wallet_addEthereumChain — only known-good RPCs */
 export function blockdagAddChainParams() {
   return {
     chainId: `0x${TOKEN.chainId.toString(16)}`,

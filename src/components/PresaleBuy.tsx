@@ -6,10 +6,10 @@ import {
   useChainId,
   useReadContract,
   useSendTransaction,
-  useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
 import { erc20Abi, parseEther, parseUnits, type Address, type Hash } from "viem";
+import { waitForBlockdagReceipt } from "@/lib/waitForBlockdagReceipt";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { useLivePrices } from "@/hooks/useLivePrices";
@@ -162,9 +162,7 @@ function PresaleBuyInner() {
 
   const { sendTransactionAsync } = useSendTransaction();
   const { writeContractAsync } = useWriteContract();
-  const { isLoading: waitingTx, isSuccess: txSuccess } = useWaitForTransactionReceipt({
-    hash: pendingHash,
-  });
+  const [waitingTx, setWaitingTx] = useState(false);
 
   const buildRecord = useCallback(
     (opts: {
@@ -306,17 +304,6 @@ function PresaleBuyInner() {
     ]
   );
 
-  useEffect(() => {
-    if (txSuccess && pendingHash) {
-      const hash = pendingHash;
-      setPendingHash(undefined);
-      void (async () => {
-        await deliverLocked(hash);
-        setBusy(false);
-      })();
-    }
-  }, [txSuccess, pendingHash, deliverLocked]);
-
   async function retryLockCredit(paymentTxHash: string) {
     setRetryBusy(true);
     setError(null);
@@ -423,20 +410,24 @@ function PresaleBuyInner() {
 
     const treasury = SITE.treasuryAddress as Address;
     setBusy(true);
+    setWaitingTx(false);
+    let hash: Hash | undefined;
     try {
-      let hash: Hash;
+      // Use fixed decimal strings — avoid scientific notation breaking parseEther
+      const payStr =
+        selected.onChain.kind === "native"
+          ? Number(derived.payAmount).toFixed(18).replace(/\.?0+$/, "") || "0"
+          : Number(derived.payAmount).toFixed(Math.min(decimals, 18));
+
       if (selected.onChain.kind === "native") {
-        const value = parseEther(String(derived.payAmount));
+        const value = parseEther(payStr);
         hash = await sendTransactionAsync({
           to: treasury,
           value,
           chainId: TOKEN.chainId,
         });
       } else {
-        const amount = parseUnits(
-          Number(derived.payAmount).toFixed(Math.min(decimals, 18)),
-          decimals
-        );
+        const amount = parseUnits(payStr, decimals);
         hash = await writeContractAsync({
           address: selected.onChain.address,
           abi: erc20Abi,
@@ -445,10 +436,46 @@ function PresaleBuyInner() {
           chainId: TOKEN.chainId,
         });
       }
+
       setPendingHash(hash);
+
+      // Persist immediately so Retry works even if receipt wait / deliver fails
+      const pendingRecord = {
+        ...buildRecord({
+          txHash: hash,
+          status: "locked_pending_chain" as const,
+          payMethod: "onchain" as const,
+        }),
+        from: address,
+        olcAmount: derived.olc,
+        deliveryNote: "Payment submitted — confirming on BlockDAG…",
+      };
+      setPurchases(savePurchase(pendingRecord));
+      setPendingLockRetryTx(hash);
+      setSuccessNote(
+        `Payment submitted (${hash.slice(0, 10)}…). Confirming on BlockDAG, then crediting PresaleLock…`
+      );
+
+      setWaitingTx(true);
+      const waited = await waitForBlockdagReceipt(hash, { timeoutMs: 90_000, pollMs: 2_000 });
+      setWaitingTx(false);
+
+      if (!waited.ok) {
+        setSuccessNote(
+          `Payment submitted (${hash.slice(0, 10)}…) but confirmation timed out on public RPCs. Attempting PresaleLock credit anyway — use Retry lock credit if needed.`
+        );
+      }
+
+      await deliverLocked(hash);
     } catch (e) {
-      setBusy(false);
       setError(e instanceof Error ? e.message : "Transaction failed");
+      if (hash) {
+        setPendingLockRetryTx(hash);
+      }
+    } finally {
+      setWaitingTx(false);
+      setBusy(false);
+      setPendingHash(undefined);
     }
   }
 

@@ -2,6 +2,7 @@
  * Minimal eth_call helper for ERC-20 name/symbol/decimals/totalSupply.
  * Gracefully falls back to static TOKEN config if RPC is unavailable.
  */
+import { blockdagHttpRpcUrls } from "./blockdagRpc";
 import { TOKEN } from "./token";
 
 export type OnChainTokenInfo = {
@@ -77,11 +78,16 @@ function formatSupply(raw: bigint, decimals: number): string {
 }
 
 async function callWithFallback(data: string): Promise<string> {
-  try {
-    return await ethCall(TOKEN.rpcUrl, TOKEN.contractAddress, data);
-  } catch {
-    return await ethCall(TOKEN.rpcFallback, TOKEN.contractAddress, data);
+  const urls = blockdagHttpRpcUrls();
+  let lastErr: unknown;
+  for (const url of urls) {
+    try {
+      return await ethCall(url, TOKEN.contractAddress, data);
+    } catch (e) {
+      lastErr = e;
+    }
   }
+  throw lastErr instanceof Error ? lastErr : new Error("All BlockDAG RPCs failed");
 }
 
 export function fallbackTokenInfo(): OnChainTokenInfo {

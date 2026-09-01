@@ -2,6 +2,9 @@
  * OVERLANDCOIN on-chain token config — source of truth.
  * Contract exists ONLY on BlockDAG Mainnet (chainId 1404).
  * Not deployed on Base/Ethereum (those addresses are empty EOAs).
+ *
+ * RPC note: do NOT use https://rpc.bdagscan.com/ — divergent/stale tip.
+ * Prefer west + engineering. Explorer https://bdagscan.com is still OK.
  */
 export const TOKEN = {
   name: "OVERLANDCOIN",
@@ -15,12 +18,15 @@ export const TOKEN = {
   chainName: "BlockDAG Mainnet",
   nativeCurrency: { name: "BDAG", symbol: "BDAG", decimals: 18 },
   rpcUrl: process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim() || "https://rpc.west.bdag-us.org/",
+  /** Secondary known-good RPC (never default to rpc.bdagscan.com) */
   rpcFallback:
-    process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim() || "https://rpc.bdagscan.com/",
-  /** Additional RPC referenced by live site */
+    process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim() ||
+    "https://rpc.blockdag.engineering/",
+  /** Additional known-good RPC */
   rpcAlt: "https://rpc.blockdag.engineering/",
   explorers: {
     primary: "https://explorer.blockdag.engineering",
+    /** Explorer UI only — not an HTTP JSON-RPC endpoint */
     secondary: "https://bdagscan.com",
   },
 } as const;

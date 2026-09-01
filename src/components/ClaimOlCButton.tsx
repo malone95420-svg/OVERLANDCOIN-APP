@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
+import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { claimRewardToWallet } from "@/lib/claimReward";
 import type { Completion } from "@/lib/completions";
@@ -16,7 +17,19 @@ type Props = {
   compact?: boolean;
 };
 
-export function ClaimOlCButton({ completion, onClaimed, className = "", compact }: Props) {
+export function ClaimOlCButton(props: Props) {
+  const web3Mounted = useWeb3Mounted();
+  if (!web3Mounted) {
+    return (
+      <button type="button" disabled className={`btn-secondary ${props.compact ? "!py-1 !text-xs" : ""} ${props.className}`}>
+        Claim OLC
+      </button>
+    );
+  }
+  return <ClaimOlCButtonInner {...props} />;
+}
+
+function ClaimOlCButtonInner({ completion, onClaimed, className = "", compact }: Props) {
   const { address, isConnected } = useAccount();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);

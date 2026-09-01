@@ -11,6 +11,7 @@ import {
 } from "wagmi";
 import { erc20Abi, parseEther, parseUnits, type Address, type Hash } from "viem";
 import { ConnectWallet } from "@/components/ConnectWallet";
+import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import {
   getAcceptedPayAssets,
@@ -41,6 +42,18 @@ function formatNum(n: number, maxFrac = 6): string {
 }
 
 export function PresaleBuy() {
+  const web3Mounted = useWeb3Mounted();
+  if (!web3Mounted) {
+    return (
+      <div className="rounded-xl border border-border bg-bg-card p-6 text-sm text-slate-400">
+        Loading wallet…
+      </div>
+    );
+  }
+  return <PresaleBuyInner />;
+}
+
+function PresaleBuyInner() {
   const batch = liveBatch();
   const batchPrice = batch.priceUsdt;
   const assets = useMemo(() => getAcceptedPayAssets(), []);

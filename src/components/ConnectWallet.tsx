@@ -10,15 +10,14 @@ import {
 } from "wagmi";
 import { blockdag, blockdagAddChainParams } from "@/lib/chain";
 import { TOKEN } from "@/lib/token";
-import { hasWalletConnect } from "@/lib/wagmi";
+import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 
 function shortAddr(addr: string) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
 function connectorLabel(name: string, id: string) {
-  if (id === "metaMask" || name === "MetaMask") return "MetaMask";
-  if (id === "injected" || name === "Injected") return "Browser wallet";
+  if (id === "injected" || name === "Injected" || name === "MetaMask") return "Browser wallet";
   return name;
 }
 
@@ -42,9 +41,32 @@ async function addBlockdagNetwork(): Promise<void> {
 }
 
 const INSTALL_MSG =
-  "No wallet detected. Install MetaMask for desktop browsers. On mobile, WalletConnect needs NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID.";
+  "No wallet detected. Install MetaMask for desktop browsers or open this site in a wallet browser.";
 
+function ConnectWalletButton({
+  disabled,
+  label = "Connect Wallet",
+}: {
+  disabled?: boolean;
+  label?: string;
+}) {
+  return (
+    <button type="button" className="btn-primary !py-2 !text-xs" disabled={disabled}>
+      {label}
+    </button>
+  );
+}
+
+/** Outer shell: no wagmi hooks until Web3Provider is client-mounted. */
 export function ConnectWallet({ compact = false }: { compact?: boolean }) {
+  const web3Mounted = useWeb3Mounted();
+  if (!web3Mounted) {
+    return <ConnectWalletButton disabled label="Connect Wallet" />;
+  }
+  return <ConnectWalletInner compact={compact} />;
+}
+
+function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
   const { address, isConnected, status } = useAccount();
   const chainId = useChainId();
   const { connectAsync, connectors, isPending: isConnecting, error: connectError } = useConnect();
@@ -66,28 +88,15 @@ export function ConnectWallet({ compact = false }: { compact?: boolean }) {
   const wrongNetwork = isConnected && chainId !== TOKEN.chainId;
 
   const browserConnector = useMemo(() => {
-    return (
-      connectors.find((c) => c.id === "metaMask") ??
-      connectors.find((c) => c.id === "injected" || c.type === "injected") ??
-      null
-    );
+    return connectors.find((c) => c.id === "injected" || c.type === "injected") ?? null;
   }, [connectors]);
 
-  const wcConnector = useMemo(() => {
-    if (!hasWalletConnect) return null;
-    return connectors.find((c) => c.id === "walletConnect" || c.type === "walletConnect") ?? null;
-  }, [connectors]);
-
-  /** Deduped menu options: MetaMask preferred over generic injected; WC if configured. */
   const menuConnectors = useMemo(() => {
     const list = [];
-    const mm = connectors.find((c) => c.id === "metaMask");
-    const inj = connectors.find((c) => c.id === "injected");
-    if (mm) list.push(mm);
-    else if (inj) list.push(inj);
-    if (wcConnector) list.push(wcConnector);
+    const inj = connectors.find((c) => c.id === "injected" || c.type === "injected");
+    if (inj) list.push(inj);
     return list;
-  }, [connectors, wcConnector]);
+  }, [connectors]);
 
   const onSwitch = useCallback(async () => {
     setNetError(null);
@@ -138,11 +147,9 @@ export function ConnectWallet({ compact = false }: { compact?: boolean }) {
     async (connector: (typeof connectors)[number]) => {
       setLocalError(null);
       const isBrowserWallet =
-        connector.id === "metaMask" ||
-        connector.id === "injected" ||
-        connector.type === "injected";
+        connector.id === "injected" || connector.type === "injected";
 
-      // QA: clicking MetaMask/Browser with no window.ethereum must not silently close.
+      // QA: clicking Browser wallet with no window.ethereum must not crash.
       if (isBrowserWallet && !hasWindowEthereum()) {
         setHasEthereum(false);
         showInstallError();
@@ -154,10 +161,9 @@ export function ConnectWallet({ compact = false }: { compact?: boolean }) {
         await connectAsync({ connector, chainId: blockdag.id });
       } catch (e) {
         const msg = e instanceof Error ? e.message : "Connection failed";
-        // Common wagmi/provider-missing messages → install guidance
         if (
           !hasWindowEthereum() ||
-          /provider|ethereum|not found|no injected|rejected/i.test(msg) && !hasWindowEthereum()
+          (/provider|ethereum|not found|no injected/i.test(msg) && !hasWindowEthereum())
         ) {
           showInstallError();
         } else {
@@ -175,33 +181,23 @@ export function ConnectWallet({ compact = false }: { compact?: boolean }) {
     const ethNow = hasWindowEthereum();
     setHasEthereum(ethNow);
 
-    if (!ethNow && !wcConnector) {
+    if (!ethNow) {
       showInstallError();
       return;
     }
 
-    // Multiple distinct options → small menu
     if (menuConnectors.length > 1) {
       setMenuOpen((v) => !v);
       return;
     }
 
-    // Single path: connect immediately to MetaMask / injected (or WC on mobile if configured)
-    const target =
-      (ethNow ? browserConnector : null) ?? wcConnector ?? menuConnectors[0] ?? null;
+    const target = browserConnector ?? menuConnectors[0] ?? null;
     if (!target) {
       showInstallError();
       return;
     }
     await connectWith(target);
-  }, [
-    mounted,
-    wcConnector,
-    menuConnectors,
-    browserConnector,
-    connectWith,
-    showInstallError,
-  ]);
+  }, [mounted, menuConnectors, browserConnector, connectWith, showInstallError]);
 
   const displayError = localError || connectError?.message || null;
 
@@ -273,11 +269,9 @@ export function ConnectWallet({ compact = false }: { compact?: boolean }) {
               {connectorLabel(c.name, c.id)}
             </button>
           ))}
-          {!hasWalletConnect && (
-            <p className="mt-1 border-t border-border px-2 pt-2 text-[11px] text-slate-500">
-              WalletConnect unavailable (no project id). Injected wallets work on desktop.
-            </p>
-          )}
+          <p className="mt-1 border-t border-border px-2 pt-2 text-[11px] text-slate-500">
+            Uses the browser injected wallet (MetaMask, etc.).
+          </p>
         </div>
       )}
 
@@ -299,11 +293,7 @@ export function ConnectWallet({ compact = false }: { compact?: boolean }) {
                 </a>
                 .
               </p>
-              <p>
-                On mobile, WalletConnect requires{" "}
-                <code className="text-slate-300">NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID</code> in
-                deployment env.
-              </p>
+              <p>On mobile, open this site inside the MetaMask in-app browser.</p>
             </div>
           )}
         </div>

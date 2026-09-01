@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useAccount } from "wagmi";
+import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { ClaimOlCButton } from "@/components/ClaimOlCButton";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { claimAllPending } from "@/lib/claimReward";
@@ -16,6 +17,18 @@ import {
 import { explorerTxUrl } from "@/lib/token";
 
 export function ProfileCompletions() {
+  const web3Mounted = useWeb3Mounted();
+  if (!web3Mounted) {
+    return (
+      <div className="rounded-xl border border-border bg-bg-card p-4 text-sm text-slate-400">
+        Loading wallet…
+      </div>
+    );
+  }
+  return <ProfileCompletionsInner />;
+}
+
+function ProfileCompletionsInner() {
   const { address, isConnected } = useAccount();
   const [completions, setCompletions] = useState<Completion[]>([]);
   const [hydrated, setHydrated] = useState(false);

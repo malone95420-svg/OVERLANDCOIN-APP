@@ -10,6 +10,7 @@ import {
 } from "wagmi";
 import { formatUnits, type Hash } from "viem";
 import { ConnectWallet } from "@/components/ConnectWallet";
+import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { getPresaleLockAddress, PRESALE_LOCK_ABI } from "@/lib/presaleLock";
 import { loadPurchases, sumLocalLockedOlc } from "@/lib/purchases";
 import { TOKEN, explorerAddressUrl, explorerTxUrl } from "@/lib/token";
@@ -20,6 +21,18 @@ function formatOlc(n: number): string {
 }
 
 export function LockedPresaleOlC() {
+  const web3Mounted = useWeb3Mounted();
+  if (!web3Mounted) {
+    return (
+      <div className="rounded-xl border border-border bg-bg-card p-4 text-sm text-slate-400">
+        Loading wallet…
+      </div>
+    );
+  }
+  return <LockedPresaleOlCInner />;
+}
+
+function LockedPresaleOlCInner() {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const lockAddress = getPresaleLockAddress();

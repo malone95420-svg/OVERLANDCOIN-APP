@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AddOlcButton } from "@/components/AddOlcButton";
 import { CopyAddress } from "@/components/CopyAddress";
 import { LiveMarketPrices } from "@/components/LiveMarketPrices";
 import { LockedPresaleOlC } from "@/components/LockedPresaleOlC";
@@ -115,9 +116,14 @@ export default function PresalePage() {
       <section className="mt-6 card">
         <h2 className="text-xl font-bold text-white">2. Add OLC token</h2>
         <p className="mt-2 text-sm text-slate-400">
-          Import token: {TOKEN.name} / {TOKEN.symbol} / {TOKEN.decimals} decimals.
+          One click imports {TOKEN.name} ({TOKEN.symbol}, {TOKEN.decimals} decimals) into MetaMask
+          on BlockDAG. Or copy the contract below and add manually.
         </p>
         <div className="mt-4">
+          <AddOlcButton />
+        </div>
+        <p className="mt-4 text-xs uppercase tracking-wide text-slate-500">Contract (manual fallback)</p>
+        <div className="mt-2">
           <CopyAddress />
         </div>
         <a

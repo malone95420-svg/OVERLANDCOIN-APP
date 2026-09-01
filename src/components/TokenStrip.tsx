@@ -1,5 +1,6 @@
 import { fetchTokenInfo } from "@/lib/rpc";
 import { TOKEN, explorerAddressUrl } from "@/lib/token";
+import { AddOlcButton } from "./AddOlcButton";
 import { CopyAddress } from "./CopyAddress";
 
 export async function TokenStrip() {
@@ -38,6 +39,7 @@ export async function TokenStrip() {
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <span className="text-xs text-slate-500">Contract</span>
           <CopyAddress />
+          <AddOlcButton compact />
         </div>
       </div>
     </section>

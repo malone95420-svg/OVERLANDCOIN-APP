@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { AccountMenu } from "@/components/AccountMenu";
+import { AddOlcButton } from "@/components/AddOlcButton";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { PendingOlCBadge } from "@/components/PendingOlCBadge";
 import { NAV_LINKS, SITE } from "@/lib/site";
@@ -48,6 +49,7 @@ export function Header() {
             Presale
           </Link>
           <AccountMenu />
+          <AddOlcButton compact showStatus={false} className="hidden sm:inline-flex" />
           <ConnectWallet compact />
           <button
             type="button"
@@ -88,7 +90,8 @@ export function Header() {
             >
               Account / Sign in
             </Link>
-            <div className="px-3 py-2">
+            <div className="flex flex-wrap items-center gap-2 px-3 py-2">
+              <AddOlcButton compact />
               <ConnectWallet />
             </div>
             <p className="px-3 pt-2 text-xs text-slate-500">{SITE.tagline}</p>

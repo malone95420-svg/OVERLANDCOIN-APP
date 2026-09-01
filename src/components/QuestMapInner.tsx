@@ -1,10 +1,24 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Quest } from "@/lib/quests";
+import {
+  BASEMAPS,
+  loadBasemapId,
+  saveBasemapId,
+  type BasemapId,
+} from "@/lib/mapBasemaps";
+import { MapBasemapControl } from "./MapBasemapControl";
+import {
+  LocateMeControl,
+  LocationPermissionBanner,
+  MapApiBridge,
+  UserLocationLayer,
+  type UserGeo,
+} from "./UserLocationLayer";
 
 // Fix default marker icons under bundlers
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,33 +47,61 @@ function FlyTo({ quests, selectedId }: { quests: Quest[]; selectedId?: string })
 }
 
 export default function QuestMapInner({ quests, selectedId, onSelect }: Props) {
+  const [basemapId, setBasemapId] = useState<BasemapId>("street");
+  const [hydratedBasemap, setHydratedBasemap] = useState(false);
+  const [userGeo, setUserGeo] = useState<UserGeo>({ status: "idle" });
+  const mapRef = useRef<L.Map | null>(null);
+
+  useEffect(() => {
+    setBasemapId(loadBasemapId());
+    setHydratedBasemap(true);
+  }, []);
+
+  function onBasemapChange(id: BasemapId) {
+    setBasemapId(id);
+    saveBasemapId(id);
+  }
+
+  const basemap = BASEMAPS[basemapId];
+
   return (
-    <MapContainer
-      center={[20, 0]}
-      zoom={2}
-      scrollWheelZoom={false}
-      className="h-[420px] w-full rounded-2xl border border-border"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-      />
-      <FlyTo quests={quests} selectedId={selectedId} />
-      {quests.map((q) => (
-        <Marker
-          key={q.id}
-          position={[q.lat, q.lng]}
-          eventHandlers={{
-            click: () => onSelect?.(q.id),
-          }}
-        >
-          <Popup>
-            <strong>{q.title}</strong>
-            <br />
-            {q.region} · {q.difficulty} · Tier {q.minTier}+ · {q.radiusMeters}m · {q.rewardOlC} OLC
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    <div className="relative">
+      <MapBasemapControl value={basemapId} onChange={onBasemapChange} />
+      <LocationPermissionBanner geo={userGeo} />
+      <LocateMeControl geo={userGeo} mapRef={mapRef} />
+      <MapContainer
+        center={[20, 0]}
+        zoom={2}
+        scrollWheelZoom={false}
+        className="h-[420px] w-full rounded-2xl border border-border"
+      >
+        <TileLayer
+          key={hydratedBasemap ? basemap.id : "street"}
+          attribution={basemap.attribution}
+          url={basemap.url}
+          maxZoom={basemap.maxZoom ?? 19}
+          {...(basemap.subdomains ? { subdomains: basemap.subdomains } : {})}
+        />
+        <MapApiBridge mapRef={mapRef} />
+        <FlyTo quests={quests} selectedId={selectedId} />
+        <UserLocationLayer onGeoChange={setUserGeo} />
+        {quests.map((q) => (
+          <Marker
+            key={q.id}
+            position={[q.lat, q.lng]}
+            eventHandlers={{
+              click: () => onSelect?.(q.id),
+            }}
+          >
+            <Popup>
+              <strong>{q.title}</strong>
+              <br />
+              {q.region} · {q.difficulty} · Tier {q.minTier}+ · {q.radiusMeters}m · {q.rewardOlC}{" "}
+              OLC
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
   );
 }

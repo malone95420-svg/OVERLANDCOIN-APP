@@ -58,3 +58,9 @@ body {
   border-radius: 1rem;
   z-index: 0;
 }
+
+/* Live GPS marker (DivIcon) — reset Leaflet default icon chrome */
+.olc-user-location-icon {
+  background: transparent !important;
+  border: none !important;
+}

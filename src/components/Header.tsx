@@ -46,9 +46,7 @@ export function Header() {
           <Link href="/presale" className="btn-secondary hidden sm:inline-flex !py-2 !text-xs">
             Presale
           </Link>
-          <div className="hidden sm:block">
-            <ConnectWallet compact />
-          </div>
+          <ConnectWallet compact />
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-lg border border-border p-2 text-slate-200 lg:hidden"

@@ -36,6 +36,19 @@ export const SITE = {
    * Not a staking contract.
    */
   treasuryAddress: "0x310a612db74456cbc25a1f4f86fa0c265d98af99",
+  /**
+   * External deposit receive addresses (also defaulted in acceptedPayAssets).
+   * EVM assets share the BlockDAG treasury key on Ethereum.
+   */
+  deposits: {
+    ethereumEvm: "0x310a612db74456cbc25a1f4f86fa0c265d98af99",
+    ethereumNetwork: "Ethereum",
+    usdtNetwork: "Ethereum (ERC-20)",
+    solana: "FEUnNerfhepyz2fR7Dg5gV59hxpJ92VYg9Yv9LbmP5tJ",
+    solanaNetwork: "Solana",
+    bitcoin: "bc1qp6m0apc0mx6y88xw3ustezwaf7wfyvhvurs9ug",
+    bitcoinNetwork: "Bitcoin (native SegWit)",
+  },
   /** Placeholder — staking is UI mock only; no live staking contract */
   stakingContract: "",
 } as const;

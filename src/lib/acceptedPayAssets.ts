@@ -51,9 +51,26 @@ export type AcceptedPayAsset = {
   comingSoonNote?: string;
 };
 
+/** Same EVM receive wallet as BlockDAG treasury (user-confirmed). */
+export const DEFAULT_EVM_DEPOSIT_ADDRESS =
+  "0x310a612db74456cbc25a1f4f86fa0c265d98af99";
+
+/** Solana receive address (user-confirmed). */
+export const DEFAULT_SOL_DEPOSIT_ADDRESS =
+  "FEUnNerfhepyz2fR7Dg5gV59hxpJ92VYg9Yv9LbmP5tJ";
+
+/** Bitcoin native SegWit receive address (user-confirmed). */
+export const DEFAULT_BTC_DEPOSIT_ADDRESS =
+  "bc1qp6m0apc0mx6y88xw3ustezwaf7wfyvhvurs9ug";
+
 function envStr(key: string): string | undefined {
   const raw = process.env[key]?.trim();
   return raw || undefined;
+}
+
+/** Env override, else built-in default (so deposits work without Vercel env). */
+function depositOrDefault(envKey: string, fallback: string): string {
+  return envStr(envKey) || fallback;
 }
 
 function envEvmAddress(key: string): Address | undefined {
@@ -98,9 +115,14 @@ export function getAcceptedPayAssets(): AcceptedPayAsset[] {
           ? { kind: "erc20" as const, address: addr, decimalsHint: 6 }
           : undefined;
       })(),
-      depositAddress: envStr("NEXT_PUBLIC_DEPOSIT_USDT"),
-      depositNetwork: envStr("NEXT_PUBLIC_DEPOSIT_USDT_NETWORK") || "as published",
-      depositNote: "Tether — $1 peg for OLC math",
+      depositAddress: depositOrDefault(
+        "NEXT_PUBLIC_DEPOSIT_USDT",
+        DEFAULT_EVM_DEPOSIT_ADDRESS
+      ),
+      depositNetwork:
+        envStr("NEXT_PUBLIC_DEPOSIT_USDT_NETWORK") || "Ethereum (ERC-20)",
+      depositNote:
+        "Tether — send USDT ERC-20 on Ethereum only ($1 peg for OLC math)",
       comingSoonNote: "Accepted — on-chain / deposit pay coming soon",
     },
     {
@@ -115,9 +137,13 @@ export function getAcceptedPayAssets(): AcceptedPayAsset[] {
           ? { kind: "erc20" as const, address: addr, decimalsHint: 6 }
           : undefined;
       })(),
-      depositAddress: envStr("NEXT_PUBLIC_DEPOSIT_USDC"),
-      depositNetwork: envStr("NEXT_PUBLIC_DEPOSIT_USDC_NETWORK") || "as published",
-      depositNote: "USD Coin — $1 peg for OLC math",
+      depositAddress: depositOrDefault(
+        "NEXT_PUBLIC_DEPOSIT_USDC",
+        DEFAULT_EVM_DEPOSIT_ADDRESS
+      ),
+      depositNetwork: envStr("NEXT_PUBLIC_DEPOSIT_USDC_NETWORK") || "Ethereum",
+      depositNote:
+        "USD Coin — send USDC on Ethereum only ($1 peg for OLC math)",
       comingSoonNote: "Accepted — on-chain / deposit pay coming soon",
     },
     {
@@ -132,9 +158,12 @@ export function getAcceptedPayAssets(): AcceptedPayAsset[] {
           ? { kind: "erc20" as const, address: addr, decimalsHint: 18 }
           : undefined;
       })(),
-      depositAddress: envStr("NEXT_PUBLIC_DEPOSIT_ETH"),
+      depositAddress: depositOrDefault(
+        "NEXT_PUBLIC_DEPOSIT_ETH",
+        DEFAULT_EVM_DEPOSIT_ADDRESS
+      ),
       depositNetwork: envStr("NEXT_PUBLIC_DEPOSIT_ETH_NETWORK") || "Ethereum",
-      depositNote: "Live ETH/USD ÷ batch price",
+      depositNote: "Native ETH on Ethereum — live ETH/USD ÷ batch price",
       comingSoonNote: "Accepted — on-chain / deposit pay coming soon",
     },
     {
@@ -143,23 +172,31 @@ export function getAcceptedPayAssets(): AcceptedPayAsset[] {
       label: "BTC",
       livePriceKey: "btcUsd",
       accepted: true,
-      depositAddress: envStr("NEXT_PUBLIC_DEPOSIT_BTC"),
-      depositNetwork: envStr("NEXT_PUBLIC_DEPOSIT_BTC_NETWORK") || "Bitcoin",
-      depositNote: "Live BTC/USD ÷ batch price",
+      depositAddress: depositOrDefault(
+        "NEXT_PUBLIC_DEPOSIT_BTC",
+        DEFAULT_BTC_DEPOSIT_ADDRESS
+      ),
+      depositNetwork:
+        envStr("NEXT_PUBLIC_DEPOSIT_BTC_NETWORK") || "Bitcoin (native SegWit)",
+      depositNote: "Send BTC on Bitcoin native SegWit only — live BTC/USD ÷ batch price",
       comingSoonNote: "Accepted — on-chain pay coming soon",
     },
   ];
 
-  // Optional extras via env flags (easy to extend)
-  if (envStr("NEXT_PUBLIC_ACCEPT_SOL") === "1") {
+  // SOL enabled by default (set NEXT_PUBLIC_ACCEPT_SOL=0 to hide)
+  if (envStr("NEXT_PUBLIC_ACCEPT_SOL") !== "0") {
     assets.push({
       id: "SOL",
       symbol: "SOL",
       label: "SOL",
       livePriceKey: "solUsd",
       accepted: true,
-      depositAddress: envStr("NEXT_PUBLIC_DEPOSIT_SOL"),
-      depositNetwork: "Solana",
+      depositAddress: depositOrDefault(
+        "NEXT_PUBLIC_DEPOSIT_SOL",
+        DEFAULT_SOL_DEPOSIT_ADDRESS
+      ),
+      depositNetwork: envStr("NEXT_PUBLIC_DEPOSIT_SOL_NETWORK") || "Solana",
+      depositNote: "Send native SOL on Solana only",
       comingSoonNote: "Accepted — deposit pay coming soon",
     });
   }

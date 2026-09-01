@@ -83,3 +83,18 @@ The script aborts with exit 2 if the deployer BDAG balance is zero.
 - [x] Fund PresaleLock with **50_000_000 OLC**; operator = deliver wallet
 - [ ] Set Vercel env vars (`ops/VERCEL_ENV.md`)
 - [ ] Never paste private keys into chat, git, or client-side env (`NEXT_PUBLIC_*`)
+
+## External deposits (Ethereum + Solana)
+
+PresaleBuy accepts off-chain deposits to published addresses (defaults in code / `.env.example`):
+
+| Asset | Network | Address |
+|-------|---------|---------|
+| USDT | Ethereum (ERC-20) | `0x310a612db74456cbc25a1f4f86fa0c265d98af99` |
+| USDC | Ethereum | `0x310a612db74456cbc25a1f4f86fa0c265d98af99` |
+| ETH | Ethereum | `0x310a612db74456cbc25a1f4f86fa0c265d98af99` |
+| SOL | Solana | `FEUnNerfhepyz2fR7Dg5gV59hxpJ92VYg9Yv9LbmP5tJ` |
+| BTC | Bitcoin (native SegWit) | `bc1qp6m0apc0mx6y88xw3ustezwaf7wfyvhvurs9ug` |
+
+EVM address matches BlockDAG treasury (same key). Set matching `NEXT_PUBLIC_DEPOSIT_*` on Vercel Production (see `ops/VERCEL_ENV.md`).
+

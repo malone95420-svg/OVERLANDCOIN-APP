@@ -26,3 +26,23 @@ Set these in the Vercel project → Settings → Environment Variables.
 - Never set private keys on `NEXT_PUBLIC_*` vars.
 - Never commit `.env` or wallet JSON.
 - After rotating keys, update Vercel and redeploy.
+
+## External deposits (Production)
+
+Same EVM receive address as BlockDAG treasury (user-confirmed). Set all for Production + Redeploy:
+
+| Name | Value |
+|------|--------|
+| `NEXT_PUBLIC_DEPOSIT_USDT` | `0x310a612db74456cbc25a1f4f86fa0c265d98af99` |
+| `NEXT_PUBLIC_DEPOSIT_USDT_NETWORK` | `Ethereum` |
+| `NEXT_PUBLIC_DEPOSIT_USDC` | `0x310a612db74456cbc25a1f4f86fa0c265d98af99` |
+| `NEXT_PUBLIC_DEPOSIT_USDC_NETWORK` | `Ethereum` |
+| `NEXT_PUBLIC_DEPOSIT_ETH` | `0x310a612db74456cbc25a1f4f86fa0c265d98af99` |
+| `NEXT_PUBLIC_DEPOSIT_ETH_NETWORK` | `Ethereum` |
+| `NEXT_PUBLIC_DEPOSIT_BTC` | `bc1qp6m0apc0mx6y88xw3ustezwaf7wfyvhvurs9ug` |
+| `NEXT_PUBLIC_DEPOSIT_BTC_NETWORK` | `Bitcoin (native SegWit)` |
+| `NEXT_PUBLIC_ACCEPT_SOL` | `1` |
+| `NEXT_PUBLIC_DEPOSIT_SOL` | `FEUnNerfhepyz2fR7Dg5gV59hxpJ92VYg9Yv9LbmP5tJ` |
+
+Code also falls back to these defaults if env is unset (USDT network label defaults to `Ethereum (ERC-20)` in UI).
+

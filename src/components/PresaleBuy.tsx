@@ -11,6 +11,7 @@ import {
 import { erc20Abi, parseEther, parseUnits, type Address, type Hash } from "viem";
 import { waitForBlockdagReceipt } from "@/lib/waitForBlockdagReceipt";
 import { ConnectWallet } from "@/components/ConnectWallet";
+import { CopyAddress } from "@/components/CopyAddress";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import {
@@ -84,6 +85,11 @@ function PresaleBuyInner() {
 
   const selected = assets.find((a) => a.id === assetId) ?? assets[0];
   const payMode = paymentMode(selected);
+
+  useEffect(() => {
+    setDepositAck(false);
+  }, [selected.id]);
+
   const usdPerPayUnit = liveUsdForAsset(selected, prices);
   const rateSource = sourceLabelForAsset(selected, prices);
   const buyRateReady = rateReadyForBuy(selected, prices);
@@ -540,8 +546,8 @@ function PresaleBuyInner() {
       <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-100/90 space-y-1.5">
         <p>
           <strong>Safety:</strong> On-chain Buy is BlockDAG Mainnet only (chainId {TOKEN.chainId}).
-          External deposits (BTC/ETH/USDT) use published deposit addresses — wrong network = lost
-          funds.
+          External deposits (ETH / USDT / USDC / SOL / BTC) use published deposit addresses —
+          wrong network = lost funds.
         </p>
         <p>
           Verify treasury{" "}
@@ -717,24 +723,83 @@ function PresaleBuyInner() {
           </div>
         )}
 
-        {payMode === "deposit" && (
+        {payMode === "deposit" && selected.depositAddress && (
           <div className="rounded-xl border border-cyan-accent/30 bg-cyan-accent/5 p-4 space-y-3">
-            <p className="text-sm text-cyan-100">
-              Pay with <strong>{selected.symbol}</strong> via external deposit (
-              {selected.depositNetwork}).
-            </p>
-            <p className="font-mono text-xs break-all text-white bg-bg-panel/80 rounded-lg px-3 py-2 border border-border">
-              {selected.depositAddress}
-            </p>
-            <p className="text-[11px] text-slate-400">
-              Send exactly{" "}
-              <span className="font-mono text-slate-200">
-                {formatNum(derived.payAmount, 8)} {selected.symbol}
-              </span>{" "}
-              (≈ ${formatNum(derived.usd, 4)}) for{" "}
-              <span className="text-gold-bright">{formatNum(derived.olc, 4)} OLC</span> at the live
-              rate. Wrong network or amount may delay or lose funds.
-            </p>
+            <div>
+              <p className="text-sm font-semibold text-cyan-100">
+                External deposit — {selected.symbol}
+              </p>
+              <p className="mt-1 text-xs text-slate-400">
+                Network:{" "}
+                <span className="font-semibold text-white">
+                  {selected.depositNetwork}
+                </span>
+                {selected.id === "USDT" && (
+                  <span className="text-amber-200">
+                    {" "}
+                    — send only USDT ERC-20 (not TRC-20 / BEP-20 / other chains)
+                  </span>
+                )}
+                {selected.id === "USDC" && (
+                  <span className="text-amber-200">
+                    {" "}
+                    — send only USDC on Ethereum
+                  </span>
+                )}
+                {selected.id === "ETH" && (
+                  <span className="text-amber-200">
+                    {" "}
+                    — send native ETH on Ethereum mainnet
+                  </span>
+                )}
+                {selected.id === "SOL" && (
+                  <span className="text-amber-200">
+                    {" "}
+                    — send native SOL on Solana only
+                  </span>
+                )}
+                {selected.id === "BTC" && (
+                  <span className="text-amber-200">
+                    {" "}
+                    — send BTC to native SegWit (bc1…) on Bitcoin only
+                  </span>
+                )}
+              </p>
+            </div>
+
+            <div className="grid gap-2 sm:grid-cols-2 text-xs">
+              <div className="rounded-lg border border-border bg-bg-panel/80 px-3 py-2">
+                <p className="text-slate-500 uppercase tracking-wide text-[10px]">
+                  Amount to send
+                </p>
+                <p className="mt-0.5 font-mono text-sm text-white">
+                  {formatNum(derived.payAmount, 8)} {selected.symbol}
+                </p>
+                <p className="text-slate-400">≈ ${formatNum(derived.usd, 4)}</p>
+              </div>
+              <div className="rounded-lg border border-border bg-bg-panel/80 px-3 py-2">
+                <p className="text-slate-500 uppercase tracking-wide text-[10px]">
+                  OLC you receive
+                </p>
+                <p className="mt-0.5 font-mono text-sm text-gold-bright">
+                  {formatNum(derived.olc, 4)} OLC
+                </p>
+                <p className="text-slate-400">(locked until listing unlock)</p>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                Deposit address
+              </p>
+              <CopyAddress address={selected.depositAddress} className="w-full" />
+              <p className="text-[11px] text-amber-200/90">
+                <strong>Warning:</strong> Send only {selected.symbol} on{" "}
+                {selected.depositNetwork}. Wrong asset or network can permanently lose funds.
+                {selected.depositNote ? ` ${selected.depositNote}.` : ""}
+              </p>
+            </div>
+
             <label className="flex items-start gap-2 text-xs text-slate-300">
               <input
                 type="checkbox"
@@ -743,8 +808,8 @@ function PresaleBuyInner() {
                 onChange={(e) => setDepositAck(e.target.checked)}
               />
               <span>
-                I will send {formatNum(derived.payAmount, 8)} {selected.symbol} on{" "}
-                {selected.depositNetwork} to the address above at the quoted live rate.
+                I will send exactly {formatNum(derived.payAmount, 8)} {selected.symbol} on{" "}
+                {selected.depositNetwork} to the deposit address above at the quoted live rate.
               </span>
             </label>
             <button
@@ -755,8 +820,12 @@ function PresaleBuyInner() {
             >
               {!buyRateReady
                 ? "Waiting for live price…"
-                : `Pay with ${selected.symbol} — record pending`}
+                : "Record deposit / pending purchase"}
             </button>
+            <p className="text-[10px] text-slate-500">
+              Records a local pending purchase. OLC is credited after your deposit is confirmed
+              — this is not an instant on-chain mint.
+            </p>
           </div>
         )}
 

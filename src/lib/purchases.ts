@@ -6,7 +6,11 @@
  *  - locked_pending_chain — local credit only; lock contract/key not configured yet
  *  - pending_delivery — legacy / failed path (should migrate toward locked*)
  *  - pending_external — off-chain deposit awaiting confirmation
+ *
+ * Keys are namespaced by accountKey when signed in (see accountScope).
  */
+
+import { scopedStorageKey } from "@/lib/auth/accountScope";
 
 export const PURCHASES_STORAGE_KEY = "overlandcoin.purchases.v1";
 
@@ -52,7 +56,7 @@ export type LocalPurchase = {
 export function loadPurchases(): LocalPurchase[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(PURCHASES_STORAGE_KEY);
+    const raw = localStorage.getItem(scopedStorageKey(PURCHASES_STORAGE_KEY));
     if (!raw) return [];
     const parsed = JSON.parse(raw) as LocalPurchase[];
     return Array.isArray(parsed) ? parsed : [];
@@ -64,7 +68,7 @@ export function loadPurchases(): LocalPurchase[] {
 export function savePurchase(purchase: LocalPurchase): LocalPurchase[] {
   const prev = loadPurchases();
   const next = [purchase, ...prev.filter((p) => p.txHash !== purchase.txHash)].slice(0, 50);
-  localStorage.setItem(PURCHASES_STORAGE_KEY, JSON.stringify(next));
+  localStorage.setItem(scopedStorageKey(PURCHASES_STORAGE_KEY), JSON.stringify(next));
   return next;
 }
 
@@ -74,7 +78,7 @@ export function updatePurchase(
 ): LocalPurchase[] {
   const prev = loadPurchases();
   const next = prev.map((p) => (p.txHash === txHash ? { ...p, ...patch } : p));
-  localStorage.setItem(PURCHASES_STORAGE_KEY, JSON.stringify(next));
+  localStorage.setItem(scopedStorageKey(PURCHASES_STORAGE_KEY), JSON.stringify(next));
   return next;
 }
 

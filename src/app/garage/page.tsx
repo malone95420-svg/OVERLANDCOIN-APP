@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { GarageForm } from "@/components/GarageForm";
 import { LockedPresaleOlC } from "@/components/LockedPresaleOlC";
 import { ProfileCompletions } from "@/components/ProfileCompletions";
@@ -15,7 +16,12 @@ export default function GaragePage() {
       <h1 className="section-title mt-4">Vehicle Garage</h1>
       <p className="section-sub">
         Log your rig and upgrades. We score a capability tier (Stock → Extreme) and use it to filter
-        Quest Map pins. Data stays in your browser (localStorage) for now.
+        Quest Map pins. Data stays in your browser (localStorage).{" "}
+        <Link href="/login" className="link-accent">
+          Sign in
+        </Link>{" "}
+        to namespace garage / completions / purchases under your account key on this device
+        (cross-device sync needs Redis later).
       </p>
       <div className="mt-10">
         <GarageForm />

@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { RangerWidget } from "@/components/RangerWidget";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Web3ErrorBoundary } from "@/components/providers/Web3ErrorBoundary";
 import { Web3Provider } from "@/components/providers/Web3Provider";
 import { SITE } from "@/lib/site";
@@ -70,9 +71,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${sans.variable} ${mono.variable} font-sans antialiased`}>
-        <Web3ErrorBoundary fallback={shell}>
-          <Web3Provider>{shell}</Web3Provider>
-        </Web3ErrorBoundary>
+        <AuthProvider>
+          <Web3ErrorBoundary fallback={shell}>
+            <Web3Provider>{shell}</Web3Provider>
+          </Web3ErrorBoundary>
+        </AuthProvider>
       </body>
     </html>
   );

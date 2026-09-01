@@ -56,3 +56,10 @@ From /workspace zip overlandcoin excluding node_modules and .next
 ## Not included
 
 Admin panels, passwords, auth backends, email systems.
+
+## Account login
+
+- **Wallet (primary):** `/login` → Sign in with wallet (sign message “Sign in to OVERLANDCOIN”). No Redis required. Set `AUTH_SECRET` in production.
+- **Email/password:** Needs `AUTH_SECRET` + Upstash `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` in production. Otherwise the UI tells you to use wallet login.
+- **Google (optional):** `AUTH_GOOGLE_ID` + `AUTH_GOOGLE_SECRET`.
+- Garage / completions / purchases localStorage keys are namespaced by `accountKey` after login (same device). Cross-device sync needs Redis later.

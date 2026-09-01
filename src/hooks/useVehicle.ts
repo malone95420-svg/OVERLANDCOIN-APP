@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { scopedStorageKey } from "@/lib/auth/accountScope";
 import {
   DEFAULT_VEHICLE,
   VEHICLE_STORAGE_KEY,
@@ -13,7 +14,7 @@ import {
 function readStored(): Vehicle {
   if (typeof window === "undefined") return DEFAULT_VEHICLE;
   try {
-    const raw = localStorage.getItem(VEHICLE_STORAGE_KEY);
+    const raw = localStorage.getItem(scopedStorageKey(VEHICLE_STORAGE_KEY));
     if (!raw) return DEFAULT_VEHICLE;
     const parsed = JSON.parse(raw) as Partial<Vehicle>;
     return { ...DEFAULT_VEHICLE, ...parsed };
@@ -29,13 +30,16 @@ export function useVehicle() {
   useEffect(() => {
     setVehicleState(readStored());
     setHydrated(true);
+    const onAccount = () => setVehicleState(readStored());
+    window.addEventListener("olc-account-change", onAccount);
+    return () => window.removeEventListener("olc-account-change", onAccount);
   }, []);
 
   const setVehicle = useCallback((next: Vehicle | ((prev: Vehicle) => Vehicle)) => {
     setVehicleState((prev) => {
       const value = typeof next === "function" ? next(prev) : next;
       try {
-        localStorage.setItem(VEHICLE_STORAGE_KEY, JSON.stringify(value));
+        localStorage.setItem(scopedStorageKey(VEHICLE_STORAGE_KEY), JSON.stringify(value));
       } catch {
         /* ignore quota */
       }

@@ -5,6 +5,8 @@
 
 import type { Quest } from "@/data/quests";
 
+import { scopedStorageKey } from "@/lib/auth/accountScope";
+
 export const COMPLETIONS_STORAGE_KEY = "overlandcoin.completions.v1";
 export const POSTS_STORAGE_KEY = "overlandcoin.posts.v1";
 /** Client-side claimed completion ids (mirrors server ledger for UX / anti-double-claim). */
@@ -59,25 +61,25 @@ function safeParse<T>(raw: string | null, fallback: T): T {
 
 export function loadCompletions(): Completion[] {
   if (typeof window === "undefined") return [];
-  const list = safeParse<Completion[]>(localStorage.getItem(COMPLETIONS_STORAGE_KEY), []);
+  const list = safeParse<Completion[]>(localStorage.getItem(scopedStorageKey(COMPLETIONS_STORAGE_KEY)), []);
   return Array.isArray(list) ? list : [];
 }
 
 export function loadPosts(): FeedPost[] {
   if (typeof window === "undefined") return [];
-  const list = safeParse<FeedPost[]>(localStorage.getItem(POSTS_STORAGE_KEY), []);
+  const list = safeParse<FeedPost[]>(localStorage.getItem(scopedStorageKey(POSTS_STORAGE_KEY)), []);
   return Array.isArray(list) ? list : [];
 }
 
 export function loadClaimedIds(): string[] {
   if (typeof window === "undefined") return [];
-  const list = safeParse<string[]>(localStorage.getItem(CLAIMS_STORAGE_KEY), []);
+  const list = safeParse<string[]>(localStorage.getItem(scopedStorageKey(CLAIMS_STORAGE_KEY)), []);
   return Array.isArray(list) ? list : [];
 }
 
 export function saveCompletions(list: Completion[]): { ok: true } | { ok: false; error: string } {
   try {
-    localStorage.setItem(COMPLETIONS_STORAGE_KEY, JSON.stringify(list));
+    localStorage.setItem(scopedStorageKey(COMPLETIONS_STORAGE_KEY), JSON.stringify(list));
     return { ok: true };
   } catch (e) {
     const msg =
@@ -90,7 +92,7 @@ export function saveCompletions(list: Completion[]): { ok: true } | { ok: false;
 
 export function savePosts(list: FeedPost[]): { ok: true } | { ok: false; error: string } {
   try {
-    localStorage.setItem(POSTS_STORAGE_KEY, JSON.stringify(list));
+    localStorage.setItem(scopedStorageKey(POSTS_STORAGE_KEY), JSON.stringify(list));
     return { ok: true };
   } catch (e) {
     const msg =
@@ -103,7 +105,7 @@ export function savePosts(list: FeedPost[]): { ok: true } | { ok: false; error: 
 
 function saveClaimedIds(ids: string[]): void {
   try {
-    localStorage.setItem(CLAIMS_STORAGE_KEY, JSON.stringify(ids));
+    localStorage.setItem(scopedStorageKey(CLAIMS_STORAGE_KEY), JSON.stringify(ids));
   } catch {
     /* ignore quota for id list */
   }

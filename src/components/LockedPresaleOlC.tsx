@@ -5,12 +5,14 @@ import {
   useAccount,
   useChainId,
   useReadContract,
+  useSwitchChain,
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi";
 import { formatUnits, type Hash } from "viem";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
+import { blockdag, blockdagAddChainParams } from "@/lib/chain";
 import { getPresaleLockAddress, PRESALE_LOCK_ABI } from "@/lib/presaleLock";
 import {
   listPendingLockCredits,
@@ -62,6 +64,29 @@ async function postDeliver(p: LocalPurchase, buyerFallback?: string | null) {
   return { ok: res.ok || data.status === "locked", data, status: res.status };
 }
 
+async function addBlockdagNetwork(): Promise<void> {
+  const eth = (
+    window as unknown as {
+      ethereum?: { request: (args: { method: string; params?: unknown[] }) => Promise<unknown> };
+    }
+  ).ethereum;
+  if (!eth?.request) {
+    throw new Error("No injected wallet found. Install MetaMask or another injected wallet.");
+  }
+  await eth.request({
+    method: "wallet_addEthereumChain",
+    params: [blockdagAddChainParams()],
+  });
+}
+
+type LockedBalanceApi = {
+  locked: number;
+  totalLocked: number;
+  tradingEnabled: boolean;
+  lockAddress: string | null;
+  error?: string;
+};
+
 export function LockedPresaleOlC() {
   const web3Mounted = useWeb3Mounted();
   if (!web3Mounted) {
@@ -79,12 +104,22 @@ function LockedPresaleOlCInner() {
   const chainId = useChainId();
   const lockAddress = getPresaleLockAddress();
   const onCorrectChain = isConnected && chainId === TOKEN.chainId;
+  const wrongNetwork = isConnected && chainId !== TOKEN.chainId;
 
   const [localSum, setLocalSum] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
   const [retryBusy, setRetryBusy] = useState(false);
   const [retryNote, setRetryNote] = useState<string | null>(null);
   const autoRetried = useRef(false);
+
+  const [apiLocked, setApiLocked] = useState<number | null>(null);
+  const [apiTrading, setApiTrading] = useState<boolean | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [apiLoading, setApiLoading] = useState(false);
+
+  const { switchChainAsync, isPending: isSwitching } = useSwitchChain();
+  const [netBusy, setNetBusy] = useState(false);
+  const [netError, setNetError] = useState<string | null>(null);
 
   const refreshLocal = useCallback(() => {
     setLocalSum(sumLocalLockedOlc(address));
@@ -102,6 +137,43 @@ function LockedPresaleOlCInner() {
     };
   }, [refreshLocal]);
 
+  const fetchLockedApi = useCallback(async () => {
+    if (!address) {
+      setApiLocked(null);
+      setApiTrading(null);
+      setApiError(null);
+      setApiLoading(false);
+      return;
+    }
+    setApiLoading(true);
+    try {
+      const res = await fetch(
+        `/api/presale/locked-balance?address=${encodeURIComponent(address)}`,
+        { cache: "no-store" },
+      );
+      const data = (await res.json().catch(() => ({}))) as LockedBalanceApi;
+      if (typeof data.locked === "number" && Number.isFinite(data.locked)) {
+        setApiLocked(data.locked);
+      }
+      if (typeof data.tradingEnabled === "boolean") {
+        setApiTrading(data.tradingEnabled);
+      }
+      setApiError(res.ok ? null : data.error || `HTTP ${res.status}`);
+    } catch (e) {
+      setApiError(e instanceof Error ? e.message : "Failed to read locked balance");
+    } finally {
+      setApiLoading(false);
+    }
+  }, [address]);
+
+  useEffect(() => {
+    void fetchLockedApi();
+    if (!address) return;
+    const t = setInterval(() => void fetchLockedApi(), 10_000);
+    return () => clearInterval(t);
+  }, [address, fetchLockedApi]);
+
+  // Optional wagmi enhancement — only when already on BlockDAG; never gates display.
   const { data: onChainLocked, refetch: refetchLocked } = useReadContract({
     address: lockAddress ?? undefined,
     abi: PRESALE_LOCK_ABI,
@@ -113,22 +185,29 @@ function LockedPresaleOlCInner() {
     },
   });
 
-  const { data: tradingEnabled, refetch: refetchTrading } = useReadContract({
+  const { data: tradingEnabledWagmi, refetch: refetchTrading } = useReadContract({
     address: lockAddress ?? undefined,
     abi: PRESALE_LOCK_ABI,
     functionName: "tradingEnabled",
     query: {
-      enabled: Boolean(lockAddress),
+      enabled: Boolean(lockAddress && onCorrectChain),
       refetchInterval: 15_000,
     },
   });
 
-  const onChainNum = useMemo(() => {
+  const wagmiNum = useMemo(() => {
     if (lockAddress && onChainLocked != null) {
       return Number(formatUnits(onChainLocked as bigint, TOKEN.decimals));
     }
     return null;
   }, [lockAddress, onChainLocked]);
+
+  // Prefer server API; fall back to wagmi when available.
+  const onChainNum = useMemo(() => {
+    if (apiLocked != null) return apiLocked;
+    if (wagmiNum != null) return wagmiNum;
+    return null;
+  }, [apiLocked, wagmiNum]);
 
   // Always show MAX(on-chain locked, localSum of locked/locked_pending_chain)
   const lockedDisplay = useMemo(() => {
@@ -141,7 +220,9 @@ function LockedPresaleOlCInner() {
   const localAhead =
     onChainNum != null && localSum > onChainNum + 1e-8 && pendingCount > 0;
 
-  const unlocked = Boolean(tradingEnabled);
+  const unlocked = Boolean(
+    apiTrading != null ? apiTrading : tradingEnabledWagmi,
+  );
 
   const { writeContractAsync, isPending: writing } = useWriteContract();
   const [withdrawHash, setWithdrawHash] = useState<Hash | undefined>();
@@ -153,9 +234,39 @@ function LockedPresaleOlCInner() {
     if (withdrawOk) {
       void refetchLocked();
       void refetchTrading();
+      void fetchLockedApi();
       setWithdrawHash(undefined);
     }
-  }, [withdrawOk, refetchLocked, refetchTrading]);
+  }, [withdrawOk, refetchLocked, refetchTrading, fetchLockedApi]);
+
+  const onSwitchNetwork = useCallback(async () => {
+    setNetError(null);
+    try {
+      await switchChainAsync({ chainId: blockdag.id });
+    } catch {
+      try {
+        setNetBusy(true);
+        await addBlockdagNetwork();
+        await switchChainAsync({ chainId: blockdag.id });
+      } catch (e) {
+        setNetError(e instanceof Error ? e.message : "Could not switch to BlockDAG");
+      } finally {
+        setNetBusy(false);
+      }
+    }
+  }, [switchChainAsync]);
+
+  const onAddNetwork = useCallback(async () => {
+    setNetError(null);
+    setNetBusy(true);
+    try {
+      await addBlockdagNetwork();
+    } catch (e) {
+      setNetError(e instanceof Error ? e.message : "Could not add BlockDAG");
+    } finally {
+      setNetBusy(false);
+    }
+  }, []);
 
   const retryPendingCredits = useCallback(
     async (opts?: { quiet?: boolean }) => {
@@ -200,6 +311,7 @@ function LockedPresaleOlCInner() {
       }
       refreshLocal();
       void refetchLocked();
+      void fetchLockedApi();
       if (!opts?.quiet) {
         setRetryNote(
           locked > 0
@@ -213,7 +325,7 @@ function LockedPresaleOlCInner() {
         setRetryNote(`Auto-retried: ${locked} credit(s) confirmed on-chain.`);
       }
     },
-    [address, refreshLocal, refetchLocked],
+    [address, refreshLocal, refetchLocked, fetchLockedApi],
   );
 
   // Optional: on mount, auto-retry pending credits once quietly
@@ -253,6 +365,24 @@ function LockedPresaleOlCInner() {
     }
   }
 
+  const balanceSourceLabel = (() => {
+    if (!lockAddress) return "From local purchase records (lock address not set)";
+    if (onChainNum != null) {
+      if (localSum > onChainNum) {
+        return `Showing max(on-chain ${formatOlc(onChainNum)}, local ${formatOlc(localSum)})`;
+      }
+      return apiLocked != null
+        ? "From PresaleLock (server RPC)"
+        : "From PresaleLock contract";
+    }
+    if (wrongNetwork) {
+      return "On-chain balance via server — switch network to withdraw";
+    }
+    if (apiLoading && apiLocked == null) return "Loading locked balance…";
+    if (apiError && apiLocked == null) return `Could not read lock: ${apiError}`;
+    return "No on-chain locked balance yet";
+  })();
+
   return (
     <section className="card border-cyan-accent/30">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -267,26 +397,54 @@ function LockedPresaleOlCInner() {
         <ConnectWallet />
       </div>
 
+      {wrongNetwork && (
+        <div className="mt-4 rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-50 space-y-2">
+          <p>
+            <strong>Switch MetaMask to BlockDAG Mainnet ({TOKEN.chainId})</strong> to withdraw or
+            write on-chain. Locked balance below is still read via server RPC.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="btn-primary !text-xs !px-3 !py-1.5"
+              disabled={isSwitching || netBusy}
+              onClick={() => void onSwitchNetwork()}
+            >
+              {isSwitching || netBusy ? "Switching…" : "Switch to BlockDAG"}
+            </button>
+            <button
+              type="button"
+              className="btn-secondary !text-xs !px-3 !py-1.5"
+              disabled={netBusy}
+              onClick={() => void onAddNetwork()}
+            >
+              Add BlockDAG
+            </button>
+          </div>
+          {netError && <p className="text-xs text-red-300">{netError}</p>}
+        </div>
+      )}
+
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-border bg-bg-panel/80 p-4">
           <p className="text-xs uppercase tracking-wide text-slate-500">Your locked balance</p>
           <p className="mt-2 text-2xl font-bold text-gold-bright">
             {formatOlc(lockedDisplay)} OLC
           </p>
-          <p className="mt-1 text-[11px] text-slate-500">
-            {lockAddress
-              ? onChainNum != null
-                ? localSum > onChainNum
-                  ? `Showing max(on-chain ${formatOlc(onChainNum)}, local ${formatOlc(localSum)})`
-                  : "From PresaleLock contract"
-                : "Reading contract…"
-              : "From local purchase records (lock address not set)"}
-          </p>
+          <p className="mt-1 text-[11px] text-slate-500">{balanceSourceLabel}</p>
         </div>
         <div className="rounded-xl border border-border bg-bg-panel/80 p-4">
           <p className="text-xs uppercase tracking-wide text-slate-500">Unlock status</p>
           <p className="mt-2 text-lg font-semibold text-white">
-            {lockAddress ? (unlocked ? "Trading enabled" : "Locked until listing") : "Awaiting config"}
+            {lockAddress
+              ? apiTrading == null && tradingEnabledWagmi == null
+                ? apiLoading
+                  ? "Checking…"
+                  : "Locked until listing"
+                : unlocked
+                  ? "Trading enabled"
+                  : "Locked until listing"
+              : "Awaiting config"}
           </p>
           <p className="mt-1 text-[11px] text-slate-500">
             Owner calls <code className="text-slate-400">enableTrading()</code> after listings.

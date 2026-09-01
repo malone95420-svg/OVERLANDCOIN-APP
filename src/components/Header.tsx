@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { ConnectWallet } from "@/components/ConnectWallet";
 import { NAV_LINKS, SITE } from "@/lib/site";
 
 export function Header() {
@@ -40,9 +41,12 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link href="/presale" className="btn-primary hidden sm:inline-flex !py-2 !text-xs">
+          <Link href="/presale" className="btn-secondary hidden sm:inline-flex !py-2 !text-xs">
             Presale
           </Link>
+          <div className="hidden sm:block">
+            <ConnectWallet compact />
+          </div>
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-lg border border-border p-2 text-slate-200 lg:hidden"
@@ -75,6 +79,9 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+            <div className="px-3 py-2">
+              <ConnectWallet />
+            </div>
             <p className="px-3 pt-2 text-xs text-slate-500">{SITE.tagline}</p>
           </nav>
         </div>

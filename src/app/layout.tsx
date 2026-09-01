@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { RangerWidget } from "@/components/RangerWidget";
+import { Web3Provider } from "@/components/providers/Web3Provider";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -56,10 +57,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${sans.variable} ${mono.variable} font-sans antialiased`}>
-        <Header />
-        <main className="min-h-[70vh]">{children}</main>
-        <Footer />
-        <RangerWidget />
+        <Web3Provider>
+          <Header />
+          <main className="min-h-[70vh]">{children}</main>
+          <Footer />
+          <RangerWidget />
+        </Web3Provider>
       </body>
     </html>
   );

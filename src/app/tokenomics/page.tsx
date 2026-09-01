@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { CopyAddress } from "@/components/CopyAddress";
 import { fetchTokenInfo } from "@/lib/rpc";
-import { ALLOCATIONS, TOKENOMICS_DISCLAIMER } from "@/lib/tokenomics";
+import { ALLOCATIONS, TOTAL_SUPPLY_FORMATTED } from "@/lib/tokenomics";
 import { TOKEN, explorerAddressUrl } from "@/lib/token";
 
 export const metadata: Metadata = {
   title: "Tokenomics",
-  description: "OVERLANDCOIN on-chain supply and draft allocation overview.",
+  description: "OVERLANDCOIN 9B on-chain supply and token allocation on BlockDAG.",
 };
 
 export default async function TokenomicsPage() {
@@ -17,7 +17,8 @@ export default async function TokenomicsPage() {
       <span className="badge">On-chain supply verified</span>
       <h1 className="section-title mt-4">Tokenomics</h1>
       <p className="section-sub">
-        Total supply is fixed on BlockDAG at {TOKEN.totalSupplyFormatted} OLC. Allocation bars below are draft/example only.
+        Total supply is fixed on BlockDAG at {TOTAL_SUPPLY_FORMATTED} OLC. Allocation below is the
+        full 9B breakdown.
       </p>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -43,13 +44,11 @@ export default async function TokenomicsPage() {
       </div>
 
       <div className="mt-12">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <h2 className="text-2xl font-bold text-white">Allocation (draft)</h2>
-          <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-semibold text-gold-bright">
-            Example / not finalized
-          </span>
-        </div>
-        <p className="mt-2 text-sm text-slate-400">{TOKENOMICS_DISCLAIMER}</p>
+        <h2 className="text-2xl font-bold text-white">Token Allocation — {TOTAL_SUPPLY_FORMATTED} OLC</h2>
+        <p className="mt-2 text-sm text-slate-400">
+          Percentages applied to the on-chain 9B supply. Presale is 900M OLC (10%) with a $500K USD hard
+          cap.
+        </p>
 
         <div className="mt-6 space-y-4">
           {ALLOCATIONS.map((a) => (
@@ -59,7 +58,10 @@ export default async function TokenomicsPage() {
                   <h3 className="font-semibold text-white">{a.label}</h3>
                   <p className="text-sm text-slate-400">{a.description}</p>
                 </div>
-                <span className="text-lg font-bold text-gold-bright">{a.percent}%</span>
+                <div className="text-right">
+                  <p className="text-lg font-bold text-gold-bright">{a.percent}%</p>
+                  <p className="text-sm text-slate-400">{a.amountFormatted} OLC</p>
+                </div>
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-bg-deep">
                 <div className="h-full rounded-full" style={{ width: `${a.percent}%`, background: a.color }} />

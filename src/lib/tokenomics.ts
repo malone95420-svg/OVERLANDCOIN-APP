@@ -1,62 +1,80 @@
 /**
- * Tokenomics allocation config from the live public site.
- *
- * IMPORTANT: Percentages are DRAFT relative to the old 5B UI narrative.
- * On-chain total supply is 9,000,000,000 OLC — founders must confirm whether
- * these % still apply to the full 9B or to a subset. UI labels this clearly.
+ * OVERLANDCOIN tokenomics — allocations against on-chain total supply
+ * of 9,000,000,000 OLC on BlockDAG (chain ID 1404).
  */
 export type Allocation = {
   label: string;
   percent: number;
+  /** Absolute OLC amount (whole tokens) */
+  amount: number;
+  amountFormatted: string;
   description: string;
   color: string;
 };
 
-/** @draft Live-site buckets — confirm against 9B on-chain supply. */
+const TOTAL = 9_000_000_000;
+
+function amountFor(percent: number) {
+  const amount = Math.round((TOTAL * percent) / 100);
+  return {
+    amount,
+    amountFormatted: amount.toLocaleString("en-US"),
+  };
+}
+
+export const TOTAL_SUPPLY = TOTAL;
+export const TOTAL_SUPPLY_FORMATTED = "9,000,000,000";
+
 export const ALLOCATIONS: Allocation[] = [
   {
     label: "Presale",
     percent: 10,
-    description: "Public presale allocation (old UI claimed ~500M OLC against a prior 5B frame).",
+    ...amountFor(10),
+    description: "Public presale allocation — 900M OLC (10%).",
     color: "#f5a623",
   },
   {
     label: "Ecosystem Rewards",
     percent: 35,
+    ...amountFor(35),
     description: "Location rewards, quests, and community incentives.",
     color: "#c9952a",
   },
   {
     label: "Team & Advisors",
     percent: 15,
-    description: "3-year vest, 1-year cliff (as published on live site).",
+    ...amountFor(15),
+    description: "3-year vest, 1-year cliff.",
     color: "#b8821f",
   },
   {
     label: "Treasury",
     percent: 20,
-    description: "Operations / treasury reserve.",
+    ...amountFor(20),
+    description: "Operations and treasury reserve.",
     color: "#38c4e8",
   },
   {
     label: "Liquidity",
     percent: 10,
-    description: "DEX liquidity when markets go live (no pairs yet).",
+    ...amountFor(10),
+    description: "DEX liquidity when markets go live.",
     color: "#1a8aab",
   },
   {
     label: "Marketing",
     percent: 5,
+    ...amountFor(5),
     description: "Growth and partnerships.",
     color: "#6b7280",
   },
   {
     label: "Locked Reserve",
     percent: 5,
-    description: "2-year lock (as published on live site).",
+    ...amountFor(5),
+    description: "2-year on-chain time lock.",
     color: "#1a2a3a",
   },
 ];
 
-export const TOKENOMICS_DISCLAIMER =
-  "Allocation percentages mirror the live public site and are a draft plan pending founder confirmation. On-chain total supply is 9,000,000,000 OLC (the old UI incorrectly showed 5B). Absolute token amounts for each bucket need confirmation against the 9B supply.";
+export const PRESALE_ALLOCATION = ALLOCATIONS[0];

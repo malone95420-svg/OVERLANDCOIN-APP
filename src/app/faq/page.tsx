@@ -25,7 +25,7 @@ const FAQS = [
   },
   {
     q: "What is the total supply?",
-    a: `On-chain total supply is ${TOKEN.totalSupplyFormatted} OLC with ${TOKEN.decimals} decimals. (Older UI incorrectly showed 5B — trust the chain.)`,
+    a: `On-chain total supply is ${TOKEN.totalSupplyFormatted} OLC with ${TOKEN.decimals} decimals.`,
   },
   {
     q: "What is the current presale price?",
@@ -45,7 +45,7 @@ const FAQS = [
   },
   {
     q: "Are allocation percentages final?",
-    a: "They mirror the live public site but are labeled draft pending founder confirmation against the 9B on-chain supply.",
+    a: "Yes. Allocations are set against the full 9B supply: Presale 10% (900M), Ecosystem 35%, Team 15%, Treasury 20%, Liquidity 10%, Marketing 5%, Locked Reserve 5%.",
   },
   {
     q: "How do I get support?",

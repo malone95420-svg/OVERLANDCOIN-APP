@@ -34,9 +34,9 @@ export default function PresalePage() {
       <section className="mt-10">
         <h2 className="text-2xl font-bold text-white">Presale batches</h2>
         <p className="mt-2 text-sm text-slate-400">
-          Prices in USDT. Batch 1 is LIVE. Allocation claimed in prior UI:{" "}
-          {PRESALE_META.allocationOlC.toLocaleString()} OLC · hard cap $
-          {PRESALE_META.hardCapUsd.toLocaleString()} (draft vs 9B on-chain supply).
+          Prices in USDT. Batch 1 is LIVE. Presale allocation:{" "}
+          {PRESALE_META.allocationOlC.toLocaleString()} OLC (10% of 9B) · hard cap $
+          {PRESALE_META.hardCapUsd.toLocaleString()} USD.
         </p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {PRESALE_BATCHES.map((b) => (

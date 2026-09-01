@@ -7,7 +7,7 @@ export const TOKEN = {
   name: "OVERLANDCOIN",
   symbol: "OLC",
   decimals: 18,
-  /** On-chain total supply: 9,000,000,000 OLC (ignore old 5B UI) */
+  /** On-chain total supply: 9,000,000,000 OLC */
   totalSupply: BigInt("9000000000"),
   totalSupplyFormatted: "9,000,000,000",
   contractAddress: "0x4DF1041EA978fcFF8997f9BFd5302E65100d7f27" as const,

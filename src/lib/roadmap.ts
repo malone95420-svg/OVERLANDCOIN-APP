@@ -31,7 +31,7 @@ export const ROADMAP_PHASES: RoadmapPhase[] = [
       "Quest map demo and location reward concepts",
       "Community channels (placeholders until official handles)",
       "Education: how to add BlockDAG + OLC to wallets",
-      "Tokenomics publication (draft → final)",
+      "Tokenomics publication (9B on-chain supply + final allocations)",
     ],
   },
   {

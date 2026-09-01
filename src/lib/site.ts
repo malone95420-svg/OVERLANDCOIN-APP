@@ -50,8 +50,8 @@ export const PRESALE_BATCHES = [
 ] as const;
 
 export const PRESALE_META = {
-  /** Claimed in old UI — draft until founder confirmation against 9B on-chain supply */
-  allocationOlC: 500_000_000,
+  /** 10% of 9B on-chain supply */
+  allocationOlC: 900_000_000,
   hardCapUsd: 500_000,
 } as const;
 

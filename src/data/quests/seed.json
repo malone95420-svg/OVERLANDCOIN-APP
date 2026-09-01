@@ -1,5 +1,21 @@
 [
   {
+    "id": "q-test-gale-rs",
+    "title": "Test Check-in — Gale St (Rock Springs)",
+    "description": "Dev/test quest at 347 Gale St, Rock Springs WY. Easy check-in to verify GPS + photo + OLC claim. Safe to complete.",
+    "lat": 41.5876677,
+    "lng": -109.213399,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Wyoming, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "urban",
+      "test"
+    ],
+    "radiusMeters": 250
+  },
+  {
     "id": "q0001",
     "title": "Moab Rim Overlook",
     "description": "Overlook above Moab — graded access with rocky sections.",

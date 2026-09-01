@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { CopyAddress } from "@/components/CopyAddress";
 import { fetchTokenInfo } from "@/lib/rpc";
 import { ALLOCATIONS, TOTAL_SUPPLY_FORMATTED } from "@/lib/tokenomics";
-import { TOKEN, explorerAddressUrl } from "@/lib/token";
+import { explorerAddressUrl } from "@/lib/token";
 
 export const metadata: Metadata = {
   title: "Tokenomics",

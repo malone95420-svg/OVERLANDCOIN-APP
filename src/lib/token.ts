@@ -14,9 +14,9 @@ export const TOKEN = {
   chainId: 1404,
   chainName: "BlockDAG Mainnet",
   nativeCurrency: { name: "BDAG", symbol: "BDAG", decimals: 18 },
-  rpcUrl: process.env.NEXT_PUBLIC_BLOCKDAG_RPC ?? "https://rpc.west.bdag-us.org/",
+  rpcUrl: process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim() || "https://rpc.west.bdag-us.org/",
   rpcFallback:
-    process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK ?? "https://rpc.bdagscan.com/",
+    process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim() || "https://rpc.bdagscan.com/",
   /** Additional RPC referenced by live site */
   rpcAlt: "https://rpc.blockdag.engineering/",
   explorers: {

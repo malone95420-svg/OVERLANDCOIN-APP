@@ -15,8 +15,16 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+function absoluteSiteUrl() {
+  try {
+    return new URL(SITE.url);
+  } catch {
+    return new URL("https://overlandcoin-app.vercel.app");
+  }
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
+  metadataBase: absoluteSiteUrl(),
   title: {
     default: `${SITE.name} | ${SITE.tagline}`,
     template: `%s | ${SITE.name}`,

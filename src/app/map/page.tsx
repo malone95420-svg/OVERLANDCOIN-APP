@@ -27,10 +27,10 @@ export default function MapPage() {
         <QuestCards quests={QUESTS} />
       </div>
       <p className="mt-6 text-xs text-slate-600">
-        Map tiles © OpenStreetMap / CARTO (Street &amp; Outdoors), Esri World Topo Map (Topo), Esri
-        World Imagery (Satellite) — attribution updates with the selected layer. No Mapbox or Google
-        Maps SDK. Quest coords are real trailheads/parks for illustration. Badge: GPS verified ·
-        Photo proof · OLC pending claim.
+        Map tiles © Esri Canvas Dark Gray (Street), Esri World Topo Map (Topo), Esri World Imagery
+        (Satellite), OpenStreetMap / OpenTopoMap / SRTM (Outdoors) — attribution updates with the
+        selected layer. No Mapbox or Google Maps SDK. Quest coords are real trailheads/parks for
+        illustration. Badge: GPS verified · Photo proof · OLC pending claim.
       </p>
     </div>
   );

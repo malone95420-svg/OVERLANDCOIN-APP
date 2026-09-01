@@ -14,16 +14,16 @@ export type BasemapDef = {
   subdomains?: string | string[];
 };
 
-export const BASEMAP_STORAGE_KEY = "overlandcoin.map.basemap.v2";
+export const BASEMAP_STORAGE_KEY = "overlandcoin.map.basemap.v3";
 
 export const BASEMAPS: Record<BasemapId, BasemapDef> = {
   street: {
     id: "street",
     label: "Street",
-    url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: "abcd",
+    // Esri Canvas World Dark Gray Base — dark theme matching app, no API key
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
+    maxZoom: 16,
   },
   topo: {
     id: "topo",
@@ -45,10 +45,12 @@ export const BASEMAPS: Record<BasemapId, BasemapDef> = {
   outdoors: {
     id: "outdoors",
     label: "Outdoors",
-    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    // OpenTopoMap — key-free topographic tiles
+    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
     attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: "abcd",
+      'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+    subdomains: "abc",
+    maxZoom: 17,
   },
 };
 
@@ -68,11 +70,16 @@ export function loadBasemapId(): BasemapId {
   try {
     const raw = localStorage.getItem(BASEMAP_STORAGE_KEY);
     if (isBasemapId(raw)) return raw;
-    // migrate v1 storage key if present
-    const legacy = localStorage.getItem("overlandcoin.map.basemap.v1");
-    if (isBasemapId(legacy)) {
-      localStorage.setItem(BASEMAP_STORAGE_KEY, legacy);
-      return legacy;
+    // migrate earlier storage keys if present
+    for (const legacyKey of [
+      "overlandcoin.map.basemap.v2",
+      "overlandcoin.map.basemap.v1",
+    ]) {
+      const legacy = localStorage.getItem(legacyKey);
+      if (isBasemapId(legacy)) {
+        localStorage.setItem(BASEMAP_STORAGE_KEY, legacy);
+        return legacy;
+      }
     }
   } catch {
     /* ignore */

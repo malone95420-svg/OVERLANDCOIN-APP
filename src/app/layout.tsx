@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { RangerWidget } from "@/components/RangerWidget";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Header />
         <main className="min-h-[70vh]">{children}</main>
         <Footer />
+        <RangerWidget />
       </body>
     </html>
   );

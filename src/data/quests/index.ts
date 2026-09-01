@@ -1,0 +1,108 @@
+/**
+ * Quest catalog — seeded from known trailheads, parks, and overland corridors.
+ * Grow toward ~5000 by appending entries in seed.json (or re-running
+ * `node scripts/generate-quests.mjs` after extending LOCATIONS).
+ */
+import type { CapabilityTier } from "@/lib/vehicle";
+import seed from "./seed.json";
+
+export type QuestDifficulty = "Easy" | "Moderate" | "Hard" | "Legendary";
+
+export type TerrainTag =
+  | "rock"
+  | "desert"
+  | "dirt"
+  | "sand"
+  | "mud"
+  | "snow"
+  | "forest"
+  | "alpine"
+  | "high-alpine"
+  | "cliff"
+  | "water"
+  | "creek"
+  | "remote"
+  | "scenic"
+  | "paved"
+  | "gravel"
+  | "technical"
+  | "extreme"
+  | "slickrock"
+  | "ledge"
+  | "ohv"
+  | "beach"
+  | "coast"
+  | "fjord"
+  | "savanna"
+  | "steppe"
+  | "outback"
+  | "patagonia"
+  | "f-road"
+  | "river"
+  | "volcanic"
+  | "arctic"
+  | "tropical"
+  | "jungle"
+  | "canyon"
+  | "plateau"
+  | "mountain"
+  | "moor"
+  | "lake"
+  | "playa"
+  | "saltflat"
+  | "saltpan"
+  | "high-altitude"
+  | "wind"
+  | "wildlife"
+  | "historic"
+  | "one-way"
+  | "switchback"
+  | "steep"
+  | "granite"
+  | "redrock"
+  | "wash"
+  | "geothermal"
+  | "private-adjacent"
+  | "high-country"
+  | "high-plains"
+  | "prairie"
+  | "badlands"
+  | "scrub"
+  | "swamp"
+  | "clay"
+  | "slot"
+  | "dunes"
+  | "andes"
+  | "washboard";
+
+export type Quest = {
+  id: string;
+  title: string;
+  description: string;
+  lat: number;
+  lng: number;
+  rewardOlC: number;
+  difficulty: QuestDifficulty;
+  region: string;
+  /** Minimum vehicle capability tier required (1–5). */
+  minTier: CapabilityTier;
+  /** Optional terrain hints for Ranger + UI chips. */
+  terrainTags?: string[];
+};
+
+export const QUESTS: Quest[] = seed as Quest[];
+
+export const QUEST_COUNT = QUESTS.length;
+
+export function getQuestById(id: string): Quest | undefined {
+  return QUESTS.find((q) => q.id === id);
+}
+
+export function filterQuestsByTier(
+  quests: Quest[],
+  vehicleTier: CapabilityTier,
+  showAll: boolean,
+): Quest[] {
+  if (showAll) return quests;
+  return quests.filter((q) => vehicleTier >= q.minTier);
+}

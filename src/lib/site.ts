@@ -74,6 +74,8 @@ export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/presale", label: "Presale" },
   { href: "/map", label: "Quest Map" },
+  { href: "/garage", label: "Garage" },
+  { href: "/ranger", label: "Ranger" },
   { href: "/staking", label: "Staking" },
   { href: "/tokenomics", label: "Tokenomics" },
   { href: "/roadmap", label: "Roadmap" },

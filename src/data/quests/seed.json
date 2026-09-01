@@ -1,0 +1,4343 @@
+[
+  {
+    "id": "q0001",
+    "title": "Moab Rim Overlook",
+    "description": "Overlook above Moab — graded access with rocky sections.",
+    "lat": 38.5733,
+    "lng": -109.5498,
+    "rewardOlC": 356,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "rock",
+      "desert"
+    ]
+  },
+  {
+    "id": "q0002",
+    "title": "Gemini Bridges Trailhead",
+    "description": "Classic Moab sandstone trailhead.",
+    "lat": 38.5915,
+    "lng": -109.6621,
+    "rewardOlC": 330,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "rock",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0003",
+    "title": "Poison Spider Mesa",
+    "description": "Technical mesa trail — high clearance + lockers recommended.",
+    "lat": 38.5748,
+    "lng": -109.615,
+    "rewardOlC": 518,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "rock",
+      "ledge"
+    ]
+  },
+  {
+    "id": "q0004",
+    "title": "Hell's Revenge Trailhead",
+    "description": "Iconic Moab slickrock — Extreme builds only.",
+    "lat": 38.5695,
+    "lng": -109.505,
+    "rewardOlC": 780,
+    "difficulty": "Legendary",
+    "region": "Utah, USA",
+    "minTier": 5,
+    "terrainTags": [
+      "slickrock",
+      "extreme"
+    ]
+  },
+  {
+    "id": "q0005",
+    "title": "White Rim Road (Island in the Sky)",
+    "description": "Canyonlands White Rim — long remote dirt road.",
+    "lat": 38.459,
+    "lng": -109.821,
+    "rewardOlC": 495,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0006",
+    "title": "Elephant Hill Trailhead",
+    "description": "Needles District — notorious steep rock steps.",
+    "lat": 38.146,
+    "lng": -109.854,
+    "rewardOlC": 800,
+    "difficulty": "Legendary",
+    "region": "Utah, USA",
+    "minTier": 5,
+    "terrainTags": [
+      "rock",
+      "technical"
+    ]
+  },
+  {
+    "id": "q0007",
+    "title": "Shafer Trail Overlook",
+    "description": "Switchbacks off Island in the Sky mesa.",
+    "lat": 38.453,
+    "lng": -109.812,
+    "rewardOlC": 497,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "cliff",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0008",
+    "title": "Fins & Things Trailhead",
+    "description": "Sand Hollow–style fins near Moab.",
+    "lat": 38.575,
+    "lng": -109.48,
+    "rewardOlC": 528,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "slickrock"
+    ]
+  },
+  {
+    "id": "q0009",
+    "title": "Onion Creek Road",
+    "description": "Scenic creek canyon drive east of Moab.",
+    "lat": 38.696,
+    "lng": -109.33,
+    "rewardOlC": 358,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0010",
+    "title": "Kane Creek Boulevard",
+    "description": "Along the Colorado River cliffs.",
+    "lat": 38.545,
+    "lng": -109.575,
+    "rewardOlC": 493,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "rock",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0011",
+    "title": "Hole in the Rock Road",
+    "description": "Grand Staircase long dirt corridor.",
+    "lat": 37.426,
+    "lng": -111.356,
+    "rewardOlC": 373,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0012",
+    "title": "Burr Trail Switchbacks",
+    "description": "Steep switchbacks in Capitol Reef country.",
+    "lat": 37.855,
+    "lng": -111.02,
+    "rewardOlC": 479,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "cliff",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0013",
+    "title": "Notch Peak Trailhead",
+    "description": "House Range remote access.",
+    "lat": 39.143,
+    "lng": -113.408,
+    "rewardOlC": 338,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0014",
+    "title": "Little Sahara Sand Dunes",
+    "description": "Sand play — A/T or M/T recommended.",
+    "lat": 39.725,
+    "lng": -112.355,
+    "rewardOlC": 510,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "sand"
+    ]
+  },
+  {
+    "id": "q0015",
+    "title": "Paiute ATV Trail (Circleville)",
+    "description": "Long multi-use trail system.",
+    "lat": 38.17,
+    "lng": -112.27,
+    "rewardOlC": 357,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "dirt",
+      "forest"
+    ]
+  },
+  {
+    "id": "q0016",
+    "title": "Sedona Schnebly Hill Road",
+    "description": "Steep red-rock climb above Sedona.",
+    "lat": 34.87,
+    "lng": -111.71,
+    "rewardOlC": 504,
+    "difficulty": "Hard",
+    "region": "Arizona, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "rock",
+      "redrock"
+    ]
+  },
+  {
+    "id": "q0017",
+    "title": "Broken Arrow Trailhead",
+    "description": "Famous Sedona rock crawling corridor.",
+    "lat": 34.83,
+    "lng": -111.745,
+    "rewardOlC": 539,
+    "difficulty": "Hard",
+    "region": "Arizona, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "rock",
+      "technical"
+    ]
+  },
+  {
+    "id": "q0018",
+    "title": "Mingus Mountain Forest Road",
+    "description": "Prescott NF high-country roads.",
+    "lat": 34.695,
+    "lng": -112.125,
+    "rewardOlC": 332,
+    "difficulty": "Moderate",
+    "region": "Arizona, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0019",
+    "title": "Apache Trail (AZ-88)",
+    "description": "Historic Salt River canyon road.",
+    "lat": 33.555,
+    "lng": -111.35,
+    "rewardOlC": 365,
+    "difficulty": "Moderate",
+    "region": "Arizona, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0020",
+    "title": "Canyon de Chelly Overlook Road",
+    "description": "Paved/graded overlook approaches.",
+    "lat": 36.14,
+    "lng": -109.47,
+    "rewardOlC": 214,
+    "difficulty": "Easy",
+    "region": "Arizona, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0021",
+    "title": "Monument Valley Visitor Approach",
+    "description": "Iconic butte country — graded access.",
+    "lat": 36.98,
+    "lng": -110.11,
+    "rewardOlC": 220,
+    "difficulty": "Easy",
+    "region": "Arizona / Utah, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0022",
+    "title": "Organ Pipe Cactus Scenic Loop",
+    "description": "Sonoran desert loop road.",
+    "lat": 31.955,
+    "lng": -112.8,
+    "rewardOlC": 332,
+    "difficulty": "Moderate",
+    "region": "Arizona, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0023",
+    "title": "Mogollon Rim Road",
+    "description": "High pine rim forest roads.",
+    "lat": 34.32,
+    "lng": -110.95,
+    "rewardOlC": 372,
+    "difficulty": "Moderate",
+    "region": "Arizona, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0024",
+    "title": "Turquoise Trail near Jerome",
+    "description": "Mingus / Jerome backroads.",
+    "lat": 34.75,
+    "lng": -112.11,
+    "rewardOlC": 370,
+    "difficulty": "Moderate",
+    "region": "Arizona, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "dirt",
+      "mountain"
+    ]
+  },
+  {
+    "id": "q0025",
+    "title": "Lake Havasu Backcountry",
+    "description": "Colorado River desert tracks.",
+    "lat": 34.48,
+    "lng": -114.32,
+    "rewardOlC": 481,
+    "difficulty": "Hard",
+    "region": "Arizona, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "sand"
+    ]
+  },
+  {
+    "id": "q0026",
+    "title": "Death Valley Dunes (Mesquite)",
+    "description": "Mesquite Flat dunes access.",
+    "lat": 36.605,
+    "lng": -117.115,
+    "rewardOlC": 346,
+    "difficulty": "Moderate",
+    "region": "California, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "desert"
+    ]
+  },
+  {
+    "id": "q0027",
+    "title": "Racetrack Playa Road",
+    "description": "Long washboard to the sailing stones.",
+    "lat": 36.681,
+    "lng": -117.56,
+    "rewardOlC": 517,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "wash",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0028",
+    "title": "Titus Canyon Road",
+    "description": "One-way canyon through Grapevine Mtns.",
+    "lat": 36.845,
+    "lng": -117.05,
+    "rewardOlC": 500,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "canyon",
+      "one-way"
+    ]
+  },
+  {
+    "id": "q0029",
+    "title": "Anza-Borrego Slot Canyon Area",
+    "description": "Desert washes and slots.",
+    "lat": 33.27,
+    "lng": -116.25,
+    "rewardOlC": 500,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "sand"
+    ]
+  },
+  {
+    "id": "q0030",
+    "title": "Joshua Tree Geology Tour Road",
+    "description": "Park geology auto tour.",
+    "lat": 33.935,
+    "lng": -116.07,
+    "rewardOlC": 354,
+    "difficulty": "Moderate",
+    "region": "California, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0031",
+    "title": "Hungry Valley SVRA",
+    "description": "State OHV recreation area.",
+    "lat": 34.78,
+    "lng": -118.85,
+    "rewardOlC": 485,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "dirt",
+      "ohv"
+    ]
+  },
+  {
+    "id": "q0032",
+    "title": "Corral Canyon (Cleveland NF)",
+    "description": "Southern CA technical trails.",
+    "lat": 32.75,
+    "lng": -116.55,
+    "rewardOlC": 538,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "rock",
+      "mountain"
+    ]
+  },
+  {
+    "id": "q0033",
+    "title": "Fordyce Creek Trail",
+    "description": "Sierra hardcore rock & water crossings.",
+    "lat": 39.35,
+    "lng": -120.55,
+    "rewardOlC": 817,
+    "difficulty": "Legendary",
+    "region": "California, USA",
+    "minTier": 5,
+    "terrainTags": [
+      "rock",
+      "water"
+    ]
+  },
+  {
+    "id": "q0034",
+    "title": "Rubicon Trail (Wentworth Springs)",
+    "description": "World-famous granite trail.",
+    "lat": 39.01,
+    "lng": -120.25,
+    "rewardOlC": 820,
+    "difficulty": "Legendary",
+    "region": "California, USA",
+    "minTier": 5,
+    "terrainTags": [
+      "granite",
+      "extreme"
+    ]
+  },
+  {
+    "id": "q0035",
+    "title": "Owl Canyon Campground Roads",
+    "description": "Barstow desert camping access.",
+    "lat": 34.95,
+    "lng": -117,
+    "rewardOlC": 221,
+    "difficulty": "Easy",
+    "region": "California, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "desert"
+    ]
+  },
+  {
+    "id": "q0036",
+    "title": "Alabama Hills Movie Road",
+    "description": "Lone Pine classic dirt loops.",
+    "lat": 36.605,
+    "lng": -118.11,
+    "rewardOlC": 213,
+    "difficulty": "Easy",
+    "region": "California, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0037",
+    "title": "Saline Valley Warm Springs Road",
+    "description": "Long remote Death Valley approach.",
+    "lat": 36.7,
+    "lng": -117.85,
+    "rewardOlC": 516,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "remote",
+      "desert"
+    ]
+  },
+  {
+    "id": "q0038",
+    "title": "Panamint Valley Road",
+    "description": "Desert valley corridor.",
+    "lat": 36.1,
+    "lng": -117.35,
+    "rewardOlC": 347,
+    "difficulty": "Moderate",
+    "region": "California, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert"
+    ]
+  },
+  {
+    "id": "q0039",
+    "title": "Alpine Loop (Lake City)",
+    "description": "San Juan high passes — Engineer / Cinnamon.",
+    "lat": 38.03,
+    "lng": -107.38,
+    "rewardOlC": 498,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "high-alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0040",
+    "title": "Imogene Pass",
+    "description": "13k+ pass between Ouray and Telluride.",
+    "lat": 37.935,
+    "lng": -107.73,
+    "rewardOlC": 523,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "high-alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0041",
+    "title": "Black Bear Pass",
+    "description": "One-way cliff shelf — Extreme only.",
+    "lat": 37.895,
+    "lng": -107.775,
+    "rewardOlC": 782,
+    "difficulty": "Legendary",
+    "region": "Colorado, USA",
+    "minTier": 5,
+    "terrainTags": [
+      "cliff",
+      "extreme"
+    ]
+  },
+  {
+    "id": "q0042",
+    "title": "Yankee Boy Basin",
+    "description": "Wildflower basin above Ouray.",
+    "lat": 37.98,
+    "lng": -107.76,
+    "rewardOlC": 477,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0043",
+    "title": "Mosquito Pass",
+    "description": "Highest through-pass in CO.",
+    "lat": 39.28,
+    "lng": -106.16,
+    "rewardOlC": 487,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "high-alpine"
+    ]
+  },
+  {
+    "id": "q0044",
+    "title": "Webster Pass",
+    "description": "Montezuma / Handcart Gulch area.",
+    "lat": 39.53,
+    "lng": -105.82,
+    "rewardOlC": 515,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0045",
+    "title": "Mount Antero Road",
+    "description": "Gem-hunting high road.",
+    "lat": 38.675,
+    "lng": -106.245,
+    "rewardOlC": 505,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "high-alpine"
+    ]
+  },
+  {
+    "id": "q0046",
+    "title": "Red Cone / Radical Hill",
+    "description": "Very steep alpine shelves.",
+    "lat": 39.55,
+    "lng": -105.85,
+    "rewardOlC": 779,
+    "difficulty": "Legendary",
+    "region": "Colorado, USA",
+    "minTier": 5,
+    "terrainTags": [
+      "rock",
+      "extreme"
+    ]
+  },
+  {
+    "id": "q0047",
+    "title": "Pearl Pass",
+    "description": "Aspen to Crested Butte classic.",
+    "lat": 39.02,
+    "lng": -106.84,
+    "rewardOlC": 518,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "rock",
+      "alpine"
+    ]
+  },
+  {
+    "id": "q0048",
+    "title": "Schofield Pass",
+    "description": "Crested Butte / Marble corridor.",
+    "lat": 39.015,
+    "lng": -107.05,
+    "rewardOlC": 501,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0049",
+    "title": "Independence Pass Overlook",
+    "description": "Scenic highway overlook (stock OK).",
+    "lat": 39.108,
+    "lng": -106.564,
+    "rewardOlC": 207,
+    "difficulty": "Easy",
+    "region": "Colorado, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0050",
+    "title": "Great Sand Dunes Medano Pass",
+    "description": "Creek + sand corridor through the dunes.",
+    "lat": 37.79,
+    "lng": -105.505,
+    "rewardOlC": 504,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "creek"
+    ]
+  },
+  {
+    "id": "q0051",
+    "title": "Olympic Coast Mora Road Area",
+    "description": "Coastal rainforest approaches.",
+    "lat": 47.91,
+    "lng": -124.64,
+    "rewardOlC": 187,
+    "difficulty": "Easy",
+    "region": "Washington, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "coast",
+      "forest"
+    ]
+  },
+  {
+    "id": "q0052",
+    "title": "Mount St. Helens Forest Roads",
+    "description": "Blast-zone forest roads.",
+    "lat": 46.2,
+    "lng": -122.15,
+    "rewardOlC": 352,
+    "difficulty": "Moderate",
+    "region": "Washington, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0053",
+    "title": "Oregon Dunes OHV",
+    "description": "Coastal dune riding.",
+    "lat": 43.72,
+    "lng": -124.17,
+    "rewardOlC": 518,
+    "difficulty": "Hard",
+    "region": "Oregon, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "coast"
+    ]
+  },
+  {
+    "id": "q0054",
+    "title": "Steens Mountain Loop",
+    "description": "Remote SE Oregon high desert.",
+    "lat": 42.64,
+    "lng": -118.58,
+    "rewardOlC": 343,
+    "difficulty": "Moderate",
+    "region": "Oregon, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "high-desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0055",
+    "title": "Wallowa Mountains FR",
+    "description": "NE Oregon alpine forest roads.",
+    "lat": 45.27,
+    "lng": -117.22,
+    "rewardOlC": 357,
+    "difficulty": "Moderate",
+    "region": "Oregon, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "mountain"
+    ]
+  },
+  {
+    "id": "q0056",
+    "title": "Idaho Panther Creek Road",
+    "description": "Frank Church wilderness edge.",
+    "lat": 45.05,
+    "lng": -114.35,
+    "rewardOlC": 505,
+    "difficulty": "Hard",
+    "region": "Idaho, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "remote",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0057",
+    "title": "Silver City Ghost Town Road",
+    "description": "Owyhee ghost town approach.",
+    "lat": 43,
+    "lng": -116.73,
+    "rewardOlC": 344,
+    "difficulty": "Moderate",
+    "region": "Idaho, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "historic"
+    ]
+  },
+  {
+    "id": "q0058",
+    "title": "Stanley Hot Springs Area Roads",
+    "description": "Sawtooth foothill access.",
+    "lat": 44.22,
+    "lng": -115,
+    "rewardOlC": 373,
+    "difficulty": "Moderate",
+    "region": "Idaho, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest"
+    ]
+  },
+  {
+    "id": "q0059",
+    "title": "White Sands Access Road",
+    "description": "National park dune approaches.",
+    "lat": 32.78,
+    "lng": -106.17,
+    "rewardOlC": 208,
+    "difficulty": "Easy",
+    "region": "New Mexico, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0060",
+    "title": "Quebradas Backcountry Byway",
+    "description": "Socorro County scenic byway.",
+    "lat": 34.15,
+    "lng": -106.75,
+    "rewardOlC": 345,
+    "difficulty": "Moderate",
+    "region": "New Mexico, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0061",
+    "title": "Forest Road 191 (Gila)",
+    "description": "Gila National Forest remote roads.",
+    "lat": 33.25,
+    "lng": -108.25,
+    "rewardOlC": 509,
+    "difficulty": "Hard",
+    "region": "New Mexico, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0062",
+    "title": "Chaco Canyon Approach",
+    "description": "Washboard county roads to Chaco.",
+    "lat": 36.06,
+    "lng": -107.96,
+    "rewardOlC": 347,
+    "difficulty": "Moderate",
+    "region": "New Mexico, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "dirt",
+      "washboard"
+    ]
+  },
+  {
+    "id": "q0063",
+    "title": "Shiprock Overlook Area",
+    "description": "Navajo Nation landmark views.",
+    "lat": 36.69,
+    "lng": -108.84,
+    "rewardOlC": 210,
+    "difficulty": "Easy",
+    "region": "New Mexico, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0064",
+    "title": "Guadalupe Mountains Salt Basin",
+    "description": "West Texas desert flats.",
+    "lat": 31.9,
+    "lng": -104.86,
+    "rewardOlC": 346,
+    "difficulty": "Moderate",
+    "region": "Texas, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert"
+    ]
+  },
+  {
+    "id": "q0065",
+    "title": "Big Bend River Road",
+    "description": "Remote river corridor in Big Bend.",
+    "lat": 29.18,
+    "lng": -103,
+    "rewardOlC": 481,
+    "difficulty": "Hard",
+    "region": "Texas, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0066",
+    "title": "Big Bend Old Ore Road",
+    "description": "Historic ore haul road.",
+    "lat": 29.25,
+    "lng": -103.05,
+    "rewardOlC": 512,
+    "difficulty": "Hard",
+    "region": "Texas, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0067",
+    "title": "Black Gap WMA Roads",
+    "description": "Trans-Pecos wildlife management roads.",
+    "lat": 29.5,
+    "lng": -102.9,
+    "rewardOlC": 482,
+    "difficulty": "Hard",
+    "region": "Texas, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0068",
+    "title": "Caprock Canyons Trailway",
+    "description": "Panhandle canyon country.",
+    "lat": 34.4,
+    "lng": -101.05,
+    "rewardOlC": 191,
+    "difficulty": "Easy",
+    "region": "Texas, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "canyon",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0069",
+    "title": "Upper Peninsula Two Hearted",
+    "description": "UP forest & sand roads.",
+    "lat": 46.7,
+    "lng": -85.42,
+    "rewardOlC": 351,
+    "difficulty": "Moderate",
+    "region": "Michigan, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "sand"
+    ]
+  },
+  {
+    "id": "q0070",
+    "title": "Pictured Rocks Backroads",
+    "description": "Munising forest access.",
+    "lat": 46.55,
+    "lng": -86.35,
+    "rewardOlC": 335,
+    "difficulty": "Moderate",
+    "region": "Michigan, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0071",
+    "title": "Ozark National Forest FR",
+    "description": "Ozark highland forest roads.",
+    "lat": 35.7,
+    "lng": -93.3,
+    "rewardOlC": 362,
+    "difficulty": "Moderate",
+    "region": "Arkansas, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0072",
+    "title": "Ouachita Trail Forest Roads",
+    "description": "Ouachita Mountains FRs.",
+    "lat": 34.7,
+    "lng": -94.35,
+    "rewardOlC": 358,
+    "difficulty": "Moderate",
+    "region": "Arkansas / Oklahoma, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest"
+    ]
+  },
+  {
+    "id": "q0073",
+    "title": "Tail of the Dragon Overlook",
+    "description": "Famous paved mountain road — stock OK.",
+    "lat": 35.495,
+    "lng": -83.92,
+    "rewardOlC": 200,
+    "difficulty": "Easy",
+    "region": "Tennessee / North Carolina, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "paved",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0074",
+    "title": "Cherohala Skyway Pullouts",
+    "description": "High scenic parkway.",
+    "lat": 35.35,
+    "lng": -84.05,
+    "rewardOlC": 181,
+    "difficulty": "Easy",
+    "region": "Tennessee / North Carolina, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "paved",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0075",
+    "title": "Dolly Sods Wilderness Roads",
+    "description": "Allegheny highland gravel.",
+    "lat": 39.02,
+    "lng": -79.35,
+    "rewardOlC": 325,
+    "difficulty": "Moderate",
+    "region": "West Virginia, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "mud"
+    ]
+  },
+  {
+    "id": "q0076",
+    "title": "Baxter State Park Perimeter",
+    "description": "North Maine woods access.",
+    "lat": 45.9,
+    "lng": -68.95,
+    "rewardOlC": 366,
+    "difficulty": "Moderate",
+    "region": "Maine, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0077",
+    "title": "White Mountain NF Roads",
+    "description": "White Mountains forest roads.",
+    "lat": 44.1,
+    "lng": -71.3,
+    "rewardOlC": 352,
+    "difficulty": "Moderate",
+    "region": "New Hampshire, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0078",
+    "title": "Adirondack Backroads",
+    "description": "ADK dirt & seasonal roads.",
+    "lat": 44.15,
+    "lng": -74.3,
+    "rewardOlC": 350,
+    "difficulty": "Moderate",
+    "region": "New York, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest"
+    ]
+  },
+  {
+    "id": "q0079",
+    "title": "Denali Park Road (Savage)",
+    "description": "Park road to Savage River.",
+    "lat": 63.72,
+    "lng": -149.3,
+    "rewardOlC": 201,
+    "difficulty": "Easy",
+    "region": "Alaska, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0080",
+    "title": "Dalton Highway Coldfoot",
+    "description": "Haul Road arctic corridor.",
+    "lat": 67.25,
+    "lng": -150.2,
+    "rewardOlC": 480,
+    "difficulty": "Hard",
+    "region": "Alaska, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "remote",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0081",
+    "title": "Taylor Highway Chicken",
+    "description": "Top of the World Highway approach.",
+    "lat": 64.07,
+    "lng": -141.94,
+    "rewardOlC": 329,
+    "difficulty": "Moderate",
+    "region": "Alaska, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "remote",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0082",
+    "title": "McCarthy Road",
+    "description": "Wrangell-St. Elias access.",
+    "lat": 61.43,
+    "lng": -142.92,
+    "rewardOlC": 503,
+    "difficulty": "Hard",
+    "region": "Alaska, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "remote",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0083",
+    "title": "Banff Icefields Parkway Pullout",
+    "description": "Columbia Icefield corridor overlooks.",
+    "lat": 51.4968,
+    "lng": -115.9281,
+    "rewardOlC": 200,
+    "difficulty": "Easy",
+    "region": "Alberta, Canada",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0084",
+    "title": "Kananaskis Forestry Roads",
+    "description": "Front Range forestry roads.",
+    "lat": 50.65,
+    "lng": -115,
+    "rewardOlC": 343,
+    "difficulty": "Moderate",
+    "region": "Alberta, Canada",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0085",
+    "title": "Mackenzie Highway Edge",
+    "description": "Northern gravel highway.",
+    "lat": 61.5,
+    "lng": -118.5,
+    "rewardOlC": 358,
+    "difficulty": "Moderate",
+    "region": "NWT, Canada",
+    "minTier": 2,
+    "terrainTags": [
+      "remote",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0086",
+    "title": "Demoster Highway Tombstone",
+    "description": "Arctic Circle gravel adventure.",
+    "lat": 64.45,
+    "lng": -138.22,
+    "rewardOlC": 512,
+    "difficulty": "Hard",
+    "region": "Yukon, Canada",
+    "minTier": 3,
+    "terrainTags": [
+      "remote",
+      "arctic"
+    ]
+  },
+  {
+    "id": "q0087",
+    "title": "Trans-Labrador Highway",
+    "description": "Long remote eastern gravel.",
+    "lat": 53.3,
+    "lng": -60.3,
+    "rewardOlC": 364,
+    "difficulty": "Moderate",
+    "region": "Newfoundland & Labrador, Canada",
+    "minTier": 2,
+    "terrainTags": [
+      "remote",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0088",
+    "title": "Cabot Trail Highlands",
+    "description": "Cape Breton coastal loop.",
+    "lat": 46.75,
+    "lng": -60.6,
+    "rewardOlC": 218,
+    "difficulty": "Easy",
+    "region": "Nova Scotia, Canada",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0089",
+    "title": "Jasper Maligne Lake Road",
+    "description": "Maligne Lake scenic access.",
+    "lat": 52.73,
+    "lng": -117.64,
+    "rewardOlC": 181,
+    "difficulty": "Easy",
+    "region": "Alberta, Canada",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0090",
+    "title": "Chilcotin Backroads",
+    "description": "BC interior plateau tracks.",
+    "lat": 51.8,
+    "lng": -123.5,
+    "rewardOlC": 486,
+    "difficulty": "Hard",
+    "region": "British Columbia, Canada",
+    "minTier": 3,
+    "terrainTags": [
+      "remote",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0091",
+    "title": "Baja Cataviña Boulder Field",
+    "description": "Central Baja desert highway side roads.",
+    "lat": 29.73,
+    "lng": -114.72,
+    "rewardOlC": 337,
+    "difficulty": "Moderate",
+    "region": "Baja California, Mexico",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0092",
+    "title": "Bahía de los Ángeles Spur",
+    "description": "Sea of Cortez spur road.",
+    "lat": 28.95,
+    "lng": -113.56,
+    "rewardOlC": 346,
+    "difficulty": "Moderate",
+    "region": "Baja California, Mexico",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "coast"
+    ]
+  },
+  {
+    "id": "q0093",
+    "title": "Sierra de la Laguna Foothills",
+    "description": "Cabo hinterland mountain tracks.",
+    "lat": 23.5,
+    "lng": -109.95,
+    "rewardOlC": 499,
+    "difficulty": "Hard",
+    "region": "Baja California Sur, Mexico",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0094",
+    "title": "Copper Canyon Rim Roads",
+    "description": "Barrancas del Cobre rim tracks.",
+    "lat": 27.5,
+    "lng": -107.8,
+    "rewardOlC": 507,
+    "difficulty": "Hard",
+    "region": "Chihuahua, Mexico",
+    "minTier": 3,
+    "terrainTags": [
+      "canyon",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0095",
+    "title": "Yucatán Cenote Backroads",
+    "description": "Jungle tracks to cenotes.",
+    "lat": 20.6,
+    "lng": -87.45,
+    "rewardOlC": 196,
+    "difficulty": "Easy",
+    "region": "Quintana Roo, Mexico",
+    "minTier": 1,
+    "terrainTags": [
+      "jungle",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0096",
+    "title": "Patagonia Wind Pass (Torres)",
+    "description": "Torres del Paine approach roads.",
+    "lat": -50.94,
+    "lng": -72.97,
+    "rewardOlC": 495,
+    "difficulty": "Hard",
+    "region": "Chile / Argentina",
+    "minTier": 3,
+    "terrainTags": [
+      "patagonia",
+      "wind"
+    ]
+  },
+  {
+    "id": "q0097",
+    "title": "Ruta 40 Perito Moreno Area",
+    "description": "Legendary Ruta 40 gravel sections.",
+    "lat": -49.3,
+    "lng": -72,
+    "rewardOlC": 366,
+    "difficulty": "Moderate",
+    "region": "Santa Cruz, Argentina",
+    "minTier": 2,
+    "terrainTags": [
+      "patagonia",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0098",
+    "title": "Carretera Austral Villa O'Higgins",
+    "description": "End of the Austral highway.",
+    "lat": -48.47,
+    "lng": -72.56,
+    "rewardOlC": 514,
+    "difficulty": "Hard",
+    "region": "Aysén, Chile",
+    "minTier": 3,
+    "terrainTags": [
+      "remote",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0099",
+    "title": "Salar de Uyuni Access",
+    "description": "Salt flat corridors — high altitude.",
+    "lat": -20.46,
+    "lng": -66.83,
+    "rewardOlC": 487,
+    "difficulty": "Hard",
+    "region": "Potosí, Bolivia",
+    "minTier": 3,
+    "terrainTags": [
+      "saltflat",
+      "high-altitude"
+    ]
+  },
+  {
+    "id": "q0100",
+    "title": "Atacama Valle de la Luna",
+    "description": "Moon Valley scenic approaches.",
+    "lat": -22.92,
+    "lng": -68.3,
+    "rewardOlC": 188,
+    "difficulty": "Easy",
+    "region": "Antofagasta, Chile",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0101",
+    "title": "Ruta del Fin del Mundo",
+    "description": "Near Ushuaia end-of-world roads.",
+    "lat": -54.8,
+    "lng": -68.3,
+    "rewardOlC": 330,
+    "difficulty": "Moderate",
+    "region": "Tierra del Fuego, Argentina",
+    "minTier": 2,
+    "terrainTags": [
+      "patagonia",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0102",
+    "title": "Laguna Colorada Approach",
+    "description": "Altiplano colored lagoon.",
+    "lat": -22.2,
+    "lng": -67.77,
+    "rewardOlC": 524,
+    "difficulty": "Hard",
+    "region": "Potosí, Bolivia",
+    "minTier": 3,
+    "terrainTags": [
+      "high-altitude",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0103",
+    "title": "Cordillera Blanca Spur",
+    "description": "High Andean valley spurs.",
+    "lat": -9.45,
+    "lng": -77.55,
+    "rewardOlC": 486,
+    "difficulty": "Hard",
+    "region": "Ancash, Peru",
+    "minTier": 3,
+    "terrainTags": [
+      "andes",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0104",
+    "title": "Lençóis Maranhenses Edge",
+    "description": "Sand dune park periphery.",
+    "lat": -2.55,
+    "lng": -43,
+    "rewardOlC": 486,
+    "difficulty": "Hard",
+    "region": "Maranhão, Brazil",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "coast"
+    ]
+  },
+  {
+    "id": "q0105",
+    "title": "Chapada Diamantina Roads",
+    "description": "Brazilian plateau dirt roads.",
+    "lat": -12.6,
+    "lng": -41.4,
+    "rewardOlC": 334,
+    "difficulty": "Moderate",
+    "region": "Bahia, Brazil",
+    "minTier": 2,
+    "terrainTags": [
+      "plateau",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0106",
+    "title": "Norwegian Fjord Camp (Geiranger)",
+    "description": "Geirangerfjord lookout approaches.",
+    "lat": 62.1015,
+    "lng": 7.0618,
+    "rewardOlC": 220,
+    "difficulty": "Easy",
+    "region": "Norway",
+    "minTier": 1,
+    "terrainTags": [
+      "fjord",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0107",
+    "title": "Trollstigen Plateau",
+    "description": "Troll's Path mountain road.",
+    "lat": 62.457,
+    "lng": 7.674,
+    "rewardOlC": 368,
+    "difficulty": "Moderate",
+    "region": "Norway",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0108",
+    "title": "Lofoten Unstad Access",
+    "description": "Arctic surfing / coastal tracks.",
+    "lat": 68.2,
+    "lng": 13.55,
+    "rewardOlC": 328,
+    "difficulty": "Moderate",
+    "region": "Norway",
+    "minTier": 2,
+    "terrainTags": [
+      "arctic",
+      "coast"
+    ]
+  },
+  {
+    "id": "q0109",
+    "title": "Scottish Highlands Applecross",
+    "description": "Bealach na Bà classic.",
+    "lat": 57.43,
+    "lng": -5.81,
+    "rewardOlC": 336,
+    "difficulty": "Moderate",
+    "region": "Scotland, UK",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "singletrack"
+    ]
+  },
+  {
+    "id": "q0110",
+    "title": "Cairngorms Estate Tracks",
+    "description": "Highland estate tracks.",
+    "lat": 57.1,
+    "lng": -3.67,
+    "rewardOlC": 328,
+    "difficulty": "Moderate",
+    "region": "Scotland, UK",
+    "minTier": 2,
+    "terrainTags": [
+      "moor",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0111",
+    "title": "Iceland F-Road Landmannalaugar",
+    "description": "Highland F-roads with river fords.",
+    "lat": 63.99,
+    "lng": -19.06,
+    "rewardOlC": 526,
+    "difficulty": "Hard",
+    "region": "Iceland",
+    "minTier": 4,
+    "terrainTags": [
+      "f-road",
+      "river"
+    ]
+  },
+  {
+    "id": "q0112",
+    "title": "Iceland Askja Route (F88)",
+    "description": "Remote highland volcano approach.",
+    "lat": 65.03,
+    "lng": -16.75,
+    "rewardOlC": 536,
+    "difficulty": "Hard",
+    "region": "Iceland",
+    "minTier": 4,
+    "terrainTags": [
+      "f-road",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0113",
+    "title": "Iceland Kerlingarfjöll",
+    "description": "Central highland geothermal area.",
+    "lat": 64.65,
+    "lng": -19.28,
+    "rewardOlC": 486,
+    "difficulty": "Hard",
+    "region": "Iceland",
+    "minTier": 3,
+    "terrainTags": [
+      "f-road",
+      "geothermal"
+    ]
+  },
+  {
+    "id": "q0114",
+    "title": "Alps Col de l'Iseran",
+    "description": "Highest paved pass in the Alps.",
+    "lat": 45.417,
+    "lng": 7.092,
+    "rewardOlC": 215,
+    "difficulty": "Easy",
+    "region": "France",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0115",
+    "title": "Grossglockner High Alpine",
+    "description": "Classic high alpine road.",
+    "lat": 47.07,
+    "lng": 12.84,
+    "rewardOlC": 185,
+    "difficulty": "Easy",
+    "region": "Austria",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0116",
+    "title": "Transfăgărășan Summit",
+    "description": "Famous Transylvanian alpine road.",
+    "lat": 45.6,
+    "lng": 24.62,
+    "rewardOlC": 202,
+    "difficulty": "Easy",
+    "region": "Romania",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0117",
+    "title": "Dolomites Passo Sella",
+    "description": "Dolomite pass pullouts.",
+    "lat": 46.51,
+    "lng": 11.76,
+    "rewardOlC": 213,
+    "difficulty": "Easy",
+    "region": "Italy",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0118",
+    "title": "Pyrenees Col du Tourmalet",
+    "description": "Tour de France legendary climb.",
+    "lat": 42.908,
+    "lng": 0.145,
+    "rewardOlC": 184,
+    "difficulty": "Easy",
+    "region": "France",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0119",
+    "title": "Faroe Islands Mountain Roads",
+    "description": "Windy island mountain roads.",
+    "lat": 62.1,
+    "lng": -6.9,
+    "rewardOlC": 349,
+    "difficulty": "Moderate",
+    "region": "Faroe Islands",
+    "minTier": 2,
+    "terrainTags": [
+      "coast",
+      "wind"
+    ]
+  },
+  {
+    "id": "q0120",
+    "title": "Swedish Lapland Forest Tracks",
+    "description": "Boreal forest tracks.",
+    "lat": 66.5,
+    "lng": 19.5,
+    "rewardOlC": 363,
+    "difficulty": "Moderate",
+    "region": "Sweden",
+    "minTier": 2,
+    "terrainTags": [
+      "arctic",
+      "forest"
+    ]
+  },
+  {
+    "id": "q0121",
+    "title": "Finnish Lake District Gravel",
+    "description": "Lakeland gravel loops.",
+    "lat": 61.5,
+    "lng": 28,
+    "rewardOlC": 179,
+    "difficulty": "Easy",
+    "region": "Finland",
+    "minTier": 1,
+    "terrainTags": [
+      "lake",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0122",
+    "title": "Sahara Oasis Trail (Merzouga)",
+    "description": "Erg Chebbi dune edge.",
+    "lat": 31.1,
+    "lng": -4.01,
+    "rewardOlC": 505,
+    "difficulty": "Hard",
+    "region": "Morocco",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "desert"
+    ]
+  },
+  {
+    "id": "q0123",
+    "title": "Atlas Crest Viewpoint",
+    "description": "High Atlas crest tracks.",
+    "lat": 31.0601,
+    "lng": -7.915,
+    "rewardOlC": 497,
+    "difficulty": "Hard",
+    "region": "High Atlas, Morocco",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0124",
+    "title": "Tizi n'Tichka Pass Area",
+    "description": "Atlas highway pass spurs.",
+    "lat": 31.285,
+    "lng": -7.38,
+    "rewardOlC": 330,
+    "difficulty": "Moderate",
+    "region": "Morocco",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain"
+    ]
+  },
+  {
+    "id": "q0125",
+    "title": "Anti-Atlas Ameln Valley",
+    "description": "Anti-Atlas village tracks.",
+    "lat": 29.8,
+    "lng": -8.9,
+    "rewardOlC": 344,
+    "difficulty": "Moderate",
+    "region": "Morocco",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "mountain"
+    ]
+  },
+  {
+    "id": "q0126",
+    "title": "Namib Naukluft Park Edge",
+    "description": "Namib desert corridors.",
+    "lat": -24.5,
+    "lng": 15.8,
+    "rewardOlC": 522,
+    "difficulty": "Hard",
+    "region": "Namibia",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "sand"
+    ]
+  },
+  {
+    "id": "q0127",
+    "title": "Skeleton Coast Spur",
+    "description": "Remote coastal desert — Extreme-capable preferred.",
+    "lat": -19,
+    "lng": 12.6,
+    "rewardOlC": 502,
+    "difficulty": "Hard",
+    "region": "Namibia",
+    "minTier": 4,
+    "terrainTags": [
+      "remote",
+      "sand"
+    ]
+  },
+  {
+    "id": "q0128",
+    "title": "Sossusvlei 2x4 Parking",
+    "description": "Dune access; deep sand beyond needs 4WD.",
+    "lat": -24.73,
+    "lng": 15.29,
+    "rewardOlC": 338,
+    "difficulty": "Moderate",
+    "region": "Namibia",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "desert"
+    ]
+  },
+  {
+    "id": "q0129",
+    "title": "Makgadikgadi Pans Edge",
+    "description": "Salt pan tracks — seasonal.",
+    "lat": -20.5,
+    "lng": 25.5,
+    "rewardOlC": 484,
+    "difficulty": "Hard",
+    "region": "Botswana",
+    "minTier": 3,
+    "terrainTags": [
+      "saltpan",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0130",
+    "title": "Central Kalahari Game Tracks",
+    "description": "Deep Kalahari sand tracks.",
+    "lat": -22,
+    "lng": 24,
+    "rewardOlC": 547,
+    "difficulty": "Hard",
+    "region": "Botswana",
+    "minTier": 4,
+    "terrainTags": [
+      "remote",
+      "sand"
+    ]
+  },
+  {
+    "id": "q0131",
+    "title": "Drakensberg Sani Pass",
+    "description": "Famous switchback into Lesotho.",
+    "lat": -29.59,
+    "lng": 29.29,
+    "rewardOlC": 520,
+    "difficulty": "Hard",
+    "region": "South Africa / Lesotho",
+    "minTier": 4,
+    "terrainTags": [
+      "mountain",
+      "switchback"
+    ]
+  },
+  {
+    "id": "q0132",
+    "title": "Garden Route Backroads",
+    "description": "Coastal scenic gravel options.",
+    "lat": -33.98,
+    "lng": 22.45,
+    "rewardOlC": 192,
+    "difficulty": "Easy",
+    "region": "South Africa",
+    "minTier": 1,
+    "terrainTags": [
+      "coast",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0133",
+    "title": "Serengeti Southern Tracks",
+    "description": "Park southern circuit tracks.",
+    "lat": -2.85,
+    "lng": 35,
+    "rewardOlC": 514,
+    "difficulty": "Hard",
+    "region": "Tanzania",
+    "minTier": 3,
+    "terrainTags": [
+      "savanna",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0134",
+    "title": "Simien Mountains Road",
+    "description": "Ethiopian highland escarpment.",
+    "lat": 13.2,
+    "lng": 38.05,
+    "rewardOlC": 497,
+    "difficulty": "Hard",
+    "region": "Ethiopia",
+    "minTier": 3,
+    "terrainTags": [
+      "high-altitude",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0135",
+    "title": "Atlas Desert Agafay",
+    "description": "Stone desert near Marrakech.",
+    "lat": 31.45,
+    "lng": -8,
+    "rewardOlC": 338,
+    "difficulty": "Moderate",
+    "region": "Morocco",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0136",
+    "title": "Wadi Rum Desert Tracks",
+    "description": "Lawrence of Arabia desert valleys.",
+    "lat": 29.58,
+    "lng": 35.42,
+    "rewardOlC": 478,
+    "difficulty": "Hard",
+    "region": "Jordan",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "sand"
+    ]
+  },
+  {
+    "id": "q0137",
+    "title": "Negev Desert Makhtesh Ramon",
+    "description": "Crater rim and floor tracks.",
+    "lat": 30.58,
+    "lng": 34.8,
+    "rewardOlC": 342,
+    "difficulty": "Moderate",
+    "region": "Israel",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "canyon"
+    ]
+  },
+  {
+    "id": "q0138",
+    "title": "Empty Quarter Edge (Liwa)",
+    "description": "Mega-dune country — sand driving skill required.",
+    "lat": 23.13,
+    "lng": 53.78,
+    "rewardOlC": 546,
+    "difficulty": "Hard",
+    "region": "UAE",
+    "minTier": 4,
+    "terrainTags": [
+      "sand",
+      "dunes"
+    ]
+  },
+  {
+    "id": "q0139",
+    "title": "Al Hajar Mountain Tracks",
+    "description": "Omani mountain wadis and tracks.",
+    "lat": 23.2,
+    "lng": 57.4,
+    "rewardOlC": 482,
+    "difficulty": "Hard",
+    "region": "Oman",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0140",
+    "title": "Pamir Highway Murghab",
+    "description": "Roof of the World corridor.",
+    "lat": 38.17,
+    "lng": 73.97,
+    "rewardOlC": 503,
+    "difficulty": "Hard",
+    "region": "Tajikistan",
+    "minTier": 3,
+    "terrainTags": [
+      "high-altitude",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0141",
+    "title": "Karakoram Highway Passu",
+    "description": "KKH Hunza valley approaches.",
+    "lat": 36.46,
+    "lng": 74.88,
+    "rewardOlC": 329,
+    "difficulty": "Moderate",
+    "region": "Gilgit-Baltistan, Pakistan",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0142",
+    "title": "Ladakh Pangong Approach",
+    "description": "High altitude lake approach.",
+    "lat": 33.75,
+    "lng": 78.7,
+    "rewardOlC": 510,
+    "difficulty": "Hard",
+    "region": "Ladakh, India",
+    "minTier": 3,
+    "terrainTags": [
+      "high-altitude",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0143",
+    "title": "Spiti Valley Kaza Road",
+    "description": "Trans-Himalayan Spiti corridor.",
+    "lat": 32.22,
+    "lng": 78.07,
+    "rewardOlC": 494,
+    "difficulty": "Hard",
+    "region": "Himachal Pradesh, India",
+    "minTier": 3,
+    "terrainTags": [
+      "high-altitude",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0144",
+    "title": "Mongolia Gobi Yolyn Am",
+    "description": "Gobi canyon & steppe tracks.",
+    "lat": 43.5,
+    "lng": 104.1,
+    "rewardOlC": 482,
+    "difficulty": "Hard",
+    "region": "Ömnögovi, Mongolia",
+    "minTier": 3,
+    "terrainTags": [
+      "steppe",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0145",
+    "title": "Mongolia Orkhon Valley Tracks",
+    "description": "Central Mongolian steppe.",
+    "lat": 47,
+    "lng": 102.8,
+    "rewardOlC": 368,
+    "difficulty": "Moderate",
+    "region": "Övörkhangai, Mongolia",
+    "minTier": 2,
+    "terrainTags": [
+      "steppe"
+    ]
+  },
+  {
+    "id": "q0146",
+    "title": "Altai Mountains Kosh-Agach",
+    "description": "Russian Altai borderlands.",
+    "lat": 50,
+    "lng": 88.67,
+    "rewardOlC": 521,
+    "difficulty": "Hard",
+    "region": "Altai Republic, Russia",
+    "minTier": 3,
+    "terrainTags": [
+      "steppe",
+      "mountain"
+    ]
+  },
+  {
+    "id": "q0147",
+    "title": "Tian Shan Kyrgyz Jailoo",
+    "description": "High pasture mountain tracks.",
+    "lat": 42,
+    "lng": 76.5,
+    "rewardOlC": 523,
+    "difficulty": "Hard",
+    "region": "Kyrgyzstan",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0148",
+    "title": "Zhangye Danxia Edge Roads",
+    "description": "Rainbow hills scenic approaches.",
+    "lat": 38.95,
+    "lng": 100.2,
+    "rewardOlC": 220,
+    "difficulty": "Easy",
+    "region": "Gansu, China",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "desert"
+    ]
+  },
+  {
+    "id": "q0149",
+    "title": "Taklamakan Desert Highway Spur",
+    "description": "Tarim basin desert spurs.",
+    "lat": 39,
+    "lng": 83,
+    "rewardOlC": 504,
+    "difficulty": "Hard",
+    "region": "Xinjiang, China",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0150",
+    "title": "Outback Red Center (Alice)",
+    "description": "Red Centre dirt loops near Alice Springs.",
+    "lat": -23.698,
+    "lng": 133.8807,
+    "rewardOlC": 349,
+    "difficulty": "Moderate",
+    "region": "Northern Territory, AU",
+    "minTier": 2,
+    "terrainTags": [
+      "outback",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0151",
+    "title": "Uluru Kata Tjuta Roads",
+    "description": "Park sealed / graded approaches.",
+    "lat": -25.34,
+    "lng": 131.03,
+    "rewardOlC": 205,
+    "difficulty": "Easy",
+    "region": "Northern Territory, AU",
+    "minTier": 1,
+    "terrainTags": [
+      "outback",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0152",
+    "title": "Simpson Desert French Line",
+    "description": "Classic desert crossing — Extreme prep required.",
+    "lat": -26,
+    "lng": 137.5,
+    "rewardOlC": 804,
+    "difficulty": "Legendary",
+    "region": "South Australia / NT, AU",
+    "minTier": 5,
+    "terrainTags": [
+      "sand",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0153",
+    "title": "Gibb River Road (El Questro)",
+    "description": "Kimberley iconic unsealed highway.",
+    "lat": -16,
+    "lng": 128,
+    "rewardOlC": 509,
+    "difficulty": "Hard",
+    "region": "Western Australia, AU",
+    "minTier": 3,
+    "terrainTags": [
+      "outback",
+      "creek"
+    ]
+  },
+  {
+    "id": "q0154",
+    "title": "Cape York Telegraph Track",
+    "description": "Far north technical creek crossings.",
+    "lat": -11.8,
+    "lng": 142.5,
+    "rewardOlC": 788,
+    "difficulty": "Legendary",
+    "region": "Queensland, AU",
+    "minTier": 5,
+    "terrainTags": [
+      "creek",
+      "mud",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0155",
+    "title": "Flinders Ranges Brachina",
+    "description": "Scenic gorge geological drive.",
+    "lat": -31.35,
+    "lng": 138.63,
+    "rewardOlC": 363,
+    "difficulty": "Moderate",
+    "region": "South Australia, AU",
+    "minTier": 2,
+    "terrainTags": [
+      "outback",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0156",
+    "title": "Wilpena Pound Access",
+    "description": "Pound resort & lookout access.",
+    "lat": -31.53,
+    "lng": 138.6,
+    "rewardOlC": 216,
+    "difficulty": "Easy",
+    "region": "South Australia, AU",
+    "minTier": 1,
+    "terrainTags": [
+      "outback",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0157",
+    "title": "Fraser Island (K'gari) Beach",
+    "description": "Beach highway — tide aware.",
+    "lat": -25.25,
+    "lng": 153.17,
+    "rewardOlC": 513,
+    "difficulty": "Hard",
+    "region": "Queensland, AU",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "beach"
+    ]
+  },
+  {
+    "id": "q0158",
+    "title": "High Country Billy Goat Bluff",
+    "description": "Infamous steep High Country track.",
+    "lat": -37.4,
+    "lng": 146.7,
+    "rewardOlC": 789,
+    "difficulty": "Legendary",
+    "region": "Victoria, AU",
+    "minTier": 5,
+    "terrainTags": [
+      "steep",
+      "extreme"
+    ]
+  },
+  {
+    "id": "q0159",
+    "title": "Tasmania Western Explorer",
+    "description": "Remote west coast gravel.",
+    "lat": -41.85,
+    "lng": 145.2,
+    "rewardOlC": 355,
+    "difficulty": "Moderate",
+    "region": "Tasmania, AU",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0160",
+    "title": "New Zealand Skippers Canyon",
+    "description": "Narrow cliff shelf historic road.",
+    "lat": -44.95,
+    "lng": 168.67,
+    "rewardOlC": 497,
+    "difficulty": "Hard",
+    "region": "Otago, NZ",
+    "minTier": 3,
+    "terrainTags": [
+      "cliff",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0161",
+    "title": "New Zealand Molesworth",
+    "description": "Largest NZ farm high-country road.",
+    "lat": -42,
+    "lng": 173.2,
+    "rewardOlC": 357,
+    "difficulty": "Moderate",
+    "region": "Marlborough, NZ",
+    "minTier": 2,
+    "terrainTags": [
+      "high-country",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0162",
+    "title": "New Zealand 4WD Rainbow Station",
+    "description": "Rainbow Road backcountry.",
+    "lat": -41.95,
+    "lng": 172.85,
+    "rewardOlC": 509,
+    "difficulty": "Hard",
+    "region": "Tasman, NZ",
+    "minTier": 3,
+    "terrainTags": [
+      "high-country"
+    ]
+  },
+  {
+    "id": "q0163",
+    "title": "Stewart Island Oban Roads",
+    "description": "Island gravel near Oban.",
+    "lat": -46.9,
+    "lng": 168.13,
+    "rewardOlC": 222,
+    "difficulty": "Easy",
+    "region": "Southland, NZ",
+    "minTier": 1,
+    "terrainTags": [
+      "coast"
+    ]
+  },
+  {
+    "id": "q0164",
+    "title": "Telluride Ophir Pass",
+    "description": "San Juan Ophir Pass.",
+    "lat": 37.85,
+    "lng": -107.83,
+    "rewardOlC": 520,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0165",
+    "title": "California Hot Springs Trail",
+    "description": "Sequoia NF foothill roads.",
+    "lat": 35.88,
+    "lng": -118.67,
+    "rewardOlC": 338,
+    "difficulty": "Moderate",
+    "region": "California, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0166",
+    "title": "Paiute Wilderness Edge",
+    "description": "NW Arizona desert tracks.",
+    "lat": 36.9,
+    "lng": -113.7,
+    "rewardOlC": 522,
+    "difficulty": "Hard",
+    "region": "Arizona, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0167",
+    "title": "Valley of the Gods Road",
+    "description": "Monument Valley cousin loop.",
+    "lat": 37.24,
+    "lng": -109.85,
+    "rewardOlC": 365,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0168",
+    "title": "Moki Dugway",
+    "description": "Steep gravel dugway — nerves of steel.",
+    "lat": 37.27,
+    "lng": -109.95,
+    "rewardOlC": 481,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0169",
+    "title": "House Rock Valley Road",
+    "description": "Paria / Vermilion Cliffs access.",
+    "lat": 36.95,
+    "lng": -112.05,
+    "rewardOlC": 341,
+    "difficulty": "Moderate",
+    "region": "Arizona / Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0170",
+    "title": "Paria Canyon Trailhead",
+    "description": "Wire Pass / Buckskin Gulch area.",
+    "lat": 37,
+    "lng": -111.85,
+    "rewardOlC": 354,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "slot"
+    ]
+  },
+  {
+    "id": "q0171",
+    "title": "Comb Ridge Dirt Roads",
+    "description": "Bears Ears region tracks.",
+    "lat": 37.4,
+    "lng": -109.65,
+    "rewardOlC": 374,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0172",
+    "title": "Lockhart Basin",
+    "description": "Technical Lockhart Basin trail.",
+    "lat": 38.35,
+    "lng": -109.7,
+    "rewardOlC": 523,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "rock",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0173",
+    "title": "Chicken Corners",
+    "description": "Colorado River cliffside track.",
+    "lat": 38.48,
+    "lng": -109.7,
+    "rewardOlC": 509,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "cliff",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0174",
+    "title": "Strike Ravine",
+    "description": "Moab extreme obstacle run.",
+    "lat": 38.55,
+    "lng": -109.55,
+    "rewardOlC": 796,
+    "difficulty": "Legendary",
+    "region": "Utah, USA",
+    "minTier": 5,
+    "terrainTags": [
+      "technical",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0175",
+    "title": "Golden Spike OHV",
+    "description": "Promontory peninsula OHV.",
+    "lat": 41.62,
+    "lng": -112.55,
+    "rewardOlC": 349,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0176",
+    "title": "Pismo Oceano Dunes",
+    "description": "Coastal dune SVRA.",
+    "lat": 35.1,
+    "lng": -120.63,
+    "rewardOlC": 503,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "beach"
+    ]
+  },
+  {
+    "id": "q0177",
+    "title": "Dumont Dunes",
+    "description": "Mojave dune complex.",
+    "lat": 35.68,
+    "lng": -116.3,
+    "rewardOlC": 514,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "sand"
+    ]
+  },
+  {
+    "id": "q0178",
+    "title": "Glamis Imperial Sand Dunes",
+    "description": "Huge Imperial Valley dune field.",
+    "lat": 32.98,
+    "lng": -115.1,
+    "rewardOlC": 515,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "sand"
+    ]
+  },
+  {
+    "id": "q0179",
+    "title": "Johnson Valley OHV",
+    "description": "King of the Hammers country.",
+    "lat": 34.4,
+    "lng": -116.6,
+    "rewardOlC": 519,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "ohv"
+    ]
+  },
+  {
+    "id": "q0180",
+    "title": "Hammers Trail (KOH)",
+    "description": "King of the Hammers rock gardens.",
+    "lat": 34.37,
+    "lng": -116.6,
+    "rewardOlC": 808,
+    "difficulty": "Legendary",
+    "region": "California, USA",
+    "minTier": 5,
+    "terrainTags": [
+      "rock",
+      "extreme"
+    ]
+  },
+  {
+    "id": "q0181",
+    "title": "Borrego Badlands",
+    "description": "Anza-Borrego badlands washes.",
+    "lat": 33.25,
+    "lng": -116.1,
+    "rewardOlC": 509,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "sand"
+    ]
+  },
+  {
+    "id": "q0182",
+    "title": "Coyote Canyon",
+    "description": "Seasonal canyon in Anza-Borrego.",
+    "lat": 33.4,
+    "lng": -116.45,
+    "rewardOlC": 511,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "creek"
+    ]
+  },
+  {
+    "id": "q0183",
+    "title": "Ghost Mountain Road",
+    "description": "Marshal South homestead approach.",
+    "lat": 33,
+    "lng": -116.35,
+    "rewardOlC": 351,
+    "difficulty": "Moderate",
+    "region": "California, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert"
+    ]
+  },
+  {
+    "id": "q0184",
+    "title": "Table Mesa Road",
+    "description": "North Phoenix desert OHV.",
+    "lat": 33.95,
+    "lng": -112.15,
+    "rewardOlC": 501,
+    "difficulty": "Hard",
+    "region": "Arizona, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "ohv"
+    ]
+  },
+  {
+    "id": "q0185",
+    "title": "Hieroglyphic Mountains",
+    "description": "Wickenburg area trails.",
+    "lat": 33.9,
+    "lng": -112.4,
+    "rewardOlC": 509,
+    "difficulty": "Hard",
+    "region": "Arizona, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0186",
+    "title": "Crown King Road",
+    "description": "Bradshaw Mountains ghost town road.",
+    "lat": 34.2,
+    "lng": -112.35,
+    "rewardOlC": 491,
+    "difficulty": "Hard",
+    "region": "Arizona, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0187",
+    "title": "Senator Highway",
+    "description": "Prescott to Crown King historic.",
+    "lat": 34.4,
+    "lng": -112.4,
+    "rewardOlC": 348,
+    "difficulty": "Moderate",
+    "region": "Arizona, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0188",
+    "title": "Pearce Ferry Road",
+    "description": "Grand Canyon west approach.",
+    "lat": 36.1,
+    "lng": -113.9,
+    "rewardOlC": 339,
+    "difficulty": "Moderate",
+    "region": "Arizona, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0189",
+    "title": "Toroweap / Tuweep Road",
+    "description": "Remote North Rim viewpoint road.",
+    "lat": 36.2,
+    "lng": -113.05,
+    "rewardOlC": 493,
+    "difficulty": "Hard",
+    "region": "Arizona, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "remote",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0190",
+    "title": "North Rim Point Sublime",
+    "description": "Long dirt to Sublime overlook.",
+    "lat": 36.2,
+    "lng": -112.25,
+    "rewardOlC": 503,
+    "difficulty": "Hard",
+    "region": "Arizona, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0191",
+    "title": "Kaibab Plateau Roads",
+    "description": "North Kaibab forest roads.",
+    "lat": 36.45,
+    "lng": -112.15,
+    "rewardOlC": 371,
+    "difficulty": "Moderate",
+    "region": "Arizona, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0192",
+    "title": "San Rafael Swell Reef",
+    "description": "Swell backcountry roads.",
+    "lat": 38.9,
+    "lng": -110.6,
+    "rewardOlC": 481,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0193",
+    "title": "Goblin Valley Backroads",
+    "description": "Near Goblin Valley SP.",
+    "lat": 38.57,
+    "lng": -110.7,
+    "rewardOlC": 366,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert"
+    ]
+  },
+  {
+    "id": "q0194",
+    "title": "Factory Butte Area",
+    "description": "Badlands clay & dirt.",
+    "lat": 38.45,
+    "lng": -110.9,
+    "rewardOlC": 487,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "clay"
+    ]
+  },
+  {
+    "id": "q0195",
+    "title": "Cathedral Valley Loop",
+    "description": "Capitol Reef north district loop.",
+    "lat": 38.48,
+    "lng": -111.2,
+    "rewardOlC": 496,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0196",
+    "title": "Notom-Bullfrog Road",
+    "description": "Capitol Reef east side corridor.",
+    "lat": 37.95,
+    "lng": -111,
+    "rewardOlC": 329,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0197",
+    "title": "Smoky Mountain Road",
+    "description": "Grand Staircase remote connector.",
+    "lat": 37.3,
+    "lng": -111.55,
+    "rewardOlC": 504,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0198",
+    "title": "Cottonwood Canyon Road",
+    "description": "Kodachrome to GSENM.",
+    "lat": 37.3,
+    "lng": -111.85,
+    "rewardOlC": 345,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0199",
+    "title": "Paria Movie Set Road",
+    "description": "Old movie set wash access.",
+    "lat": 37.25,
+    "lng": -111.95,
+    "rewardOlC": 338,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert"
+    ]
+  },
+  {
+    "id": "q0200",
+    "title": "Grand Gulch Approach",
+    "description": "Cedar Mesa canyon country.",
+    "lat": 37.45,
+    "lng": -110.15,
+    "rewardOlC": 347,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0201",
+    "title": "Natural Bridges Loop",
+    "description": "Park scenic drive.",
+    "lat": 37.6,
+    "lng": -110,
+    "rewardOlC": 198,
+    "difficulty": "Easy",
+    "region": "Utah, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0202",
+    "title": "Abajo Mountains FR",
+    "description": "Blue Mountains forest roads.",
+    "lat": 37.85,
+    "lng": -109.45,
+    "rewardOlC": 344,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0203",
+    "title": "La Sal Mountain Loop Spurs",
+    "description": "La Sals above Moab.",
+    "lat": 38.45,
+    "lng": -109.25,
+    "rewardOlC": 354,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0204",
+    "title": "Geyser Pass Road",
+    "description": "La Sal high pass.",
+    "lat": 38.5,
+    "lng": -109.25,
+    "rewardOlC": 344,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0205",
+    "title": "Miners Basin",
+    "description": "La Sal alpine basin.",
+    "lat": 38.52,
+    "lng": -109.2,
+    "rewardOlC": 521,
+    "difficulty": "Hard",
+    "region": "Utah, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0206",
+    "title": "Big Island Saddle Road Spurs",
+    "description": "High lava saddle side roads.",
+    "lat": 19.7,
+    "lng": -155.45,
+    "rewardOlC": 361,
+    "difficulty": "Moderate",
+    "region": "Hawaii, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0207",
+    "title": "Maui Haleakalā Crater Road",
+    "description": "Summit highway — stock OK.",
+    "lat": 20.71,
+    "lng": -156.25,
+    "rewardOlC": 195,
+    "difficulty": "Easy",
+    "region": "Hawaii, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "volcanic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0208",
+    "title": "New Caledonia Dirt Capes",
+    "description": "Island coastal dirt roads.",
+    "lat": -22.3,
+    "lng": 166.9,
+    "rewardOlC": 353,
+    "difficulty": "Moderate",
+    "region": "New Caledonia",
+    "minTier": 2,
+    "terrainTags": [
+      "coast",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0209",
+    "title": "Fiji Highlands Gravel",
+    "description": "Interior highland gravel.",
+    "lat": -17.8,
+    "lng": 178,
+    "rewardOlC": 360,
+    "difficulty": "Moderate",
+    "region": "Fiji",
+    "minTier": 2,
+    "terrainTags": [
+      "tropical",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0210",
+    "title": "Zion Kolob Terrace Road",
+    "description": "Kolob Terrace scenic climb.",
+    "lat": 37.3,
+    "lng": -113.1,
+    "rewardOlC": 343,
+    "difficulty": "Moderate",
+    "region": "Utah, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "plateau",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0211",
+    "title": "Cedar Breaks Overlook",
+    "description": "High alpine amphitheater.",
+    "lat": 37.63,
+    "lng": -112.84,
+    "rewardOlC": 211,
+    "difficulty": "Easy",
+    "region": "Utah, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0212",
+    "title": "Bryce Point Sunrise",
+    "description": "Hoodoo amphitheater overlook.",
+    "lat": 37.6,
+    "lng": -112.16,
+    "rewardOlC": 179,
+    "difficulty": "Easy",
+    "region": "Utah, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0213",
+    "title": "Arches Delicate Arch Viewpoint",
+    "description": "Park road to viewpoint.",
+    "lat": 38.73,
+    "lng": -109.5,
+    "rewardOlC": 191,
+    "difficulty": "Easy",
+    "region": "Utah, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0214",
+    "title": "Canyonlands Grand View Point",
+    "description": "Island in the Sky overlook.",
+    "lat": 38.39,
+    "lng": -109.86,
+    "rewardOlC": 224,
+    "difficulty": "Easy",
+    "region": "Utah, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0215",
+    "title": "Mesa Verde Cliff Palace Area",
+    "description": "Park mesa-top roads.",
+    "lat": 37.16,
+    "lng": -108.47,
+    "rewardOlC": 218,
+    "difficulty": "Easy",
+    "region": "Colorado, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0216",
+    "title": "Great Basin Wheeler Peak",
+    "description": "Scenic drive toward Wheeler.",
+    "lat": 39,
+    "lng": -114.3,
+    "rewardOlC": 221,
+    "difficulty": "Easy",
+    "region": "Nevada, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0217",
+    "title": "Great Basin Snake Creek",
+    "description": "Snake Creek dirt access.",
+    "lat": 38.9,
+    "lng": -114.25,
+    "rewardOlC": 363,
+    "difficulty": "Moderate",
+    "region": "Nevada, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0218",
+    "title": "Black Rock Desert Playa",
+    "description": "Vast playa — weather dependent.",
+    "lat": 40.78,
+    "lng": -119.2,
+    "rewardOlC": 337,
+    "difficulty": "Moderate",
+    "region": "Nevada, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "playa",
+      "desert"
+    ]
+  },
+  {
+    "id": "q0219",
+    "title": "Pyramid Lake Dirt Spurs",
+    "description": "Paiute lake desert tracks.",
+    "lat": 39.98,
+    "lng": -119.5,
+    "rewardOlC": 335,
+    "difficulty": "Moderate",
+    "region": "Nevada, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0220",
+    "title": "Lake Tahoe Rubicon Access",
+    "description": "Rubicon western approaches.",
+    "lat": 39,
+    "lng": -120.12,
+    "rewardOlC": 501,
+    "difficulty": "Hard",
+    "region": "California, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "granite",
+      "forest"
+    ]
+  },
+  {
+    "id": "q0221",
+    "title": "Lassen Forest Roads",
+    "description": "Lassen NF forest roads.",
+    "lat": 40.5,
+    "lng": -121.5,
+    "rewardOlC": 369,
+    "difficulty": "Moderate",
+    "region": "California, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "forest"
+    ]
+  },
+  {
+    "id": "q0222",
+    "title": "Crater Lake Rim Drive",
+    "description": "Caldera rim drive.",
+    "lat": 42.94,
+    "lng": -122.1,
+    "rewardOlC": 215,
+    "difficulty": "Easy",
+    "region": "Oregon, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0223",
+    "title": "Newberry Caldera Roads",
+    "description": "Central Oregon volcanic roads.",
+    "lat": 43.7,
+    "lng": -121.25,
+    "rewardOlC": 371,
+    "difficulty": "Moderate",
+    "region": "Oregon, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0224",
+    "title": "Three Sisters Backroads",
+    "description": "Cascades forest roads.",
+    "lat": 44.1,
+    "lng": -121.75,
+    "rewardOlC": 360,
+    "difficulty": "Moderate",
+    "region": "Oregon, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0225",
+    "title": "Mount Hood NF Roads",
+    "description": "Hood forest road network.",
+    "lat": 45.35,
+    "lng": -121.7,
+    "rewardOlC": 342,
+    "difficulty": "Moderate",
+    "region": "Oregon, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0226",
+    "title": "North Cascades FR",
+    "description": "North Cascades forest roads.",
+    "lat": 48.5,
+    "lng": -120.7,
+    "rewardOlC": 354,
+    "difficulty": "Moderate",
+    "region": "Washington, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "mountain"
+    ]
+  },
+  {
+    "id": "q0227",
+    "title": "Olympic Hot Springs Road",
+    "description": "Olympic NP approach (gated seasons).",
+    "lat": 48,
+    "lng": -123.7,
+    "rewardOlC": 177,
+    "difficulty": "Easy",
+    "region": "Washington, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "forest"
+    ]
+  },
+  {
+    "id": "q0228",
+    "title": "Glacier Going-to-the-Sun",
+    "description": "Classic alpine parkway.",
+    "lat": 48.7,
+    "lng": -113.7,
+    "rewardOlC": 188,
+    "difficulty": "Easy",
+    "region": "Montana, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0229",
+    "title": "Glacier Many Glacier Road",
+    "description": "Many Glacier valley road.",
+    "lat": 48.8,
+    "lng": -113.65,
+    "rewardOlC": 189,
+    "difficulty": "Easy",
+    "region": "Montana, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0230",
+    "title": "Beartooth Highway Summit",
+    "description": "Highest paved road in the Northern Rockies.",
+    "lat": 45,
+    "lng": -109.4,
+    "rewardOlC": 186,
+    "difficulty": "Easy",
+    "region": "Montana / Wyoming, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0231",
+    "title": "Chief Joseph Scenic Byway",
+    "description": "Absaroka scenic byway.",
+    "lat": 44.75,
+    "lng": -109.5,
+    "rewardOlC": 191,
+    "difficulty": "Easy",
+    "region": "Wyoming, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0232",
+    "title": "Yellowstone Blacktail Plateau",
+    "description": "Seasonal dirt loop.",
+    "lat": 44.8,
+    "lng": -110.55,
+    "rewardOlC": 344,
+    "difficulty": "Moderate",
+    "region": "Wyoming, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "dirt",
+      "wildlife"
+    ]
+  },
+  {
+    "id": "q0233",
+    "title": "Tetons Gros Ventre Road",
+    "description": "Slide Lake corridor.",
+    "lat": 43.6,
+    "lng": -110.5,
+    "rewardOlC": 345,
+    "difficulty": "Moderate",
+    "region": "Wyoming, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "dirt",
+      "wildlife"
+    ]
+  },
+  {
+    "id": "q0234",
+    "title": "Wind River Reservation Roads",
+    "description": "Central WY dirt corridors.",
+    "lat": 43.2,
+    "lng": -109,
+    "rewardOlC": 342,
+    "difficulty": "Moderate",
+    "region": "Wyoming, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "high-plains",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0235",
+    "title": "Bighorn Medicine Wheel Road",
+    "description": "High gravel to Medicine Wheel.",
+    "lat": 44.82,
+    "lng": -107.92,
+    "rewardOlC": 347,
+    "difficulty": "Moderate",
+    "region": "Wyoming, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0236",
+    "title": "Badlands Sage Creek Rim",
+    "description": "Wilderness loop dirt.",
+    "lat": 43.75,
+    "lng": -102.2,
+    "rewardOlC": 359,
+    "difficulty": "Moderate",
+    "region": "South Dakota, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "prairie",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0237",
+    "title": "Black Hills Forest Roads",
+    "description": "Black Hills NF roads.",
+    "lat": 43.9,
+    "lng": -103.6,
+    "rewardOlC": 368,
+    "difficulty": "Moderate",
+    "region": "South Dakota, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0238",
+    "title": "Theodore Roosevelt Scenic",
+    "description": "Park scenic drives.",
+    "lat": 46.95,
+    "lng": -103.45,
+    "rewardOlC": 181,
+    "difficulty": "Easy",
+    "region": "North Dakota, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "badlands",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0239",
+    "title": "Boundary Waters FR",
+    "description": "Superior NF access roads.",
+    "lat": 48,
+    "lng": -91.5,
+    "rewardOlC": 362,
+    "difficulty": "Moderate",
+    "region": "Minnesota, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0240",
+    "title": "Porcupine Mountains Roads",
+    "description": "Porkies forest roads.",
+    "lat": 46.75,
+    "lng": -89.75,
+    "rewardOlC": 368,
+    "difficulty": "Moderate",
+    "region": "Michigan, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest"
+    ]
+  },
+  {
+    "id": "q0241",
+    "title": "Shenandoah Skyline Drive",
+    "description": "Blue Ridge parkway cousin.",
+    "lat": 38.5,
+    "lng": -78.45,
+    "rewardOlC": 180,
+    "difficulty": "Easy",
+    "region": "Virginia, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0242",
+    "title": "Blue Ridge Parkway Mabry Mill",
+    "description": "Classic BRP stop.",
+    "lat": 36.75,
+    "lng": -80.4,
+    "rewardOlC": 212,
+    "difficulty": "Easy",
+    "region": "Virginia, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0243",
+    "title": "Great Smoky Cades Cove",
+    "description": "Loop road in the Cove.",
+    "lat": 35.6,
+    "lng": -83.85,
+    "rewardOlC": 191,
+    "difficulty": "Easy",
+    "region": "Tennessee, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0244",
+    "title": "Cherokee NF Unaka Roads",
+    "description": "Unaka Mountain forest roads.",
+    "lat": 36.1,
+    "lng": -82.3,
+    "rewardOlC": 371,
+    "difficulty": "Moderate",
+    "region": "Tennessee, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0245",
+    "title": "Chattahoochee NF Roads",
+    "description": "North Georgia mountain FRs.",
+    "lat": 34.75,
+    "lng": -83.9,
+    "rewardOlC": 371,
+    "difficulty": "Moderate",
+    "region": "Georgia, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0246",
+    "title": "Florida Ocala Scrub Roads",
+    "description": "Ocala NF sand tracks.",
+    "lat": 29.15,
+    "lng": -81.75,
+    "rewardOlC": 371,
+    "difficulty": "Moderate",
+    "region": "Florida, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "scrub"
+    ]
+  },
+  {
+    "id": "q0247",
+    "title": "Big Cypress Loop Road",
+    "description": "Everglades neighbor loop.",
+    "lat": 25.85,
+    "lng": -81.05,
+    "rewardOlC": 374,
+    "difficulty": "Moderate",
+    "region": "Florida, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "swamp",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0248",
+    "title": "Everglades Flamingo Road",
+    "description": "Park road to Flamingo.",
+    "lat": 25.14,
+    "lng": -80.94,
+    "rewardOlC": 219,
+    "difficulty": "Easy",
+    "region": "Florida, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0249",
+    "title": "Organ Mountains Dripping Springs",
+    "description": "Organ Mountains foothills.",
+    "lat": 32.33,
+    "lng": -106.58,
+    "rewardOlC": 197,
+    "difficulty": "Easy",
+    "region": "New Mexico, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0250",
+    "title": "White Mountain Wilderness FR",
+    "description": "Sacramento Mountains FRs.",
+    "lat": 33.4,
+    "lng": -105.8,
+    "rewardOlC": 349,
+    "difficulty": "Moderate",
+    "region": "New Mexico, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0251",
+    "title": "Valles Caldera Roads",
+    "description": "Caldera preserve roads.",
+    "lat": 35.87,
+    "lng": -106.52,
+    "rewardOlC": 327,
+    "difficulty": "Moderate",
+    "region": "New Mexico, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0252",
+    "title": "Bandelier Backcountry",
+    "description": "Pajarito Plateau access.",
+    "lat": 35.78,
+    "lng": -106.27,
+    "rewardOlC": 361,
+    "difficulty": "Moderate",
+    "region": "New Mexico, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0253",
+    "title": "Carson NF Cruces Basin",
+    "description": "Northern NM remote basin.",
+    "lat": 36.9,
+    "lng": -106.2,
+    "rewardOlC": 504,
+    "difficulty": "Hard",
+    "region": "New Mexico, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "remote"
+    ]
+  },
+  {
+    "id": "q0254",
+    "title": "San Juan NF Piedra Road",
+    "description": "SW Colorado forest roads.",
+    "lat": 37.25,
+    "lng": -107.35,
+    "rewardOlC": 354,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0255",
+    "title": "Rio Grande NF Stunner Pass",
+    "description": "Southern CO alpine pass.",
+    "lat": 37.35,
+    "lng": -106.55,
+    "rewardOlC": 479,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0256",
+    "title": "Culebra Range Access",
+    "description": "Sangre de Cristo approaches.",
+    "lat": 37.1,
+    "lng": -105.2,
+    "rewardOlC": 503,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "private-adjacent"
+    ]
+  },
+  {
+    "id": "q0257",
+    "title": "Great Sand Dunes Medano Creek",
+    "description": "Creek bed driving (seasonal).",
+    "lat": 37.74,
+    "lng": -105.51,
+    "rewardOlC": 345,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "creek"
+    ]
+  },
+  {
+    "id": "q0258",
+    "title": "Sangre de Cristo Crestone",
+    "description": "Crestone trailhead roads.",
+    "lat": 37.99,
+    "lng": -105.7,
+    "rewardOlC": 327,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "dirt",
+      "mountain"
+    ]
+  },
+  {
+    "id": "q0259",
+    "title": "Arkansas River Collegiate Peaks",
+    "description": "Buena Vista / Twin Lakes spurs.",
+    "lat": 38.9,
+    "lng": -106.2,
+    "rewardOlC": 327,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0260",
+    "title": "Taylor Park Reservoir Roads",
+    "description": "Gunnison NF high park.",
+    "lat": 38.85,
+    "lng": -106.55,
+    "rewardOlC": 352,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0261",
+    "title": "Kebler Pass",
+    "description": "Crested Butte to Paonia gravel.",
+    "lat": 38.85,
+    "lng": -107.1,
+    "rewardOlC": 359,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0262",
+    "title": "Ohio Pass",
+    "description": "Historic narrow-gauge corridor.",
+    "lat": 38.78,
+    "lng": -107.1,
+    "rewardOlC": 350,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0263",
+    "title": "Cinnamon Pass Summit",
+    "description": "Alpine Loop eastern pass.",
+    "lat": 37.98,
+    "lng": -107.5,
+    "rewardOlC": 492,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "high-alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0264",
+    "title": "Engineer Pass Summit",
+    "description": "Alpine Loop western pass.",
+    "lat": 38,
+    "lng": -107.55,
+    "rewardOlC": 513,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "high-alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0265",
+    "title": "California Gulch",
+    "description": "Animas Forks area gulch.",
+    "lat": 37.95,
+    "lng": -107.48,
+    "rewardOlC": 515,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0266",
+    "title": "Corkscrew Gulch",
+    "description": "Ouray technical gulch.",
+    "lat": 37.92,
+    "lng": -107.65,
+    "rewardOlC": 501,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0267",
+    "title": "Poughkeepsie Gulch",
+    "description": "Very technical San Juan gulch.",
+    "lat": 37.95,
+    "lng": -107.58,
+    "rewardOlC": 814,
+    "difficulty": "Legendary",
+    "region": "Colorado, USA",
+    "minTier": 5,
+    "terrainTags": [
+      "extreme",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0268",
+    "title": "Hurricane Pass",
+    "description": "Near Black Bear complex.",
+    "lat": 37.88,
+    "lng": -107.75,
+    "rewardOlC": 512,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 4,
+    "terrainTags": [
+      "alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0269",
+    "title": "Magnolia Mill Road",
+    "description": "Front Range mountain roads.",
+    "lat": 39.75,
+    "lng": -105.6,
+    "rewardOlC": 358,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0270",
+    "title": "Rollins Pass East",
+    "description": "Hill Route historic railbed.",
+    "lat": 39.93,
+    "lng": -105.67,
+    "rewardOlC": 485,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "historic"
+    ]
+  },
+  {
+    "id": "q0271",
+    "title": "Mount Evans Summit Road",
+    "description": "One of America's highest paved roads.",
+    "lat": 39.59,
+    "lng": -105.64,
+    "rewardOlC": 187,
+    "difficulty": "Easy",
+    "region": "Colorado, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0272",
+    "title": "Guanella Pass",
+    "description": "Georgetown to Grant scenic.",
+    "lat": 39.6,
+    "lng": -105.71,
+    "rewardOlC": 181,
+    "difficulty": "Easy",
+    "region": "Colorado, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "paved"
+    ]
+  },
+  {
+    "id": "q0273",
+    "title": "Boreas Pass",
+    "description": "Breckenridge historic rail grade.",
+    "lat": 39.41,
+    "lng": -105.97,
+    "rewardOlC": 356,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "gravel"
+    ]
+  },
+  {
+    "id": "q0274",
+    "title": "Georgia Pass",
+    "description": "Jefferson / Swan River divide.",
+    "lat": 39.45,
+    "lng": -105.9,
+    "rewardOlC": 510,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0275",
+    "title": "French Pass",
+    "description": "Near Boreas / Georgia complex.",
+    "lat": 39.4,
+    "lng": -105.85,
+    "rewardOlC": 480,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0276",
+    "title": "Mosquito Pass North Approach",
+    "description": "Leadville side of Mosquito.",
+    "lat": 39.3,
+    "lng": -106.15,
+    "rewardOlC": 487,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "high-alpine"
+    ]
+  },
+  {
+    "id": "q0277",
+    "title": "Hagerman Pass",
+    "description": "Leadville to Basalt historic.",
+    "lat": 39.25,
+    "lng": -106.48,
+    "rewardOlC": 511,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0278",
+    "title": "Timberline Lake Road",
+    "description": "Near Leadville alpine lakes.",
+    "lat": 39.35,
+    "lng": -106.25,
+    "rewardOlC": 355,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0279",
+    "title": "Winfield Ghost Town",
+    "description": "Clear Creek canyon ghost town.",
+    "lat": 38.98,
+    "lng": -106.42,
+    "rewardOlC": 374,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0280",
+    "title": "Huron Peak Trailhead Road",
+    "description": "Collegiate Peaks 14er access.",
+    "lat": 38.95,
+    "lng": -106.42,
+    "rewardOlC": 352,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0281",
+    "title": "Ptarmigan Lake Road",
+    "description": "Buena Vista high lake road.",
+    "lat": 38.7,
+    "lng": -106.3,
+    "rewardOlC": 522,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0282",
+    "title": "Tincup Pass",
+    "description": "St. Elmo to Tincup classic.",
+    "lat": 38.75,
+    "lng": -106.47,
+    "rewardOlC": 494,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "rock"
+    ]
+  },
+  {
+    "id": "q0283",
+    "title": "Cumberland Pass",
+    "description": "Pitkin / Tincup high pass.",
+    "lat": 38.7,
+    "lng": -106.48,
+    "rewardOlC": 345,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0284",
+    "title": "Waunita Pass",
+    "description": "Gunnison country pass.",
+    "lat": 38.55,
+    "lng": -106.55,
+    "rewardOlC": 342,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0285",
+    "title": "Old Monarch Pass",
+    "description": "Historic Monarch alignment.",
+    "lat": 38.5,
+    "lng": -106.35,
+    "rewardOlC": 334,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0286",
+    "title": "Marshall Pass",
+    "description": "Salida to Gunnison historic.",
+    "lat": 38.4,
+    "lng": -106.2,
+    "rewardOlC": 356,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0287",
+    "title": "Poncha Pass Spurs",
+    "description": "US-285 pass area.",
+    "lat": 38.42,
+    "lng": -106.08,
+    "rewardOlC": 189,
+    "difficulty": "Easy",
+    "region": "Colorado, USA",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ]
+  },
+  {
+    "id": "q0288",
+    "title": "Medano Pass Primitive Road",
+    "description": "Full Medano Pass crossing.",
+    "lat": 37.85,
+    "lng": -105.45,
+    "rewardOlC": 509,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "creek",
+      "alpine"
+    ]
+  },
+  {
+    "id": "q0289",
+    "title": "Music Pass Trailhead",
+    "description": "Sangre wilderness trailhead.",
+    "lat": 37.92,
+    "lng": -105.45,
+    "rewardOlC": 330,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0290",
+    "title": "Rainbow Trail Access FR",
+    "description": "Salida area Rainbow Trail FRs.",
+    "lat": 38.2,
+    "lng": -105.8,
+    "rewardOlC": 337,
+    "difficulty": "Moderate",
+    "region": "Colorado, USA",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "dirt"
+    ]
+  },
+  {
+    "id": "q0291",
+    "title": "South Colony Lakes Road",
+    "description": "Crestone Peak approach road.",
+    "lat": 37.95,
+    "lng": -105.55,
+    "rewardOlC": 488,
+    "difficulty": "Hard",
+    "region": "Colorado, USA",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "rock"
+    ]
+  }
+]

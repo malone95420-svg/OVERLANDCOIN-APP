@@ -53,6 +53,37 @@ export type LocalPurchase = {
   deliveryNote?: string;
 };
 
+function resolveOlcAmount(p: LocalPurchase): number {
+  if (typeof p.olcAmount === "number" && Number.isFinite(p.olcAmount)) {
+    return p.olcAmount;
+  }
+  const n = Number(String(p.olcEstimated).replace(/,/g, ""));
+  return Number.isFinite(n) ? n : 0;
+}
+
+/** Preserve identity fields needed for deliver retries across save/update. */
+function withRetryFields(
+  base: LocalPurchase,
+  patch?: Partial<LocalPurchase>,
+): LocalPurchase {
+  const merged: LocalPurchase = { ...base, ...patch };
+  // Never drop txHash / from / olcAmount once known — retries need them.
+  if (!merged.txHash && base.txHash) merged.txHash = base.txHash;
+  if (!merged.from && base.from) merged.from = base.from;
+  if (
+    (merged.olcAmount == null || !Number.isFinite(merged.olcAmount)) &&
+    typeof base.olcAmount === "number" &&
+    Number.isFinite(base.olcAmount)
+  ) {
+    merged.olcAmount = base.olcAmount;
+  }
+  if (merged.olcAmount == null || !Number.isFinite(merged.olcAmount)) {
+    const n = resolveOlcAmount(merged);
+    if (n > 0) merged.olcAmount = n;
+  }
+  return merged;
+}
+
 export function loadPurchases(): LocalPurchase[] {
   if (typeof window === "undefined") return [];
   try {
@@ -67,7 +98,22 @@ export function loadPurchases(): LocalPurchase[] {
 
 export function savePurchase(purchase: LocalPurchase): LocalPurchase[] {
   const prev = loadPurchases();
-  const next = [purchase, ...prev.filter((p) => p.txHash !== purchase.txHash)].slice(0, 50);
+  const existing = prev.find((p) => p.txHash === purchase.txHash);
+  const record = withRetryFields(existing ?? purchase, existing ? purchase : undefined);
+  // Prefer incoming fields but keep identity for retries
+  const final = withRetryFields(
+    {
+      ...record,
+      ...purchase,
+      txHash: purchase.txHash || record.txHash,
+      from: purchase.from || record.from,
+      olcAmount:
+        typeof purchase.olcAmount === "number" && Number.isFinite(purchase.olcAmount)
+          ? purchase.olcAmount
+          : record.olcAmount,
+    },
+  );
+  const next = [final, ...prev.filter((p) => p.txHash !== final.txHash)].slice(0, 50);
   localStorage.setItem(scopedStorageKey(PURCHASES_STORAGE_KEY), JSON.stringify(next));
   return next;
 }
@@ -77,9 +123,37 @@ export function updatePurchase(
   patch: Partial<LocalPurchase>,
 ): LocalPurchase[] {
   const prev = loadPurchases();
-  const next = prev.map((p) => (p.txHash === txHash ? { ...p, ...patch } : p));
+  const next = prev.map((p) => {
+    if (p.txHash !== txHash) return p;
+    // Keep from / olcAmount / txHash even if patch omits or clears them.
+    const merged = withRetryFields(p, {
+      ...patch,
+      txHash: patch.txHash || p.txHash,
+      from: patch.from || p.from,
+      olcAmount:
+        typeof patch.olcAmount === "number" && Number.isFinite(patch.olcAmount)
+          ? patch.olcAmount
+          : p.olcAmount,
+    });
+    return merged;
+  });
   localStorage.setItem(scopedStorageKey(PURCHASES_STORAGE_KEY), JSON.stringify(next));
   return next;
+}
+
+/** Purchases awaiting PresaleLock on-chain credit (for Retry / auto-retry). */
+export function listPendingLockCredits(address?: string | null): LocalPurchase[] {
+  const list = loadPurchases();
+  return list.filter((p) => {
+    if (p.status !== "locked_pending_chain") return false;
+    if (!p.txHash || !p.txHash.startsWith("0x")) return false;
+    const olc = resolveOlcAmount(p);
+    if (!(olc > 0)) return false;
+    if (address) {
+      if (p.from && p.from.toLowerCase() !== address.toLowerCase()) return false;
+    }
+    return true;
+  });
 }
 
 /** Sum of OLC from locked / locked_pending_chain / legacy pending_delivery for a wallet. */
@@ -94,11 +168,5 @@ export function sumLocalLockedOlc(wallet?: string | null): number {
         p.status === "pending_delivery"
       );
     })
-    .reduce((sum, p) => {
-      const n =
-        typeof p.olcAmount === "number" && Number.isFinite(p.olcAmount)
-          ? p.olcAmount
-          : Number(String(p.olcEstimated).replace(/,/g, ""));
-      return sum + (Number.isFinite(n) ? n : 0);
-    }, 0);
+    .reduce((sum, p) => sum + resolveOlcAmount(p), 0);
 }

@@ -26,7 +26,13 @@ import {
   calcPayFromOlc,
   formatUsdPrice,
 } from "@/lib/livePrices";
-import { loadPurchases, savePurchase, updatePurchase, type LocalPurchase } from "@/lib/purchases";
+import {
+  listPendingLockCredits,
+  loadPurchases,
+  savePurchase,
+  updatePurchase,
+  type LocalPurchase,
+} from "@/lib/purchases";
 import { PRESALE_BATCHES, SITE } from "@/lib/site";
 import { TOKEN, explorerTxUrl, explorerAddressUrl } from "@/lib/token";
 
@@ -72,6 +78,8 @@ function PresaleBuyInner() {
   const [pendingHash, setPendingHash] = useState<Hash | undefined>();
   const [purchases, setPurchases] = useState<LocalPurchase[]>([]);
   const [successNote, setSuccessNote] = useState<string | null>(null);
+  const [pendingLockRetryTx, setPendingLockRetryTx] = useState<string | null>(null);
+  const [retryBusy, setRetryBusy] = useState(false);
   const [depositAck, setDepositAck] = useState(false);
 
   const selected = assets.find((a) => a.id === assetId) ?? assets[0];
@@ -108,13 +116,23 @@ function PresaleBuyInner() {
 
   useEffect(() => {
     setPurchases(loadPurchases());
+    const pending = listPendingLockCredits();
+    if (pending.length > 0) {
+      setPendingLockRetryTx(pending[0].txHash);
+      setSuccessNote(
+        `You have ${pending.length} purchase(s) with payment confirmed but PresaleLock credit still pending. Use Retry lock credit to recover.`,
+      );
+    }
+    const t = setInterval(() => setPurchases(loadPurchases()), 8000);
+    return () => clearInterval(t);
   }, []);
 
   useEffect(() => {
     setDepositAck(false);
     setError(null);
-    setSuccessNote(null);
-  }, [assetId]);
+    // Keep pendingLockRetryTx / recovery note if lock credit still outstanding
+    if (!pendingLockRetryTx) setSuccessNote(null);
+  }, [assetId, pendingLockRetryTx]);
 
   const derived = useMemo(() => {
     const price = batchPrice;
@@ -196,6 +214,7 @@ function PresaleBuyInner() {
       });
       const withAmount: LocalPurchase = {
         ...base,
+        from: address,
         olcAmount: derived.olc,
         deliveryNote: "Delivering to PresaleLock…",
       };
@@ -231,41 +250,47 @@ function PresaleBuyInner() {
             status: "locked",
             creditTxHash: data.creditTxHash,
             olcAmount: typeof data.olcAmount === "number" ? data.olcAmount : derived.olc,
+            from: address,
             deliveryNote: undefined,
           });
           setPurchases(next);
+          setPendingLockRetryTx(null);
           setSuccessNote(
-            `You received ${olcLabel} OLC (locked until OVERLANDCOIN is listed on exchanges). Credit tx ${data.creditTxHash.slice(0, 10)}…`
+            `Payment confirmed. ${olcLabel} OLC credited to PresaleLock (non-transferable until listing). Credit tx ${data.creditTxHash.slice(0, 10)}…`
           );
           return;
         }
 
-        // Config missing or chain credit failed — honest local locked credit
+        // Config missing or chain credit failed — keep local locked credit + visible Retry
         const next = updatePurchase(paymentTxHash, {
           status: "locked_pending_chain",
           olcAmount: derived.olc,
+          from: address,
           deliveryNote:
             data.message ||
             data.error ||
             "Awaiting lock contract config — not transferable wallet delivery.",
         });
         setPurchases(next);
+        setPendingLockRetryTx(paymentTxHash);
         setSuccessNote(
-          `You received ${olcLabel} OLC (locked until OVERLANDCOIN is listed on exchanges). ${
+          `Payment confirmed. ${olcLabel} OLC recorded as locked locally. On-chain PresaleLock credit is still pending — use Retry lock credit below (Locked balance shows max of on-chain and local). ${
             data.notConfigured || res.status === 503
-              ? "On-chain lock credit is awaiting contract/key config — recorded locally, not a transferable wallet transfer."
-              : data.error || data.message || "On-chain lock credit pending; local locked credit recorded."
+              ? "Deliver service may need contract/key config."
+              : data.error || data.message || ""
           }`
         );
       } catch (e) {
         const next = updatePurchase(paymentTxHash, {
           status: "locked_pending_chain",
           olcAmount: derived.olc,
+          from: address,
           deliveryNote: e instanceof Error ? e.message : "Deliver request failed",
         });
         setPurchases(next);
+        setPendingLockRetryTx(paymentTxHash);
         setSuccessNote(
-          `You received ${formatNum(derived.olc, 4)} OLC (locked until OVERLANDCOIN is listed on exchanges). Deliver API unreachable — local locked credit only.`
+          `Payment confirmed. ${formatNum(derived.olc, 4)} OLC recorded as locked locally. Deliver API unreachable — use Retry lock credit when ready.`
         );
       }
     },
@@ -292,9 +317,85 @@ function PresaleBuyInner() {
     }
   }, [txSuccess, pendingHash, deliverLocked]);
 
+  async function retryLockCredit(paymentTxHash: string) {
+    setRetryBusy(true);
+    setError(null);
+    try {
+      const record =
+        loadPurchases().find((p) => p.txHash === paymentTxHash) ||
+        listPendingLockCredits(address).find((p) => p.txHash === paymentTxHash);
+      if (!record) {
+        setError("Purchase record not found for retry.");
+        return;
+      }
+      const olcAmount =
+        typeof record.olcAmount === "number" && Number.isFinite(record.olcAmount)
+          ? record.olcAmount
+          : Number(String(record.olcEstimated).replace(/,/g, ""));
+      const buyer = record.from || address;
+      if (!buyer || !(olcAmount > 0)) {
+        setError("Missing buyer or olcAmount for retry.");
+        return;
+      }
+      const res = await fetch("/api/presale/deliver", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          buyer,
+          olcAmount,
+          paymentTxHash,
+          batchPriceUsed: record.batchPriceUsed ?? record.batchPriceUsdt,
+          usdRateUsed: record.usdRateUsed,
+          usdPaid: record.usdPaid ?? record.usdEstimated,
+          payAsset: record.payAsset,
+          payAmount: record.payAmount,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        status?: string;
+        creditTxHash?: string;
+        message?: string;
+        error?: string;
+        olcAmount?: number;
+      };
+      if (data.status === "locked" && data.creditTxHash) {
+        const next = updatePurchase(paymentTxHash, {
+          status: "locked",
+          creditTxHash: data.creditTxHash,
+          olcAmount: typeof data.olcAmount === "number" ? data.olcAmount : olcAmount,
+          from: buyer,
+          deliveryNote: undefined,
+        });
+        setPurchases(next);
+        setPendingLockRetryTx(null);
+        setSuccessNote(
+          `PresaleLock credit confirmed for ${formatNum(olcAmount, 4)} OLC. Credit tx ${data.creditTxHash.slice(0, 10)}…`
+        );
+      } else {
+        const next = updatePurchase(paymentTxHash, {
+          status: "locked_pending_chain",
+          olcAmount,
+          from: buyer,
+          deliveryNote: data.message || data.error || "Still pending on-chain credit",
+        });
+        setPurchases(next);
+        setPendingLockRetryTx(paymentTxHash);
+        setSuccessNote(
+          `Still pending on-chain credit. Local locked OLC remains visible. ${data.error || data.message || ""}`
+        );
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Retry failed");
+    } finally {
+      setRetryBusy(false);
+      setPurchases(loadPurchases());
+    }
+  }
+
   async function onBuyOnChain() {
     setError(null);
     setSuccessNote(null);
+    setPendingLockRetryTx(null);
     if (!isConnected || !address) {
       setError("Connect a wallet first.");
       return;
@@ -657,9 +758,19 @@ function PresaleBuyInner() {
         </p>
       )}
       {successNote && (
-        <p className="mt-3 rounded-lg border border-cyan-accent/30 bg-cyan-accent/5 p-3 text-sm text-cyan-100">
-          {successNote}
-        </p>
+        <div className="mt-3 rounded-lg border border-cyan-accent/30 bg-cyan-accent/5 p-3 text-sm text-cyan-100 space-y-2">
+          <p>{successNote}</p>
+          {pendingLockRetryTx && (
+            <button
+              type="button"
+              className="btn-primary !text-xs !px-3 !py-1.5"
+              disabled={retryBusy}
+              onClick={() => void retryLockCredit(pendingLockRetryTx)}
+            >
+              {retryBusy ? "Retrying…" : "Retry lock credit"}
+            </button>
+          )}
+        </div>
       )}
       {pendingHash && (
         <p className="mt-2 text-xs text-slate-400">
@@ -714,18 +825,30 @@ function PresaleBuyInner() {
                     </a>
                   )}
                 </div>
-                {p.txHash.startsWith("0x") ? (
-                  <a
-                    className="link-accent font-mono"
-                    href={explorerTxUrl(p.txHash)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    View tx
-                  </a>
-                ) : (
-                  <span className="font-mono text-slate-500 text-[10px]">external</span>
-                )}
+                <div className="flex items-center gap-2">
+                  {p.status === "locked_pending_chain" && p.txHash.startsWith("0x") && (
+                    <button
+                      type="button"
+                      className="rounded-full border border-amber-500/40 px-2 py-0.5 text-[10px] text-amber-100 hover:bg-amber-500/10"
+                      disabled={retryBusy}
+                      onClick={() => void retryLockCredit(p.txHash)}
+                    >
+                      {retryBusy && pendingLockRetryTx === p.txHash ? "…" : "Retry lock"}
+                    </button>
+                  )}
+                  {p.txHash.startsWith("0x") ? (
+                    <a
+                      className="link-accent font-mono"
+                      href={explorerTxUrl(p.txHash)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View tx
+                    </a>
+                  ) : (
+                    <span className="font-mono text-slate-500 text-[10px]">external</span>
+                  )}
+                </div>
               </li>
             ))}
           </ul>

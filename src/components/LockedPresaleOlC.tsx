@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useAccount,
   useChainId,
@@ -12,12 +12,54 @@ import { formatUnits, type Hash } from "viem";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { getPresaleLockAddress, PRESALE_LOCK_ABI } from "@/lib/presaleLock";
-import { loadPurchases, sumLocalLockedOlc } from "@/lib/purchases";
+import {
+  listPendingLockCredits,
+  sumLocalLockedOlc,
+  updatePurchase,
+  type LocalPurchase,
+} from "@/lib/purchases";
 import { TOKEN, explorerAddressUrl, explorerTxUrl } from "@/lib/token";
 
 function formatOlc(n: number): string {
   if (!Number.isFinite(n)) return "—";
   return n.toLocaleString("en-US", { maximumFractionDigits: 4 });
+}
+
+function resolveOlc(p: LocalPurchase): number {
+  if (typeof p.olcAmount === "number" && Number.isFinite(p.olcAmount)) return p.olcAmount;
+  const n = Number(String(p.olcEstimated).replace(/,/g, ""));
+  return Number.isFinite(n) ? n : 0;
+}
+
+async function postDeliver(p: LocalPurchase, buyerFallback?: string | null) {
+  const buyer = p.from || buyerFallback;
+  const olcAmount = resolveOlc(p);
+  if (!buyer || !(olcAmount > 0) || !p.txHash?.startsWith("0x")) {
+    return { ok: false as const, error: "Missing buyer, olcAmount, or paymentTxHash" };
+  }
+  const res = await fetch("/api/presale/deliver", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      buyer,
+      olcAmount,
+      paymentTxHash: p.txHash,
+      batchPriceUsed: p.batchPriceUsed ?? p.batchPriceUsdt,
+      usdRateUsed: p.usdRateUsed,
+      usdPaid: p.usdPaid ?? p.usdEstimated,
+      payAsset: p.payAsset,
+      payAmount: p.payAmount,
+    }),
+  });
+  const data = (await res.json().catch(() => ({}))) as {
+    status?: string;
+    creditTxHash?: string;
+    message?: string;
+    error?: string;
+    olcAmount?: number;
+    alreadyDelivered?: boolean;
+  };
+  return { ok: res.ok || data.status === "locked", data, status: res.status };
 }
 
 export function LockedPresaleOlC() {
@@ -39,27 +81,26 @@ function LockedPresaleOlCInner() {
   const onCorrectChain = isConnected && chainId === TOKEN.chainId;
 
   const [localSum, setLocalSum] = useState(0);
-  const [localNote, setLocalNote] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [retryBusy, setRetryBusy] = useState(false);
+  const [retryNote, setRetryNote] = useState<string | null>(null);
+  const autoRetried = useRef(false);
+
+  const refreshLocal = useCallback(() => {
+    setLocalSum(sumLocalLockedOlc(address));
+    setPendingCount(listPendingLockCredits(address).length);
+  }, [address]);
 
   useEffect(() => {
-    const refresh = () => {
-      setLocalSum(sumLocalLockedOlc(address));
-      const pending = loadPurchases().some(
-        (p) =>
-          p.status === "locked_pending_chain" &&
-          (!address || !p.from || p.from.toLowerCase() === address.toLowerCase()),
-      );
-      setLocalNote(pending);
-    };
-    refresh();
-    const onStorage = () => refresh();
+    refreshLocal();
+    const onStorage = () => refreshLocal();
     window.addEventListener("storage", onStorage);
-    const t = setInterval(refresh, 4000);
+    const t = setInterval(refreshLocal, 4000);
     return () => {
       window.removeEventListener("storage", onStorage);
       clearInterval(t);
     };
-  }, [address]);
+  }, [refreshLocal]);
 
   const { data: onChainLocked, refetch: refetchLocked } = useReadContract({
     address: lockAddress ?? undefined,
@@ -82,12 +123,23 @@ function LockedPresaleOlCInner() {
     },
   });
 
-  const lockedDisplay = useMemo(() => {
+  const onChainNum = useMemo(() => {
     if (lockAddress && onChainLocked != null) {
       return Number(formatUnits(onChainLocked as bigint, TOKEN.decimals));
     }
+    return null;
+  }, [lockAddress, onChainLocked]);
+
+  // Always show MAX(on-chain locked, localSum of locked/locked_pending_chain)
+  const lockedDisplay = useMemo(() => {
+    if (onChainNum != null) {
+      return Math.max(onChainNum, localSum);
+    }
     return localSum;
-  }, [lockAddress, onChainLocked, localSum]);
+  }, [onChainNum, localSum]);
+
+  const localAhead =
+    onChainNum != null && localSum > onChainNum + 1e-8 && pendingCount > 0;
 
   const unlocked = Boolean(tradingEnabled);
 
@@ -104,6 +156,75 @@ function LockedPresaleOlCInner() {
       setWithdrawHash(undefined);
     }
   }, [withdrawOk, refetchLocked, refetchTrading]);
+
+  const retryPendingCredits = useCallback(
+    async (opts?: { quiet?: boolean }) => {
+      const pending = listPendingLockCredits(address);
+      if (pending.length === 0) {
+        if (!opts?.quiet) setRetryNote("No pending lock credits to retry.");
+        return;
+      }
+      if (!opts?.quiet) setRetryBusy(true);
+      setRetryNote(opts?.quiet ? null : `Retrying ${pending.length} pending credit(s)…`);
+      let locked = 0;
+      let stillPending = 0;
+      for (const p of pending) {
+        try {
+          const result = await postDeliver(p, address);
+          if (result.data?.status === "locked" && result.data.creditTxHash) {
+            updatePurchase(p.txHash, {
+              status: "locked",
+              creditTxHash: result.data.creditTxHash,
+              olcAmount:
+                typeof result.data.olcAmount === "number" ? result.data.olcAmount : resolveOlc(p),
+              from: p.from || address || undefined,
+              deliveryNote: undefined,
+            });
+            locked += 1;
+          } else {
+            stillPending += 1;
+            updatePurchase(p.txHash, {
+              status: "locked_pending_chain",
+              olcAmount: resolveOlc(p),
+              from: p.from || address || undefined,
+              deliveryNote:
+                result.data?.message || result.data?.error || "Still awaiting on-chain credit",
+            });
+          }
+        } catch (e) {
+          stillPending += 1;
+          updatePurchase(p.txHash, {
+            deliveryNote: e instanceof Error ? e.message : "Retry failed",
+          });
+        }
+      }
+      refreshLocal();
+      void refetchLocked();
+      if (!opts?.quiet) {
+        setRetryNote(
+          locked > 0
+            ? `Credited ${locked} purchase(s) on-chain.${stillPending ? ` ${stillPending} still pending.` : ""}`
+            : stillPending
+              ? `Still pending (${stillPending}). Deliver API may be unavailable — local locked credit still counts above.`
+              : "Done.",
+        );
+        setRetryBusy(false);
+      } else if (locked > 0) {
+        setRetryNote(`Auto-retried: ${locked} credit(s) confirmed on-chain.`);
+      }
+    },
+    [address, refreshLocal, refetchLocked],
+  );
+
+  // Optional: on mount, auto-retry pending credits once quietly
+  useEffect(() => {
+    if (autoRetried.current) return;
+    if (!address || !lockAddress) return;
+    const pending = listPendingLockCredits(address);
+    if (pending.length === 0) return;
+    autoRetried.current = true;
+    void retryPendingCredits({ quiet: true });
+  }, [address, lockAddress, retryPendingCredits]);
 
   async function onWithdraw() {
     setError(null);
@@ -154,8 +275,10 @@ function LockedPresaleOlCInner() {
           </p>
           <p className="mt-1 text-[11px] text-slate-500">
             {lockAddress
-              ? onChainLocked != null
-                ? "From PresaleLock contract"
+              ? onChainNum != null
+                ? localSum > onChainNum
+                  ? `Showing max(on-chain ${formatOlc(onChainNum)}, local ${formatOlc(localSum)})`
+                  : "From PresaleLock contract"
                 : "Reading contract…"
               : "From local purchase records (lock address not set)"}
           </p>
@@ -206,10 +329,35 @@ function LockedPresaleOlCInner() {
           not transferable wallet delivery.
         </p>
       )}
-      {localNote && lockAddress && (
-        <p className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-100/90">
-          Some purchases are <code className="text-amber-50">locked_pending_chain</code> (server
-          could not credit yet). Balance above may under-count until those are synced on-chain.
+      {(localAhead || pendingCount > 0) && lockAddress && (
+        <div className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-100/90 space-y-2">
+          <p>
+            {localAhead ? (
+              <>
+                Local pending locked OLC ({formatOlc(localSum)}) is ahead of on-chain lockedBalance (
+                {formatOlc(onChainNum ?? 0)}). Payment to treasury may have succeeded while PresaleLock
+                credit is still pending.
+              </>
+            ) : (
+              <>
+                {pendingCount} purchase(s) are <code className="text-amber-50">locked_pending_chain</code>
+                . Balance above uses max(on-chain, local) so you still see them.
+              </>
+            )}
+          </p>
+          <button
+            type="button"
+            className="btn-primary !text-xs !px-3 !py-1.5"
+            disabled={retryBusy || pendingCount === 0}
+            onClick={() => void retryPendingCredits()}
+          >
+            {retryBusy ? "Retrying…" : "Retry lock credit"}
+          </button>
+        </div>
+      )}
+      {retryNote && (
+        <p className="mt-3 rounded-lg border border-cyan-accent/30 bg-cyan-accent/5 p-3 text-xs text-cyan-100">
+          {retryNote}
         </p>
       )}
       {lockAddress && (

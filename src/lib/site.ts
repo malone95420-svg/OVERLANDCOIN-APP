@@ -66,7 +66,7 @@ export const STAKING_PLANS = [
 export const HOW_IT_WORKS = [
   { step: "Find", body: "Browse quests on the map and pick your next waypoint." },
   { step: "Visit", body: "Get out there — overland to the location." },
-  { step: "Earn", body: "Log proof-of-adventure and earn OLC location rewards." },
+  { step: "Earn", body: "Check in with GPS + photo proof. OLC is recorded as pending claim until the reward contract is live." },
   { step: "Stake", body: "Optionally stake OLC when staking goes live (mock UI today)." },
 ] as const;
 
@@ -74,6 +74,7 @@ export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/presale", label: "Presale" },
   { href: "/map", label: "Quest Map" },
+  { href: "/feed", label: "Feed" },
   { href: "/garage", label: "Garage" },
   { href: "/ranger", label: "Ranger" },
   { href: "/staking", label: "Staking" },

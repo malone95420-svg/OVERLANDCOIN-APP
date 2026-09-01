@@ -339,6 +339,7 @@ const quests = LOCATIONS.map((row, i) => {
     region,
     minTier,
     terrainTags,
+    radiusMeters: 100,
   };
 });
 

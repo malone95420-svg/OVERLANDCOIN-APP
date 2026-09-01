@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { GarageForm } from "@/components/GarageForm";
+import { ProfileCompletions } from "@/components/ProfileCompletions";
 
 export const metadata: Metadata = {
   title: "Vehicle Garage",
@@ -18,6 +19,7 @@ export default function GaragePage() {
       <div className="mt-10">
         <GarageForm />
       </div>
+      <ProfileCompletions />
     </div>
   );
 }

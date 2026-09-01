@@ -1,24 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Quest } from "@/lib/quests";
 import { filterQuestsByTier } from "@/lib/quests";
 import { useVehicle } from "@/hooks/useVehicle";
-import { TIER_LABELS, tierLabel } from "@/lib/vehicle";
+import { canReachQuest, TIER_LABELS, tierLabel } from "@/lib/vehicle";
+import { hasCompletedQuest, loadCompletions } from "@/lib/completions";
 import { QuestMap } from "./QuestMap";
+import { CheckInModal } from "./CheckInModal";
 
 export function QuestCards({ quests }: { quests: Quest[] }) {
   const { tier, hydrated, vehicle } = useVehicle();
   const [showAll, setShowAll] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
+  const [checkInQuest, setCheckInQuest] = useState<Quest | null>(null);
+  const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
+
+  const refreshCompletions = useCallback(() => {
+    setCompletedIds(new Set(loadCompletions().map((c) => c.questId)));
+  }, []);
+
+  useEffect(() => {
+    refreshCompletions();
+  }, [refreshCompletions]);
 
   const visible = useMemo(() => {
     if (!hydrated) return quests;
     return filterQuestsByTier(quests, tier, showAll);
   }, [quests, tier, showAll, hydrated]);
 
-  const selectedId = selected && visible.some((q) => q.id === selected) ? selected : visible[0]?.id;
+  const selectedId =
+    selected && visible.some((q) => q.id === selected) ? selected : visible[0]?.id;
+
+  const selectedQuest = visible.find((q) => q.id === selectedId);
 
   return (
     <div className="space-y-4">
@@ -51,6 +66,9 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
           <Link href="/garage" className="text-xs text-cyan-accent hover:text-gold-bright">
             Edit Garage →
           </Link>
+          <Link href="/feed" className="text-xs text-cyan-accent hover:text-gold-bright">
+            Adventure Feed →
+          </Link>
         </div>
       </div>
 
@@ -66,45 +84,91 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
           )}
           {visible.map((q) => {
             const active = q.id === selectedId;
+            const done = completedIds.has(q.id) || hasCompletedQuest(q.id);
+            const tierOk = !hydrated || canReachQuest(tier, q.minTier);
             return (
-              <button
+              <div
                 key={q.id}
-                type="button"
-                onClick={() => setSelected(q.id)}
                 className={`rounded-xl border p-4 text-left transition ${
                   active
                     ? "border-gold/60 bg-bg-card shadow-gold"
                     : "border-border bg-bg-panel hover:border-gold/30"
                 }`}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-semibold text-white">{q.title}</h3>
-                  <span className="badge !text-[10px]">{q.difficulty}</span>
-                </div>
-                <p className="mt-1 text-xs text-slate-500">
-                  {q.region} · Min Tier {q.minTier} {TIER_LABELS[q.minTier]}
-                </p>
-                <p className="mt-2 text-sm text-slate-400">{q.description}</p>
-                {(q.terrainTags?.length ?? 0) > 0 && (
-                  <p className="mt-2 flex flex-wrap gap-1">
-                    {q.terrainTags!.slice(0, 4).map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full border border-border px-2 py-0.5 text-[10px] text-slate-500"
-                      >
-                        {t}
-                      </span>
-                    ))}
+                <button type="button" className="w-full text-left" onClick={() => setSelected(q.id)}>
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-semibold text-white">{q.title}</h3>
+                    <span className="badge !text-[10px]">{q.difficulty}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-slate-500">
+                    {q.region} · Min Tier {q.minTier} {TIER_LABELS[q.minTier]} ·{" "}
+                    {q.radiusMeters}m check-in
                   </p>
-                )}
-                <p className="mt-3 text-sm font-semibold text-gold-bright">
-                  {q.rewardOlC} OLC reward
-                </p>
-              </button>
+                  <p className="mt-2 text-sm text-slate-400">{q.description}</p>
+                  {(q.terrainTags?.length ?? 0) > 0 && (
+                    <p className="mt-2 flex flex-wrap gap-1">
+                      {q.terrainTags!.slice(0, 4).map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full border border-border px-2 py-0.5 text-[10px] text-slate-500"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </p>
+                  )}
+                  <p className="mt-3 text-sm font-semibold text-gold-bright">
+                    {q.rewardOlC} OLC reward
+                    {done && (
+                      <span className="ml-2 text-xs font-normal text-emerald-400">Completed</span>
+                    )}
+                  </p>
+                </button>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    className="btn-primary !py-1.5 !text-xs disabled:cursor-not-allowed disabled:opacity-40"
+                    disabled={!hydrated || done}
+                    onClick={() => setCheckInQuest(q)}
+                    title={
+                      !tierOk
+                        ? `Needs Tier ${q.minTier}+ — check-in will explain`
+                        : done
+                          ? "Already completed"
+                          : "Open GPS + photo check-in"
+                    }
+                  >
+                    {done ? "Checked in" : "Check in"}
+                  </button>
+                  {!tierOk && !done && (
+                    <span className="self-center text-[11px] text-amber-400">
+                      Needs Tier {q.minTier} {TIER_LABELS[q.minTier]}
+                    </span>
+                  )}
+                </div>
+              </div>
             );
           })}
         </div>
       </div>
+
+      {selectedQuest && (
+        <p className="text-xs text-slate-600">
+          Selected: {selectedQuest.title}. Check-in requires GPS within{" "}
+          {selectedQuest.radiusMeters}m + photo proof. OLC stays pending_claim until a reward
+          contract exists.
+        </p>
+      )}
+
+      {checkInQuest && hydrated && (
+        <CheckInModal
+          quest={checkInQuest}
+          vehicleTier={tier}
+          open={!!checkInQuest}
+          onClose={() => setCheckInQuest(null)}
+          onSuccess={refreshCompletions}
+        />
+      )}
     </div>
   );
 }

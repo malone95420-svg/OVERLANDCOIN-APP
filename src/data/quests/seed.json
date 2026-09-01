@@ -2,7 +2,7 @@
   {
     "id": "q0001",
     "title": "Moab Rim Overlook",
-    "description": "Overlook above Moab — graded access with rocky sections.",
+    "description": "Overlook above Moab \u2014 graded access with rocky sections.",
     "lat": 38.5733,
     "lng": -109.5498,
     "rewardOlC": 356,
@@ -12,7 +12,8 @@
     "terrainTags": [
       "rock",
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0002",
@@ -27,12 +28,13 @@
     "terrainTags": [
       "rock",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0003",
     "title": "Poison Spider Mesa",
-    "description": "Technical mesa trail — high clearance + lockers recommended.",
+    "description": "Technical mesa trail \u2014 high clearance + lockers recommended.",
     "lat": 38.5748,
     "lng": -109.615,
     "rewardOlC": 518,
@@ -42,12 +44,13 @@
     "terrainTags": [
       "rock",
       "ledge"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0004",
     "title": "Hell's Revenge Trailhead",
-    "description": "Iconic Moab slickrock — Extreme builds only.",
+    "description": "Iconic Moab slickrock \u2014 Extreme builds only.",
     "lat": 38.5695,
     "lng": -109.505,
     "rewardOlC": 780,
@@ -57,12 +60,13 @@
     "terrainTags": [
       "slickrock",
       "extreme"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0005",
     "title": "White Rim Road (Island in the Sky)",
-    "description": "Canyonlands White Rim — long remote dirt road.",
+    "description": "Canyonlands White Rim \u2014 long remote dirt road.",
     "lat": 38.459,
     "lng": -109.821,
     "rewardOlC": 495,
@@ -72,12 +76,13 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0006",
     "title": "Elephant Hill Trailhead",
-    "description": "Needles District — notorious steep rock steps.",
+    "description": "Needles District \u2014 notorious steep rock steps.",
     "lat": 38.146,
     "lng": -109.854,
     "rewardOlC": 800,
@@ -87,7 +92,8 @@
     "terrainTags": [
       "rock",
       "technical"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0007",
@@ -102,12 +108,13 @@
     "terrainTags": [
       "cliff",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0008",
     "title": "Fins & Things Trailhead",
-    "description": "Sand Hollow–style fins near Moab.",
+    "description": "Sand Hollow\u2013style fins near Moab.",
     "lat": 38.575,
     "lng": -109.48,
     "rewardOlC": 528,
@@ -116,7 +123,8 @@
     "minTier": 4,
     "terrainTags": [
       "slickrock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0009",
@@ -131,7 +139,8 @@
     "terrainTags": [
       "canyon",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0010",
@@ -146,7 +155,8 @@
     "terrainTags": [
       "rock",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0011",
@@ -161,7 +171,8 @@
     "terrainTags": [
       "desert",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0012",
@@ -176,7 +187,8 @@
     "terrainTags": [
       "cliff",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0013",
@@ -191,12 +203,13 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0014",
     "title": "Little Sahara Sand Dunes",
-    "description": "Sand play — A/T or M/T recommended.",
+    "description": "Sand play \u2014 A/T or M/T recommended.",
     "lat": 39.725,
     "lng": -112.355,
     "rewardOlC": 510,
@@ -205,7 +218,8 @@
     "minTier": 3,
     "terrainTags": [
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0015",
@@ -220,7 +234,8 @@
     "terrainTags": [
       "dirt",
       "forest"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0016",
@@ -235,7 +250,8 @@
     "terrainTags": [
       "rock",
       "redrock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0017",
@@ -250,7 +266,8 @@
     "terrainTags": [
       "rock",
       "technical"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0018",
@@ -265,7 +282,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0019",
@@ -280,7 +298,8 @@
     "terrainTags": [
       "cliff",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0020",
@@ -294,12 +313,13 @@
     "minTier": 1,
     "terrainTags": [
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0021",
     "title": "Monument Valley Visitor Approach",
-    "description": "Iconic butte country — graded access.",
+    "description": "Iconic butte country \u2014 graded access.",
     "lat": 36.98,
     "lng": -110.11,
     "rewardOlC": 220,
@@ -309,7 +329,8 @@
     "terrainTags": [
       "desert",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0022",
@@ -324,7 +345,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0023",
@@ -339,7 +361,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0024",
@@ -354,7 +377,8 @@
     "terrainTags": [
       "dirt",
       "mountain"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0025",
@@ -369,7 +393,8 @@
     "terrainTags": [
       "desert",
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0026",
@@ -384,7 +409,8 @@
     "terrainTags": [
       "sand",
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0027",
@@ -399,7 +425,8 @@
     "terrainTags": [
       "wash",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0028",
@@ -414,7 +441,8 @@
     "terrainTags": [
       "canyon",
       "one-way"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0029",
@@ -429,7 +457,8 @@
     "terrainTags": [
       "desert",
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0030",
@@ -444,7 +473,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0031",
@@ -459,7 +489,8 @@
     "terrainTags": [
       "dirt",
       "ohv"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0032",
@@ -474,7 +505,8 @@
     "terrainTags": [
       "rock",
       "mountain"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0033",
@@ -489,7 +521,8 @@
     "terrainTags": [
       "rock",
       "water"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0034",
@@ -504,7 +537,8 @@
     "terrainTags": [
       "granite",
       "extreme"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0035",
@@ -518,7 +552,8 @@
     "minTier": 1,
     "terrainTags": [
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0036",
@@ -533,7 +568,8 @@
     "terrainTags": [
       "scenic",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0037",
@@ -548,7 +584,8 @@
     "terrainTags": [
       "remote",
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0038",
@@ -562,12 +599,13 @@
     "minTier": 2,
     "terrainTags": [
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0039",
     "title": "Alpine Loop (Lake City)",
-    "description": "San Juan high passes — Engineer / Cinnamon.",
+    "description": "San Juan high passes \u2014 Engineer / Cinnamon.",
     "lat": 38.03,
     "lng": -107.38,
     "rewardOlC": 498,
@@ -577,7 +615,8 @@
     "terrainTags": [
       "high-alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0040",
@@ -592,12 +631,13 @@
     "terrainTags": [
       "high-alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0041",
     "title": "Black Bear Pass",
-    "description": "One-way cliff shelf — Extreme only.",
+    "description": "One-way cliff shelf \u2014 Extreme only.",
     "lat": 37.895,
     "lng": -107.775,
     "rewardOlC": 782,
@@ -607,7 +647,8 @@
     "terrainTags": [
       "cliff",
       "extreme"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0042",
@@ -622,7 +663,8 @@
     "terrainTags": [
       "alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0043",
@@ -636,7 +678,8 @@
     "minTier": 3,
     "terrainTags": [
       "high-alpine"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0044",
@@ -651,7 +694,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0045",
@@ -665,7 +709,8 @@
     "minTier": 3,
     "terrainTags": [
       "high-alpine"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0046",
@@ -680,7 +725,8 @@
     "terrainTags": [
       "rock",
       "extreme"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0047",
@@ -695,7 +741,8 @@
     "terrainTags": [
       "rock",
       "alpine"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0048",
@@ -710,7 +757,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0049",
@@ -725,7 +773,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0050",
@@ -740,7 +789,8 @@
     "terrainTags": [
       "sand",
       "creek"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0051",
@@ -755,7 +805,8 @@
     "terrainTags": [
       "coast",
       "forest"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0052",
@@ -770,7 +821,8 @@
     "terrainTags": [
       "volcanic",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0053",
@@ -785,7 +837,8 @@
     "terrainTags": [
       "sand",
       "coast"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0054",
@@ -800,7 +853,8 @@
     "terrainTags": [
       "high-desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0055",
@@ -815,7 +869,8 @@
     "terrainTags": [
       "forest",
       "mountain"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0056",
@@ -830,7 +885,8 @@
     "terrainTags": [
       "remote",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0057",
@@ -845,7 +901,8 @@
     "terrainTags": [
       "desert",
       "historic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0058",
@@ -859,7 +916,8 @@
     "minTier": 2,
     "terrainTags": [
       "forest"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0059",
@@ -874,7 +932,8 @@
     "terrainTags": [
       "sand",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0060",
@@ -889,7 +948,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0061",
@@ -904,7 +964,8 @@
     "terrainTags": [
       "forest",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0062",
@@ -919,7 +980,8 @@
     "terrainTags": [
       "dirt",
       "washboard"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0063",
@@ -934,7 +996,8 @@
     "terrainTags": [
       "desert",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0064",
@@ -948,7 +1011,8 @@
     "minTier": 2,
     "terrainTags": [
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0065",
@@ -963,7 +1027,8 @@
     "terrainTags": [
       "desert",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0066",
@@ -978,7 +1043,8 @@
     "terrainTags": [
       "desert",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0067",
@@ -993,7 +1059,8 @@
     "terrainTags": [
       "desert",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0068",
@@ -1008,7 +1075,8 @@
     "terrainTags": [
       "canyon",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0069",
@@ -1023,7 +1091,8 @@
     "terrainTags": [
       "forest",
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0070",
@@ -1038,7 +1107,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0071",
@@ -1053,7 +1123,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0072",
@@ -1067,12 +1138,13 @@
     "minTier": 2,
     "terrainTags": [
       "forest"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0073",
     "title": "Tail of the Dragon Overlook",
-    "description": "Famous paved mountain road — stock OK.",
+    "description": "Famous paved mountain road \u2014 stock OK.",
     "lat": 35.495,
     "lng": -83.92,
     "rewardOlC": 200,
@@ -1082,7 +1154,8 @@
     "terrainTags": [
       "paved",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0074",
@@ -1097,7 +1170,8 @@
     "terrainTags": [
       "paved",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0075",
@@ -1112,7 +1186,8 @@
     "terrainTags": [
       "forest",
       "mud"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0076",
@@ -1127,7 +1202,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0077",
@@ -1142,7 +1218,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0078",
@@ -1156,7 +1233,8 @@
     "minTier": 2,
     "terrainTags": [
       "forest"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0079",
@@ -1171,7 +1249,8 @@
     "terrainTags": [
       "scenic",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0080",
@@ -1186,7 +1265,8 @@
     "terrainTags": [
       "remote",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0081",
@@ -1201,7 +1281,8 @@
     "terrainTags": [
       "remote",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0082",
@@ -1216,7 +1297,8 @@
     "terrainTags": [
       "remote",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0083",
@@ -1231,7 +1313,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0084",
@@ -1246,7 +1329,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0085",
@@ -1261,7 +1345,8 @@
     "terrainTags": [
       "remote",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0086",
@@ -1276,7 +1361,8 @@
     "terrainTags": [
       "remote",
       "arctic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0087",
@@ -1291,7 +1377,8 @@
     "terrainTags": [
       "remote",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0088",
@@ -1306,7 +1393,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0089",
@@ -1320,7 +1408,8 @@
     "minTier": 1,
     "terrainTags": [
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0090",
@@ -1335,11 +1424,12 @@
     "terrainTags": [
       "remote",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0091",
-    "title": "Baja Cataviña Boulder Field",
+    "title": "Baja Catavi\u00f1a Boulder Field",
     "description": "Central Baja desert highway side roads.",
     "lat": 29.73,
     "lng": -114.72,
@@ -1350,11 +1440,12 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0092",
-    "title": "Bahía de los Ángeles Spur",
+    "title": "Bah\u00eda de los \u00c1ngeles Spur",
     "description": "Sea of Cortez spur road.",
     "lat": 28.95,
     "lng": -113.56,
@@ -1365,7 +1456,8 @@
     "terrainTags": [
       "desert",
       "coast"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0093",
@@ -1380,7 +1472,8 @@
     "terrainTags": [
       "mountain",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0094",
@@ -1395,11 +1488,12 @@
     "terrainTags": [
       "canyon",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0095",
-    "title": "Yucatán Cenote Backroads",
+    "title": "Yucat\u00e1n Cenote Backroads",
     "description": "Jungle tracks to cenotes.",
     "lat": 20.6,
     "lng": -87.45,
@@ -1410,7 +1504,8 @@
     "terrainTags": [
       "jungle",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0096",
@@ -1425,7 +1520,8 @@
     "terrainTags": [
       "patagonia",
       "wind"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0097",
@@ -1440,7 +1536,8 @@
     "terrainTags": [
       "patagonia",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0098",
@@ -1450,27 +1547,29 @@
     "lng": -72.56,
     "rewardOlC": 514,
     "difficulty": "Hard",
-    "region": "Aysén, Chile",
+    "region": "Ays\u00e9n, Chile",
     "minTier": 3,
     "terrainTags": [
       "remote",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0099",
     "title": "Salar de Uyuni Access",
-    "description": "Salt flat corridors — high altitude.",
+    "description": "Salt flat corridors \u2014 high altitude.",
     "lat": -20.46,
     "lng": -66.83,
     "rewardOlC": 487,
     "difficulty": "Hard",
-    "region": "Potosí, Bolivia",
+    "region": "Potos\u00ed, Bolivia",
     "minTier": 3,
     "terrainTags": [
       "saltflat",
       "high-altitude"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0100",
@@ -1485,7 +1584,8 @@
     "terrainTags": [
       "desert",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0101",
@@ -1500,7 +1600,8 @@
     "terrainTags": [
       "patagonia",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0102",
@@ -1510,12 +1611,13 @@
     "lng": -67.77,
     "rewardOlC": 524,
     "difficulty": "Hard",
-    "region": "Potosí, Bolivia",
+    "region": "Potos\u00ed, Bolivia",
     "minTier": 3,
     "terrainTags": [
       "high-altitude",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0103",
@@ -1530,22 +1632,24 @@
     "terrainTags": [
       "andes",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0104",
-    "title": "Lençóis Maranhenses Edge",
+    "title": "Len\u00e7\u00f3is Maranhenses Edge",
     "description": "Sand dune park periphery.",
     "lat": -2.55,
     "lng": -43,
     "rewardOlC": 486,
     "difficulty": "Hard",
-    "region": "Maranhão, Brazil",
+    "region": "Maranh\u00e3o, Brazil",
     "minTier": 3,
     "terrainTags": [
       "sand",
       "coast"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0105",
@@ -1560,7 +1664,8 @@
     "terrainTags": [
       "plateau",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0106",
@@ -1575,7 +1680,8 @@
     "terrainTags": [
       "fjord",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0107",
@@ -1590,7 +1696,8 @@
     "terrainTags": [
       "mountain",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0108",
@@ -1605,12 +1712,13 @@
     "terrainTags": [
       "arctic",
       "coast"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0109",
     "title": "Scottish Highlands Applecross",
-    "description": "Bealach na Bà classic.",
+    "description": "Bealach na B\u00e0 classic.",
     "lat": 57.43,
     "lng": -5.81,
     "rewardOlC": 336,
@@ -1620,7 +1728,8 @@
     "terrainTags": [
       "mountain",
       "singletrack"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0110",
@@ -1635,7 +1744,8 @@
     "terrainTags": [
       "moor",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0111",
@@ -1650,7 +1760,8 @@
     "terrainTags": [
       "f-road",
       "river"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0112",
@@ -1665,11 +1776,12 @@
     "terrainTags": [
       "f-road",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0113",
-    "title": "Iceland Kerlingarfjöll",
+    "title": "Iceland Kerlingarfj\u00f6ll",
     "description": "Central highland geothermal area.",
     "lat": 64.65,
     "lng": -19.28,
@@ -1680,7 +1792,8 @@
     "terrainTags": [
       "f-road",
       "geothermal"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0114",
@@ -1695,7 +1808,8 @@
     "terrainTags": [
       "alpine",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0115",
@@ -1710,11 +1824,12 @@
     "terrainTags": [
       "alpine",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0116",
-    "title": "Transfăgărășan Summit",
+    "title": "Transf\u0103g\u0103r\u0103\u0219an Summit",
     "description": "Famous Transylvanian alpine road.",
     "lat": 45.6,
     "lng": 24.62,
@@ -1725,7 +1840,8 @@
     "terrainTags": [
       "alpine",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0117",
@@ -1740,7 +1856,8 @@
     "terrainTags": [
       "alpine",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0118",
@@ -1755,7 +1872,8 @@
     "terrainTags": [
       "alpine",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0119",
@@ -1770,7 +1888,8 @@
     "terrainTags": [
       "coast",
       "wind"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0120",
@@ -1785,7 +1904,8 @@
     "terrainTags": [
       "arctic",
       "forest"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0121",
@@ -1800,7 +1920,8 @@
     "terrainTags": [
       "lake",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0122",
@@ -1815,7 +1936,8 @@
     "terrainTags": [
       "sand",
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0123",
@@ -1830,7 +1952,8 @@
     "terrainTags": [
       "mountain",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0124",
@@ -1844,7 +1967,8 @@
     "minTier": 2,
     "terrainTags": [
       "mountain"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0125",
@@ -1859,7 +1983,8 @@
     "terrainTags": [
       "desert",
       "mountain"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0126",
@@ -1874,12 +1999,13 @@
     "terrainTags": [
       "desert",
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0127",
     "title": "Skeleton Coast Spur",
-    "description": "Remote coastal desert — Extreme-capable preferred.",
+    "description": "Remote coastal desert \u2014 Extreme-capable preferred.",
     "lat": -19,
     "lng": 12.6,
     "rewardOlC": 502,
@@ -1889,7 +2015,8 @@
     "terrainTags": [
       "remote",
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0128",
@@ -1904,12 +2031,13 @@
     "terrainTags": [
       "sand",
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0129",
     "title": "Makgadikgadi Pans Edge",
-    "description": "Salt pan tracks — seasonal.",
+    "description": "Salt pan tracks \u2014 seasonal.",
     "lat": -20.5,
     "lng": 25.5,
     "rewardOlC": 484,
@@ -1919,7 +2047,8 @@
     "terrainTags": [
       "saltpan",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0130",
@@ -1934,7 +2063,8 @@
     "terrainTags": [
       "remote",
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0131",
@@ -1949,7 +2079,8 @@
     "terrainTags": [
       "mountain",
       "switchback"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0132",
@@ -1964,7 +2095,8 @@
     "terrainTags": [
       "coast",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0133",
@@ -1979,7 +2111,8 @@
     "terrainTags": [
       "savanna",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0134",
@@ -1994,7 +2127,8 @@
     "terrainTags": [
       "high-altitude",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0135",
@@ -2009,7 +2143,8 @@
     "terrainTags": [
       "desert",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0136",
@@ -2024,7 +2159,8 @@
     "terrainTags": [
       "desert",
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0137",
@@ -2039,12 +2175,13 @@
     "terrainTags": [
       "desert",
       "canyon"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0138",
     "title": "Empty Quarter Edge (Liwa)",
-    "description": "Mega-dune country — sand driving skill required.",
+    "description": "Mega-dune country \u2014 sand driving skill required.",
     "lat": 23.13,
     "lng": 53.78,
     "rewardOlC": 546,
@@ -2054,7 +2191,8 @@
     "terrainTags": [
       "sand",
       "dunes"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0139",
@@ -2069,7 +2207,8 @@
     "terrainTags": [
       "mountain",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0140",
@@ -2084,7 +2223,8 @@
     "terrainTags": [
       "high-altitude",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0141",
@@ -2099,7 +2239,8 @@
     "terrainTags": [
       "mountain",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0142",
@@ -2114,7 +2255,8 @@
     "terrainTags": [
       "high-altitude",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0143",
@@ -2129,7 +2271,8 @@
     "terrainTags": [
       "high-altitude",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0144",
@@ -2139,12 +2282,13 @@
     "lng": 104.1,
     "rewardOlC": 482,
     "difficulty": "Hard",
-    "region": "Ömnögovi, Mongolia",
+    "region": "\u00d6mn\u00f6govi, Mongolia",
     "minTier": 3,
     "terrainTags": [
       "steppe",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0145",
@@ -2154,11 +2298,12 @@
     "lng": 102.8,
     "rewardOlC": 368,
     "difficulty": "Moderate",
-    "region": "Övörkhangai, Mongolia",
+    "region": "\u00d6v\u00f6rkhangai, Mongolia",
     "minTier": 2,
     "terrainTags": [
       "steppe"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0146",
@@ -2173,7 +2318,8 @@
     "terrainTags": [
       "steppe",
       "mountain"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0147",
@@ -2188,7 +2334,8 @@
     "terrainTags": [
       "mountain",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0148",
@@ -2203,7 +2350,8 @@
     "terrainTags": [
       "scenic",
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0149",
@@ -2218,7 +2366,8 @@
     "terrainTags": [
       "desert",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0150",
@@ -2233,7 +2382,8 @@
     "terrainTags": [
       "outback",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0151",
@@ -2248,12 +2398,13 @@
     "terrainTags": [
       "outback",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0152",
     "title": "Simpson Desert French Line",
-    "description": "Classic desert crossing — Extreme prep required.",
+    "description": "Classic desert crossing \u2014 Extreme prep required.",
     "lat": -26,
     "lng": 137.5,
     "rewardOlC": 804,
@@ -2263,7 +2414,8 @@
     "terrainTags": [
       "sand",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0153",
@@ -2278,7 +2430,8 @@
     "terrainTags": [
       "outback",
       "creek"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0154",
@@ -2294,7 +2447,8 @@
       "creek",
       "mud",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0155",
@@ -2309,7 +2463,8 @@
     "terrainTags": [
       "outback",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0156",
@@ -2324,12 +2479,13 @@
     "terrainTags": [
       "outback",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0157",
     "title": "Fraser Island (K'gari) Beach",
-    "description": "Beach highway — tide aware.",
+    "description": "Beach highway \u2014 tide aware.",
     "lat": -25.25,
     "lng": 153.17,
     "rewardOlC": 513,
@@ -2339,7 +2495,8 @@
     "terrainTags": [
       "sand",
       "beach"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0158",
@@ -2354,7 +2511,8 @@
     "terrainTags": [
       "steep",
       "extreme"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0159",
@@ -2369,7 +2527,8 @@
     "terrainTags": [
       "forest",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0160",
@@ -2384,7 +2543,8 @@
     "terrainTags": [
       "cliff",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0161",
@@ -2399,7 +2559,8 @@
     "terrainTags": [
       "high-country",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0162",
@@ -2413,7 +2574,8 @@
     "minTier": 3,
     "terrainTags": [
       "high-country"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0163",
@@ -2427,7 +2589,8 @@
     "minTier": 1,
     "terrainTags": [
       "coast"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0164",
@@ -2442,7 +2605,8 @@
     "terrainTags": [
       "alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0165",
@@ -2457,7 +2621,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0166",
@@ -2472,7 +2637,8 @@
     "terrainTags": [
       "desert",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0167",
@@ -2487,12 +2653,13 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0168",
     "title": "Moki Dugway",
-    "description": "Steep gravel dugway — nerves of steel.",
+    "description": "Steep gravel dugway \u2014 nerves of steel.",
     "lat": 37.27,
     "lng": -109.95,
     "rewardOlC": 481,
@@ -2502,7 +2669,8 @@
     "terrainTags": [
       "cliff",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0169",
@@ -2517,7 +2685,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0170",
@@ -2532,7 +2701,8 @@
     "terrainTags": [
       "desert",
       "slot"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0171",
@@ -2547,7 +2717,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0172",
@@ -2562,7 +2733,8 @@
     "terrainTags": [
       "rock",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0173",
@@ -2577,7 +2749,8 @@
     "terrainTags": [
       "cliff",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0174",
@@ -2592,7 +2765,8 @@
     "terrainTags": [
       "technical",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0175",
@@ -2607,7 +2781,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0176",
@@ -2622,7 +2797,8 @@
     "terrainTags": [
       "sand",
       "beach"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0177",
@@ -2636,7 +2812,8 @@
     "minTier": 3,
     "terrainTags": [
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0178",
@@ -2650,7 +2827,8 @@
     "minTier": 3,
     "terrainTags": [
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0179",
@@ -2665,7 +2843,8 @@
     "terrainTags": [
       "desert",
       "ohv"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0180",
@@ -2680,7 +2859,8 @@
     "terrainTags": [
       "rock",
       "extreme"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0181",
@@ -2695,7 +2875,8 @@
     "terrainTags": [
       "desert",
       "sand"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0182",
@@ -2710,7 +2891,8 @@
     "terrainTags": [
       "desert",
       "creek"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0183",
@@ -2724,7 +2906,8 @@
     "minTier": 2,
     "terrainTags": [
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0184",
@@ -2739,7 +2922,8 @@
     "terrainTags": [
       "desert",
       "ohv"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0185",
@@ -2754,7 +2938,8 @@
     "terrainTags": [
       "desert",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0186",
@@ -2769,7 +2954,8 @@
     "terrainTags": [
       "mountain",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0187",
@@ -2784,7 +2970,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0188",
@@ -2799,7 +2986,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0189",
@@ -2814,7 +3002,8 @@
     "terrainTags": [
       "remote",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0190",
@@ -2829,7 +3018,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0191",
@@ -2844,7 +3034,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0192",
@@ -2859,7 +3050,8 @@
     "terrainTags": [
       "desert",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0193",
@@ -2873,7 +3065,8 @@
     "minTier": 2,
     "terrainTags": [
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0194",
@@ -2888,7 +3081,8 @@
     "terrainTags": [
       "desert",
       "clay"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0195",
@@ -2903,7 +3097,8 @@
     "terrainTags": [
       "desert",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0196",
@@ -2918,7 +3113,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0197",
@@ -2933,7 +3129,8 @@
     "terrainTags": [
       "desert",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0198",
@@ -2948,7 +3145,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0199",
@@ -2962,7 +3160,8 @@
     "minTier": 2,
     "terrainTags": [
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0200",
@@ -2977,7 +3176,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0201",
@@ -2992,7 +3192,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0202",
@@ -3007,7 +3208,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0203",
@@ -3022,7 +3224,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0204",
@@ -3037,7 +3240,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0205",
@@ -3052,7 +3256,8 @@
     "terrainTags": [
       "alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0206",
@@ -3067,12 +3272,13 @@
     "terrainTags": [
       "volcanic",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0207",
-    "title": "Maui Haleakalā Crater Road",
-    "description": "Summit highway — stock OK.",
+    "title": "Maui Haleakal\u0101 Crater Road",
+    "description": "Summit highway \u2014 stock OK.",
     "lat": 20.71,
     "lng": -156.25,
     "rewardOlC": 195,
@@ -3082,7 +3288,8 @@
     "terrainTags": [
       "volcanic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0208",
@@ -3097,7 +3304,8 @@
     "terrainTags": [
       "coast",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0209",
@@ -3112,7 +3320,8 @@
     "terrainTags": [
       "tropical",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0210",
@@ -3127,7 +3336,8 @@
     "terrainTags": [
       "plateau",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0211",
@@ -3142,7 +3352,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0212",
@@ -3157,7 +3368,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0213",
@@ -3172,7 +3384,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0214",
@@ -3187,7 +3400,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0215",
@@ -3202,7 +3416,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0216",
@@ -3217,7 +3432,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0217",
@@ -3232,12 +3448,13 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0218",
     "title": "Black Rock Desert Playa",
-    "description": "Vast playa — weather dependent.",
+    "description": "Vast playa \u2014 weather dependent.",
     "lat": 40.78,
     "lng": -119.2,
     "rewardOlC": 337,
@@ -3247,7 +3464,8 @@
     "terrainTags": [
       "playa",
       "desert"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0219",
@@ -3262,7 +3480,8 @@
     "terrainTags": [
       "desert",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0220",
@@ -3277,7 +3496,8 @@
     "terrainTags": [
       "granite",
       "forest"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0221",
@@ -3292,7 +3512,8 @@
     "terrainTags": [
       "volcanic",
       "forest"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0222",
@@ -3307,7 +3528,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0223",
@@ -3322,7 +3544,8 @@
     "terrainTags": [
       "volcanic",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0224",
@@ -3337,7 +3560,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0225",
@@ -3352,7 +3576,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0226",
@@ -3367,7 +3592,8 @@
     "terrainTags": [
       "forest",
       "mountain"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0227",
@@ -3381,7 +3607,8 @@
     "minTier": 1,
     "terrainTags": [
       "forest"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0228",
@@ -3396,7 +3623,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0229",
@@ -3410,7 +3638,8 @@
     "minTier": 1,
     "terrainTags": [
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0230",
@@ -3425,7 +3654,8 @@
     "terrainTags": [
       "alpine",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0231",
@@ -3440,7 +3670,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0232",
@@ -3455,7 +3686,8 @@
     "terrainTags": [
       "dirt",
       "wildlife"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0233",
@@ -3470,7 +3702,8 @@
     "terrainTags": [
       "dirt",
       "wildlife"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0234",
@@ -3485,7 +3718,8 @@
     "terrainTags": [
       "high-plains",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0235",
@@ -3500,7 +3734,8 @@
     "terrainTags": [
       "alpine",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0236",
@@ -3515,7 +3750,8 @@
     "terrainTags": [
       "prairie",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0237",
@@ -3530,7 +3766,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0238",
@@ -3545,7 +3782,8 @@
     "terrainTags": [
       "badlands",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0239",
@@ -3560,7 +3798,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0240",
@@ -3574,7 +3813,8 @@
     "minTier": 2,
     "terrainTags": [
       "forest"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0241",
@@ -3589,7 +3829,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0242",
@@ -3604,7 +3845,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0243",
@@ -3619,7 +3861,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0244",
@@ -3634,7 +3877,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0245",
@@ -3649,7 +3893,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0246",
@@ -3664,7 +3909,8 @@
     "terrainTags": [
       "sand",
       "scrub"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0247",
@@ -3679,7 +3925,8 @@
     "terrainTags": [
       "swamp",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0248",
@@ -3694,7 +3941,8 @@
     "terrainTags": [
       "scenic",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0249",
@@ -3709,7 +3957,8 @@
     "terrainTags": [
       "desert",
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0250",
@@ -3724,7 +3973,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0251",
@@ -3739,7 +3989,8 @@
     "terrainTags": [
       "volcanic",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0252",
@@ -3754,7 +4005,8 @@
     "terrainTags": [
       "canyon",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0253",
@@ -3769,7 +4021,8 @@
     "terrainTags": [
       "forest",
       "remote"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0254",
@@ -3784,7 +4037,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0255",
@@ -3799,7 +4053,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0256",
@@ -3814,7 +4069,8 @@
     "terrainTags": [
       "alpine",
       "private-adjacent"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0257",
@@ -3829,7 +4085,8 @@
     "terrainTags": [
       "sand",
       "creek"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0258",
@@ -3844,7 +4101,8 @@
     "terrainTags": [
       "dirt",
       "mountain"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0259",
@@ -3859,7 +4117,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0260",
@@ -3874,7 +4133,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0261",
@@ -3889,7 +4149,8 @@
     "terrainTags": [
       "forest",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0262",
@@ -3904,7 +4165,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0263",
@@ -3919,7 +4181,8 @@
     "terrainTags": [
       "high-alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0264",
@@ -3934,7 +4197,8 @@
     "terrainTags": [
       "high-alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0265",
@@ -3949,7 +4213,8 @@
     "terrainTags": [
       "alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0266",
@@ -3964,7 +4229,8 @@
     "terrainTags": [
       "alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0267",
@@ -3979,7 +4245,8 @@
     "terrainTags": [
       "extreme",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0268",
@@ -3994,7 +4261,8 @@
     "terrainTags": [
       "alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0269",
@@ -4009,7 +4277,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0270",
@@ -4024,7 +4293,8 @@
     "terrainTags": [
       "alpine",
       "historic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0271",
@@ -4039,7 +4309,8 @@
     "terrainTags": [
       "alpine",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0272",
@@ -4054,7 +4325,8 @@
     "terrainTags": [
       "alpine",
       "paved"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0273",
@@ -4069,7 +4341,8 @@
     "terrainTags": [
       "alpine",
       "gravel"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0274",
@@ -4084,7 +4357,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0275",
@@ -4099,7 +4373,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0276",
@@ -4113,7 +4388,8 @@
     "minTier": 3,
     "terrainTags": [
       "high-alpine"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0277",
@@ -4128,7 +4404,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0278",
@@ -4143,7 +4420,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0279",
@@ -4158,7 +4436,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0280",
@@ -4173,7 +4452,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0281",
@@ -4188,7 +4468,8 @@
     "terrainTags": [
       "alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0282",
@@ -4203,7 +4484,8 @@
     "terrainTags": [
       "alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0283",
@@ -4218,7 +4500,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0284",
@@ -4233,7 +4516,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0285",
@@ -4248,7 +4532,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0286",
@@ -4263,7 +4548,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0287",
@@ -4277,7 +4563,8 @@
     "minTier": 1,
     "terrainTags": [
       "scenic"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0288",
@@ -4293,7 +4580,8 @@
       "sand",
       "creek",
       "alpine"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0289",
@@ -4308,7 +4596,8 @@
     "terrainTags": [
       "alpine",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0290",
@@ -4323,7 +4612,8 @@
     "terrainTags": [
       "forest",
       "dirt"
-    ]
+    ],
+    "radiusMeters": 100
   },
   {
     "id": "q0291",
@@ -4338,6 +4628,7 @@
     "terrainTags": [
       "alpine",
       "rock"
-    ]
+    ],
+    "radiusMeters": 100
   }
 ]

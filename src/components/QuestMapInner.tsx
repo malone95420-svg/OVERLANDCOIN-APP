@@ -56,7 +56,7 @@ export default function QuestMapInner({ quests, selectedId, onSelect }: Props) {
           <Popup>
             <strong>{q.title}</strong>
             <br />
-            {q.region} · {q.difficulty} · Tier {q.minTier}+ · {q.rewardOlC} OLC
+            {q.region} · {q.difficulty} · Tier {q.minTier}+ · {q.radiusMeters}m · {q.rewardOlC} OLC
           </Popup>
         </Marker>
       ))}

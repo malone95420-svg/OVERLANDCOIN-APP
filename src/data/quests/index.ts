@@ -1,7 +1,6 @@
 /**
- * Quest catalog — seeded from known trailheads, parks, and overland corridors.
- * Grow toward ~5000 by appending entries in seed.json (or re-running
- * `node scripts/generate-quests.mjs` after extending LOCATIONS).
+ * Quest catalog — curated corridors plus GeoNames / Overpass NA expansion.
+ * Regenerate with `node scripts/generate-quests.mjs` (Wyoming-heavy NA set).
  */
 import type { CapabilityTier } from "@/lib/vehicle";
 import seed from "./seed.json";

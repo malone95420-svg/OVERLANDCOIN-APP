@@ -1,14 +1,14 @@
 /**
  * Generates src/data/quests/seed.json with realistic overland waypoints.
- * Expand this list toward 5000 by appending more known trailheads/parks.
+ *
+ * Sources:
+ *  1) Hand-curated LOCATIONS (classic overland corridors)
+ *  2) OpenStreetMap Overpass API (trailhead / camp / viewpoint / picnic / hut)
+ *  3) GeoNames US+CA dumps as a reliable fallback when Overpass is flaky
+ *
+ * Wyoming is oversampled (~400–700 of new quests). Dedupes within ~150m.
  * Run: node scripts/generate-quests.mjs
  */
-import { writeFileSync, mkdirSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 /** Known real-world trailheads / parks / overland corridors [title, region, lat, lng, difficulty, minTier, terrainTags[], desc] */
 const LOCATIONS = [
   // USA Southwest
@@ -321,30 +321,598 @@ const LOCATIONS = [
   ["South Colony Lakes Road", "Colorado, USA", 37.95, -105.55, "Hard", 3, ["alpine","rock"], "Crestone Peak approach road."],
 ];
 
-function rewardFor(difficulty, minTier) {
-  const base = { Easy: 150, Moderate: 275, Hard: 400, Legendary: 650 }[difficulty] || 250;
-  return base + minTier * 25 + Math.floor(Math.random() * 50);
+import { readFileSync, writeFileSync, mkdirSync, existsSync, createReadStream } from "fs";
+import { createInterface } from "readline";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+import { createHash } from "crypto";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, "..");
+const CACHE = join(__dirname, "cache");
+const OUT_DIR = join(ROOT, "src/data/quests");
+const DEDUPE_METERS = 150;
+const TARGET_NEW = 2000;
+const WY_TARGET_MIN = 400;
+const WY_TARGET_MAX = 700;
+
+/** Deterministic 0..n-1 from string */
+function hashInt(s, n) {
+  const h = createHash("sha256").update(String(s)).digest();
+  return h.readUInt32BE(0) % n;
 }
 
-const quests = LOCATIONS.map((row, i) => {
-  const [title, region, lat, lng, difficulty, minTier, terrainTags, description] = row;
-  return {
-    id: `q${String(i + 1).padStart(4, "0")}`,
-    title,
-    description,
-    lat: Number(lat.toFixed(5)),
-    lng: Number(lng.toFixed(5)),
-    rewardOlC: rewardFor(difficulty, minTier),
-    difficulty,
-    region,
-    minTier,
-    terrainTags,
-    radiusMeters: 100,
-  };
-});
+function rewardFor(difficulty, minTier, seedKey) {
+  const base = { Easy: 150, Moderate: 275, Hard: 400, Legendary: 650 }[difficulty] || 250;
+  return base + minTier * 25 + hashInt(seedKey, 50);
+}
 
-const outDir = join(__dirname, "../src/data/quests");
-mkdirSync(outDir, { recursive: true });
-const outPath = join(outDir, "seed.json");
-writeFileSync(outPath, JSON.stringify(quests, null, 2) + "\n");
-console.log(`Wrote ${quests.length} quests to ${outPath}`);
+function haversineM(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const toR = (d) => (d * Math.PI) / 180;
+  const dLat = toR(lat2 - lat1);
+  const dLng = toR(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toR(lat1)) * Math.cos(toR(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+/** Grid-bucket dedupe to avoid O(n^2) full scans */
+function makeDedupeIndex() {
+  const cell = 0.002; // ~220m
+  const buckets = new Map();
+  const key = (lat, lng) => `${Math.floor(lat / cell)}:${Math.floor(lng / cell)}`;
+  return {
+    hasNear(lat, lng, meters = DEDUPE_METERS) {
+      const i0 = Math.floor(lat / cell);
+      const j0 = Math.floor(lng / cell);
+      for (let di = -1; di <= 1; di++) {
+        for (let dj = -1; dj <= 1; dj++) {
+          const arr = buckets.get(`${i0 + di}:${j0 + dj}`);
+          if (!arr) continue;
+          for (const p of arr) {
+            if (haversineM(lat, lng, p.lat, p.lng) < meters) return true;
+          }
+        }
+      }
+      return false;
+    },
+    add(lat, lng) {
+      const k = key(lat, lng);
+      if (!buckets.has(k)) buckets.set(k, []);
+      buckets.get(k).push({ lat, lng });
+    },
+  };
+}
+
+const HARD_RE =
+  /\b(4wd|4x4|4-wheel|four[\s-]?wheel|jeep|ohv|atv|technical|wilderness|remote|alpine|ford|slickrock|rock crawl|extreme|ledge|shelf road|high clearance)\b/i;
+const LEGENDARY_RE = /\b(extreme|rubicon|hell'?s revenge|black bear|fordyce|cape york|simpson desert)\b/i;
+const EASY_RE = /\b(scenic|overlook|viewpoint|visitor|picnic|parkway|paved|interpretive)\b/i;
+
+function classifyFromName(name, fcode, elev) {
+  const n = name || "";
+  if (LEGENDARY_RE.test(n)) return { difficulty: "Legendary", minTier: 5, tags: ["extreme", "remote"] };
+  if (HARD_RE.test(n) || fcode === "GAP" || (elev != null && elev >= 3000)) {
+    const tags = ["dirt", "mountain"];
+    if (elev != null && elev >= 3000) tags.push("high-alpine");
+    if (/rock|ledge|slick/i.test(n)) tags.push("rock");
+    return { difficulty: "Hard", minTier: elev != null && elev >= 3500 ? 4 : 3, tags };
+  }
+  if (fcode === "PRK" || EASY_RE.test(n) || fcode === "viewpoint" || fcode === "picnic_site") {
+    return { difficulty: "Easy", minTier: 1, tags: ["scenic"] };
+  }
+  if (fcode === "CMP" || fcode === "camp_site") {
+    return { difficulty: "Moderate", minTier: 2, tags: ["dirt", "forest"] };
+  }
+  if (fcode === "TRL" || fcode === "trailhead") {
+    return { difficulty: "Moderate", minTier: 2, tags: ["dirt", "forest"] };
+  }
+  if (fcode === "MT" || fcode === "RDGE" || fcode === "CLF") {
+    return { difficulty: "Hard", minTier: 3, tags: ["mountain", "dirt"] };
+  }
+  if (fcode === "LK" || fcode === "SPNG" || fcode === "FALL") {
+    return { difficulty: "Moderate", minTier: 2, tags: ["scenic", "dirt"] };
+  }
+  return { difficulty: "Moderate", minTier: 2, tags: ["dirt"] };
+}
+
+function titleFor(name, fcode) {
+  const n = name.trim().replace(/\s+/g, " ");
+  if (/camp|trail|park|pass|gap|overlook|viewpoint|picnic|hut/i.test(n)) return n;
+  const suffix = {
+    CMP: "Camp",
+    camp_site: "Camp",
+    TRL: "Trail",
+    trailhead: "Trailhead",
+    PRK: "Park",
+    GAP: "Gap",
+    PASS: "Pass",
+    viewpoint: "Viewpoint",
+    picnic_site: "Picnic Site",
+    wilderness_hut: "Hut",
+    MT: "Peak Area",
+    LK: "Lake Access",
+    SPNG: "Spring",
+    RDGE: "Ridge",
+    AREA: "Recreation Area",
+    FALL: "Falls",
+    VAL: "Valley",
+    RSV: "Reservoir Access",
+    CLF: "Cliff Overlook",
+    MESA: "Mesa",
+    BUTE: "Butte",
+    PLAT: "Plateau",
+    RESV: "Reserve",
+  }[fcode];
+  return suffix ? `${n} ${suffix}` : n;
+}
+
+function descFor(title, region, fcode, difficulty) {
+  const place = region.replace(/, USA|, Canada/g, "");
+  const byCode = {
+    CMP: `Dispersed / developed camp access in ${place} — verify fire rules and surface conditions.`,
+    camp_site: `Camp site waypoint in ${place}. High-clearance helpful on approach spurs.`,
+    TRL: `Named trail corridor in ${place}. Overland staging / trailhead-style check-in.`,
+    trailhead: `Trailhead access in ${place}.`,
+    PRK: `Park / recreation site in ${place}. Stock vehicles often OK to the pin.`,
+    GAP: `Mountain gap / pass notch in ${place}. Expect grades, weather, and possible snow seasonally.`,
+    viewpoint: `Scenic viewpoint in ${place}.`,
+    picnic_site: `Picnic site pullout in ${place}.`,
+    wilderness_hut: `Backcountry hut vicinity in ${place}.`,
+    MT: `Mountain waypoint in ${place}. Approach roads may be rough.`,
+    LK: `Lake access area in ${place}.`,
+    SPNG: `Named spring area in ${place}.`,
+    RDGE: `Ridge access in ${place}.`,
+    FALL: `Waterfall area access in ${place}.`,
+    VAL: `Valley corridor in ${place}.`,
+    RSV: `Reservoir access in ${place}.`,
+    AREA: `Recreation area in ${place}.`,
+  };
+  const base = byCode[fcode] || `Overland waypoint in ${place}.`;
+  if (difficulty === "Hard" || difficulty === "Legendary") {
+    return `${base} Rated ${difficulty} — clearance / recovery gear recommended.`;
+  }
+  return base;
+}
+
+function isBadName(name) {
+  if (!name || name.length < 3) return true;
+  if (/^unnamed/i.test(name)) return true;
+  if (/^\d+$/.test(name.trim())) return true;
+  if (/^(a|the|north|south|east|west)\s*\d+$/i.test(name)) return true;
+  if (/indian reserve|pre-reserve|réserve indienne/i.test(name)) return true;
+  if (/^\{\d+\}/.test(name)) return true; // odd GNIS glyphs
+  // Yellowstone-style cryptic site codes ("3L9") without a real place name
+  if (/^[0-9A-Z]{2,5}$/i.test(name.trim())) return true;
+  if (/^\d[A-Z]\d\b/i.test(name) && name.length < 14) return true;
+  return false;
+}
+
+const STATE_REGION = {
+  WY: "Wyoming, USA",
+  CO: "Colorado, USA",
+  UT: "Utah, USA",
+  MT: "Montana, USA",
+  ID: "Idaho, USA",
+  NM: "New Mexico, USA",
+  AZ: "Arizona, USA",
+  NV: "Nevada, USA",
+  OR: "Oregon, USA",
+  WA: "Washington, USA",
+  CA: "California, USA",
+  SD: "South Dakota, USA",
+  ND: "North Dakota, USA",
+  AK: "Alaska, USA",
+  TX: "Texas, USA",
+  NE: "Nebraska, USA",
+  KS: "Kansas, USA",
+  OK: "Oklahoma, USA",
+};
+const CA_REGION = {
+  "01": "Alberta, Canada",
+  "02": "British Columbia, Canada",
+  "12": "Yukon, Canada",
+  "13": "NWT, Canada",
+  "11": "Saskatchewan, Canada",
+  "03": "Manitoba, Canada",
+};
+
+const WEST_US = new Set(Object.keys(STATE_REGION));
+const CA_WEST = new Set(["01", "02", "12", "13", "11"]);
+const CORE = new Set(["CMP", "TRL", "PRK", "GAP"]);
+const EXTRA_WY = new Set(["MT", "LK", "SPNG", "RDGE", "AREA", "FALL", "CLF", "MESA", "BUTE", "PLAT"]);
+const CA_CORE = new Set(["PRK", "MT", "GAP", "CMP", "TRL", "AREA", "RESV"]);
+
+async function parseGeonamesFile(path, { country }) {
+  if (!existsSync(path)) return [];
+  const out = [];
+  const rl = createInterface({ input: createReadStream(path, { encoding: "utf8" }), crlfDelay: Infinity });
+  for await (const line of rl) {
+    const row = line.split("\t");
+    if (row.length < 11) continue;
+    const name = row[1];
+    const lat = parseFloat(row[4]);
+    const lng = parseFloat(row[5]);
+    const fcode = row[7];
+    const admin1 = row[10];
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+    if (isBadName(name)) continue;
+    let region, keep = false;
+    if (country === "US") {
+      if (!WEST_US.has(admin1)) continue;
+      if (admin1 === "WY") keep = CORE.has(fcode) || EXTRA_WY.has(fcode);
+      else keep = CORE.has(fcode);
+      region = STATE_REGION[admin1];
+    } else {
+      if (!CA_WEST.has(admin1)) continue;
+      keep = CA_CORE.has(fcode);
+      region = CA_REGION[admin1] || "Canada";
+    }
+    if (!keep) continue;
+    let elev = null;
+    if (row[15]) elev = parseInt(row[15], 10);
+    else if (row[16]) elev = parseInt(row[16], 10);
+    if (!Number.isFinite(elev)) elev = null;
+    out.push({
+      name,
+      lat,
+      lng,
+      fcode,
+      region,
+      admin1,
+      elev,
+      source: "geonames",
+      priority: priorityScore(admin1, fcode, country),
+    });
+  }
+  return out;
+}
+
+function priorityScore(admin1, fcode, country) {
+  // Higher = take first. Wyoming CORE boosted heavily.
+  let p = 0;
+  if (admin1 === "WY") p += 1000;
+  else if (["CO", "UT", "MT", "ID", "AZ", "NM", "NV", "OR", "WA"].includes(admin1)) p += 400;
+  else if (admin1 === "CA" || admin1 === "02" || admin1 === "01") p += 300;
+  else p += 100;
+  const codeBoost = { CMP: 50, PRK: 45, GAP: 40, camp_site: 50, viewpoint: 42, picnic_site: 35, trailhead: 38, TRL: 30, MT: 15, LK: 12, SPNG: 10, RDGE: 10, AREA: 20, RESV: 18, FALL: 14, CLF: 12 };
+  p += codeBoost[fcode] || 0;
+  if (country === "CA") p += 20;
+  return p;
+}
+
+async function ensureGeonames() {
+  mkdirSync(CACHE, { recursive: true });
+  const files = [
+    { zip: "US.zip", txt: "US.txt", url: "https://download.geonames.org/export/dump/US.zip" },
+    { zip: "CA.zip", txt: "CA.txt", url: "https://download.geonames.org/export/dump/CA.zip" },
+  ];
+  for (const f of files) {
+    const txtPath = join(CACHE, f.txt);
+    if (existsSync(txtPath)) continue;
+    const zipPath = join(CACHE, f.zip);
+    if (!existsSync(zipPath)) {
+      console.log(`Downloading ${f.url} ...`);
+      const res = await fetch(f.url, { headers: { "User-Agent": "OverlandCoinQuestBot/1.0" } });
+      if (!res.ok) throw new Error(`Failed to download ${f.url}: ${res.status}`);
+      writeFileSync(zipPath, Buffer.from(await res.arrayBuffer()));
+    }
+    console.log(`Unzipping ${f.zip} ...`);
+    const { execSync } = await import("child_process");
+    execSync(`unzip -o -q ${JSON.stringify(f.zip)} ${JSON.stringify(f.txt)}`, { cwd: CACHE });
+  }
+}
+
+async function fetchOverpassBbox(name, south, west, north, east) {
+  const outPath = join(CACHE, `${name}.json`);
+  if (existsSync(outPath)) {
+    try {
+      const d = JSON.parse(readFileSync(outPath, "utf8"));
+      if (Array.isArray(d.elements)) return d.elements;
+    } catch {
+      /* refetch */
+    }
+  }
+  const query = `[out:json][timeout:60];(
+  node["tourism"~"^(viewpoint|camp_site|picnic_site|wilderness_hut)$"](${south},${west},${north},${east});
+  node["highway"="trailhead"](${south},${west},${north},${east});
+  node["tourism"="information"]["information"="trailhead"](${south},${west},${north},${east});
+  node["amenity"="parking"]["hiking"="yes"](${south},${west},${north},${east});
+);out body;`;
+  const endpoints = [
+    "https://lz4.overpass-api.de/api/interpreter",
+    "https://overpass-api.de/api/interpreter",
+  ];
+  for (const url of endpoints) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        console.log(`Overpass ${name} via ${url} (try ${attempt})...`);
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "User-Agent": "OverlandCoinQuestBot/1.0",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({ data: query }),
+          signal: AbortSignal.timeout(90000),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        const d = JSON.parse(text);
+        if (!Array.isArray(d.elements)) throw new Error("no elements");
+        writeFileSync(outPath, JSON.stringify(d));
+        console.log(`  -> ${d.elements.length} elements`);
+        return d.elements;
+      } catch (e) {
+        console.warn(`  failed: ${e.message}`);
+        await new Promise((r) => setTimeout(r, 3000 * attempt));
+      }
+    }
+  }
+  return [];
+}
+
+function elementsToCandidates(elements, region, admin1) {
+  const out = [];
+  for (const e of elements) {
+    if (e.type !== "node" || e.lat == null) continue;
+    const tags = e.tags || {};
+    const name = tags.name || tags["name:en"];
+    if (isBadName(name)) continue;
+    const fcode =
+      tags.tourism || tags.highway || tags.leisure || tags.amenity || "poi";
+    out.push({
+      name,
+      lat: e.lat,
+      lng: e.lon,
+      fcode,
+      region,
+      admin1,
+      elev: tags.ele ? parseFloat(tags.ele) : null,
+      source: "overpass",
+      priority: priorityScore(admin1, fcode, "US") + 80,
+    });
+  }
+  return out;
+}
+
+/** Per-region caps for non-Wyoming fill */
+const REGION_CAPS = {
+  // Interleave Canada early so phase-B soft fill cannot starve it
+  "British Columbia, Canada": 90,
+  "Alberta, Canada": 70,
+  "Colorado, USA": 180,
+  "Utah, USA": 150,
+  "California, USA": 180,
+  "Montana, USA": 130,
+  "Arizona, USA": 120,
+  "Oregon, USA": 120,
+  "Idaho, USA": 100,
+  "New Mexico, USA": 90,
+  "Washington, USA": 90,
+  "Yukon, Canada": 35,
+  "Nevada, USA": 80,
+  "Alaska, USA": 60,
+  "Texas, USA": 70,
+  "NWT, Canada": 25,
+  "South Dakota, USA": 40,
+  "Saskatchewan, Canada": 25,
+  "North Dakota, USA": 25,
+  "Nebraska, USA": 30,
+  "Kansas, USA": 25,
+  "Oklahoma, USA": 25,
+};
+
+async function main() {
+  mkdirSync(CACHE, { recursive: true });
+  mkdirSync(OUT_DIR, { recursive: true });
+
+  // 1) Curated base from LOCATIONS
+  const curated = LOCATIONS.map((row, i) => {
+    const [title, region, lat, lng, difficulty, minTier, terrainTags, description] = row;
+    return {
+      id: `q${String(i + 1).padStart(4, "0")}`,
+      title,
+      description,
+      lat: Number(lat.toFixed(5)),
+      lng: Number(lng.toFixed(5)),
+      rewardOlC: rewardFor(difficulty, minTier, `curated:${title}:${lat}:${lng}`),
+      difficulty,
+      region,
+      minTier,
+      terrainTags,
+      radiusMeters: 100,
+      _source: "curated",
+    };
+  });
+
+  const index = makeDedupeIndex();
+  for (const q of curated) index.add(q.lat, q.lng);
+
+  // 2) GeoNames candidates
+  await ensureGeonames();
+  console.log("Parsing GeoNames US/CA ...");
+  const geoUs = await parseGeonamesFile(join(CACHE, "US.txt"), { country: "US" });
+  const geoCa = await parseGeonamesFile(join(CACHE, "CA.txt"), { country: "CA" });
+  console.log(`GeoNames candidates: US=${geoUs.length} CA=${geoCa.length}`);
+
+  // 3) Overpass (Wyoming tiles + a few western tiles); uses cache when present
+  const overpassTiles = [
+    ["wy_nw", 43.0, -111.05, 45.01, -107.55, "Wyoming, USA", "WY"],
+    ["wy_ne", 43.0, -107.55, 45.01, -104.05, "Wyoming, USA", "WY"],
+    ["wy_sw", 40.99, -111.05, 43.0, -107.55, "Wyoming, USA", "WY"],
+    ["wy_se", 40.99, -107.55, 43.0, -104.05, "Wyoming, USA", "WY"],
+    ["co_west", 37.5, -109.0, 41.0, -106.0, "Colorado, USA", "CO"],
+    ["ut_east", 37.0, -111.0, 41.0, -109.0, "Utah, USA", "UT"],
+    ["mt_south", 44.5, -113.0, 46.5, -108.0, "Montana, USA", "MT"],
+  ];
+  let overpassCands = [];
+  for (const [name, s, w, n, e, region, admin1] of overpassTiles) {
+    const els = await fetchOverpassBbox(name, s, w, n, e);
+    overpassCands = overpassCands.concat(elementsToCandidates(els, region, admin1));
+    await new Promise((r) => setTimeout(r, 1500));
+  }
+  console.log(`Overpass named candidates: ${overpassCands.length}`);
+
+  // 4) Merge & sort by priority
+  const candidates = [...overpassCands, ...geoUs, ...geoCa].sort(
+    (a, b) => b.priority - a.priority || a.name.localeCompare(b.name),
+  );
+
+  const selected = [];
+  const regionCounts = {};
+  let wyCount = 0;
+  const WY_TARGET = Math.floor((WY_TARGET_MIN + WY_TARGET_MAX) / 2); // ~550
+
+  const bump = (region) => {
+    regionCounts[region] = (regionCounts[region] || 0) + 1;
+  };
+
+  const tryAdd = (c, { wyMax = WY_TARGET_MAX, regionCap = null } = {}) => {
+    if (selected.length >= TARGET_NEW) return false;
+    if (index.hasNear(c.lat, c.lng)) return false;
+    const isWy = c.admin1 === "WY" || c.region === "Wyoming, USA";
+    if (isWy) {
+      if (wyCount >= wyMax) return false;
+    } else {
+      const cap = regionCap ?? REGION_CAPS[c.region] ?? 40;
+      if ((regionCounts[c.region] || 0) >= cap) return false;
+    }
+    const { difficulty, minTier, tags } = classifyFromName(c.name, c.fcode, c.elev);
+    const title = titleFor(c.name, c.fcode);
+    const lat = Number(c.lat.toFixed(5));
+    const lng = Number(c.lng.toFixed(5));
+    selected.push({
+      cand: c,
+      quest: {
+        title,
+        description: descFor(title, c.region, c.fcode, difficulty),
+        lat,
+        lng,
+        rewardOlC: rewardFor(difficulty, minTier, `${c.source}:${title}:${lat}:${lng}`),
+        difficulty,
+        region: c.region,
+        minTier,
+        terrainTags: tags,
+        radiusMeters: 100,
+        _source: c.source,
+      },
+    });
+    index.add(lat, lng);
+    bump(c.region);
+    if (isWy) wyCount++;
+    return true;
+  };
+
+  // Phase A — Wyoming CORE-first toward mid target
+  for (const c of candidates) {
+    if (wyCount >= WY_TARGET) break;
+    if (c.admin1 !== "WY" && c.region !== "Wyoming, USA") continue;
+    // Prefer camp/park/gap/trailhead over mountain extras early
+    if (!CORE.has(c.fcode) && !["camp_site","viewpoint","picnic_site","trailhead","wilderness_hut"].includes(c.fcode)) continue;
+    tryAdd(c, { wyMax: WY_TARGET });
+  }
+  for (const c of candidates) {
+    if (wyCount >= WY_TARGET) break;
+    if (c.admin1 !== "WY" && c.region !== "Wyoming, USA") continue;
+    tryAdd(c, { wyMax: WY_TARGET });
+  }
+
+  // Phase B — fill each region toward its soft cap for geographic spread
+  const regionOrder = Object.keys(REGION_CAPS);
+  for (const region of regionOrder) {
+    const soft = Math.min(REGION_CAPS[region], Math.floor(REGION_CAPS[region] * 0.55));
+    for (const c of candidates) {
+      if ((regionCounts[region] || 0) >= soft) break;
+      if (selected.length >= TARGET_NEW) break;
+      if (c.region !== region) continue;
+      tryAdd(c);
+    }
+  }
+
+  // Phase C — fill remaining slots (allow WY up to MAX)
+  for (const c of candidates) {
+    if (selected.length >= TARGET_NEW) break;
+    tryAdd(c, { wyMax: WY_TARGET_MAX });
+  }
+
+  // Phase D — if WY still under MIN, force-fill
+  if (wyCount < WY_TARGET_MIN) {
+    for (const c of candidates) {
+      if (wyCount >= WY_TARGET_MIN) break;
+      if (c.admin1 !== "WY" && c.region !== "Wyoming, USA") continue;
+      tryAdd(c, { wyMax: WY_TARGET_MAX });
+    }
+  }
+
+  // Trim to ~TARGET_NEW while protecting WY count in [MIN,MAX]
+  let finalNew = selected.map((s) => s.quest);
+  if (finalNew.length > TARGET_NEW) {
+    // Drop non-WY from the end (lowest priority were appended later... actually highest priority first)
+    // Prefer dropping non-WY extras
+    const wy = finalNew.filter((q) => q.region === "Wyoming, USA");
+    const other = finalNew.filter((q) => q.region !== "Wyoming, USA");
+    const keepWy = wy.slice(0, WY_TARGET_MAX);
+    const keepOther = other.slice(0, Math.max(0, TARGET_NEW - keepWy.length));
+    finalNew = [...keepWy, ...keepOther];
+  }
+
+  const all = [
+    ...curated.map(({ _source, ...q }) => q),
+    ...finalNew.map(({ _source, ...q }, i) => ({
+      ...q,
+      id: `q${String(curated.length + i + 1).padStart(4, "0")}`,
+    })),
+  ];
+
+  // Optional: split by region if huge (>1.5MB)
+  const singlePath = join(OUT_DIR, "seed.json");
+  const payload = JSON.stringify(all, null, 2) + "\n";
+  writeFileSync(singlePath, payload);
+
+  const wyTotal = all.filter((q) => /Wyoming/i.test(q.region)).length;
+  const naTotal = all.filter((q) => /, USA|, Canada/i.test(q.region)).length;
+  const bySource = { curated: curated.length, overpass: 0, geonames: 0 };
+  for (const s of selected) {
+    if (s.quest._source === "overpass") bySource.overpass++;
+    if (s.quest._source === "geonames") bySource.geonames++;
+  }
+  // recount sources from finalNew length vs selected — use region stats
+  console.log(
+    JSON.stringify(
+      {
+        total: all.length,
+        curated: curated.length,
+        added: finalNew.length,
+        wyomingTotal: wyTotal,
+        naTotal,
+        bytes: payload.length,
+        sources: {
+          curated: curated.length,
+          overpass: selected.filter((s) => s.quest._source === "overpass" && finalNew.includes(s.quest)).length,
+          geonames: selected.filter((s) => s.quest._source === "geonames" && finalNew.includes(s.quest)).length,
+        },
+        regionSample: Object.fromEntries(
+          Object.entries(
+            all.reduce((m, q) => {
+              m[q.region] = (m[q.region] || 0) + 1;
+              return m;
+            }, {}),
+          )
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 20),
+        ),
+      },
+      null,
+      2,
+    ),
+  );
+  console.log(`Wrote ${all.length} quests to ${singlePath}`);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

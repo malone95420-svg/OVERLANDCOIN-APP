@@ -3,6 +3,7 @@
  * Regenerate with `node scripts/generate-quests.mjs` (Wyoming-heavy NA set).
  */
 import type { CapabilityTier } from "@/lib/vehicle";
+import { rewardForDifficulty } from "@/lib/questRewards";
 import seed from "./seed.json";
 
 export type QuestDifficulty = "Easy" | "Moderate" | "Hard" | "Legendary";
@@ -94,14 +95,17 @@ export type Quest = {
 const DEFAULT_RADIUS_METERS = 100;
 
 function normalizeQuest(raw: Partial<Quest> & Pick<Quest, "id" | "title" | "lat" | "lng">): Quest {
+  const rawDiff = (raw.difficulty as string | undefined) ?? "Easy";
+  const difficulty: Quest["difficulty"] =
+    rawDiff === "Medium" ? "Moderate" : ((rawDiff as Quest["difficulty"]) || "Easy");
   return {
     id: raw.id,
     title: raw.title,
     description: raw.description ?? "",
     lat: raw.lat,
     lng: raw.lng,
-    rewardOlC: raw.rewardOlC ?? 0,
-    difficulty: (raw.difficulty as Quest["difficulty"]) ?? "Easy",
+    rewardOlC: rewardForDifficulty(difficulty),
+    difficulty,
     region: raw.region ?? "",
     minTier: (raw.minTier as CapabilityTier) ?? 1,
     terrainTags: raw.terrainTags,

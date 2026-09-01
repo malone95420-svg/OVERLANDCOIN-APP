@@ -19,6 +19,10 @@ export default function MapPage() {
         reward contract exists. Use Live location, Directions (OSRM + Google/Apple Maps), and switch
         Street / Topo / Satellite / Outdoors basemaps — no map API key required.
       </p>
+      <p className="mt-4 rounded-lg border border-slate-800 bg-slate-950/60 px-4 py-3 text-xs text-slate-400">
+        <span className="font-medium text-slate-300">OLC by difficulty:</span>{" "}
+        Easy 25 · Moderate 75 · Hard 150 · Legendary 400
+      </p>
       <div className="mt-10">
         <QuestCards quests={QUESTS} />
       </div>

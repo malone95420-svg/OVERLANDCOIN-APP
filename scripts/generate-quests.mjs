@@ -325,7 +325,6 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, createReadStream } 
 import { createInterface } from "readline";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { createHash } from "crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -336,15 +335,17 @@ const TARGET_NEW = 2000;
 const WY_TARGET_MIN = 400;
 const WY_TARGET_MAX = 700;
 
-/** Deterministic 0..n-1 from string */
-function hashInt(s, n) {
-  const h = createHash("sha256").update(String(s)).digest();
-  return h.readUInt32BE(0) % n;
-}
+/** Fixed OLC by difficulty — matches src/lib/questRewards.ts (no random scatter). */
+const REWARD_BY_DIFFICULTY = {
+  Easy: 25,
+  Moderate: 75,
+  Hard: 150,
+  Legendary: 400,
+};
 
-function rewardFor(difficulty, minTier, seedKey) {
-  const base = { Easy: 150, Moderate: 275, Hard: 400, Legendary: 650 }[difficulty] || 250;
-  return base + minTier * 25 + hashInt(seedKey, 50);
+function rewardForDifficulty(d) {
+  if (d === "Medium") return REWARD_BY_DIFFICULTY.Moderate;
+  return REWARD_BY_DIFFICULTY[d] ?? REWARD_BY_DIFFICULTY.Easy;
 }
 
 function haversineM(lat1, lng1, lat2, lng2) {
@@ -718,7 +719,7 @@ async function main() {
       description,
       lat: Number(lat.toFixed(5)),
       lng: Number(lng.toFixed(5)),
-      rewardOlC: rewardFor(difficulty, minTier, `curated:${title}:${lat}:${lng}`),
+      rewardOlC: rewardForDifficulty(difficulty),
       difficulty,
       region,
       minTier,
@@ -791,7 +792,7 @@ async function main() {
         description: descFor(title, c.region, c.fcode, difficulty),
         lat,
         lng,
-        rewardOlC: rewardFor(difficulty, minTier, `${c.source}:${title}:${lat}:${lng}`),
+        rewardOlC: rewardForDifficulty(difficulty),
         difficulty,
         region: c.region,
         minTier,

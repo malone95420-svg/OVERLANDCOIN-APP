@@ -16,3 +16,5 @@ export {
 
 /** @deprecated Prefer QUESTS — kept for older imports during transition. */
 export { QUESTS as DEMO_QUESTS } from "@/data/quests";
+
+export { REWARD_BY_DIFFICULTY, rewardForDifficulty } from "@/lib/questRewards";

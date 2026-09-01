@@ -3,7 +3,7 @@
  * Locked OLC is non-transferable until owner enableTrading() after exchange listing.
  */
 
-import { blockdagHttpRpcUrls, isKnownGoodBlockdagRpc } from "./blockdagRpc";
+import { blockdagWalletRpcUrls, isSendCapableBlockdagRpc } from "./blockdagRpc";
 
 export const PRESALE_LOCK_ABI = [
   {
@@ -163,8 +163,8 @@ export function presaleDeliverRpcUrls(): string[] {
   const envRpc =
     process.env.PRESALE_RPC_URL?.trim() || process.env.REWARD_RPC_URL?.trim();
   const list = [
-    envRpc && isKnownGoodBlockdagRpc(envRpc) ? envRpc : undefined,
-    ...blockdagHttpRpcUrls(),
+    envRpc && isSendCapableBlockdagRpc(envRpc) ? envRpc : undefined,
+    ...blockdagWalletRpcUrls(),
   ].filter((u): u is string => Boolean(u));
   return [...new Set(list)];
 }

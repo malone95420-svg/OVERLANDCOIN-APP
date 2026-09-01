@@ -1,9 +1,13 @@
 /**
  * BlockDAG Mainnet chain definition for wagmi/viem.
  * Matches TOKEN in src/lib/token.ts (chainId 1404).
+ *
+ * defineChain http list may include read-only RPCs (engineering) for publicClient.
+ * wallet_addEthereumChain MUST use send-capable URLs only (west) — MetaMask
+ * broadcasts via those rpcUrls; engineering returns method not found on send.
  */
 import { defineChain } from "viem";
-import { blockdagHttpRpcUrls } from "./blockdagRpc";
+import { blockdagHttpRpcUrls, blockdagWalletRpcUrls } from "./blockdagRpc";
 import { TOKEN } from "./token";
 
 const rpcUrls = blockdagHttpRpcUrls();
@@ -31,8 +35,12 @@ export const blockdag = defineChain({
   },
 });
 
-/** EIP-3085 params for wallet_addEthereumChain — only known-good RPCs */
+/**
+ * EIP-3085 params for wallet_addEthereumChain.
+ * Send-capable URLs only (prefer west) — never engineering or bdagscan.
+ */
 export function blockdagAddChainParams() {
+  const walletRpcs = blockdagWalletRpcUrls();
   return {
     chainId: `0x${TOKEN.chainId.toString(16)}`,
     chainName: TOKEN.chainName,
@@ -41,7 +49,7 @@ export function blockdagAddChainParams() {
       symbol: TOKEN.nativeCurrency.symbol,
       decimals: TOKEN.nativeCurrency.decimals,
     },
-    rpcUrls: [...rpcUrls],
+    rpcUrls: [...walletRpcs],
     blockExplorerUrls: [TOKEN.explorers.primary, TOKEN.explorers.secondary],
   } as const;
 }

@@ -101,17 +101,19 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
   const onSwitch = useCallback(async () => {
     setNetError(null);
     try {
-      await switchChainAsync({ chainId: blockdag.id });
-    } catch {
+      // Re-offer chain with send-capable RPCs only (west) so MetaMask can update
+      // off rpc.blockdag.engineering before/while switching.
+      setAdding(true);
       try {
-        setAdding(true);
         await addBlockdagNetwork();
-        await switchChainAsync({ chainId: blockdag.id });
-      } catch (e) {
-        setNetError(e instanceof Error ? e.message : "Could not switch to BlockDAG");
-      } finally {
-        setAdding(false);
+      } catch {
+        // Chain may already exist; switch below still helps if wrong network.
       }
+      await switchChainAsync({ chainId: blockdag.id });
+    } catch (e) {
+      setNetError(e instanceof Error ? e.message : "Could not switch to BlockDAG");
+    } finally {
+      setAdding(false);
     }
   }, [switchChainAsync]);
 
@@ -204,26 +206,39 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
   if (isConnected && address) {
     return (
       <div className={`relative flex items-center gap-2 ${compact ? "" : ""}`}>
-        {wrongNetwork && (
-          <div className="flex flex-wrap items-center gap-1.5">
-            <button
-              type="button"
-              onClick={onSwitch}
-              disabled={isSwitching || adding}
-              className="btn-primary !py-1.5 !text-xs"
-            >
-              {isSwitching || adding ? "Switching…" : "Switch to BlockDAG"}
-            </button>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {wrongNetwork ? (
+            <>
+              <button
+                type="button"
+                onClick={onSwitch}
+                disabled={isSwitching || adding}
+                className="btn-primary !py-1.5 !text-xs"
+              >
+                {isSwitching || adding ? "Switching…" : "Switch to BlockDAG"}
+              </button>
+              <button
+                type="button"
+                onClick={onAdd}
+                disabled={adding}
+                className="btn-secondary !py-1.5 !text-xs"
+                title="Re-add BlockDAG with send-capable RPC (rpc.west.bdag-us.org)"
+              >
+                {adding ? "Adding…" : "Add BlockDAG"}
+              </button>
+            </>
+          ) : (
             <button
               type="button"
               onClick={onAdd}
               disabled={adding}
               className="btn-secondary !py-1.5 !text-xs"
+              title="Re-offer BlockDAG with send-capable RPC so MetaMask updates off engineering"
             >
-              Add BlockDAG
+              {adding ? "Updating…" : "Add BlockDAG"}
             </button>
-          </div>
-        )}
+          )}
+        </div>
         <button
           type="button"
           onClick={() => disconnect()}

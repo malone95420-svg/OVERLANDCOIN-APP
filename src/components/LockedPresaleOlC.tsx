@@ -242,17 +242,18 @@ function LockedPresaleOlCInner() {
   const onSwitchNetwork = useCallback(async () => {
     setNetError(null);
     try {
-      await switchChainAsync({ chainId: blockdag.id });
-    } catch {
+      // Re-offer send-capable RPCs (west) so MetaMask can leave engineering.
+      setNetBusy(true);
       try {
-        setNetBusy(true);
         await addBlockdagNetwork();
-        await switchChainAsync({ chainId: blockdag.id });
-      } catch (e) {
-        setNetError(e instanceof Error ? e.message : "Could not switch to BlockDAG");
-      } finally {
-        setNetBusy(false);
+      } catch {
+        // Chain may already exist.
       }
+      await switchChainAsync({ chainId: blockdag.id });
+    } catch (e) {
+      setNetError(e instanceof Error ? e.message : "Could not switch to BlockDAG");
+    } finally {
+      setNetBusy(false);
     }
   }, [switchChainAsync]);
 

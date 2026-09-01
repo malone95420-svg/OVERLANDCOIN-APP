@@ -1,7 +1,9 @@
 /**
  * Wagmi config — injected-only (MetaMask works as injected).
  * Avoid metaMask() SDK and WalletConnect side effects that crash iOS Safari.
- * Transports use only known-good BlockDAG RPCs (never rpc.bdagscan.com).
+ * Transports use known-good read RPCs (west + engineering; never bdagscan).
+ * Wallet broadcasts use MetaMask's own RPC — set via wallet_addEthereumChain
+ * to send-capable west only (see blockdagWalletRpcUrls).
  */
 import { createConfig, fallback, http, injected } from "wagmi";
 import { blockdagHttpRpcUrls } from "./blockdagRpc";

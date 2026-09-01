@@ -468,7 +468,14 @@ function PresaleBuyInner() {
 
       await deliverLocked(hash);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Transaction failed");
+      const raw = e instanceof Error ? e.message : "Transaction failed";
+      if (/sendRawTransaction|method not found/i.test(raw)) {
+        setError(
+          "Your wallet’s BlockDAG RPC can’t send txs. Tap Switch/Add BlockDAG (uses rpc.west.bdag-us.org) or in MetaMask set BlockDAG RPC to https://rpc.west.bdag-us.org/",
+        );
+      } else {
+        setError(raw);
+      }
       if (hash) {
         setPendingLockRetryTx(hash);
       }

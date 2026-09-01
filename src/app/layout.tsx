@@ -19,7 +19,7 @@ function absoluteSiteUrl() {
   try {
     return new URL(SITE.url);
   } catch {
-    return new URL("https://overlandcoin-app.vercel.app");
+    return new URL("https://overlandcoin-app-kohl.vercel.app");
   }
 }
 

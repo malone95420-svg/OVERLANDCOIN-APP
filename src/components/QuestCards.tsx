@@ -9,6 +9,8 @@ import { canReachQuest, TIER_LABELS, tierLabel } from "@/lib/vehicle";
 import { hasCompletedQuest, loadCompletions } from "@/lib/completions";
 import { QuestMap } from "./QuestMap";
 import { CheckInModal } from "./CheckInModal";
+import { QuestDirections } from "./QuestDirections";
+import type { UserGeo } from "./UserLocationLayer";
 
 export function QuestCards({ quests }: { quests: Quest[] }) {
   const { tier, hydrated, vehicle } = useVehicle();
@@ -16,6 +18,8 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [checkInQuest, setCheckInQuest] = useState<Quest | null>(null);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
+  const [userGeo, setUserGeo] = useState<UserGeo>({ status: "idle" });
+  const [routeCoords, setRouteCoords] = useState<[number, number][] | null>(null);
 
   const refreshCompletions = useCallback(() => {
     setCompletedIds(new Set(loadCompletions().map((c) => c.questId)));
@@ -34,6 +38,11 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
     selected && visible.some((q) => q.id === selected) ? selected : visible[0]?.id;
 
   const selectedQuest = visible.find((q) => q.id === selectedId);
+
+  // Drop stale route when selection changes away from drawn destination
+  useEffect(() => {
+    setRouteCoords(null);
+  }, [selectedId]);
 
   return (
     <div className="space-y-4">
@@ -74,7 +83,13 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
 
       <div className="grid gap-6 lg:grid-cols-5">
         <div className="lg:col-span-3">
-          <QuestMap quests={visible} selectedId={selectedId} onSelect={setSelected} />
+          <QuestMap
+            quests={visible}
+            selectedId={selectedId}
+            onSelect={setSelected}
+            onUserGeoChange={setUserGeo}
+            routeCoords={routeCoords}
+          />
         </div>
         <div className="flex max-h-[420px] flex-col gap-3 overflow-y-auto lg:col-span-2">
           {visible.length === 0 && (
@@ -146,6 +161,14 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
                     </span>
                   )}
                 </div>
+                {active && (
+                  <QuestDirections
+                    quest={q}
+                    userGeo={userGeo}
+                    onRouteChange={setRouteCoords}
+                    compact
+                  />
+                )}
               </div>
             );
           })}

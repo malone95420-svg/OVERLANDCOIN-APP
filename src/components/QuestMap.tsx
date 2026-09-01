@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import type { Quest } from "@/lib/quests";
+import type { UserGeo } from "./UserLocationLayer";
 
 const QuestMapInner = dynamic(() => import("./QuestMapInner"), {
   ssr: false,
@@ -16,6 +17,8 @@ type Props = {
   quests: Quest[];
   selectedId?: string;
   onSelect?: (id: string) => void;
+  onUserGeoChange?: (geo: UserGeo) => void;
+  routeCoords?: [number, number][] | null;
 };
 
 export function QuestMap(props: Props) {

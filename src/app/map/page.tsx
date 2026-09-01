@@ -16,15 +16,17 @@ export default function MapPage() {
       <p className="section-sub">
         Explore overland waypoints worldwide. Check in only when your GPS is inside the quest radius
         and you attach a photo. OLC is recorded as pending claim — on-chain payout comes later when a
-        reward contract exists. Use Live location and switch Street / Topo / Satellite basemaps.
+        reward contract exists. Use Live location, Directions (OSRM + Google/Apple Maps), and switch
+        Street / Topo / Satellite / Outdoors basemaps — no map API key required.
       </p>
       <div className="mt-10">
         <QuestCards quests={QUESTS} />
       </div>
       <p className="mt-6 text-xs text-slate-600">
-        Map tiles © OpenStreetMap / CARTO (Street), OpenTopoMap (Topo), Esri World Imagery
-        (Satellite) — attribution updates with the selected layer. Quest coords are real
-        trailheads/parks for illustration. Badge: GPS verified · Photo proof · OLC pending claim.
+        Map tiles © OpenStreetMap / CARTO (Street &amp; Outdoors), Esri World Topo Map (Topo), Esri
+        World Imagery (Satellite) — attribution updates with the selected layer. No Mapbox or Google
+        Maps SDK. Quest coords are real trailheads/parks for illustration. Badge: GPS verified ·
+        Photo proof · OLC pending claim.
       </p>
     </div>
   );

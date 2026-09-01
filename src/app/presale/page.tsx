@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CopyAddress } from "@/components/CopyAddress";
 import { LiveMarketPrices } from "@/components/LiveMarketPrices";
+import { LockedPresaleOlC } from "@/components/LockedPresaleOlC";
 import { PresaleBuy } from "@/components/PresaleBuy";
 import { PRESALE_BATCHES, PRESALE_META, SITE } from "@/lib/site";
 import { TOKEN, explorerAddressUrl } from "@/lib/token";
@@ -41,6 +42,10 @@ export default function PresalePage() {
 
       <div className="mt-6">
         <PresaleBuy />
+      </div>
+
+      <div className="mt-6">
+        <LockedPresaleOlC />
       </div>
 
       <section className="mt-10">
@@ -130,7 +135,7 @@ export default function PresalePage() {
         <ul className="mt-3 space-y-2 text-sm text-slate-400">
           <li>• On-site purchases use native BDAG and official BDUSD on BlockDAG — not CEX USDT.</li>
           <li>• No DEX pairs are listed yet — do not trust unofficial swap links.</li>
-          <li>• When liquidity launches, links will be published in site config and official channels.</li>
+          <li>• When liquidity launches, links will be published and the PresaleLock owner calls enableTrading() so buyers can withdraw.</li>
           <li>• Always verify contract and treasury addresses character-for-character.</li>
         </ul>
       </section>

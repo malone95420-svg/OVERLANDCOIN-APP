@@ -36,8 +36,12 @@ const FAQS = [
     a: SITE.treasuryAddress,
   },
   {
+    q: "When can I sell or transfer presale OLC?",
+    a: "Bought OLC is yours immediately but non-transferable until listing unlock. Presale purchases are credited into a PresaleLock contract; after OVERLANDCOIN is listed on exchanges, the owner enables trading and you can withdraw to your wallet. Quest rewards are different — they claim straight to your wallet and are not locked in PresaleLock.",
+  },
+  {
     q: "Where can I trade OLC?",
-    a: "No official DEX pairs are listed yet. Do not trust unofficial swap links. Official market links will be published when available.",
+    a: "No official DEX pairs are listed yet. Do not trust unofficial swap links. Official market links will be published when available. Presale OLC stays locked until that unlock.",
   },
   {
     q: "Is staking live?",

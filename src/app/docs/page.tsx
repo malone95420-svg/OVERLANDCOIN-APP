@@ -26,6 +26,12 @@ const DOCS = [
     href: "/presale",
   },
   {
+    title: "PresaleLock",
+    status: "Deploy",
+    body: "Instant locked delivery: deploy contracts/PresaleLock.sol on BlockDAG 1404, fund with OLC, set NEXT_PUBLIC_PRESALE_LOCK_ADDRESS + PRESALE_DELIVER_PRIVATE_KEY. Owner calls enableTrading() after exchange listings. See contracts/README.md.",
+    href: "/presale",
+  },
+  {
     title: "Quest & map concepts",
     status: "Demo",
     body: "Explore the demo quest map and leaderboard UX.",

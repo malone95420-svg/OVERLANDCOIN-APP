@@ -1,14 +1,24 @@
 /**
  * Local purchase records (browser localStorage).
- * Status is pending_delivery — treasury contribution model until a
- * presale contract can mint/claim OLC automatically.
- * External deposits (BTC/ETH/USDT off BlockDAG) use pending_external.
+ * On-chain BDAG/BDUSD buys attempt instant locked delivery via PresaleLock
+ * (POST /api/presale/deliver). Status:
+ *  - locked — credited on-chain into PresaleLock (non-transferable until listing)
+ *  - locked_pending_chain — local credit only; lock contract/key not configured yet
+ *  - pending_delivery — legacy / failed path (should migrate toward locked*)
+ *  - pending_external — off-chain deposit awaiting confirmation
  */
+
 export const PURCHASES_STORAGE_KEY = "overlandcoin.purchases.v1";
+
+export type PurchaseStatus =
+  | "locked"
+  | "locked_pending_chain"
+  | "pending_delivery"
+  | "pending_external";
 
 export type LocalPurchase = {
   id: string;
-  /** On-chain tx hash, or external:pending:* placeholder */
+  /** On-chain payment tx hash, or external:pending:* placeholder */
   txHash: string;
   timestamp: number;
   from?: string;
@@ -16,6 +26,8 @@ export type LocalPurchase = {
   payAmount: string;
   /** OLC credited from usdPaid / batchPriceUsed */
   olcEstimated: string;
+  /** Numeric OLC amount when known */
+  olcAmount?: number;
   /** @deprecated prefer batchPriceUsed */
   batchPriceUsdt: number;
   /** Live batch price used for this purchase */
@@ -26,11 +38,15 @@ export type LocalPurchase = {
   usdPaid: number;
   /** @deprecated prefer usdPaid */
   usdEstimated: number;
-  status: "pending_delivery" | "pending_external";
+  status: PurchaseStatus;
   /** deposit | onchain */
   payMethod?: "onchain" | "deposit";
   depositAddress?: string;
   depositNetwork?: string;
+  /** PresaleLock credit tx when status === locked */
+  creditTxHash?: string;
+  /** Honest note when awaiting lock config */
+  deliveryNote?: string;
 };
 
 export function loadPurchases(): LocalPurchase[] {
@@ -50,4 +66,35 @@ export function savePurchase(purchase: LocalPurchase): LocalPurchase[] {
   const next = [purchase, ...prev.filter((p) => p.txHash !== purchase.txHash)].slice(0, 50);
   localStorage.setItem(PURCHASES_STORAGE_KEY, JSON.stringify(next));
   return next;
+}
+
+export function updatePurchase(
+  txHash: string,
+  patch: Partial<LocalPurchase>,
+): LocalPurchase[] {
+  const prev = loadPurchases();
+  const next = prev.map((p) => (p.txHash === txHash ? { ...p, ...patch } : p));
+  localStorage.setItem(PURCHASES_STORAGE_KEY, JSON.stringify(next));
+  return next;
+}
+
+/** Sum of OLC from locked / locked_pending_chain / legacy pending_delivery for a wallet. */
+export function sumLocalLockedOlc(wallet?: string | null): number {
+  const list = loadPurchases();
+  return list
+    .filter((p) => {
+      if (wallet && p.from && p.from.toLowerCase() !== wallet.toLowerCase()) return false;
+      return (
+        p.status === "locked" ||
+        p.status === "locked_pending_chain" ||
+        p.status === "pending_delivery"
+      );
+    })
+    .reduce((sum, p) => {
+      const n =
+        typeof p.olcAmount === "number" && Number.isFinite(p.olcAmount)
+          ? p.olcAmount
+          : Number(String(p.olcEstimated).replace(/,/g, ""));
+      return sum + (Number.isFinite(n) ? n : 0);
+    }, 0);
 }

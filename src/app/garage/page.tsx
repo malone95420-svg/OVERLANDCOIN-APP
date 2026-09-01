@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { GarageForm } from "@/components/GarageForm";
+import { LockedPresaleOlC } from "@/components/LockedPresaleOlC";
 import { ProfileCompletions } from "@/components/ProfileCompletions";
 
 export const metadata: Metadata = {
@@ -18,6 +19,9 @@ export default function GaragePage() {
       </p>
       <div className="mt-10">
         <GarageForm />
+      </div>
+      <div className="mt-10">
+        <LockedPresaleOlC />
       </div>
       <ProfileCompletions />
     </div>

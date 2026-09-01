@@ -25,7 +25,7 @@ import {
   calcPayFromOlc,
   formatUsdPrice,
 } from "@/lib/livePrices";
-import { loadPurchases, savePurchase, type LocalPurchase } from "@/lib/purchases";
+import { loadPurchases, savePurchase, updatePurchase, type LocalPurchase } from "@/lib/purchases";
 import { PRESALE_BATCHES, SITE } from "@/lib/site";
 import { TOKEN, explorerTxUrl, explorerAddressUrl } from "@/lib/token";
 
@@ -174,26 +174,110 @@ export function PresaleBuy() {
     ]
   );
 
-  const recordLocal = useCallback(
-    (txHash: string) => {
-      const next = savePurchase(
-        buildRecord({ txHash, status: "pending_delivery", payMethod: "onchain" })
-      );
-      setPurchases(next);
-      setSuccessNote(
-        "Contribution submitted. OLC is recorded as pending delivery — treasury contribution model until a claim/presale contract is live. No instant mint."
-      );
+  const deliverLocked = useCallback(
+    async (paymentTxHash: string) => {
+      const base = buildRecord({
+        txHash: paymentTxHash,
+        status: "locked_pending_chain",
+        payMethod: "onchain",
+      });
+      const withAmount: LocalPurchase = {
+        ...base,
+        olcAmount: derived.olc,
+        deliveryNote: "Delivering to PresaleLock…",
+      };
+      setPurchases(savePurchase(withAmount));
+
+      try {
+        const res = await fetch("/api/presale/deliver", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            buyer: address,
+            olcAmount: derived.olc,
+            paymentTxHash,
+            batchPriceUsed: batchPrice,
+            usdRateUsed: usdPerPayUnit ?? 0,
+            usdPaid: Number(derived.usd.toFixed(8)),
+            payAsset: selected.symbol,
+            payAmount: formatNum(derived.payAmount, 8),
+          }),
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          status?: string;
+          creditTxHash?: string;
+          message?: string;
+          error?: string;
+          notConfigured?: boolean;
+          olcAmount?: number;
+        };
+
+        const olcLabel = formatNum(derived.olc, 4);
+        if (data.status === "locked" && data.creditTxHash) {
+          const next = updatePurchase(paymentTxHash, {
+            status: "locked",
+            creditTxHash: data.creditTxHash,
+            olcAmount: typeof data.olcAmount === "number" ? data.olcAmount : derived.olc,
+            deliveryNote: undefined,
+          });
+          setPurchases(next);
+          setSuccessNote(
+            `You received ${olcLabel} OLC (locked until OVERLANDCOIN is listed on exchanges). Credit tx ${data.creditTxHash.slice(0, 10)}…`
+          );
+          return;
+        }
+
+        // Config missing or chain credit failed — honest local locked credit
+        const next = updatePurchase(paymentTxHash, {
+          status: "locked_pending_chain",
+          olcAmount: derived.olc,
+          deliveryNote:
+            data.message ||
+            data.error ||
+            "Awaiting lock contract config — not transferable wallet delivery.",
+        });
+        setPurchases(next);
+        setSuccessNote(
+          `You received ${olcLabel} OLC (locked until OVERLANDCOIN is listed on exchanges). ${
+            data.notConfigured || res.status === 503
+              ? "On-chain lock credit is awaiting contract/key config — recorded locally, not a transferable wallet transfer."
+              : data.error || data.message || "On-chain lock credit pending; local locked credit recorded."
+          }`
+        );
+      } catch (e) {
+        const next = updatePurchase(paymentTxHash, {
+          status: "locked_pending_chain",
+          olcAmount: derived.olc,
+          deliveryNote: e instanceof Error ? e.message : "Deliver request failed",
+        });
+        setPurchases(next);
+        setSuccessNote(
+          `You received ${formatNum(derived.olc, 4)} OLC (locked until OVERLANDCOIN is listed on exchanges). Deliver API unreachable — local locked credit only.`
+        );
+      }
     },
-    [buildRecord]
+    [
+      buildRecord,
+      address,
+      derived.olc,
+      derived.usd,
+      derived.payAmount,
+      batchPrice,
+      usdPerPayUnit,
+      selected.symbol,
+    ]
   );
 
   useEffect(() => {
     if (txSuccess && pendingHash) {
-      recordLocal(pendingHash);
+      const hash = pendingHash;
       setPendingHash(undefined);
-      setBusy(false);
+      void (async () => {
+        await deliverLocked(hash);
+        setBusy(false);
+      })();
     }
-  }, [txSuccess, pendingHash, recordLocal]);
+  }, [txSuccess, pendingHash, deliverLocked]);
 
   async function onBuyOnChain() {
     setError(null);
@@ -324,7 +408,8 @@ export function PresaleBuy() {
           for BlockDAG transfers.
         </p>
         <p>
-          Treasury contribution model — no instant OLC mint until a claim/presale contract is live.
+          Successful buys credit OLC into a <strong>PresaleLock</strong> — yours immediately, but
+          non-transferable until exchange listing unlock. Not a free-trading wallet transfer.
         </p>
       </div>
 
@@ -433,7 +518,8 @@ export function PresaleBuy() {
           <div className="flex justify-between gap-2 border-t border-border pt-1.5 text-sm">
             <span className="text-slate-300">You receive</span>
             <span className="font-semibold text-gold-bright">
-              {formatNum(derived.olc, 4)} OLC
+              {formatNum(derived.olc, 4)} OLC{" "}
+              <span className="text-[10px] font-normal text-slate-400">(locked)</span>
             </span>
           </div>
           <p className="text-[10px] text-slate-500">
@@ -577,10 +663,10 @@ export function PresaleBuy() {
       )}
 
       <div className="mt-8 border-t border-border pt-6">
-        <h3 className="text-sm font-semibold text-white">Your recent contributions (this browser)</h3>
+        <h3 className="text-sm font-semibold text-white">Your recent purchases (this browser)</h3>
         <p className="mt-1 text-[11px] text-slate-500">
-          Stored in localStorage ({`overlandcoin.purchases.v1`}). Includes on-chain and external
-          pending records.
+          Stored in localStorage ({`overlandcoin.purchases.v1`}). On-chain buys show{" "}
+          <code className="text-slate-400">locked</code> when PresaleLock credit succeeds.
         </p>
         {purchases.length === 0 ? (
           <p className="mt-3 text-sm text-slate-500">No local purchases yet.</p>
@@ -604,6 +690,16 @@ export function PresaleBuy() {
                   <span className="ml-2 rounded-full border border-border px-2 py-0.5 text-[10px] text-cyan-accent">
                     {p.status}
                   </span>
+                  {p.creditTxHash && (
+                    <a
+                      className="ml-2 link-accent font-mono text-[10px]"
+                      href={explorerTxUrl(p.creditTxHash)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      lock tx
+                    </a>
+                  )}
                 </div>
                 {p.txHash.startsWith("0x") ? (
                   <a

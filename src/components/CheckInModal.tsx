@@ -7,8 +7,10 @@ import {
   compressImageToDataUrl,
   hasCompletedQuest,
   recordCheckIn,
+  type Completion,
 } from "@/lib/completions";
 import { canReachQuest, tierLabel, TIER_LABELS, type CapabilityTier } from "@/lib/vehicle";
+import { ClaimOlCButton } from "@/components/ClaimOlCButton";
 
 type Props = {
   quest: Quest;
@@ -31,7 +33,7 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
   const [caption, setCaption] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState<{ olc: number } | null>(null);
+  const [done, setDone] = useState<Completion | null>(null);
 
   const tierOk = canReachQuest(vehicleTier, quest.minTier);
   const alreadyDone = hasCompletedQuest(quest.id);
@@ -120,7 +122,7 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
         setError(res.error);
         return;
       }
-      setDone({ olc: res.completion.olcEarned });
+      setDone(res.completion);
       onSuccess?.();
     } finally {
       setSubmitting(false);
@@ -162,9 +164,10 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
         </div>
 
         <p className="mt-3 rounded-lg border border-border/80 bg-bg-panel px-3 py-2 text-xs text-slate-400">
-          Rewards are <span className="text-gold-bright">GPS + photo verified</span>. OLC is saved as{" "}
-          <span className="font-mono text-cyan-accent">pending_claim</span> — on-chain claim comes later
-          when a reward contract exists. No tokens move on BlockDAG today.
+          Rewards are <span className="text-gold-bright">GPS + photo verified</span>. After check-in,
+          claim OLC to your connected wallet from the Overland rewards wallet (when{" "}
+          <span className="font-mono text-cyan-accent">REWARD_PRIVATE_KEY</span> is configured). No
+          fake on-chain success without a real tx hash.
         </p>
 
         {!tierOk && (
@@ -177,20 +180,28 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
 
         {alreadyDone && !done && (
           <div className="mt-4 rounded-xl border border-gold/40 bg-bg-panel px-3 py-3 text-sm text-gold-bright">
-            You already completed this quest (local ledger). Photo is on the Adventure Feed.
+            You already completed this quest (local ledger). Claim pending OLC from Garage if needed.
           </div>
         )}
 
         {done ? (
-          <div className="mt-5 space-y-3 text-center">
-            <p className="text-2xl font-bold text-gold-bright">+{done.olc} OLC</p>
-            <p className="badge !text-[11px]">GPS verified · Photo proof · OLC pending claim</p>
-            <p className="text-sm text-slate-400">
-              Saved to your local ledger and Adventure Feed. Claim on-chain when the reward contract
-              ships.
+          <div className="mt-5 space-y-4 text-center">
+            <p className="text-2xl font-bold text-gold-bright">+{done.olcEarned} OLC</p>
+            <p className="badge !text-[11px]">
+              {done.status === "claimed"
+                ? "GPS verified · Photo proof · OLC claimed"
+                : "GPS verified · Photo proof · OLC pending claim"}
             </p>
-            <button type="button" className="btn-primary w-full" onClick={onClose}>
-              Done
+            <p className="text-sm text-slate-400">
+              Saved to your local ledger and Adventure Feed. Claim to your wallet now — payouts come
+              from the Overland rewards wallet once configured.
+            </p>
+            <ClaimOlCButton
+              completion={done}
+              onClaimed={(c) => setDone(c)}
+            />
+            <button type="button" className="btn-secondary w-full" onClick={onClose}>
+              {done.status === "claimed" ? "Done" : "Claim later in Garage"}
             </button>
           </div>
         ) : (

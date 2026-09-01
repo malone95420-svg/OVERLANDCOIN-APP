@@ -11,3 +11,7 @@ coverage
 
 # GeoNames / Overpass generation cache
 scripts/cache/
+
+# Runtime claims ledger (MVP anti-double-claim; use Redis/DB in production)
+/data/claims-ledger.json
+/tmp/overlandcoin-claims-ledger.json

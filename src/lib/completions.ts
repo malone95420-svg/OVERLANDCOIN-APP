@@ -1,14 +1,16 @@
 /**
  * Quest completions + adventure feed posts (localStorage v1).
- * OLC is recorded as pending_claim only — no on-chain transfer until a reward contract exists.
+ * OLC starts as pending_claim; claim via POST /api/rewards/claim sets status claimed + txHash.
  */
 
 import type { Quest } from "@/data/quests";
 
 export const COMPLETIONS_STORAGE_KEY = "overlandcoin.completions.v1";
 export const POSTS_STORAGE_KEY = "overlandcoin.posts.v1";
+/** Client-side claimed completion ids (mirrors server ledger for UX / anti-double-claim). */
+export const CLAIMS_STORAGE_KEY = "overlandcoin.claims.v1";
 
-export type CompletionStatus = "pending_claim";
+export type CompletionStatus = "pending_claim" | "claimed";
 
 export type Completion = {
   id: string;
@@ -22,7 +24,15 @@ export type Completion = {
   caption: string;
   olcEarned: number;
   status: CompletionStatus;
+  /** Set after successful on-chain payout. */
+  txHash?: string;
+  claimedAt?: string;
+  claimedWallet?: string;
 };
+
+export type FeedPostBadge =
+  | "GPS verified · Photo proof · OLC pending claim"
+  | "GPS verified · Photo proof · OLC claimed";
 
 export type FeedPost = {
   id: string;
@@ -34,7 +44,8 @@ export type FeedPost = {
   caption: string;
   olcEarned: number;
   createdAt: string; // ISO
-  badge: "GPS verified · Photo proof · OLC pending claim";
+  badge: FeedPostBadge;
+  txHash?: string;
 };
 
 function safeParse<T>(raw: string | null, fallback: T): T {
@@ -58,14 +69,21 @@ export function loadPosts(): FeedPost[] {
   return Array.isArray(list) ? list : [];
 }
 
+export function loadClaimedIds(): string[] {
+  if (typeof window === "undefined") return [];
+  const list = safeParse<string[]>(localStorage.getItem(CLAIMS_STORAGE_KEY), []);
+  return Array.isArray(list) ? list : [];
+}
+
 export function saveCompletions(list: Completion[]): { ok: true } | { ok: false; error: string } {
   try {
     localStorage.setItem(COMPLETIONS_STORAGE_KEY, JSON.stringify(list));
     return { ok: true };
   } catch (e) {
-    const msg = e instanceof DOMException && e.name === "QuotaExceededError"
-      ? "Storage full — try a smaller photo or clear old posts."
-      : "Could not save completion.";
+    const msg =
+      e instanceof DOMException && e.name === "QuotaExceededError"
+        ? "Storage full — try a smaller photo or clear old posts."
+        : "Could not save completion.";
     return { ok: false, error: msg };
   }
 }
@@ -75,10 +93,19 @@ export function savePosts(list: FeedPost[]): { ok: true } | { ok: false; error: 
     localStorage.setItem(POSTS_STORAGE_KEY, JSON.stringify(list));
     return { ok: true };
   } catch (e) {
-    const msg = e instanceof DOMException && e.name === "QuotaExceededError"
-      ? "Storage full — try a smaller photo or clear old posts."
-      : "Could not save feed post.";
+    const msg =
+      e instanceof DOMException && e.name === "QuotaExceededError"
+        ? "Storage full — try a smaller photo or clear old posts."
+        : "Could not save feed post.";
     return { ok: false, error: msg };
+  }
+}
+
+function saveClaimedIds(ids: string[]): void {
+  try {
+    localStorage.setItem(CLAIMS_STORAGE_KEY, JSON.stringify(ids));
+  } catch {
+    /* ignore quota for id list */
   }
 }
 
@@ -90,6 +117,16 @@ export function totalPendingOlC(completions = loadCompletions()): number {
   return completions
     .filter((c) => c.status === "pending_claim")
     .reduce((sum, c) => sum + (c.olcEarned || 0), 0);
+}
+
+export function totalClaimedOlC(completions = loadCompletions()): number {
+  return completions
+    .filter((c) => c.status === "claimed")
+    .reduce((sum, c) => sum + (c.olcEarned || 0), 0);
+}
+
+export function pendingCompletions(completions = loadCompletions()): Completion[] {
+  return completions.filter((c) => c.status === "pending_claim");
 }
 
 export function makeId(prefix: string): string {
@@ -106,11 +143,11 @@ export type RecordCheckInInput = {
 };
 
 /**
- * Persist completion + feed post. Rewards stay pending_claim (honest — no fake chain tx).
+ * Persist completion + feed post. Rewards start as pending_claim until claim API succeeds.
  */
-export function recordCheckIn(input: RecordCheckInInput):
-  | { ok: true; completion: Completion; post: FeedPost }
-  | { ok: false; error: string } {
+export function recordCheckIn(
+  input: RecordCheckInInput,
+): { ok: true; completion: Completion; post: FeedPost } | { ok: false; error: string } {
   const completion: Completion = {
     id: makeId("cmp"),
     questId: input.quest.id,
@@ -144,11 +181,61 @@ export function recordCheckIn(input: RecordCheckInInput):
   if (!cRes.ok) return cRes;
   const pRes = savePosts(posts);
   if (!pRes.ok) {
-    // roll back completion write best-effort
     saveCompletions(completions.slice(1));
     return pRes;
   }
   return { ok: true, completion, post };
+}
+
+export type MarkClaimedInput = {
+  txHash: string;
+  wallet: string;
+  amount?: number;
+};
+
+/**
+ * Mark a completion as claimed after a real on-chain transfer (requires txHash).
+ */
+export function markCompletionClaimed(
+  completionId: string,
+  input: MarkClaimedInput,
+): { ok: true; completion: Completion } | { ok: false; error: string } {
+  if (!input.txHash || !/^0x[a-fA-F0-9]{64}$/.test(input.txHash)) {
+    return { ok: false, error: "Invalid txHash — refusing to mark claimed without a real transaction." };
+  }
+
+  const completions = loadCompletions();
+  const idx = completions.findIndex((c) => c.id === completionId);
+  if (idx < 0) return { ok: false, error: "Completion not found in local ledger." };
+
+  const next: Completion = {
+    ...completions[idx],
+    status: "claimed",
+    txHash: input.txHash,
+    claimedAt: new Date().toISOString(),
+    claimedWallet: input.wallet,
+    olcEarned: input.amount ?? completions[idx].olcEarned,
+  };
+  completions[idx] = next;
+  const cRes = saveCompletions(completions);
+  if (!cRes.ok) return cRes;
+
+  const claimedIds = new Set(loadClaimedIds());
+  claimedIds.add(completionId);
+  saveClaimedIds(Array.from(claimedIds));
+
+  const posts = loadPosts().map((p) =>
+    p.completionId === completionId
+      ? {
+          ...p,
+          badge: "GPS verified · Photo proof · OLC claimed" as const,
+          txHash: input.txHash,
+        }
+      : p,
+  );
+  savePosts(posts);
+
+  return { ok: true, completion: next };
 }
 
 /**

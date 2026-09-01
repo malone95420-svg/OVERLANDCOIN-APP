@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ConnectWallet } from "@/components/ConnectWallet";
+import { PendingOlCBadge } from "@/components/PendingOlCBadge";
 import { NAV_LINKS, SITE } from "@/lib/site";
 
 export function Header() {
@@ -41,6 +42,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <PendingOlCBadge />
           <Link href="/presale" className="btn-secondary hidden sm:inline-flex !py-2 !text-xs">
             Presale
           </Link>

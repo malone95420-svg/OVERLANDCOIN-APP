@@ -4,6 +4,9 @@
  * - Official BDUSD (BlockDAG Labs beta stablecoin): hardcoded verified address
  * - USDT/USDC/WETH: env-only — do NOT hardcode unofficial community addresses
  * CEX USDT pairs are off-chain; on-site buys use BDAG/BDUSD on BlockDAG.
+ *
+ * OLC amounts use live USD value ÷ live batch price (see livePrices + PresaleBuy).
+ * Never use a hard-coded BDAG rate as the primary Buy source.
  */
 import type { Address } from "viem";
 
@@ -42,7 +45,7 @@ export function getPayTokenOptions(): PayTokenOption[] {
       label: "BDAG (native)",
       kind: "native",
       decimalsHint: 18,
-      note: "Uses configurable BDAG/USD estimate",
+      note: "OLC amount uses live BDAG/USD ÷ batch price",
     },
     {
       id: "BDUSD",
@@ -51,7 +54,7 @@ export function getPayTokenOptions(): PayTokenOption[] {
       address: BDUSD_ADDRESS,
       kind: "erc20",
       decimalsHint: 18,
-      note: "Official BlockDAG Labs beta stablecoin (not USDT/USDC)",
+      note: "Official BlockDAG Labs beta stablecoin (not USDT/USDC) — treated as $1",
     },
   ];
 
@@ -64,6 +67,7 @@ export function getPayTokenOptions(): PayTokenOption[] {
       address: usdt,
       kind: "erc20",
       decimalsHint: 6,
+      note: "Treated as $1 for batch pricing",
     });
   }
 
@@ -76,6 +80,7 @@ export function getPayTokenOptions(): PayTokenOption[] {
       address: usdc,
       kind: "erc20",
       decimalsHint: 6,
+      note: "Treated as $1 for batch pricing",
     });
   }
 
@@ -88,6 +93,7 @@ export function getPayTokenOptions(): PayTokenOption[] {
       address: eth,
       kind: "erc20",
       decimalsHint: 18,
+      note: "OLC amount uses live ETH/USD ÷ batch price",
     });
   }
 
@@ -95,11 +101,17 @@ export function getPayTokenOptions(): PayTokenOption[] {
 }
 
 /**
- * Configurable BDAG/USD estimate for converting native payments to OLC.
- * Label clearly as an estimate — not an oracle.
+ * Env BDAG/USD estimate — display/stale fallback ONLY.
+ * Buy math must use a fresh live rate from /api/prices (never this as primary).
  */
-export function getBdagUsdPrice(): number {
+export function getBdagUsdStaleEstimate(): number | null {
   const raw = process.env.NEXT_PUBLIC_BDAG_USD_PRICE?.trim();
-  const n = raw ? Number(raw) : 0.05;
-  return Number.isFinite(n) && n > 0 ? n : 0.05;
+  if (!raw) return null;
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+/** @deprecated Use live /api/prices — kept for any leftover imports */
+export function getBdagUsdPrice(): number {
+  return getBdagUsdStaleEstimate() ?? 0.05;
 }

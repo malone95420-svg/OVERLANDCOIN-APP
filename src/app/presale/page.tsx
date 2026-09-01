@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CopyAddress } from "@/components/CopyAddress";
+import { LiveMarketPrices } from "@/components/LiveMarketPrices";
 import { PresaleBuy } from "@/components/PresaleBuy";
 import { PRESALE_BATCHES, PRESALE_META, SITE } from "@/lib/site";
 import { TOKEN, explorerAddressUrl } from "@/lib/token";
@@ -35,6 +36,10 @@ export default function PresalePage() {
       </div>
 
       <div className="mt-10">
+        <LiveMarketPrices />
+      </div>
+
+      <div className="mt-6">
         <PresaleBuy />
       </div>
 

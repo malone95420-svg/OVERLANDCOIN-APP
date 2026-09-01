@@ -3,7 +3,7 @@
  * Matches TOKEN in src/lib/token.ts (chainId 1404).
  *
  * defineChain http list may include read-only RPCs (engineering) for publicClient.
- * wallet_addEthereumChain MUST use send-capable URLs only (west) — MetaMask
+ * wallet_addEthereumChain MUST use send-capable URLs only (west + east) — MetaMask
  * broadcasts via those rpcUrls; engineering returns method not found on send.
  */
 import { defineChain } from "viem";
@@ -37,7 +37,7 @@ export const blockdag = defineChain({
 
 /**
  * EIP-3085 params for wallet_addEthereumChain.
- * Send-capable URLs only (prefer west) — never engineering or bdagscan.
+ * Send-capable URLs only (prefer west then east) — never engineering or bdagscan.
  */
 export function blockdagAddChainParams() {
   const walletRpcs = blockdagWalletRpcUrls();

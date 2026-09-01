@@ -3,7 +3,12 @@
  * Locked OLC is non-transferable until owner enableTrading() after exchange listing.
  */
 
-import { blockdagWalletRpcUrls, isSendCapableBlockdagRpc } from "./blockdagRpc";
+import {
+  blockdagHttpRpcUrls,
+  blockdagWalletRpcUrls,
+  isKnownGoodBlockdagRpc,
+  isSendCapableBlockdagRpc,
+} from "./blockdagRpc";
 
 export const PRESALE_LOCK_ABI = [
   {
@@ -159,12 +164,27 @@ export function getPresaleLockAddress(): `0x${string}` | null {
   return raw as `0x${string}`;
 }
 
+/** Send-capable RPCs for PresaleLock credit / approve / transfer broadcasts. */
 export function presaleDeliverRpcUrls(): string[] {
   const envRpc =
     process.env.PRESALE_RPC_URL?.trim() || process.env.REWARD_RPC_URL?.trim();
   const list = [
     envRpc && isSendCapableBlockdagRpc(envRpc) ? envRpc : undefined,
     ...blockdagWalletRpcUrls(),
+  ].filter((u): u is string => Boolean(u));
+  return [...new Set(list)];
+}
+
+/**
+ * Read / receipt RPCs for PresaleLock (balanceOf, lockedBalance, waitForReceipt).
+ * Includes engineering so reads survive west 502; do NOT use for eth_sendRawTransaction.
+ */
+export function presaleReadRpcUrls(): string[] {
+  const envRpc =
+    process.env.PRESALE_RPC_URL?.trim() || process.env.REWARD_RPC_URL?.trim();
+  const list = [
+    envRpc && isKnownGoodBlockdagRpc(envRpc) ? envRpc : undefined,
+    ...blockdagHttpRpcUrls(),
   ].filter((u): u is string => Boolean(u));
   return [...new Set(list)];
 }

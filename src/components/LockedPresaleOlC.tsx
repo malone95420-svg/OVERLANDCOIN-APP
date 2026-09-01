@@ -242,7 +242,7 @@ function LockedPresaleOlCInner() {
   const onSwitchNetwork = useCallback(async () => {
     setNetError(null);
     try {
-      // Re-offer send-capable RPCs (west) so MetaMask can leave engineering.
+      // Re-offer send-capable RPCs (west + east) so MetaMask can leave engineering.
       setNetBusy(true);
       try {
         await addBlockdagNetwork();

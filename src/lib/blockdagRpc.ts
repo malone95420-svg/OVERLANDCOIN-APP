@@ -12,11 +12,16 @@
  * any broadcast path.
  *
  * https://rpc.west.bdag-us.org/ — send-capable (eth_sendRawTransaction works).
- * Prefer this for wallet_addEthereumChain and server tx broadcast.
+ * Prefer this first for wallet_addEthereumChain and server tx broadcast.
+ *
+ * https://rpc.east.bdag-us.org/ — send-capable; same good tip as engineering.
+ * Use as send fallback when west is down (502), and prefer early in read lists
+ * so eth_call / receipts survive west outages.
  */
 import { TOKEN } from "./token";
 
 const WEST_RPC = "https://rpc.west.bdag-us.org/";
+const EAST_RPC = "https://rpc.east.bdag-us.org/";
 const ENGINEERING_RPC = "https://rpc.blockdag.engineering/";
 
 /** Divergent tip — never for clients / receipts / wallet */
@@ -60,35 +65,48 @@ function dedupe(urls: string[]): string[] {
 
 /**
  * Deduped HTTP RPC list for publicClient reads + receipt waits:
- * env overrides first, then TOKEN defaults. Always filters bdagscan.
+ * env overrides first, then east → west → engineering. Always filters bdagscan.
  * May include engineering (read-only / no-send, good tip).
+ * Prefer east/west ahead of engineering so reads survive west 502 without
+ * depending on a single send-capable host.
  */
 export function blockdagHttpRpcUrls(): string[] {
   const envPrimary = process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim();
   const envFallback = process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim();
-  const candidates = [envPrimary, envFallback, TOKEN.rpcUrl, TOKEN.rpcFallback, TOKEN.rpcAlt];
+  const candidates = [
+    envPrimary,
+    envFallback,
+    EAST_RPC,
+    WEST_RPC,
+    ENGINEERING_RPC,
+    TOKEN.rpcUrl,
+    TOKEN.rpcFallback,
+    TOKEN.rpcAlt,
+  ];
   const list = candidates.filter(
     (u): u is string => typeof u === "string" && u.length > 0 && isKnownGoodBlockdagRpc(u),
   );
   const deduped = dedupe(list);
   if (deduped.length > 0) return deduped;
   // Absolute last resort if env somehow wiped everything to bad hosts
-  return [WEST_RPC, ENGINEERING_RPC];
+  return [EAST_RPC, WEST_RPC, ENGINEERING_RPC];
 }
 
 /**
- * Send-capable RPCs only (west + env that aren't known no-send / no-receipt-bad).
+ * Send-capable RPCs only (west + east + env that aren't known no-send / no-receipt-bad).
  * Use for wallet_addEthereumChain and any eth_sendRawTransaction / walletClient path.
- * Prefer west; never include engineering or bdagscan.
+ * Prefer west then east; never include engineering or bdagscan.
  */
 export function blockdagWalletRpcUrls(): string[] {
   const envPrimary = process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim();
   const envFallback = process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim();
-  const candidates = [envPrimary, envFallback, TOKEN.rpcUrl, WEST_RPC];
+  const candidates = [envPrimary, envFallback, WEST_RPC, EAST_RPC, TOKEN.rpcUrl];
   const list = candidates.filter(
     (u): u is string => typeof u === "string" && u.length > 0 && isSendCapableBlockdagRpc(u),
   );
   const deduped = dedupe(list);
   if (deduped.length > 0) return deduped;
-  return [WEST_RPC];
+  return [WEST_RPC, EAST_RPC];
 }
+
+export { WEST_RPC, EAST_RPC, ENGINEERING_RPC };

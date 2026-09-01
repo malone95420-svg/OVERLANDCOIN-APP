@@ -222,7 +222,7 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
                 onClick={onAdd}
                 disabled={adding}
                 className="btn-secondary !py-1.5 !text-xs"
-                title="Re-add BlockDAG with send-capable RPC (rpc.west.bdag-us.org)"
+                title="Re-add BlockDAG with send-capable RPCs (west + east)"
               >
                 {adding ? "Adding…" : "Add BlockDAG"}
               </button>

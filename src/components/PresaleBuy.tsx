@@ -471,7 +471,7 @@ function PresaleBuyInner() {
       const raw = e instanceof Error ? e.message : "Transaction failed";
       if (/sendRawTransaction|method not found/i.test(raw)) {
         setError(
-          "Your wallet’s BlockDAG RPC can’t send txs. Tap Switch/Add BlockDAG (uses rpc.west.bdag-us.org) or in MetaMask set BlockDAG RPC to https://rpc.west.bdag-us.org/",
+          "Your wallet’s BlockDAG RPC can’t send txs. Tap Switch/Add BlockDAG (uses rpc.west / rpc.east) or in MetaMask set BlockDAG RPC to https://rpc.west.bdag-us.org/ or https://rpc.east.bdag-us.org/",
         );
       } else {
         setError(raw);

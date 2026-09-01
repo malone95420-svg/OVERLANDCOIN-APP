@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   createPublicClient,
   createWalletClient,
+  fallback,
   getAddress,
   http,
   isAddress,
@@ -13,7 +14,12 @@ import { blockdag } from "@/lib/chain";
 import { getClaim, isCompletionClaimed, recordClaim } from "@/lib/claimsLedger";
 import { getQuestById } from "@/lib/quests";
 import { TOKEN } from "@/lib/token";
-import { blockdagWalletRpcUrls, isSendCapableBlockdagRpc } from "@/lib/blockdagRpc";
+import {
+  blockdagHttpRpcUrls,
+  blockdagWalletRpcUrls,
+  isKnownGoodBlockdagRpc,
+  isSendCapableBlockdagRpc,
+} from "@/lib/blockdagRpc";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -73,11 +79,20 @@ function normalizePrivateKey(raw: string): Hex {
   return with0x as Hex;
 }
 
-function rpcUrls(): string[] {
+function rewardSendRpcUrls(): string[] {
   const envRpc = process.env.REWARD_RPC_URL?.trim();
   const list = [
     envRpc && isSendCapableBlockdagRpc(envRpc) ? envRpc : undefined,
     ...blockdagWalletRpcUrls(),
+  ].filter((u): u is string => Boolean(u));
+  return [...new Set(list)];
+}
+
+function rewardReadRpcUrls(): string[] {
+  const envRpc = process.env.REWARD_RPC_URL?.trim();
+  const list = [
+    envRpc && isKnownGoodBlockdagRpc(envRpc) ? envRpc : undefined,
+    ...blockdagHttpRpcUrls(),
   ].filter((u): u is string => Boolean(u));
   return [...new Set(list)];
 }
@@ -212,19 +227,24 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const urls = rpcUrls();
+  const readUrls = rewardReadRpcUrls();
+  const sendUrls = rewardSendRpcUrls();
   const amountWei = parseUnits(String(amount), TOKEN.decimals);
 
   let lastErr: unknown;
   let txHash: Hex | undefined;
 
-  for (const url of urls) {
+  const pc = createPublicClient({
+    chain: blockdag,
+    transport: fallback(readUrls.map((url) => http(url))),
+  });
+
+  for (const sendUrl of sendUrls) {
     try {
-      const pc = createPublicClient({ chain: blockdag, transport: http(url) });
       const wc = createWalletClient({
         account,
         chain: blockdag,
-        transport: http(url),
+        transport: http(sendUrl),
       });
 
       const bal = await pc.readContract({

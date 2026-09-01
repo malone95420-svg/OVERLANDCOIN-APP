@@ -5,7 +5,8 @@
  *
  * RPC note:
  * - Do NOT use https://rpc.bdagscan.com/ — divergent/stale tip (never for clients/receipts).
- * - https://rpc.west.bdag-us.org/ — send-capable; use for MetaMask / wallet_addEthereumChain.
+ * - https://rpc.west.bdag-us.org/ — send-capable; prefer for MetaMask / wallet_addEthereumChain.
+ * - https://rpc.east.bdag-us.org/ — send-capable fallback when west is down; good tip for reads.
  * - https://rpc.blockdag.engineering/ — read-only / no-send (good tip for receipts; NO eth_sendRawTransaction).
  * Explorer https://bdagscan.com is still OK.
  */
@@ -23,13 +24,14 @@ export const TOKEN = {
   /** Primary send-capable RPC */
   rpcUrl: process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim() || "https://rpc.west.bdag-us.org/",
   /**
-   * Read fallback (engineering has a good tip but cannot send txs).
-   * Never put this in wallet_addEthereumChain rpcUrls.
+   * Fallback RPC (east is send-capable + good tip).
+   * Engineering remains available via rpcAlt / blockdagHttpRpcUrls for reads only.
+   * Never put engineering in wallet_addEthereumChain rpcUrls.
    */
   rpcFallback:
     process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim() ||
-    "https://rpc.blockdag.engineering/",
-  /** Additional read RPC (same host as rpcFallback by default) */
+    "https://rpc.east.bdag-us.org/",
+  /** Additional read-only RPC (no eth_sendRawTransaction) */
   rpcAlt: "https://rpc.blockdag.engineering/",
   explorers: {
     primary: "https://explorer.blockdag.engineering",

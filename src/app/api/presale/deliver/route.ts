@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   createPublicClient,
   createWalletClient,
+  fallback,
   getAddress,
   http,
   isAddress,
@@ -15,6 +16,7 @@ import {
   PRESALE_LOCK_ABI,
   getPresaleLockAddress,
   presaleDeliverRpcUrls,
+  presaleReadRpcUrls,
 } from "@/lib/presaleLock";
 import { TOKEN } from "@/lib/token";
 
@@ -172,18 +174,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "olcAmount too small after decimal conversion" }, { status: 400 });
   }
 
-  const urls = presaleDeliverRpcUrls();
+  // Reads may use engineering/east when west is 502; broadcasts use send-capable only.
+  const readUrls = presaleReadRpcUrls();
+  const sendUrls = presaleDeliverRpcUrls();
   let lastErr: unknown;
   let creditTxHash: Hex | undefined;
   let mode: "credit" | "transfer_then_credit" | undefined;
 
-  for (const url of urls) {
+  const pc = createPublicClient({
+    chain: blockdag,
+    transport: fallback(readUrls.map((url) => http(url))),
+  });
+
+  for (const sendUrl of sendUrls) {
     try {
-      const pc = createPublicClient({ chain: blockdag, transport: http(url) });
       const wc = createWalletClient({
         account,
         chain: blockdag,
-        transport: http(url),
+        transport: http(sendUrl),
       });
 
       const [lockBal, totalLocked, operator] = await Promise.all([

@@ -10,7 +10,7 @@ import { blockdag } from "@/lib/chain";
 import {
   PRESALE_LOCK_ABI,
   getPresaleLockAddress,
-  presaleDeliverRpcUrls,
+  presaleReadRpcUrls,
 } from "@/lib/presaleLock";
 import { TOKEN } from "@/lib/token";
 
@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
   }
 
   const user = getAddress(addressRaw);
-  const urls = presaleDeliverRpcUrls();
+  const urls = presaleReadRpcUrls();
   let lastErr: unknown;
 
   for (const url of urls) {

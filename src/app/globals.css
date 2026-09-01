@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #060a10;
+  --bg-card: #0d1520;
+  --gold: #c9952a;
+  --gold-bright: #f5a623;
+  --cyan: #38c4e8;
+  --border: #1a2a3a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: #e8eef4;
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+  .card {
+    @apply rounded-2xl border border-border bg-bg-card/90 p-6 shadow-gold backdrop-blur;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-gold-dark via-gold to-gold-bright px-5 py-2.5 text-sm font-semibold text-bg-deep shadow-gold transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-bright/60;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-bg-panel px-5 py-2.5 text-sm font-semibold text-white transition hover:border-gold/50 hover:bg-bg-card focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-accent/40;
+  }
+  .section-title {
+    @apply text-3xl font-bold tracking-tight text-white sm:text-4xl;
+  }
+  .section-sub {
+    @apply mt-3 max-w-2xl text-base text-slate-400 sm:text-lg;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full border border-border bg-bg-panel px-3 py-1 text-xs font-medium text-cyan-accent;
+  }
+  .gold-text {
+    @apply bg-gradient-to-r from-gold via-gold-bright to-gold bg-clip-text text-transparent;
+  }
+  .link-accent {
+    @apply text-cyan-accent underline-offset-4 hover:text-gold-bright hover:underline;
+  }
+}
+
+/* Leaflet dark map tweaks */
+.leaflet-container {
+  background: #0a0a0f;
+  font-family: inherit;
+  border-radius: 1rem;
+  z-index: 0;
+}

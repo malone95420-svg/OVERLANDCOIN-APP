@@ -1,0 +1,41 @@
+/**
+ * OVERLANDCOIN on-chain token config — source of truth.
+ * Contract exists ONLY on BlockDAG Mainnet (chainId 1404).
+ * Not deployed on Base/Ethereum (those addresses are empty EOAs).
+ */
+export const TOKEN = {
+  name: "OVERLANDCOIN",
+  symbol: "OLC",
+  decimals: 18,
+  /** On-chain total supply: 9,000,000,000 OLC (ignore old 5B UI) */
+  totalSupply: BigInt("9000000000"),
+  totalSupplyFormatted: "9,000,000,000",
+  contractAddress: "0x4DF1041EA978fcFF8997f9BFd5302E65100d7f27" as const,
+  chainId: 1404,
+  chainName: "BlockDAG Mainnet",
+  nativeCurrency: { name: "BDAG", symbol: "BDAG", decimals: 18 },
+  rpcUrl: process.env.NEXT_PUBLIC_BLOCKDAG_RPC ?? "https://rpc.west.bdag-us.org/",
+  rpcFallback:
+    process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK ?? "https://rpc.bdagscan.com/",
+  /** Additional RPC referenced by live site */
+  rpcAlt: "https://rpc.blockdag.engineering/",
+  explorers: {
+    primary: "https://explorer.blockdag.engineering",
+    secondary: "https://bdagscan.com",
+  },
+} as const;
+
+export function explorerAddressUrl(address: string = TOKEN.contractAddress) {
+  return `${TOKEN.explorers.primary}/address/${address}`;
+}
+
+export function explorerTxUrl(txHash: string) {
+  return `${TOKEN.explorers.primary}/tx/${txHash}`;
+}
+
+export const ERC20_ABI = [
+  "function name() view returns (string)",
+  "function symbol() view returns (string)",
+  "function decimals() view returns (uint8)",
+  "function totalSupply() view returns (uint256)",
+] as const;

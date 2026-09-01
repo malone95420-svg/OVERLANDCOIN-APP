@@ -19,7 +19,7 @@ Purchased OLC must not be freely transferable until exchange listing. After a su
 
 ### Deploy on BlockDAG 1404
 
-1. Compile with solc ≥ 0.8.20 (no OpenZeppelin — Ownable/operator are inline).
+1. Compile with solc ≥ 0.8.20 and **evmVersion `paris`** (BlockDAG rejects PUSH0). Use `node scripts/compile-presale-lock.mjs` (no OpenZeppelin — Ownable/operator are inline).
 2. Deploy `PresaleLock` with constructor arg = OLC token `0x4DF1041EA978fcFF8997f9BFd5302E65100d7f27`.
 3. Fund inventory: approve the lock contract, then call `deposit(amount)`, **or** transfer OLC to the lock address and keep `balanceOf(lock) >= totalLocked + nextCredit`.
 4. Set operator to the deliver hot wallet: `setOperator(deliverAddress)`.
@@ -32,7 +32,7 @@ Purchased OLC must not be freely transferable until exchange listing. After a su
 
 If lock address or deliver key is missing, purchases are marked `locked_pending_chain` and the UI shows a local credit with “awaiting lock contract config” — never claim transferable wallet delivery.
 
-Explorer: https://explorer.blockdag.engineering  
+Explorer: https://bdagscan.com/ (also https://explorer.blockdag.engineering)  
 RPC: `https://rpc.west.bdag-us.org/` (fallback `https://rpc.bdagscan.com/`)
 
 ### Suggested forge/cast deploy sketch

@@ -15,3 +15,12 @@ scripts/cache/
 # Runtime claims ledger (MVP anti-double-claim; use Redis/DB in production)
 /data/claims-ledger.json
 /tmp/overlandcoin-claims-ledger.json
+
+# Ops secrets (never commit private keys)
+**/secrets/
+/home/box/agent-data/
+*.wallet.json
+reward-wallet.json
+presale-deliver-wallet.json
+ops/secrets/
+contracts/out/

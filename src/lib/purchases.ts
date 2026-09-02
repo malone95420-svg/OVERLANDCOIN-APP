@@ -1,11 +1,14 @@
 /**
  * Local purchase records (browser localStorage).
- * On-chain BDAG/BDUSD buys attempt instant locked delivery via PresaleLock
- * (POST /api/presale/deliver). Status:
+ * On-chain BDAG/BDUSD buys attempt locked delivery via PresaleLock
+ * (POST /api/presale/deliver) AFTER server verifies the payment tx.
+ * External deposits use POST /api/presale/confirm-deposit with pasted tx hash.
+ * Never credit from client-only / localStorage-only claims.
+ * Status:
  *  - locked — credited on-chain into PresaleLock (non-transferable until listing)
- *  - locked_pending_chain — local credit only; lock contract/key not configured yet
+ *  - locked_pending_chain — payment verified (or submitted) but lock credit pending
  *  - pending_delivery — legacy / failed path (should migrate toward locked*)
- *  - pending_external — off-chain deposit awaiting confirmation
+ *  - pending_external — awaiting tx hash verification (reminder only — no OLC yet)
  *
  * Keys are namespaced by accountKey when signed in (see accountScope).
  */
@@ -146,7 +149,9 @@ export function listPendingLockCredits(address?: string | null): LocalPurchase[]
   const list = loadPurchases();
   return list.filter((p) => {
     if (p.status !== "locked_pending_chain") return false;
-    if (!p.txHash || !p.txHash.startsWith("0x")) return false;
+    // Real payment ids only — exclude local reminder stubs
+    if (!p.txHash || p.txHash.startsWith("external:")) return false;
+    if (p.txHash.length < 10) return false;
     const olc = resolveOlcAmount(p);
     if (!(olc > 0)) return false;
     if (address) {

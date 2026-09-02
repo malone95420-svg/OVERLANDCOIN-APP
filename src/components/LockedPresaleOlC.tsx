@@ -36,16 +36,29 @@ function resolveOlc(p: LocalPurchase): number {
 async function postDeliver(p: LocalPurchase, buyerFallback?: string | null) {
   const buyer = p.from || buyerFallback;
   const olcAmount = resolveOlc(p);
-  if (!buyer || !(olcAmount > 0) || !p.txHash?.startsWith("0x")) {
+  if (!buyer || !(olcAmount > 0) || !p.txHash || p.txHash.startsWith("external:")) {
     return { ok: false as const, error: "Missing buyer, olcAmount, or paymentTxHash" };
   }
-  const res = await fetch("/api/presale/deliver", {
+  const asset = (p.payAsset || "BDAG").toUpperCase();
+  const payChain =
+    asset === "BTC"
+      ? "bitcoin"
+      : asset === "SOL"
+        ? "solana"
+        : asset === "ETH" || asset === "USDT" || asset === "USDC"
+          ? "ethereum"
+          : "blockdag";
+  const endpoint =
+    payChain === "blockdag" ? "/api/presale/deliver" : "/api/presale/confirm-deposit";
+  const res = await fetch(endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       buyer,
       olcAmount,
       paymentTxHash: p.txHash,
+      payChain,
+      chain: payChain,
       batchPriceUsed: p.batchPriceUsed ?? p.batchPriceUsdt,
       usdRateUsed: p.usdRateUsed,
       usdPaid: p.usdPaid ?? p.usdEstimated,

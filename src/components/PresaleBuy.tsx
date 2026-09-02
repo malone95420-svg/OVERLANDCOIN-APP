@@ -48,6 +48,24 @@ function formatNum(n: number, maxFrac = 6): string {
   return n.toLocaleString("en-US", { maximumFractionDigits: maxFrac });
 }
 
+function payChainForAsset(id: AcceptedPayAsset["id"]): "blockdag" | "ethereum" | "bitcoin" | "solana" {
+  switch (id) {
+    case "BDAG":
+    case "BDUSD":
+      return "blockdag";
+    case "ETH":
+    case "USDT":
+    case "USDC":
+      return "ethereum";
+    case "BTC":
+      return "bitcoin";
+    case "SOL":
+      return "solana";
+    default:
+      return "ethereum";
+  }
+}
+
 export function PresaleBuy() {
   const web3Mounted = useWeb3Mounted();
   if (!web3Mounted) {
@@ -82,12 +100,15 @@ function PresaleBuyInner() {
   const [pendingLockRetryTx, setPendingLockRetryTx] = useState<string | null>(null);
   const [retryBusy, setRetryBusy] = useState(false);
   const [depositAck, setDepositAck] = useState(false);
+  const [depositTxHash, setDepositTxHash] = useState("");
+  const [confirmBusy, setConfirmBusy] = useState(false);
 
   const selected = assets.find((a) => a.id === assetId) ?? assets[0];
   const payMode = paymentMode(selected);
 
   useEffect(() => {
     setDepositAck(false);
+    setDepositTxHash("");
   }, [selected.id]);
 
   const usdPerPayUnit = liveUsdForAsset(selected, prices);
@@ -231,6 +252,7 @@ function PresaleBuyInner() {
             buyer: address,
             olcAmount: derived.olc,
             paymentTxHash,
+            payChain: payChainForAsset(selected.id),
             batchPriceUsed: batchPrice,
             usdRateUsed: usdPerPayUnit ?? 0,
             usdPaid: Number(derived.usd.toFixed(8)),
@@ -305,6 +327,7 @@ function PresaleBuyInner() {
       batchPrice,
       usdPerPayUnit,
       selected.symbol,
+      selected.id,
     ]
   );
 
@@ -328,13 +351,21 @@ function PresaleBuyInner() {
         setError("Missing buyer or olcAmount for retry.");
         return;
       }
-      const res = await fetch("/api/presale/deliver", {
+      const assetId = (record.payAsset as AcceptedPayAsset["id"]) || selected.id;
+      const payChain = payChainForAsset(assetId);
+      const endpoint =
+        payChain === "blockdag"
+          ? "/api/presale/deliver"
+          : "/api/presale/confirm-deposit";
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           buyer,
           olcAmount,
           paymentTxHash,
+          payChain,
+          chain: payChain,
           batchPriceUsed: record.batchPriceUsed ?? record.batchPriceUsdt,
           usdRateUsed: record.usdRateUsed,
           usdPaid: record.usdPaid ?? record.usdEstimated,
@@ -490,11 +521,15 @@ function PresaleBuyInner() {
     }
   }
 
-  function onRecordExternalDeposit() {
+  async function onConfirmExternalDeposit() {
     setError(null);
     setSuccessNote(null);
+    if (!isConnected || !address) {
+      setError("Connect your BlockDAG wallet first — OLC is credited to that address.");
+      return;
+    }
     if (!buyRateReady) {
-      setError(`Live ${selected.symbol}/USD price required before recording a deposit.`);
+      setError(`Live ${selected.symbol}/USD price required before confirming a deposit.`);
       return;
     }
     if (!(derived.olc > 0) || !(derived.payAmount > 0)) {
@@ -506,16 +541,131 @@ function PresaleBuyInner() {
       return;
     }
     if (!depositAck) {
-      setError("Confirm you will send exactly the quoted amount to the deposit address.");
+      setError("Confirm you sent (or will send) the quoted amount to the deposit address.");
       return;
     }
-    const stub = `external:pending:${selected.symbol}:${Date.now()}`;
-    const next = savePurchase(
-      buildRecord({ txHash: stub, status: "pending_external", payMethod: "deposit" })
-    );
+    const hash = depositTxHash.trim();
+    if (!hash || hash.length < 10) {
+      setError("Paste your payment transaction hash / txid after sending — required for verification.");
+      return;
+    }
+
+    setConfirmBusy(true);
+    const pending = {
+      ...buildRecord({
+        txHash: hash,
+        status: "locked_pending_chain" as const,
+        payMethod: "deposit" as const,
+      }),
+      from: address,
+      olcAmount: derived.olc,
+      deliveryNote: "Verifying payment on-chain…",
+    };
+    setPurchases(savePurchase(pending));
+    setPendingLockRetryTx(hash);
+
+    try {
+      const res = await fetch("/api/presale/confirm-deposit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chain: payChainForAsset(selected.id),
+          paymentTxHash: hash,
+          buyer: address,
+          payAsset: selected.symbol,
+          olcAmount: derived.olc,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        status?: string;
+        creditTxHash?: string;
+        message?: string;
+        error?: string;
+        notConfigured?: boolean;
+        olcAmount?: number;
+        verified?: boolean;
+        payAmount?: number;
+      };
+
+      if (data.status === "locked" && data.creditTxHash) {
+        const olc =
+          typeof data.olcAmount === "number" ? data.olcAmount : derived.olc;
+        const next = updatePurchase(hash, {
+          status: "locked",
+          creditTxHash: data.creditTxHash,
+          olcAmount: olc,
+          from: address,
+          deliveryNote: undefined,
+        });
+        setPurchases(next);
+        setPendingLockRetryTx(null);
+        setSuccessNote(
+          `Payment verified. ${formatNum(olc, 4)} OLC credited to PresaleLock for ${address.slice(0, 8)}… Credit tx ${data.creditTxHash.slice(0, 10)}…`,
+        );
+        return;
+      }
+
+      if (data.verified && data.status === "locked_pending_chain") {
+        const olc =
+          typeof data.olcAmount === "number" ? data.olcAmount : derived.olc;
+        const next = updatePurchase(hash, {
+          status: "locked_pending_chain",
+          olcAmount: olc,
+          from: address,
+          deliveryNote:
+            data.message ||
+            data.error ||
+            "Payment verified — awaiting PresaleLock credit config.",
+        });
+        setPurchases(next);
+        setPendingLockRetryTx(hash);
+        setSuccessNote(
+          `Payment verified on-chain. ${formatNum(olc, 4)} OLC pending PresaleLock credit. ${data.error || data.message || ""}`,
+        );
+        return;
+      }
+
+      setError(data.error || data.message || "Payment could not be verified.");
+      const next = updatePurchase(hash, {
+        status: "pending_external",
+        from: address,
+        deliveryNote: data.error || "Unverified",
+      });
+      setPurchases(next);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Confirm request failed");
+    } finally {
+      setConfirmBusy(false);
+      setPurchases(loadPurchases());
+    }
+  }
+
+  /** Local reminder only — does NOT credit OLC (no tx hash verification). */
+  function onSaveDepositReminder() {
+    setError(null);
+    setSuccessNote(null);
+    if (!isConnected || !address) {
+      setError("Connect your BlockDAG wallet first.");
+      return;
+    }
+    if (!depositAck) {
+      setError("Confirm the deposit amount/network checkbox first.");
+      return;
+    }
+    const stub = `external:reminder:${selected.symbol}:${Date.now()}`;
+    const next = savePurchase({
+      ...buildRecord({
+        txHash: stub,
+        status: "pending_external",
+        payMethod: "deposit",
+      }),
+      from: address,
+      deliveryNote:
+        "Reminder only — paste tx hash and tap Confirm payment to verify and credit OLC.",
+    });
     setPurchases(next);
     setSuccessNote(
-      `Pending external ${selected.symbol} deposit recorded locally. Send ${formatNum(derived.payAmount, 8)} ${selected.symbol} on ${selected.depositNetwork ?? "the published network"} to the deposit address. OLC (~${formatNum(derived.olc, 4)}) is pending delivery after confirmation — not an instant mint.`
+      `Reminder saved. Send ${formatNum(derived.payAmount, 8)} ${selected.symbol}, then paste the tx hash and tap Confirm payment. No OLC is credited from a reminder alone.`,
     );
   }
 
@@ -545,7 +695,8 @@ function PresaleBuyInner() {
         <p>
           <strong>Safety:</strong> On-chain Buy is BlockDAG Mainnet only (chainId {TOKEN.chainId}).
           External deposits (ETH / USDT / USDC / SOL / BTC) use published deposit addresses —
-          wrong network = lost funds.
+          wrong network = lost funds. Paste the payment tx hash and Confirm — no credit without
+          on-chain verification.
         </p>
         <p>
           Verify treasury{" "}
@@ -805,23 +956,70 @@ function PresaleBuyInner() {
                 onChange={(e) => setDepositAck(e.target.checked)}
               />
               <span>
-                I will send exactly {formatNum(derived.payAmount, 8)} {selected.symbol} on{" "}
-                {selected.depositNetwork} to the deposit address above at the quoted live rate.
+                I sent (or will send) exactly {formatNum(derived.payAmount, 8)}{" "}
+                {selected.symbol} on {selected.depositNetwork} to the deposit address above.
               </span>
             </label>
-            <button
-              type="button"
-              className="btn-primary"
-              disabled={!buyRateReady || !(derived.olc > 0) || !depositAck}
-              onClick={onRecordExternalDeposit}
-            >
-              {!buyRateReady
-                ? "Waiting for live price…"
-                : "Record deposit / pending purchase"}
-            </button>
+
+            <label className="block text-xs text-slate-300">
+              <span className="text-slate-400">
+                Payment tx hash / txid (required to credit OLC)
+              </span>
+              <input
+                type="text"
+                value={depositTxHash}
+                onChange={(e) => setDepositTxHash(e.target.value)}
+                placeholder={
+                  selected.id === "BTC"
+                    ? "Bitcoin txid (64 hex)"
+                    : selected.id === "SOL"
+                      ? "Solana signature"
+                      : "0x… transaction hash"
+                }
+                className="mt-1 w-full rounded-xl border border-border bg-bg-panel px-3 py-2.5 font-mono text-sm text-white"
+                autoComplete="off"
+                spellCheck={false}
+              />
+            </label>
+
+            {!isConnected && (
+              <p className="text-xs text-amber-200">
+                Connect your BlockDAG wallet — verified OLC is locked to that address.
+              </p>
+            )}
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                className="btn-primary"
+                disabled={
+                  confirmBusy ||
+                  !buyRateReady ||
+                  !(derived.olc > 0) ||
+                  !depositAck ||
+                  !isConnected ||
+                  !depositTxHash.trim()
+                }
+                onClick={() => void onConfirmExternalDeposit()}
+              >
+                {confirmBusy
+                  ? "Verifying…"
+                  : !buyRateReady
+                    ? "Waiting for live price…"
+                    : "Confirm payment"}
+              </button>
+              <button
+                type="button"
+                className="rounded-xl border border-border px-3 py-2 text-xs text-slate-300 hover:bg-bg-panel"
+                disabled={!depositAck || !isConnected}
+                onClick={onSaveDepositReminder}
+              >
+                Save reminder (no credit)
+              </button>
+            </div>
             <p className="text-[10px] text-slate-500">
-              Records a local pending purchase. OLC is credited after your deposit is confirmed
-              — this is not an instant on-chain mint.
+              OLC is credited only after the server verifies your tx on{" "}
+              {selected.depositNetwork}. A reminder alone never mints or locks OLC.
             </p>
           </div>
         )}
@@ -926,7 +1124,9 @@ function PresaleBuyInner() {
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  {p.status === "locked_pending_chain" && p.txHash.startsWith("0x") && (
+                  {p.status === "locked_pending_chain" &&
+                    p.txHash &&
+                    !p.txHash.startsWith("external:") && (
                     <button
                       type="button"
                       className="rounded-full border border-amber-500/40 px-2 py-0.5 text-[10px] text-amber-100 hover:bg-amber-500/10"
@@ -945,8 +1145,12 @@ function PresaleBuyInner() {
                     >
                       View tx
                     </a>
+                  ) : p.txHash.startsWith("external:") ? (
+                    <span className="font-mono text-slate-500 text-[10px]">reminder</span>
                   ) : (
-                    <span className="font-mono text-slate-500 text-[10px]">external</span>
+                    <span className="font-mono text-slate-400 text-[10px]" title={p.txHash}>
+                      {p.txHash.slice(0, 12)}…
+                    </span>
                   )}
                 </div>
               </li>

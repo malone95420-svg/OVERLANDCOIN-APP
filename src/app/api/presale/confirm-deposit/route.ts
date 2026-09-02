@@ -1,16 +1,10 @@
 /**
- * POST /api/presale/deliver
+ * POST /api/presale/confirm-deposit
  *
- * Credits OLC into PresaleLock ONLY after on-chain / network payment verification.
- * Never trusts client olcAmount alone — recomputes from verified pay amount × live USD ÷ batch price.
- * Idempotent by paymentTxHash (in-memory MVP; use Redis/Postgres in prod).
+ * Verify an external deposit (Ethereum / Bitcoin / Solana) or BlockDAG payment
+ * by tx hash, recompute OLC server-side, credit PresaleLock to buyer.
  *
- * Body:
- *   buyer            — BlockDAG EVM address to credit (required)
- *   paymentTxHash    — payment tx id / signature (required)
- *   payChain?        — blockdag | ethereum | bitcoin | solana (inferred from payAsset if omitted)
- *   payAsset?        — BDAG | BDUSD | ETH | USDT | USDC | BTC | SOL
- *   olcAmount?       — client hint; capped to verified; rejected if >1% over computed
+ * Body: { chain, paymentTxHash, buyer, payAsset, olcAmount? }
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -27,7 +21,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 12;
+const RATE_LIMIT_MAX = 10;
 const rateBuckets = new Map<string, number[]>();
 
 function clientIp(req: NextRequest): string {
@@ -51,29 +45,25 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
-type DeliverBody = {
-  buyer?: string;
-  olcAmount?: number;
+type Body = {
+  chain?: string;
   paymentTxHash?: string;
-  payChain?: string;
+  buyer?: string;
   payAsset?: string;
-  batchPriceUsed?: number;
-  usdRateUsed?: number;
-  usdPaid?: number;
-  payAmount?: string;
+  olcAmount?: number;
 };
 
 export async function POST(req: NextRequest) {
   if (!checkRateLimit(clientIp(req))) {
     return NextResponse.json(
-      { error: "Too many deliver attempts. Wait a minute and try again." },
+      { error: "Too many confirm attempts. Wait a minute and try again." },
       { status: 429 },
     );
   }
 
-  let body: DeliverBody;
+  let body: Body;
   try {
-    body = (await req.json()) as DeliverBody;
+    body = (await req.json()) as Body;
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
@@ -81,29 +71,44 @@ export async function POST(req: NextRequest) {
   const buyerRaw = typeof body.buyer === "string" ? body.buyer.trim() : "";
   const paymentTxHash =
     typeof body.paymentTxHash === "string" ? body.paymentTxHash.trim() : "";
+  const payAsset =
+    typeof body.payAsset === "string" ? body.payAsset.trim().toUpperCase() : undefined;
   const clientOlc =
     typeof body.olcAmount === "number"
       ? body.olcAmount
       : body.olcAmount != null
         ? Number(body.olcAmount)
         : null;
-  const payAsset =
-    typeof body.payAsset === "string" ? body.payAsset.trim().toUpperCase() : undefined;
 
   if (!buyerRaw || !isAddress(buyerRaw)) {
     return NextResponse.json(
-      { error: "buyer must be a valid BlockDAG / EVM address to credit" },
+      {
+        error:
+          "buyer must be your connected BlockDAG wallet address (OLC is credited there)",
+      },
       { status: 400 },
     );
   }
   if (!paymentTxHash || paymentTxHash.length < 10 || paymentTxHash.length > 128) {
     return NextResponse.json(
-      { error: "paymentTxHash is required (on-chain tx hash or network tx id)" },
+      { error: "paymentTxHash is required — paste the tx hash after sending" },
       { status: 400 },
     );
   }
 
-  // Idempotent short-circuit before RPC work
+  const chain =
+    normalizePayChain(body.chain) ||
+    inferChainFromAsset(payAsset);
+  if (!chain) {
+    return NextResponse.json(
+      {
+        error:
+          "chain is required: ethereum | bitcoin | solana | blockdag (or provide payAsset)",
+      },
+      { status: 400 },
+    );
+  }
+
   const existing = getDeliveredByPayment(paymentTxHash);
   if (existing) {
     return NextResponse.json({
@@ -113,21 +118,15 @@ export async function POST(req: NextRequest) {
       olcAmount: existing.olcAmount,
       alreadyDelivered: true,
       paymentTxHash,
-      payAsset: existing.payAsset ?? payAsset,
       verified: true,
     });
   }
-
-  const chain =
-    normalizePayChain(body.payChain) ||
-    inferChainFromAsset(payAsset) ||
-    "blockdag";
 
   const verified = await verifyPaymentAndQuote({
     chain,
     paymentTxHash,
     payAsset,
-    buyer: buyerRaw,
+    buyer: chain === "blockdag" ? buyerRaw : undefined,
     clientOlcAmount: clientOlc,
   });
 
@@ -142,8 +141,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // For BlockDAG native/BDUSD we already enforced from===buyer inside verify.
-  // For external chains, buyer is the connected BlockDAG wallet to credit.
   const result = await creditVerifiedPurchase({
     buyer: buyerRaw,
     payment: verified.payment,
@@ -186,7 +183,6 @@ export async function POST(req: NextRequest) {
       batchPriceUsed: result.quote.batchPriceUsed,
       usdRateUsed: result.quote.usdRateUsed,
       usdPaid: result.quote.usdPaid,
-      transferTxHash: result.transferTxHash,
       verified: true,
     },
     { status: result.httpStatus },

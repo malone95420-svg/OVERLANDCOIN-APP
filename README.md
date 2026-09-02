@@ -63,3 +63,9 @@ Admin panels, passwords, auth backends, email systems.
 - **Email/password:** Needs `AUTH_SECRET` + Upstash `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` in production. Otherwise the UI tells you to use wallet login.
 - **Google (optional):** `AUTH_GOOGLE_ID` + `AUTH_GOOGLE_SECRET`.
 - Garage / completions / purchases localStorage keys are namespaced by `accountKey` after login (same device). Cross-device sync needs Redis later.
+
+## Presale payment verification
+
+OLC is never credited from client-only claims. `POST /api/presale/deliver` and `POST /api/presale/confirm-deposit` verify the payment tx on BlockDAG / Ethereum / Bitcoin / Solana, recompute OLC from verified amount × live USD ÷ live batch price, then credit PresaleLock (idempotent by `paymentTxHash`).
+
+Users paste the payment tx hash and tap **Confirm payment**. Optional cron: `/api/cron/presale-scan` (needs `CRON_SECRET`). Optional `ETHEREUM_RPC_URL` / `SOLANA_RPC_URL`.

@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/presale-scan",
-      "schedule": "0 14 * * *"
+      "schedule": "*/10 * * * *"
     }
   ]
 }

@@ -4,20 +4,19 @@ import { AdventureFeed } from "@/components/AdventureFeed";
 export const metadata: Metadata = {
   title: "Adventure Feed",
   description:
-    "GPS-verified quest photos from OVERLANDCOIN check-ins. OLC rewards are pending claim until the reward contract is live.",
+    "Shared wall of GPS + photo verified OVERLANDCOIN quest check-ins. OLC earned on check-in — claim to your wallet.",
 };
 
 export default function FeedPage() {
   return (
-    <div className="container-page py-14">
+    <div className="container-page w-full max-w-full overflow-x-hidden py-14">
       <span className="badge">GPS verified · Photo proof</span>
       <h1 className="section-title mt-4">Adventure Feed</h1>
       <p className="section-sub">
-        Public-feeling wall of check-in photos from this browser. Rewards are GPS + photo verified
-        and recorded as <span className="font-mono text-cyan-accent">pending_claim</span> — on-chain
-        claim comes later when a reward contract exists. No tokens move on BlockDAG today.
+        Public adventure wall of GPS + photo verified quest check-ins. Earn OLC when you check in,
+        then claim rewards to your wallet. Share the trail with the community.
       </p>
-      <div className="mt-10">
+      <div className="mt-10 w-full max-w-full">
         <AdventureFeed />
       </div>
     </div>

@@ -6,6 +6,7 @@ import { formatDistance, haversineMeters, isWithinRadius } from "@/lib/checkin";
 import {
   compressImageToDataUrl,
   hasCompletedQuest,
+  publishFeedPostToServer,
   recordCheckIn,
   type Completion,
 } from "@/lib/completions";
@@ -34,6 +35,7 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
   const [caption, setCaption] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [feedSyncError, setFeedSyncError] = useState<string | null>(null);
   const [done, setDone] = useState<Completion | null>(null);
 
   const tierOk = canReachQuest(vehicleTier, quest.minTier);
@@ -67,6 +69,7 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
   useEffect(() => {
     if (!open) return;
     setError(null);
+    setFeedSyncError(null);
     setDone(null);
     setPhotoDataUrl(null);
     setPhotoName("");
@@ -127,6 +130,10 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
       }
       setDone(res.completion);
       onSuccess?.();
+      // Shared wall — keep local save even if sync fails
+      void publishFeedPostToServer(res.post).then((pub) => {
+        if (!pub.ok) setFeedSyncError(pub.error);
+      });
     } finally {
       setSubmitting(false);
     }
@@ -193,13 +200,18 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
             <p className="text-2xl font-bold text-gold-bright">+{done.olcEarned} OLC</p>
             <p className="badge !text-[11px]">
               {done.status === "claimed"
-                ? "GPS verified · Photo proof · OLC claimed"
-                : "GPS verified · Photo proof · OLC pending claim"}
+                ? "GPS verified · Photo proof · OLC sent"
+                : "GPS verified · Photo proof"}
             </p>
             <p className="text-sm text-slate-400">
-              Saved to your local ledger and Adventure Feed. Claim to your wallet now — payouts come
-              from the Overland rewards wallet once configured.
+              Saved locally and published to the Adventure Feed. Claim OLC to your wallet now —
+              payouts come from the Overland rewards wallet once configured.
             </p>
+            {feedSyncError ? (
+              <p className="text-xs text-amber-400">
+                Shared feed sync failed: {feedSyncError}. Your check-in is still saved on this device.
+              </p>
+            ) : null}
             <ClaimOlCButton
               completion={done}
               onClaimed={(c) => setDone(c)}

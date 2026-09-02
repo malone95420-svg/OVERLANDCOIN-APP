@@ -37,8 +37,8 @@ export type Completion = {
 };
 
 export type FeedPostBadge =
-  | "GPS verified · Photo proof · OLC pending claim"
-  | "GPS verified · Photo proof · OLC claimed";
+  | "GPS verified · Photo proof"
+  | "GPS verified · Photo proof · OLC sent";
 
 export type FeedPost = {
   id: string;
@@ -190,7 +190,7 @@ export function recordCheckIn(
     caption: completion.caption,
     olcEarned: completion.olcEarned,
     createdAt: completion.completedAt,
-    badge: "GPS verified · Photo proof · OLC pending claim",
+    badge: "GPS verified · Photo proof",
   };
 
   const completions = [completion, ...loadCompletions()];
@@ -248,7 +248,7 @@ export function markCompletionClaimed(
     p.completionId === completionId
       ? {
           ...p,
-          badge: "GPS verified · Photo proof · OLC claimed" as const,
+          badge: "GPS verified · Photo proof · OLC sent" as const,
           txHash: input.txHash,
         }
       : p,
@@ -298,4 +298,47 @@ export function compressImageToDataUrl(
     };
     img.src = url;
   });
+}
+
+/**
+ * Fire-and-forget publish to the shared Adventure Feed API.
+ * Local save remains authoritative if this fails.
+ */
+export async function publishFeedPostToServer(
+  post: FeedPost,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    const res = await fetch("/api/feed", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: post.id,
+        questId: post.questId,
+        questTitle: post.questTitle,
+        region: post.region,
+        caption: post.caption,
+        olcEarned: post.olcEarned,
+        photoDataUrl: post.photoDataUrl,
+        createdAt: post.createdAt,
+        badge: post.badge,
+        txHash: post.txHash,
+      }),
+    });
+    if (!res.ok) {
+      let msg = `Feed sync failed (${res.status})`;
+      try {
+        const data = (await res.json()) as { error?: string };
+        if (data?.error) msg = data.error;
+      } catch {
+        /* ignore */
+      }
+      return { ok: false, error: msg };
+    }
+    return { ok: true };
+  } catch (e) {
+    return {
+      ok: false,
+      error: e instanceof Error ? e.message : "Feed sync network error",
+    };
+  }
 }

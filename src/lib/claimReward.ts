@@ -7,6 +7,7 @@ import {
   loadCompletions,
   loadPosts,
   markCompletionClaimed,
+  publishFeedPostToServer,
   type Completion,
 } from "@/lib/completions";
 import { getOrCreateDeviceId } from "@/lib/deviceId";
@@ -120,6 +121,12 @@ export async function claimRewardToWallet(input: ClaimInput): Promise<ClaimResul
     }
 
     markQuestCompletedOnDevice(completion.questId);
+
+    // Best-effort: refresh shared wall badge / txHash
+    const feedPost = loadPosts().find((p) => p.completionId === completion.id);
+    if (feedPost) {
+      void publishFeedPostToServer(feedPost);
+    }
 
     return {
       ok: true,

@@ -3,6 +3,7 @@
  * Ensures BlockDAG Mainnet (1404) when possible before prompting.
  */
 import { blockdagAddChainParams } from "@/lib/chain";
+import { getAnyInjectedProvider } from "@/lib/injectedWallets";
 import { SITE } from "@/lib/site";
 import { TOKEN } from "@/lib/token";
 
@@ -12,8 +13,8 @@ type EthereumProvider = {
 
 function getEthereum(): EthereumProvider | null {
   if (typeof window === "undefined") return null;
-  const eth = (window as unknown as { ethereum?: EthereumProvider }).ethereum;
-  return eth?.request ? eth : null;
+  const eth = getAnyInjectedProvider();
+  return eth?.request ? (eth as EthereumProvider) : null;
 }
 
 function olcImageUrl(): string {
@@ -81,7 +82,7 @@ export async function addOlcToWallet(opts?: {
     return {
       ok: false,
       error:
-        "No injected wallet found. Install MetaMask (or open this site in a wallet browser) to add OLC.",
+        "No injected wallet found. Install OKX, Trust, MetaMask, or open this site in a wallet browser to add OLC.",
     };
   }
 

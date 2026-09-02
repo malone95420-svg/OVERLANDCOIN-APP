@@ -27,7 +27,6 @@ import {
   type UserGeo,
 } from "./UserLocationLayer";
 
-// Fix default marker icons under bundlers
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -52,7 +51,6 @@ function FlyTo({ quests, selectedId }: { quests: Quest[]; selectedId?: string })
   useEffect(() => {
     const q = quests.find((x) => x.id === selectedId);
     if (q) {
-      // Zoom ~13 for quest selection (not world zoom 5)
       map.flyTo([q.lat, q.lng], 13, { duration: 0.8 });
     }
   }, [map, quests, selectedId]);

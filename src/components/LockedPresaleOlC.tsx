@@ -173,7 +173,6 @@ function LockedPresaleOlCInner() {
     return () => clearInterval(t);
   }, [address, fetchLockedApi]);
 
-  // Optional wagmi enhancement — only when already on BlockDAG; never gates display.
   const { data: onChainLocked, refetch: refetchLocked } = useReadContract({
     address: lockAddress ?? undefined,
     abi: PRESALE_LOCK_ABI,
@@ -202,14 +201,12 @@ function LockedPresaleOlCInner() {
     return null;
   }, [lockAddress, onChainLocked]);
 
-  // Prefer server API; fall back to wagmi when available.
   const onChainNum = useMemo(() => {
     if (apiLocked != null) return apiLocked;
     if (wagmiNum != null) return wagmiNum;
     return null;
   }, [apiLocked, wagmiNum]);
 
-  // Always show MAX(on-chain locked, localSum of locked/locked_pending_chain)
   const lockedDisplay = useMemo(() => {
     if (onChainNum != null) {
       return Math.max(onChainNum, localSum);
@@ -329,7 +326,6 @@ function LockedPresaleOlCInner() {
     [address, refreshLocal, refetchLocked, fetchLockedApi],
   );
 
-  // Optional: on mount, auto-retry pending credits once quietly
   useEffect(() => {
     if (autoRetried.current) return;
     if (!address || !lockAddress) return;

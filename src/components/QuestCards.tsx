@@ -39,7 +39,6 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
 
   const selectedQuest = visible.find((q) => q.id === selectedId);
 
-  // Drop stale route when selection changes away from drawn destination
   useEffect(() => {
     setRouteCoords(null);
   }, [selectedId]);

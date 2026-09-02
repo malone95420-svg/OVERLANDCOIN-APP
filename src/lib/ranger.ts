@@ -162,11 +162,6 @@ export function replyRanger(
   userText: string,
   opts: { vehicle: Vehicle | null; tier: CapabilityTier | null },
 ): string {
-  // --- Future LLM hook (placeholder) ---
-  // if (process.env.RANGER_API) {
-  //   // POST { messages, vehicle, tier } → assistant text
-  //   // Use a server route so API keys never ship to the browser.
-  // }
   const text = userText.trim();
   const lower = text.toLowerCase();
   const { vehicle, tier } = opts;

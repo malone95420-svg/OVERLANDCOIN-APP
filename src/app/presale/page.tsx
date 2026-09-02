@@ -98,7 +98,12 @@ export default function PresalePage() {
         <h2 className="text-xl font-bold text-white">1. Add BlockDAG Mainnet</h2>
         <p className="mt-2 text-sm text-slate-400">
           Use <strong className="text-slate-200">Connect Wallet → Switch / Add BlockDAG</strong>, or
-          add manually in MetaMask: Settings → Networks → Add network.
+          add manually in OKX / Trust / Rabby / Coinbase / Bitget / MetaMask: Settings → Networks →
+          Add network. Any BlockDAG-capable wallet must be on chainId {TOKEN.chainId} with a
+          send-capable RPC (
+          <span className="font-mono text-slate-300">rpc.west.bdag-us.org</span> or{" "}
+          <span className="font-mono text-slate-300">rpc.east.bdag-us.org</span>) — not engineering /
+          bdagscan for broadcasts. No BlockDAG wallet? Use external USDT/ETH/BTC/SOL deposits below.
         </p>
         <dl className="mt-6 space-y-3">
           {networkRows.map((row) => (
@@ -116,7 +121,7 @@ export default function PresalePage() {
       <section className="mt-6 card">
         <h2 className="text-xl font-bold text-white">2. Add OLC token</h2>
         <p className="mt-2 text-sm text-slate-400">
-          One click imports {TOKEN.name} ({TOKEN.symbol}, {TOKEN.decimals} decimals) into MetaMask
+          One click imports {TOKEN.name} ({TOKEN.symbol}, {TOKEN.decimals} decimals) into your connected wallet
           on BlockDAG. Or copy the contract below and add manually.
         </p>
         <div className="mt-4">

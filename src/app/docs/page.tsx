@@ -32,9 +32,9 @@ const DOCS = [
     href: "/presale",
   },
   {
-    title: "Quest & map concepts",
-    status: "Demo",
-    body: "Explore the demo quest map and leaderboard UX.",
+    title: "Quest map & leaderboard",
+    status: "Live",
+    body: "Explore the quest map and climb the leaderboard by completing quests.",
     href: "/map",
   },
   {
@@ -58,7 +58,7 @@ export default function DocsPage() {
       <span className="badge">Documentation</span>
       <h1 className="section-title mt-4">Docs hub</h1>
       <p className="section-sub">
-        Whitepaper landing soon. Meanwhile, use these references for the token, wallet setup, and product demos.
+        Whitepaper landing soon. Meanwhile, use these references for the token, wallet setup, quests, and leaderboard.
       </p>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2">

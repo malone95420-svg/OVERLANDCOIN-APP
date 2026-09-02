@@ -49,11 +49,9 @@ export function QuestDirections({ quest, userGeo, onRouteChange, compact }: Prop
     setBusy(false);
   }, [onRouteChange]);
 
-  // Clear route when quest changes
   useEffect(() => {
     clearRoute();
     setOpen(false);
-    // only when quest id changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quest.id]);
 

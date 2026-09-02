@@ -136,7 +136,6 @@ function PresaleBuyInner() {
   useEffect(() => {
     setDepositAck(false);
     setError(null);
-    // Keep pendingLockRetryTx / recovery note if lock credit still outstanding
     if (!pendingLockRetryTx) setSuccessNote(null);
   }, [assetId, pendingLockRetryTx]);
 
@@ -265,7 +264,6 @@ function PresaleBuyInner() {
           return;
         }
 
-        // Config missing or chain credit failed — keep local locked credit + visible Retry
         const next = updatePurchase(paymentTxHash, {
           status: "locked_pending_chain",
           olcAmount: derived.olc,
@@ -419,7 +417,6 @@ function PresaleBuyInner() {
     setWaitingTx(false);
     let hash: Hash | undefined;
     try {
-      // Use fixed decimal strings — avoid scientific notation breaking parseEther
       const payStr =
         selected.onChain.kind === "native"
           ? Number(derived.payAmount).toFixed(18).replace(/\.?0+$/, "") || "0"
@@ -445,7 +442,6 @@ function PresaleBuyInner() {
 
       setPendingHash(hash);
 
-      // Persist immediately so Retry works even if receipt wait / deliver fails
       const pendingRecord = {
         ...buildRecord({
           txHash: hash,
@@ -475,9 +471,11 @@ function PresaleBuyInner() {
       await deliverLocked(hash);
     } catch (e) {
       const raw = e instanceof Error ? e.message : "Transaction failed";
-      if (/sendRawTransaction|method not found/i.test(raw)) {
+      if (/rejected|denied|canceled|cancelled/i.test(raw)) {
+        setError("Transaction canceled in wallet");
+      } else if (/sendRawTransaction|method not found/i.test(raw)) {
         setError(
-          "Your wallet’s BlockDAG RPC can’t send txs. Tap Switch/Add BlockDAG (uses rpc.west / rpc.east) or in MetaMask set BlockDAG RPC to https://rpc.west.bdag-us.org/ or https://rpc.east.bdag-us.org/",
+          "Your wallet’s BlockDAG RPC can’t send txs. Tap Switch/Add BlockDAG (uses rpc.west / rpc.east) or in OKX/MetaMask set BlockDAG RPC to https://rpc.west.bdag-us.org/ or https://rpc.east.bdag-us.org/",
         );
       } else {
         setError(raw);
@@ -694,7 +692,6 @@ function PresaleBuyInner() {
         </div>
       </div>
 
-      {/* Payment actions by mode */}
       <div className="mt-6 space-y-3">
         {payMode === "onchain" && (
           <div className="flex flex-wrap items-center gap-3">

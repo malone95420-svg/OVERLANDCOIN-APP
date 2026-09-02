@@ -16,10 +16,10 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-bg/80 backdrop-blur-xl">
-      <div className="container-page flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <Image src="/logo.png" alt="OVERLANDCOIN" width={36} height={36} className="rounded-full" priority />
-          <span className="font-bold tracking-wide text-white">
+      <div className="container-page flex h-16 min-w-0 items-center justify-between gap-2 sm:gap-4">
+        <Link href="/" className="flex min-w-0 shrink items-center gap-2 sm:gap-2.5">
+          <Image src="/logo.png" alt="OVERLANDCOIN" width={36} height={36} className="rounded-full shrink-0" priority />
+          <span className="truncate font-bold tracking-wide text-white">
             OVERLAND<span className="gold-text">COIN</span>
           </span>
         </Link>
@@ -43,7 +43,7 @@ export function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-2">
           <PendingOlCBadge />
           <Link href="/presale" className="btn-secondary hidden sm:inline-flex !py-2 !text-xs">
             Presale

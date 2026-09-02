@@ -24,7 +24,7 @@ const networkRows = [
 
 export default function PresalePage() {
   return (
-    <div className="container-page py-14">
+    <div className="container-page min-w-0 max-w-full overflow-x-hidden py-10 sm:py-14">
       <span className="badge">Presale</span>
       <h1 className="section-title mt-4">Get OVERLANDCOIN</h1>
       <p className="section-sub">

@@ -35,7 +35,7 @@ import {
   type LocalPurchase,
 } from "@/lib/purchases";
 import { friendlyPaymentError, parsePaymentTxRef } from "@/lib/parsePaymentTxRef";
-import { getAnyInjectedProvider } from "@/lib/injectedWallets";
+import { getAnyInjectedProvider, getEthereumPaymentProvider } from "@/lib/injectedWallets";
 import { PRESALE_BATCHES, SITE } from "@/lib/site";
 import { TOKEN, explorerTxUrl, explorerAddressUrl } from "@/lib/token";
 
@@ -89,10 +89,75 @@ const ETH_MAINNET_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7" as Address
 const ETH_MAINNET_USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" as Address;
 const ETHEREUM_MAINNET_HEX = "0x1";
 
-async function ensureEthereumMainnet(): Promise<void> {
-  const eth = getAnyInjectedProvider();
+/** Extract actionable message (+ code) from EIP-1193 / viem / plain objects. */
+function formatWalletError(e: unknown, fallback = "Wallet payment failed."): string {
+  if (e == null) return fallback;
+  if (typeof e === "string" && e.trim()) return e.trim();
+
+  if (e instanceof Error) {
+    const withCause = e as Error & { cause?: unknown; code?: unknown; shortMessage?: string };
+    const short = typeof withCause.shortMessage === "string" ? withCause.shortMessage : "";
+    const code =
+      withCause.code != null && String(withCause.code) !== ""
+        ? String(withCause.code)
+        : undefined;
+    const base = (short || e.message || "").trim();
+    if (withCause.cause) {
+      const nested = formatWalletError(withCause.cause, "");
+      if (nested) {
+        if (code && !nested.includes(`code ${code}`)) return `${nested} (code ${code})`;
+        return nested;
+      }
+    }
+    if (base) {
+      if (code && !base.includes(String(code))) return `${base} (code ${code})`;
+      return base;
+    }
+    return fallback;
+  }
+
+  if (typeof e === "object") {
+    const o = e as Record<string, unknown>;
+    const code = o.code != null ? String(o.code) : "";
+    let msg = "";
+    if (typeof o.message === "string") msg = o.message;
+    else if (typeof o.reason === "string") msg = o.reason;
+    else if (o.data && typeof o.data === "object") {
+      const d = o.data as Record<string, unknown>;
+      if (typeof d.message === "string") msg = d.message;
+    }
+    msg = msg.trim();
+    if (msg && code) return `${msg} (code ${code})`;
+    if (msg) return msg;
+    if (code) return `Wallet error (code ${code})`;
+  }
+  return fallback;
+}
+
+function walletErrorCode(e: unknown): number | undefined {
+  if (e && typeof e === "object" && "code" in e) {
+    const n = Number((e as { code: unknown }).code);
+    return Number.isFinite(n) ? n : undefined;
+  }
+  if (e instanceof Error && "code" in e) {
+    const n = Number((e as Error & { code: unknown }).code);
+    return Number.isFinite(n) ? n : undefined;
+  }
+  return undefined;
+}
+
+function noInjectedProviderMessage(payAsset: string, payAmount: number): string {
+  const amt = Number.isFinite(payAmount) ? payAmount.toFixed(6).replace(/\.?0+$/, "") : "";
+  const amountBit = amt ? ` ${amt}` : "";
+  return `No Ethereum wallet detected in this browser. Open this page in MetaMask / OKX / Trust in-app browser, or copy the address and send${amountBit} ${payAsset} on Ethereum manually.`;
+}
+
+async function ensureEthereumMainnet(
+  provider?: ReturnType<typeof getEthereumPaymentProvider>,
+): Promise<void> {
+  const eth = provider ?? getEthereumPaymentProvider() ?? getAnyInjectedProvider();
   if (!eth?.request) {
-    throw new Error("No injected wallet found (MetaMask / OKX / etc.).");
+    throw new Error("No injected wallet found (MetaMask / OKX / Trust / etc.).");
   }
   try {
     const current = (await eth.request({ method: "eth_chainId" })) as string;
@@ -106,15 +171,43 @@ async function ensureEthereumMainnet(): Promise<void> {
       params: [{ chainId: ETHEREUM_MAINNET_HEX }],
     });
   } catch (switchErr) {
-    const code =
-      switchErr && typeof switchErr === "object" && "code" in switchErr
-        ? Number((switchErr as { code: unknown }).code)
-        : undefined;
+    const code = walletErrorCode(switchErr);
     if (code === 4001) {
       throw new Error("Switch to Ethereum mainnet was rejected in wallet.");
     }
+    // 4902 = unrecognized chain — try add Ethereum mainnet
+    if (code === 4902 || /unrecognized chain|chain .*not.*added/i.test(formatWalletError(switchErr, ""))) {
+      try {
+        await eth.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: ETHEREUM_MAINNET_HEX,
+              chainName: "Ethereum Mainnet",
+              nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+              rpcUrls: ["https://ethereum.publicnode.com"],
+              blockExplorerUrls: ["https://etherscan.io"],
+            },
+          ],
+        });
+        return;
+      } catch (addErr) {
+        if (walletErrorCode(addErr) === 4001) {
+          throw new Error("Add Ethereum mainnet was rejected in wallet.");
+        }
+        throw new Error(
+          formatWalletError(
+            addErr,
+            "Could not add Ethereum mainnet. Switch to Ethereum (chainId 1) manually, then retry.",
+          ),
+        );
+      }
+    }
     throw new Error(
-      "Could not switch wallet to Ethereum mainnet (chainId 1). Switch manually, then retry.",
+      formatWalletError(
+        switchErr,
+        "Could not switch wallet to Ethereum mainnet (chainId 1). Switch manually, then retry.",
+      ),
     );
   }
 }
@@ -715,23 +808,21 @@ function PresaleBuyInner() {
     setError(null);
     setSuccessNote(null);
     try {
-      await ensureEthereumMainnet();
-      const eth = getAnyInjectedProvider();
+      const eth = getEthereumPaymentProvider() ?? getAnyInjectedProvider();
       if (!eth?.request) {
-        throw new Error("No injected wallet found.");
+        throw new Error(noInjectedProviderMessage(asset, activeOrder.payAmount));
       }
+
+      await ensureEthereumMainnet(eth);
 
       let from: string | undefined;
       try {
         const accounts = (await eth.request({ method: "eth_requestAccounts" })) as string[];
         from = accounts?.[0];
       } catch (e) {
-        const code =
-          e && typeof e === "object" && "code" in e
-            ? Number((e as { code: unknown }).code)
-            : undefined;
+        const code = walletErrorCode(e);
         if (code === 4001) throw new Error("Wallet connect was rejected.");
-        throw e instanceof Error ? e : new Error("Could not access wallet accounts.");
+        throw new Error(formatWalletError(e, "Could not access wallet accounts."));
       }
       if (!from) throw new Error("No wallet account available.");
 
@@ -763,15 +854,84 @@ function PresaleBuyInner() {
       if (txHash) {
         setDepositTxHash(txHash);
         setSuccessNote(
-          `Wallet payment submitted on Ethereum. Tx ${txHash.slice(0, 10)}… — wait a moment, then tap I’ve paid.`,
+          `Wallet payment submitted on Ethereum. Tx ${txHash.slice(0, 10)}… — verifying…`,
         );
+        // Auto-confirm once the hash is known (safe: confirm endpoint re-checks on-chain).
+        setTimeout(() => {
+          void (async () => {
+            try {
+              setConfirmBusy(true);
+              const res = await fetch(`/api/presale/orders/${activeOrder.orderId}/confirm`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ paymentTxHash: txHash }),
+              });
+              const data = (await res.json().catch(() => ({}))) as {
+                status?: string;
+                creditTxHash?: string;
+                message?: string;
+                error?: string;
+                olcAmount?: number;
+                verified?: boolean;
+                paymentTxHash?: string;
+              };
+              if (data.status === "locked" && data.creditTxHash) {
+                const olc =
+                  typeof data.olcAmount === "number" ? data.olcAmount : activeOrder.olcAmount;
+                const paymentKey = data.paymentTxHash || txHash;
+                setPurchases(
+                  savePurchase({
+                    ...buildRecord({
+                      txHash: paymentKey,
+                      status: "locked",
+                      payMethod: "deposit",
+                    }),
+                    payAsset: activeOrder.payAsset,
+                    payAmount: formatNum(activeOrder.payAmount, 8),
+                    olcEstimated: formatNum(olc, 4),
+                    olcAmount: olc,
+                    from: activeOrder.buyer,
+                    depositAddress: activeOrder.depositAddress,
+                    depositNetwork: activeOrder.depositNetwork,
+                    creditTxHash: data.creditTxHash,
+                  }),
+                );
+                setPendingLockRetryTx(null);
+                setActiveOrder(null);
+                setSuccessNote(
+                  `Payment verified. ${formatNum(olc, 4)} OLC credited to PresaleLock. Credit tx ${data.creditTxHash.slice(0, 10)}…`,
+                );
+              } else if (data.verified) {
+                setSuccessNote(
+                  `Wallet payment submitted (${txHash.slice(0, 10)}…). On-chain verify OK — PresaleLock credit still pending. Tap I’ve paid to retry.`,
+                );
+                setPendingLockRetryTx(txHash);
+              } else {
+                setSuccessNote(
+                  `Wallet payment submitted on Ethereum. Tx ${txHash.slice(0, 10)}… — if credit doesn’t appear, wait ~30s then tap I’ve paid.`,
+                );
+              }
+            } catch {
+              setSuccessNote(
+                `Wallet payment submitted on Ethereum. Tx ${txHash.slice(0, 10)}… — wait a moment, then tap I’ve paid.`,
+              );
+            } finally {
+              setConfirmBusy(false);
+              setPurchases(loadPurchases());
+            }
+          })();
+        }, 2500);
       }
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Wallet payment failed.";
-      if (/4001|user rejected|denied/i.test(msg)) {
+      const msg = formatWalletError(e);
+      const code = walletErrorCode(e);
+      if (code === 4001 || /user rejected|denied|rejected by user/i.test(msg)) {
         setError("Payment rejected in wallet.");
-      } else {
+      } else if (/No Ethereum wallet detected|No injected wallet/i.test(msg)) {
         setError(msg);
+      } else {
+        // Always surface real provider message/code — never swallow to a bare generic.
+        setError(msg || "Wallet payment failed.");
       }
     } finally {
       setEvmPayBusy(false);
@@ -912,9 +1072,9 @@ function PresaleBuyInner() {
     : 0;
 
   return (
-    <section className="card border-gold/40 shadow-gold">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
+    <section className="card min-w-0 w-full max-w-full overflow-hidden border-gold/40 shadow-gold !p-4 sm:!p-6">
+      <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
           <h2 className="text-xl font-bold text-white">Buy OLC</h2>
           <p className="mt-1 text-sm text-slate-400">
             Live batch {batch.batch}:{" "}
@@ -934,7 +1094,7 @@ function PresaleBuyInner() {
         <p>
           On-chain Buy is BlockDAG Mainnet only (chainId {TOKEN.chainId}). Treasury{" "}
           <a
-            className="link-accent font-mono"
+            className="link-accent break-all font-mono text-[11px] sm:text-xs"
             href={explorerAddressUrl(SITE.treasuryAddress)}
             target="_blank"
             rel="noopener noreferrer"
@@ -1046,8 +1206,8 @@ function PresaleBuyInner() {
             <span className="font-mono text-gold-bright">${batchPrice.toFixed(3)} / OLC</span>
           </div>
           <div className="flex justify-between gap-2 text-xs">
-            <span className="text-slate-400">You pay</span>
-            <span className="font-mono text-slate-100">
+            <span className="shrink-0 text-slate-400">You pay</span>
+            <span className="min-w-0 break-all text-right font-mono text-slate-100">
               {formatNum(derived.payAmount, 8)} {selected.symbol} ≈ ${formatNum(derived.usd, 4)}
             </span>
           </div>
@@ -1105,7 +1265,7 @@ function PresaleBuyInner() {
         )}
 
         {payMode === "deposit" && selected.depositAddress && (
-          <div className="rounded-xl border border-cyan-accent/30 bg-cyan-accent/5 p-4 space-y-4">
+          <div className="min-w-0 rounded-xl border border-cyan-accent/30 bg-cyan-accent/5 p-3 space-y-4 sm:p-4">
             <div>
               <p className="text-sm font-semibold text-cyan-100">
                 Deposit buy — {selected.symbol}
@@ -1147,7 +1307,7 @@ function PresaleBuyInner() {
                 {!activeOrder ? (
                   <button
                     type="button"
-                    className="btn-primary"
+                    className="btn-primary w-full sm:w-auto"
                     disabled={
                       orderBusy ||
                       !buyRateReady ||
@@ -1166,13 +1326,13 @@ function PresaleBuyInner() {
                   </button>
                 ) : (
                   <>
-                    <div className="grid gap-2 sm:grid-cols-[1fr_auto] items-start">
-                      <div className="space-y-2">
-                        <div className="rounded-lg border border-border bg-bg-panel/80 px-3 py-2">
+                    <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+                      <div className="min-w-0 space-y-2">
+                        <div className="min-w-0 rounded-lg border border-border bg-bg-panel/80 px-3 py-2">
                           <p className="text-[10px] uppercase tracking-wide text-slate-500">
                             Send exactly
                           </p>
-                          <p className="mt-0.5 font-mono text-base text-white">
+                          <p className="mt-0.5 break-all font-mono text-base text-white">
                             {formatNum(activeOrder.payAmount, 8)} {activeOrder.payAsset}
                           </p>
                           <p className="text-xs text-slate-400">
@@ -1194,14 +1354,14 @@ function PresaleBuyInner() {
                           Order {activeOrder.orderId} · expires in ~{orderExpiresInMin} min
                         </p>
                       </div>
-                      <div className="flex flex-col items-center gap-1">
+                      <div className="mx-auto flex w-full max-w-[168px] flex-col items-center gap-1 sm:mx-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={qrUrl(activeOrder.depositAddress)}
                           alt="Deposit address QR"
                           width={168}
                           height={168}
-                          className="rounded-lg border border-border bg-white p-1"
+                          className="h-auto w-full max-w-[168px] rounded-lg border border-border bg-white p-1"
                         />
                         <span className="text-[10px] text-slate-500">Scan to copy address</span>
                       </div>
@@ -1210,7 +1370,7 @@ function PresaleBuyInner() {
                     {activeOrder.payAsset === "SOL" && (
                       <button
                         type="button"
-                        className="rounded-xl border border-purple-400/50 bg-purple-500/10 px-4 py-2.5 text-sm font-semibold text-purple-100 hover:bg-purple-500/20 disabled:opacity-60"
+                        className="w-full rounded-xl border border-purple-400/50 bg-purple-500/10 px-4 py-2.5 text-sm font-semibold text-purple-100 hover:bg-purple-500/20 disabled:opacity-60 sm:w-auto"
                         disabled={phantomBusy}
                         onClick={() => void onPayWithSolanaWallet()}
                       >
@@ -1225,7 +1385,7 @@ function PresaleBuyInner() {
                       activeOrder.payAsset === "USDC") && (
                       <button
                         type="button"
-                        className="rounded-xl border border-sky-400/50 bg-sky-500/10 px-4 py-2.5 text-sm font-semibold text-sky-100 hover:bg-sky-500/20 disabled:opacity-60"
+                        className="w-full rounded-xl border border-sky-400/50 bg-sky-500/10 px-4 py-2.5 text-sm font-semibold text-sky-100 hover:bg-sky-500/20 disabled:opacity-60 sm:w-auto"
                         disabled={evmPayBusy}
                         onClick={() => void onPayWithEvmWallet()}
                       >
@@ -1276,7 +1436,7 @@ function PresaleBuyInner() {
                           ? "Solana signature or solscan URL"
                           : "0x… or etherscan URL"
                     }
-                    className="mt-1 w-full rounded-xl border border-border bg-bg-panel px-3 py-2.5 font-mono text-sm text-white"
+                    className="mt-1 w-full min-w-0 rounded-xl border border-border bg-bg-panel px-3 py-2.5 font-mono text-sm text-white break-all"
                     autoComplete="off"
                     spellCheck={false}
                     disabled={!activeOrder}
@@ -1284,7 +1444,7 @@ function PresaleBuyInner() {
                 </label>
                 <button
                   type="button"
-                  className="btn-primary"
+                  className="btn-primary w-full sm:w-auto"
                   disabled={
                     !activeOrder ||
                     confirmBusy ||
@@ -1330,7 +1490,7 @@ function PresaleBuyInner() {
       </div>
 
       {error && (
-        <p className="mt-3 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
+        <p className="mt-3 break-words rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
           {error}
         </p>
       )}

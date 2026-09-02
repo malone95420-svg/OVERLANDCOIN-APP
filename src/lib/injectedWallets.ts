@@ -125,6 +125,29 @@ export function getAnyInjectedProvider(
   return resolveInjectedProvider("injected", windowObj);
 }
 
+/**
+ * Prefer MetaMask (or any ethereum.providers entry) for Ethereum mainnet sends.
+ * Falls back to getAnyInjectedProvider. Handles missing/empty providers lists
+ * (common in MetaMask mobile in-app browser).
+ */
+export function getEthereumPaymentProvider(
+  windowObj: Window = typeof window !== "undefined" ? window : (undefined as unknown as Window),
+): Eip1193Provider | undefined {
+  if (!windowObj) return undefined;
+  const eth = asWin(windowObj).ethereum;
+  if (eth) {
+    const multi = eth.providers;
+    if (Array.isArray(multi) && multi.length > 0) {
+      const mm = multi.find((p) => Boolean(p?.isMetaMask && p?.request));
+      if (mm) return mm;
+      const any = multi.find((p) => Boolean(p?.request));
+      if (any) return any;
+    }
+    if (typeof eth.request === "function") return eth;
+  }
+  return getAnyInjectedProvider(windowObj);
+}
+
 export function isInjectedWalletPresent(id: InjectedWalletId): boolean {
   if (typeof window === "undefined") return false;
   return Boolean(resolveInjectedProvider(id, window));

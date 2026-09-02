@@ -59,7 +59,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <main className="min-h-[70vh]">{children}</main>
+      <main className="min-h-[70vh] min-w-0 max-w-full overflow-x-hidden">{children}</main>
       <Footer />
       <RangerWidget />
     </>
@@ -70,7 +70,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   const shell = <AppShell>{children}</AppShell>;
   return (
     <html lang="en">
-      <body className={`${sans.variable} ${mono.variable} font-sans antialiased`}>
+      <body className={`${sans.variable} ${mono.variable} max-w-full overflow-x-hidden font-sans antialiased`}>
         <AuthProvider>
           <Web3ErrorBoundary fallback={shell}>
             <Web3Provider>{shell}</Web3Provider>

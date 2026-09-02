@@ -34,10 +34,23 @@ import {
   updatePurchase,
   type LocalPurchase,
 } from "@/lib/purchases";
+import { friendlyPaymentError, parsePaymentTxRef } from "@/lib/parsePaymentTxRef";
 import { PRESALE_BATCHES, SITE } from "@/lib/site";
 import { TOKEN, explorerTxUrl, explorerAddressUrl } from "@/lib/token";
 
 type InputMode = "olc" | "pay";
+
+type ActivePayOrder = {
+  orderId: string;
+  buyer: string;
+  payAsset: string;
+  payAmount: number;
+  olcAmount: number;
+  depositAddress: string;
+  depositNetwork: string;
+  expiresAt: number;
+  usdPaid?: number;
+};
 
 function liveBatch() {
   return PRESALE_BATCHES.find((b) => b.status === "LIVE") ?? PRESALE_BATCHES[0];
@@ -63,6 +76,31 @@ function payChainForAsset(id: AcceptedPayAsset["id"]): "blockdag" | "ethereum" |
       return "solana";
     default:
       return "ethereum";
+  }
+}
+
+function qrUrl(data: string): string {
+  return `https://api.qrserver.com/v1/create-qr-code/?size=168x168&margin=8&data=${encodeURIComponent(data)}`;
+}
+
+function solanaPayUri(depositAddress: string, solAmount: number): string {
+  const amount = Number(solAmount.toFixed(9)).toString();
+  const params = new URLSearchParams({
+    amount,
+    label: "OVERLANDCOIN Presale",
+    message: "OLC locked until listing",
+  });
+  return `solana:${depositAddress}?${params.toString()}`;
+}
+
+declare global {
+  interface Window {
+    solana?: {
+      isPhantom?: boolean;
+      isConnected?: boolean;
+      publicKey?: { toString(): string };
+      connect: (opts?: { onlyIfTrusted?: boolean }) => Promise<{ publicKey: { toString(): string } }>;
+    };
   }
 }
 
@@ -99,16 +137,18 @@ function PresaleBuyInner() {
   const [successNote, setSuccessNote] = useState<string | null>(null);
   const [pendingLockRetryTx, setPendingLockRetryTx] = useState<string | null>(null);
   const [retryBusy, setRetryBusy] = useState(false);
-  const [depositAck, setDepositAck] = useState(false);
   const [depositTxHash, setDepositTxHash] = useState("");
   const [confirmBusy, setConfirmBusy] = useState(false);
+  const [orderBusy, setOrderBusy] = useState(false);
+  const [activeOrder, setActiveOrder] = useState<ActivePayOrder | null>(null);
+  const [phantomBusy, setPhantomBusy] = useState(false);
 
   const selected = assets.find((a) => a.id === assetId) ?? assets[0];
   const payMode = paymentMode(selected);
 
   useEffect(() => {
-    setDepositAck(false);
     setDepositTxHash("");
+    setActiveOrder(null);
   }, [selected.id]);
 
   const usdPerPayUnit = liveUsdForAsset(selected, prices);
@@ -155,7 +195,6 @@ function PresaleBuyInner() {
   }, []);
 
   useEffect(() => {
-    setDepositAck(false);
     setError(null);
     if (!pendingLockRetryTx) setSuccessNote(null);
   }, [assetId, pendingLockRetryTx]);
@@ -351,8 +390,8 @@ function PresaleBuyInner() {
         setError("Missing buyer or olcAmount for retry.");
         return;
       }
-      const assetId = (record.payAsset as AcceptedPayAsset["id"]) || selected.id;
-      const payChain = payChainForAsset(assetId);
+      const assetIdRetry = (record.payAsset as AcceptedPayAsset["id"]) || selected.id;
+      const payChain = payChainForAsset(assetIdRetry);
       const endpoint =
         payChain === "blockdag"
           ? "/api/presale/deliver"
@@ -521,15 +560,15 @@ function PresaleBuyInner() {
     }
   }
 
-  async function onConfirmExternalDeposit() {
+  async function onCreatePayOrder() {
     setError(null);
     setSuccessNote(null);
     if (!isConnected || !address) {
-      setError("Connect your BlockDAG wallet first — OLC is credited to that address.");
+      setError("Step 1: Connect your BlockDAG wallet first — OLC locks to that address.");
       return;
     }
     if (!buyRateReady) {
-      setError(`Live ${selected.symbol}/USD price required before confirming a deposit.`);
+      setError(`Live ${selected.symbol}/USD price required before buying.`);
       return;
     }
     if (!(derived.olc > 0) || !(derived.payAmount > 0)) {
@@ -540,133 +579,212 @@ function PresaleBuyInner() {
       setError("No deposit address configured.");
       return;
     }
-    if (!depositAck) {
-      setError("Confirm you sent (or will send) the quoted amount to the deposit address.");
-      return;
-    }
-    const hash = depositTxHash.trim();
-    if (!hash || hash.length < 10) {
-      setError("Paste your payment transaction hash / txid after sending — required for verification.");
-      return;
-    }
 
+    setOrderBusy(true);
+    try {
+      const body: Record<string, unknown> = {
+        buyer: address,
+        payAsset: selected.symbol,
+      };
+      if (mode === "olc") body.olcAmount = derived.olc;
+      else body.payAmount = derived.payAmount;
+
+      const res = await fetch("/api/presale/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        orderId?: string;
+        buyer?: string;
+        payAsset?: string;
+        payAmount?: number;
+        olcAmount?: number;
+        depositAddress?: string;
+        depositNetwork?: string;
+        expiresAt?: number;
+        usdPaid?: number;
+        error?: string;
+      };
+      if (!res.ok || !data.orderId || !data.depositAddress) {
+        setError(friendlyPaymentError(data.error) || "Could not create pay order.");
+        return;
+      }
+      setActiveOrder({
+        orderId: data.orderId,
+        buyer: data.buyer || address,
+        payAsset: data.payAsset || selected.symbol,
+        payAmount: data.payAmount ?? derived.payAmount,
+        olcAmount: data.olcAmount ?? derived.olc,
+        depositAddress: data.depositAddress,
+        depositNetwork: data.depositNetwork || selected.depositNetwork || "",
+        expiresAt: data.expiresAt ?? Date.now() + 45 * 60_000,
+        usdPaid: data.usdPaid,
+      });
+      setDepositTxHash("");
+      setSuccessNote(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not create pay order");
+    } finally {
+      setOrderBusy(false);
+    }
+  }
+
+  async function onPayWithSolanaWallet() {
+    if (!activeOrder || activeOrder.payAsset !== "SOL") return;
+    setPhantomBusy(true);
+    setError(null);
+    try {
+      const uri = solanaPayUri(activeOrder.depositAddress, activeOrder.payAmount);
+      const phantom = typeof window !== "undefined" ? window.solana : undefined;
+      if (phantom?.isPhantom) {
+        try {
+          await phantom.connect();
+        } catch {
+          /* user may reject connect — still open pay URI */
+        }
+      }
+      // Solana Pay transfer request — Phantom / Solflare handle this
+      window.location.href = uri;
+      // Fallback: also try opening in new tab after a tick if still on page
+      setTimeout(() => {
+        try {
+          window.open(uri, "_blank", "noopener,noreferrer");
+        } catch {
+          /* ignore */
+        }
+      }, 400);
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : "Could not open Solana wallet — copy the address and send manually.",
+      );
+    } finally {
+      setPhantomBusy(false);
+    }
+  }
+
+  async function onConfirmPayOrder() {
+    if (!activeOrder) return;
+    setError(null);
+    setSuccessNote(null);
     setConfirmBusy(true);
+
+    const pasted = parsePaymentTxRef(depositTxHash);
+    const localKey = pasted || `order:${activeOrder.orderId}`;
+
     const pending = {
       ...buildRecord({
-        txHash: hash,
+        txHash: localKey,
         status: "locked_pending_chain" as const,
         payMethod: "deposit" as const,
       }),
-      from: address,
-      olcAmount: derived.olc,
-      deliveryNote: "Verifying payment on-chain…",
+      payAsset: activeOrder.payAsset,
+      payAmount: formatNum(activeOrder.payAmount, 8),
+      olcEstimated: formatNum(activeOrder.olcAmount, 4),
+      olcAmount: activeOrder.olcAmount,
+      from: activeOrder.buyer,
+      depositAddress: activeOrder.depositAddress,
+      depositNetwork: activeOrder.depositNetwork,
+      deliveryNote: pasted
+        ? "Verifying payment on-chain…"
+        : "Scanning for matching deposit…",
     };
     setPurchases(savePurchase(pending));
-    setPendingLockRetryTx(hash);
+    setPendingLockRetryTx(localKey);
 
     try {
-      const res = await fetch("/api/presale/confirm-deposit", {
+      const res = await fetch(`/api/presale/orders/${activeOrder.orderId}/confirm`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chain: payChainForAsset(selected.id),
-          paymentTxHash: hash,
-          buyer: address,
-          payAsset: selected.symbol,
-          olcAmount: derived.olc,
-        }),
+        body: JSON.stringify(
+          pasted ? { paymentTxHash: pasted } : {},
+        ),
       });
       const data = (await res.json().catch(() => ({}))) as {
         status?: string;
         creditTxHash?: string;
         message?: string;
         error?: string;
-        notConfigured?: boolean;
         olcAmount?: number;
         verified?: boolean;
+        paymentTxHash?: string;
         payAmount?: number;
       };
 
+      const paymentKey = data.paymentTxHash || pasted || localKey;
+
       if (data.status === "locked" && data.creditTxHash) {
         const olc =
-          typeof data.olcAmount === "number" ? data.olcAmount : derived.olc;
-        const next = updatePurchase(hash, {
-          status: "locked",
-          creditTxHash: data.creditTxHash,
-          olcAmount: olc,
-          from: address,
-          deliveryNote: undefined,
-        });
-        setPurchases(next);
+          typeof data.olcAmount === "number" ? data.olcAmount : activeOrder.olcAmount;
+        // Re-key local purchase to real payment hash when auto-found
+        if (paymentKey !== localKey) {
+          setPurchases(
+            savePurchase({
+              ...pending,
+              txHash: paymentKey,
+              id: `${Date.now()}-${paymentKey.slice(0, 12)}`,
+              status: "locked",
+              creditTxHash: data.creditTxHash,
+              olcAmount: olc,
+              deliveryNote: undefined,
+            }),
+          );
+        } else {
+          setPurchases(
+            updatePurchase(localKey, {
+              status: "locked",
+              creditTxHash: data.creditTxHash,
+              olcAmount: olc,
+              deliveryNote: undefined,
+            }),
+          );
+        }
         setPendingLockRetryTx(null);
+        setActiveOrder(null);
         setSuccessNote(
-          `Payment verified. ${formatNum(olc, 4)} OLC credited to PresaleLock for ${address.slice(0, 8)}… Credit tx ${data.creditTxHash.slice(0, 10)}…`,
+          `Payment verified. ${formatNum(olc, 4)} OLC credited to PresaleLock for ${activeOrder.buyer.slice(0, 8)}… Credit tx ${data.creditTxHash.slice(0, 10)}…`,
         );
         return;
       }
 
       if (data.verified && data.status === "locked_pending_chain") {
         const olc =
-          typeof data.olcAmount === "number" ? data.olcAmount : derived.olc;
-        const next = updatePurchase(hash, {
-          status: "locked_pending_chain",
-          olcAmount: olc,
-          from: address,
-          deliveryNote:
-            data.message ||
-            data.error ||
-            "Payment verified — awaiting PresaleLock credit config.",
-        });
-        setPurchases(next);
-        setPendingLockRetryTx(hash);
+          typeof data.olcAmount === "number" ? data.olcAmount : activeOrder.olcAmount;
+        setPurchases(
+          updatePurchase(localKey, {
+            status: "locked_pending_chain",
+            olcAmount: olc,
+            deliveryNote:
+              data.message ||
+              data.error ||
+              "Payment verified — awaiting PresaleLock credit config.",
+          }),
+        );
+        setPendingLockRetryTx(data.paymentTxHash || localKey);
         setSuccessNote(
           `Payment verified on-chain. ${formatNum(olc, 4)} OLC pending PresaleLock credit. ${data.error || data.message || ""}`,
         );
         return;
       }
 
-      setError(data.error || data.message || "Payment could not be verified.");
-      const next = updatePurchase(hash, {
-        status: "pending_external",
-        from: address,
-        deliveryNote: data.error || "Unverified",
-      });
-      setPurchases(next);
+      setError(
+        friendlyPaymentError(data.error || data.message) ||
+          "No matching payment found yet — wait a minute and try again.",
+      );
+      setPurchases(
+        updatePurchase(localKey, {
+          status: "pending_external",
+          deliveryNote: data.error || "Unverified",
+        }),
+      );
     } catch (e) {
       setError(e instanceof Error ? e.message : "Confirm request failed");
     } finally {
       setConfirmBusy(false);
       setPurchases(loadPurchases());
     }
-  }
-
-  /** Local reminder only — does NOT credit OLC (no tx hash verification). */
-  function onSaveDepositReminder() {
-    setError(null);
-    setSuccessNote(null);
-    if (!isConnected || !address) {
-      setError("Connect your BlockDAG wallet first.");
-      return;
-    }
-    if (!depositAck) {
-      setError("Confirm the deposit amount/network checkbox first.");
-      return;
-    }
-    const stub = `external:reminder:${selected.symbol}:${Date.now()}`;
-    const next = savePurchase({
-      ...buildRecord({
-        txHash: stub,
-        status: "pending_external",
-        payMethod: "deposit",
-      }),
-      from: address,
-      deliveryNote:
-        "Reminder only — paste tx hash and tap Confirm payment to verify and credit OLC.",
-    });
-    setPurchases(next);
-    setSuccessNote(
-      `Reminder saved. Send ${formatNum(derived.payAmount, 8)} ${selected.symbol}, then paste the tx hash and tap Confirm payment. No OLC is credited from a reminder alone.`,
-    );
   }
 
   const onChainBuyDisabled =
@@ -676,6 +794,10 @@ function PresaleBuyInner() {
     !(derived.olc > 0) ||
     !buyRateReady;
 
+  const orderExpiresInMin = activeOrder
+    ? Math.max(0, Math.ceil((activeOrder.expiresAt - Date.now()) / 60_000))
+    : 0;
+
   return (
     <section className="card border-gold/40 shadow-gold">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -684,8 +806,8 @@ function PresaleBuyInner() {
           <p className="mt-1 text-sm text-slate-400">
             Live batch {batch.batch}:{" "}
             <span className="font-semibold text-gold-bright">${batchPrice.toFixed(3)}</span> / OLC.
-            We only accept listed cryptos. OLC received = (pay amount × live USD) ÷ batch price —
-            never more than paid-for.
+            Prefer <strong className="text-slate-200">BDAG / BDUSD</strong> on BlockDAG for instant
+            verify → lock. USDT / USDC / ETH / BTC / SOL use a simple 3-step deposit.
           </p>
         </div>
         <ConnectWallet />
@@ -693,13 +815,11 @@ function PresaleBuyInner() {
 
       <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-100/90 space-y-1.5">
         <p>
-          <strong>Safety:</strong> On-chain Buy is BlockDAG Mainnet only (chainId {TOKEN.chainId}).
-          External deposits (ETH / USDT / USDC / SOL / BTC) use published deposit addresses —
-          wrong network = lost funds. Paste the payment tx hash and Confirm — no credit without
-          on-chain verification.
+          <strong>Safety:</strong> OLC only credits after we see your payment on-chain. Wrong
+          network = lost funds.
         </p>
         <p>
-          Verify treasury{" "}
+          On-chain Buy is BlockDAG Mainnet only (chainId {TOKEN.chainId}). Treasury{" "}
           <a
             className="link-accent font-mono"
             href={explorerAddressUrl(SITE.treasuryAddress)}
@@ -707,12 +827,12 @@ function PresaleBuyInner() {
             rel="noopener noreferrer"
           >
             {SITE.treasuryAddress}
-          </a>{" "}
-          for BlockDAG transfers.
+          </a>
+          .
         </p>
         <p>
           Successful buys credit OLC into a <strong>PresaleLock</strong> — yours immediately, but
-          non-transferable until exchange listing unlock. Not a free-trading wallet transfer.
+          non-transferable until exchange listing unlock.
         </p>
       </div>
 
@@ -727,7 +847,7 @@ function PresaleBuyInner() {
             {assets.map((o) => {
               const m = paymentMode(o);
               const tag =
-                m === "onchain" ? "on-chain" : m === "deposit" ? "deposit" : "quote";
+                m === "onchain" ? "instant" : m === "deposit" ? "deposit" : "quote";
               return (
                 <option key={o.id} value={o.id}>
                   {o.label} ({tag})
@@ -872,155 +992,186 @@ function PresaleBuyInner() {
         )}
 
         {payMode === "deposit" && selected.depositAddress && (
-          <div className="rounded-xl border border-cyan-accent/30 bg-cyan-accent/5 p-4 space-y-3">
+          <div className="rounded-xl border border-cyan-accent/30 bg-cyan-accent/5 p-4 space-y-4">
             <div>
               <p className="text-sm font-semibold text-cyan-100">
-                External deposit — {selected.symbol}
+                Deposit buy — {selected.symbol}
               </p>
-              <p className="mt-1 text-xs text-slate-400">
-                Network:{" "}
-                <span className="font-semibold text-white">
-                  {selected.depositNetwork}
-                </span>
-                {selected.id === "USDT" && (
-                  <span className="text-amber-200">
-                    {" "}
-                    — send only USDT ERC-20 (not TRC-20 / BEP-20 / other chains)
-                  </span>
-                )}
-                {selected.id === "USDC" && (
-                  <span className="text-amber-200">
-                    {" "}
-                    — send only USDC on Ethereum
-                  </span>
-                )}
-                {selected.id === "ETH" && (
-                  <span className="text-amber-200">
-                    {" "}
-                    — send native ETH on Ethereum mainnet
-                  </span>
-                )}
-                {selected.id === "SOL" && (
-                  <span className="text-amber-200">
-                    {" "}
-                    — send native SOL on Solana only
-                  </span>
-                )}
-                {selected.id === "BTC" && (
-                  <span className="text-amber-200">
-                    {" "}
-                    — send BTC to native SegWit (bc1…) on Bitcoin only
-                  </span>
-                )}
+              <p className="mt-1 text-[11px] text-slate-400">
+                3 steps. OLC locks to your connected BlockDAG wallet after we verify payment.
               </p>
             </div>
 
-            <div className="grid gap-2 sm:grid-cols-2 text-xs">
-              <div className="rounded-lg border border-border bg-bg-panel/80 px-3 py-2">
-                <p className="text-slate-500 uppercase tracking-wide text-[10px]">
-                  Amount to send
-                </p>
-                <p className="mt-0.5 font-mono text-sm text-white">
-                  {formatNum(derived.payAmount, 8)} {selected.symbol}
-                </p>
-                <p className="text-slate-400">≈ ${formatNum(derived.usd, 4)}</p>
+            {/* Step 1 */}
+            <div className="flex gap-3">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-cyan-accent/50 bg-bg-panel text-xs font-bold text-cyan-100">
+                1
               </div>
-              <div className="rounded-lg border border-border bg-bg-panel/80 px-3 py-2">
-                <p className="text-slate-500 uppercase tracking-wide text-[10px]">
-                  OLC you receive
+              <div className="min-w-0 flex-1 space-y-2">
+                <p className="text-sm font-medium text-white">
+                  Connect BlockDAG wallet (where OLC will lock)
                 </p>
-                <p className="mt-0.5 font-mono text-sm text-gold-bright">
-                  {formatNum(derived.olc, 4)} OLC
-                </p>
-                <p className="text-slate-400">(locked until listing unlock)</p>
+                {isConnected && address ? (
+                  <p className="font-mono text-xs text-cyan-100/90">
+                    {address.slice(0, 10)}…{address.slice(-6)}
+                  </p>
+                ) : (
+                  <ConnectWallet />
+                )}
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                Deposit address
-              </p>
-              <CopyAddress address={selected.depositAddress} className="w-full" />
-              <p className="text-[11px] text-amber-200/90">
-                <strong>Warning:</strong> Send only {selected.symbol} on{" "}
-                {selected.depositNetwork}. Wrong asset or network can permanently lose funds.
-                {selected.depositNote ? ` ${selected.depositNote}.` : ""}
-              </p>
+            {/* Step 2 */}
+            <div className="flex gap-3">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-cyan-accent/50 bg-bg-panel text-xs font-bold text-cyan-100">
+                2
+              </div>
+              <div className="min-w-0 flex-1 space-y-3">
+                <p className="text-sm font-medium text-white">
+                  Send exact quoted amount to the deposit address
+                </p>
+
+                {!activeOrder ? (
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    disabled={
+                      orderBusy ||
+                      !buyRateReady ||
+                      !(derived.olc > 0) ||
+                      !isConnected
+                    }
+                    onClick={() => void onCreatePayOrder()}
+                  >
+                    {orderBusy
+                      ? "Creating order…"
+                      : !buyRateReady
+                        ? "Waiting for live price…"
+                        : !isConnected
+                          ? "Connect wallet first"
+                          : `Buy — create ${selected.symbol} pay order`}
+                  </button>
+                ) : (
+                  <>
+                    <div className="grid gap-2 sm:grid-cols-[1fr_auto] items-start">
+                      <div className="space-y-2">
+                        <div className="rounded-lg border border-border bg-bg-panel/80 px-3 py-2">
+                          <p className="text-[10px] uppercase tracking-wide text-slate-500">
+                            Send exactly
+                          </p>
+                          <p className="mt-0.5 font-mono text-base text-white">
+                            {formatNum(activeOrder.payAmount, 8)} {activeOrder.payAsset}
+                          </p>
+                          <p className="text-xs text-slate-400">
+                            → {formatNum(activeOrder.olcAmount, 4)} OLC locked
+                            {activeOrder.usdPaid != null
+                              ? ` · ≈ $${formatNum(activeOrder.usdPaid, 4)}`
+                              : ""}
+                          </p>
+                        </div>
+                        <CopyAddress
+                          address={activeOrder.depositAddress}
+                          className="w-full"
+                        />
+                        <p className="text-[11px] text-amber-200/90">
+                          Network: <strong>{activeOrder.depositNetwork}</strong> only — wrong
+                          network = lost funds.
+                        </p>
+                        <p className="text-[10px] text-slate-500">
+                          Order {activeOrder.orderId} · expires in ~{orderExpiresInMin} min
+                        </p>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={qrUrl(activeOrder.depositAddress)}
+                          alt="Deposit address QR"
+                          width={168}
+                          height={168}
+                          className="rounded-lg border border-border bg-white p-1"
+                        />
+                        <span className="text-[10px] text-slate-500">Scan to copy address</span>
+                      </div>
+                    </div>
+
+                    {activeOrder.payAsset === "SOL" && (
+                      <button
+                        type="button"
+                        className="rounded-xl border border-purple-400/50 bg-purple-500/10 px-4 py-2.5 text-sm font-semibold text-purple-100 hover:bg-purple-500/20 disabled:opacity-60"
+                        disabled={phantomBusy}
+                        onClick={() => void onPayWithSolanaWallet()}
+                      >
+                        {phantomBusy
+                          ? "Opening wallet…"
+                          : "Pay with Phantom / Solana wallet"}
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      className="text-[11px] text-slate-400 underline-offset-2 hover:underline"
+                      onClick={() => {
+                        setActiveOrder(null);
+                        setDepositTxHash("");
+                      }}
+                    >
+                      Cancel order / change amount
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
 
-            <label className="flex items-start gap-2 text-xs text-slate-300">
-              <input
-                type="checkbox"
-                className="mt-0.5"
-                checked={depositAck}
-                onChange={(e) => setDepositAck(e.target.checked)}
-              />
-              <span>
-                I sent (or will send) exactly {formatNum(derived.payAmount, 8)}{" "}
-                {selected.symbol} on {selected.depositNetwork} to the deposit address above.
-              </span>
-            </label>
-
-            <label className="block text-xs text-slate-300">
-              <span className="text-slate-400">
-                Payment tx hash / txid (required to credit OLC)
-              </span>
-              <input
-                type="text"
-                value={depositTxHash}
-                onChange={(e) => setDepositTxHash(e.target.value)}
-                placeholder={
-                  selected.id === "BTC"
-                    ? "Bitcoin txid (64 hex)"
-                    : selected.id === "SOL"
-                      ? "Solana signature"
-                      : "0x… transaction hash"
-                }
-                className="mt-1 w-full rounded-xl border border-border bg-bg-panel px-3 py-2.5 font-mono text-sm text-white"
-                autoComplete="off"
-                spellCheck={false}
-              />
-            </label>
-
-            {!isConnected && (
-              <p className="text-xs text-amber-200">
-                Connect your BlockDAG wallet — verified OLC is locked to that address.
-              </p>
-            )}
-
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                className="btn-primary"
-                disabled={
-                  confirmBusy ||
-                  !buyRateReady ||
-                  !(derived.olc > 0) ||
-                  !depositAck ||
-                  !isConnected ||
-                  !depositTxHash.trim()
-                }
-                onClick={() => void onConfirmExternalDeposit()}
-              >
-                {confirmBusy
-                  ? "Verifying…"
-                  : !buyRateReady
-                    ? "Waiting for live price…"
-                    : "Confirm payment"}
-              </button>
-              <button
-                type="button"
-                className="rounded-xl border border-border px-3 py-2 text-xs text-slate-300 hover:bg-bg-panel"
-                disabled={!depositAck || !isConnected}
-                onClick={onSaveDepositReminder}
-              >
-                Save reminder (no credit)
-              </button>
+            {/* Step 3 */}
+            <div className="flex gap-3">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-cyan-accent/50 bg-bg-panel text-xs font-bold text-cyan-100">
+                3
+              </div>
+              <div className="min-w-0 flex-1 space-y-2">
+                <p className="text-sm font-medium text-white">
+                  Tap I’ve paid — credit my OLC
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  We auto-find a matching deposit when you leave the hash blank. Or paste a tx
+                  hash / explorer URL.
+                </p>
+                <label className="block text-xs text-slate-300">
+                  <span className="text-slate-500">Tx hash or explorer URL (optional)</span>
+                  <input
+                    type="text"
+                    value={depositTxHash}
+                    onChange={(e) => setDepositTxHash(e.target.value)}
+                    placeholder={
+                      selected.id === "BTC"
+                        ? "Bitcoin txid or mempool.space URL"
+                        : selected.id === "SOL"
+                          ? "Solana signature or solscan URL"
+                          : "0x… or etherscan URL"
+                    }
+                    className="mt-1 w-full rounded-xl border border-border bg-bg-panel px-3 py-2.5 font-mono text-sm text-white"
+                    autoComplete="off"
+                    spellCheck={false}
+                    disabled={!activeOrder}
+                  />
+                </label>
+                <button
+                  type="button"
+                  className="btn-primary"
+                  disabled={
+                    !activeOrder ||
+                    confirmBusy ||
+                    !isConnected
+                  }
+                  onClick={() => void onConfirmPayOrder()}
+                >
+                  {confirmBusy
+                    ? depositTxHash.trim()
+                      ? "Verifying…"
+                      : "Scanning for payment…"
+                    : "I’ve paid — credit my OLC"}
+                </button>
+              </div>
             </div>
-            <p className="text-[10px] text-slate-500">
-              OLC is credited only after the server verifies your tx on{" "}
-              {selected.depositNetwork}. A reminder alone never mints or locks OLC.
-            </p>
           </div>
         )}
 
@@ -1126,7 +1277,8 @@ function PresaleBuyInner() {
                 <div className="flex items-center gap-2">
                   {p.status === "locked_pending_chain" &&
                     p.txHash &&
-                    !p.txHash.startsWith("external:") && (
+                    !p.txHash.startsWith("external:") &&
+                    !p.txHash.startsWith("order:") && (
                     <button
                       type="button"
                       className="rounded-full border border-amber-500/40 px-2 py-0.5 text-[10px] text-amber-100 hover:bg-amber-500/10"
@@ -1145,8 +1297,10 @@ function PresaleBuyInner() {
                     >
                       View tx
                     </a>
-                  ) : p.txHash.startsWith("external:") ? (
-                    <span className="font-mono text-slate-500 text-[10px]">reminder</span>
+                  ) : p.txHash.startsWith("external:") || p.txHash.startsWith("order:") ? (
+                    <span className="font-mono text-slate-500 text-[10px]">
+                      {p.txHash.startsWith("order:") ? "order" : "pending"}
+                    </span>
                   ) : (
                     <span className="font-mono text-slate-400 text-[10px]" title={p.txHash}>
                       {p.txHash.slice(0, 12)}…

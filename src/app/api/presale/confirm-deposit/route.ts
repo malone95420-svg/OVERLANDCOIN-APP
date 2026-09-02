@@ -2,19 +2,32 @@
  * POST /api/presale/confirm-deposit
  *
  * Verify an external deposit (Ethereum / Bitcoin / Solana) or BlockDAG payment
- * by tx hash, recompute OLC server-side, credit PresaleLock to buyer.
+ * by tx hash (or amount-matched scan when hash omitted), recompute OLC server-side,
+ * credit PresaleLock to buyer.
  *
- * Body: { chain, paymentTxHash, buyer, payAsset, olcAmount? }
+ * Body: { chain, paymentTxHash?, buyer, payAsset, olcAmount?, payAmount? }
+ * When paymentTxHash omitted: require buyer + payAsset + payAmount + chain and scan.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { isAddress } from "viem";
+import {
+  DEFAULT_BTC_DEPOSIT_ADDRESS,
+  DEFAULT_EVM_DEPOSIT_ADDRESS,
+  DEFAULT_SOL_DEPOSIT_ADDRESS,
+} from "@/lib/acceptedPayAssets";
 import { creditVerifiedPurchase } from "@/lib/presaleCredit";
+import { findDepositForOrder } from "@/lib/findDepositPayment";
+import { friendlyPaymentError, parsePaymentTxRef } from "@/lib/parsePaymentTxRef";
+import { roundPayAmount, type PayOrder } from "@/lib/presaleOrders";
+import { SITE } from "@/lib/site";
 import {
   getDeliveredByPayment,
   inferChainFromAsset,
   normalizePayChain,
   verifyPaymentAndQuote,
+  type PayAssetId,
+  type PayChain,
 } from "@/lib/verifyPayment";
 
 export const dynamic = "force-dynamic";
@@ -51,6 +64,8 @@ type Body = {
   buyer?: string;
   payAsset?: string;
   olcAmount?: number;
+  /** Required with buyer+payAsset+chain when paymentTxHash omitted */
+  payAmount?: number | string;
 };
 
 export async function POST(req: NextRequest) {
@@ -69,8 +84,9 @@ export async function POST(req: NextRequest) {
   }
 
   const buyerRaw = typeof body.buyer === "string" ? body.buyer.trim() : "";
-  const paymentTxHash =
-    typeof body.paymentTxHash === "string" ? body.paymentTxHash.trim() : "";
+  let paymentTxHash = parsePaymentTxRef(
+    typeof body.paymentTxHash === "string" ? body.paymentTxHash : "",
+  );
   const payAsset =
     typeof body.payAsset === "string" ? body.payAsset.trim().toUpperCase() : undefined;
   const clientOlc =
@@ -79,6 +95,12 @@ export async function POST(req: NextRequest) {
       : body.olcAmount != null
         ? Number(body.olcAmount)
         : null;
+  const payAmountRaw =
+    typeof body.payAmount === "number"
+      ? body.payAmount
+      : body.payAmount != null
+        ? Number(String(body.payAmount).replace(/,/g, ""))
+        : NaN;
 
   if (!buyerRaw || !isAddress(buyerRaw)) {
     return NextResponse.json(
@@ -86,12 +108,6 @@ export async function POST(req: NextRequest) {
         error:
           "buyer must be your connected BlockDAG wallet address (OLC is credited there)",
       },
-      { status: 400 },
-    );
-  }
-  if (!paymentTxHash || paymentTxHash.length < 10 || paymentTxHash.length > 128) {
-    return NextResponse.json(
-      { error: "paymentTxHash is required — paste the tx hash after sending" },
       { status: 400 },
     );
   }
@@ -104,6 +120,75 @@ export async function POST(req: NextRequest) {
       {
         error:
           "chain is required: ethereum | bitcoin | solana | blockdag (or provide payAsset)",
+      },
+      { status: 400 },
+    );
+  }
+
+  if (!paymentTxHash) {
+    if (chain === "blockdag") {
+      return NextResponse.json(
+        { error: "paymentTxHash is required for BlockDAG payments" },
+        { status: 400 },
+      );
+    }
+    if (!payAsset || !Number.isFinite(payAmountRaw) || !(payAmountRaw > 0)) {
+      return NextResponse.json(
+        {
+          error:
+            "When paymentTxHash is omitted, provide payAsset + payAmount so we can scan for your deposit",
+        },
+        { status: 400 },
+      );
+    }
+    const asset = payAsset as PayAssetId;
+    const depositAddress =
+      asset === "SOL"
+        ? process.env.NEXT_PUBLIC_DEPOSIT_SOL?.trim() ||
+          SITE.deposits.solana ||
+          DEFAULT_SOL_DEPOSIT_ADDRESS
+        : asset === "BTC"
+          ? process.env.NEXT_PUBLIC_DEPOSIT_BTC?.trim() ||
+            SITE.deposits.bitcoin ||
+            DEFAULT_BTC_DEPOSIT_ADDRESS
+          : process.env.NEXT_PUBLIC_DEPOSIT_ETH?.trim() ||
+            SITE.treasuryAddress ||
+            DEFAULT_EVM_DEPOSIT_ADDRESS;
+    const scanOrder = {
+      orderId: "ad-hoc",
+      buyer: buyerRaw as `0x${string}`,
+      payAsset: asset,
+      payChain: chain as PayChain,
+      payAmount: roundPayAmount(asset, payAmountRaw),
+      olcAmount: clientOlc && clientOlc > 0 ? clientOlc : 0,
+      batchPriceUsed: 0,
+      usdRateUsed: 0,
+      usdPaid: 0,
+      depositAddress,
+      depositNetwork: "",
+      status: "pending" as const,
+      createdAt: Date.now() - 2 * 60 * 60 * 1000,
+      expiresAt: Date.now() + 60_000,
+    } satisfies PayOrder;
+    const found = await findDepositForOrder(scanOrder);
+    if (!found) {
+      return NextResponse.json(
+        {
+          error: "No matching payment found yet — wait a minute and try again.",
+          verified: false,
+          status: "unverified" as const,
+        },
+        { status: 404 },
+      );
+    }
+    paymentTxHash = found.paymentTxHash;
+  }
+
+  if (!paymentTxHash || paymentTxHash.length < 10 || paymentTxHash.length > 128) {
+    return NextResponse.json(
+      {
+        error:
+          "paymentTxHash is required — paste the tx hash or explorer URL after sending",
       },
       { status: 400 },
     );
@@ -133,7 +218,8 @@ export async function POST(req: NextRequest) {
   if (!verified.ok) {
     return NextResponse.json(
       {
-        error: verified.error,
+        error: friendlyPaymentError(verified.error),
+        detail: verified.error,
         verified: false,
         status: "unverified" as const,
       },
@@ -172,7 +258,7 @@ export async function POST(req: NextRequest) {
     {
       status: "locked_pending_chain" as const,
       notConfigured: result.notConfigured,
-      error: result.error,
+      error: friendlyPaymentError(result.error || result.message),
       message: result.message,
       buyer: result.buyer,
       olcAmount: result.olcAmount,

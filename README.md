@@ -66,9 +66,13 @@ Admin panels, passwords, auth backends, email systems.
 
 ## Presale payment verification
 
-OLC is never credited from client-only claims. `POST /api/presale/deliver` and `POST /api/presale/confirm-deposit` verify the payment tx on BlockDAG / Ethereum / Bitcoin / Solana, recompute OLC from verified amount × live USD ÷ live batch price, then credit PresaleLock (idempotent by `paymentTxHash`).
+OLC is never credited from client-only claims.
 
-Users paste the payment tx hash and tap **Confirm payment**. Optional cron: `/api/cron/presale-scan` (needs `CRON_SECRET`). Optional `ETHEREUM_RPC_URL` / `SOLANA_RPC_URL`.
+- **BDAG / BDUSD (BlockDAG):** wallet send → `POST /api/presale/deliver` verifies on-chain → PresaleLock credit (instant path).
+- **USDT / USDC / ETH / BTC / SOL:** `POST /api/presale/orders` creates a Pay Order (exact payAmount, buyer, deposit address, ~45 min expiry). User sends exact amount, then `POST /api/presale/orders/:id/confirm` auto-scans for a matching deposit (or accepts pasted tx hash / explorer URL) and credits only after verified payment. Idempotent by payment tx id + orderId.
+- Legacy: `POST /api/presale/confirm-deposit` still works; hash optional when `payAsset` + `payAmount` + `buyer` + `chain` are provided (amount-matched scan).
+
+Orders: in-memory + `/tmp` JSON MVP (`PRESALE_ORDERS_PATH`). Use Redis/Postgres in production. Optional cron: `/api/cron/presale-scan` (`CRON_SECRET`). Optional `ETHEREUM_RPC_URL` / `SOLANA_RPC_URL`.
 
 ## Quest completion (once per device)
 

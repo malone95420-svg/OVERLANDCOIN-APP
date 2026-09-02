@@ -9,6 +9,7 @@ import {
   recordCheckIn,
   type Completion,
 } from "@/lib/completions";
+import { getOrCreateDeviceId } from "@/lib/deviceId";
 import { canReachQuest, tierLabel, TIER_LABELS, type CapabilityTier } from "@/lib/vehicle";
 import { ClaimOlCButton } from "@/components/ClaimOlCButton";
 
@@ -71,6 +72,8 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
     setPhotoName("");
     setCaption("");
     setSubmitting(false);
+    // Ensure stable device id exists before check-in / claim.
+    getOrCreateDeviceId();
     requestGeo();
   }, [open, quest.id, requestGeo]);
 
@@ -180,7 +183,8 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
 
         {alreadyDone && !done && (
           <div className="mt-4 rounded-xl border border-gold/40 bg-bg-panel px-3 py-3 text-sm text-gold-bright">
-            You already completed this quest (local ledger). Claim pending OLC from Garage if needed.
+            Already completed on this device. Each quest can only be completed once per phone/browser —
+            switching accounts does not unlock another check-in. Claim pending OLC from Garage if needed.
           </div>
         )}
 

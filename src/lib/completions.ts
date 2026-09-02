@@ -6,6 +6,10 @@
 import type { Quest } from "@/data/quests";
 
 import { scopedStorageKey } from "@/lib/auth/accountScope";
+import {
+  hasCompletedQuestOnDevice,
+  markQuestCompletedOnDevice,
+} from "@/lib/deviceQuests";
 
 export const COMPLETIONS_STORAGE_KEY = "overlandcoin.completions.v1";
 export const POSTS_STORAGE_KEY = "overlandcoin.posts.v1";
@@ -112,7 +116,12 @@ function saveClaimedIds(ids: string[]): void {
 }
 
 export function hasCompletedQuest(questId: string, completions = loadCompletions()): boolean {
-  return completions.some((c) => c.questId === questId);
+  if (completions.some((c) => c.questId === questId)) {
+    // Seal legacy account-scoped completions onto this device so account switches cannot re-earn.
+    markQuestCompletedOnDevice(questId);
+    return true;
+  }
+  return hasCompletedQuestOnDevice(questId);
 }
 
 export function totalPendingOlC(completions = loadCompletions()): number {
@@ -150,6 +159,14 @@ export type RecordCheckInInput = {
 export function recordCheckIn(
   input: RecordCheckInInput,
 ): { ok: true; completion: Completion; post: FeedPost } | { ok: false; error: string } {
+  if (hasCompletedQuestOnDevice(input.quest.id)) {
+    return { ok: false, error: "Already completed on this device" };
+  }
+  // Also block if this account already has a completion (keeps account ledger coherent).
+  if (loadCompletions().some((c) => c.questId === input.quest.id)) {
+    return { ok: false, error: "Already completed on this device" };
+  }
+
   const completion: Completion = {
     id: makeId("cmp"),
     questId: input.quest.id,
@@ -186,6 +203,7 @@ export function recordCheckIn(
     saveCompletions(completions.slice(1));
     return pRes;
   }
+  markQuestCompletedOnDevice(input.quest.id);
   return { ok: true, completion, post };
 }
 
@@ -236,6 +254,8 @@ export function markCompletionClaimed(
       : p,
   );
   savePosts(posts);
+
+  markQuestCompletedOnDevice(next.questId);
 
   return { ok: true, completion: next };
 }

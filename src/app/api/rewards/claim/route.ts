@@ -11,7 +11,7 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { blockdag } from "@/lib/chain";
-import { getClaim, isCompletionClaimed, recordClaim } from "@/lib/claimsLedger";
+import { findClaimConflict, recordClaim } from "@/lib/claimsLedger";
 import { getQuestById } from "@/lib/quests";
 import { TOKEN } from "@/lib/token";
 import {
@@ -107,6 +107,8 @@ type ClaimBody = {
   lng?: number;
   distanceM?: number;
   photoHash?: string;
+  /** Stable browser device id (localStorage overlandcoin.device.id.v1). */
+  deviceId?: string;
   /** Ignored if present — amount always comes from quest catalog. */
   amount?: number;
 };
@@ -146,6 +148,10 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "wallet must be a valid checksum address" }, { status: 400 });
   }
+
+  const deviceIdRaw = typeof body.deviceId === "string" ? body.deviceId.trim() : "";
+  const deviceId =
+    deviceIdRaw && deviceIdRaw.length >= 8 && deviceIdRaw.length <= 80 ? deviceIdRaw : undefined;
 
   const quest = getQuestById(questId);
   if (!quest) {
@@ -187,14 +193,29 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  if (await isCompletionClaimed(completionId)) {
-    const existing = await getClaim(completionId);
+  // MVP: in-memory (+ /tmp) ledger — not shared across serverless instances.
+  // Blocks duplicate completionId, wallet+questId, and deviceId+questId when provided.
+  const conflict = await findClaimConflict({
+    completionId,
+    questId,
+    wallet,
+    deviceId,
+  });
+  if (conflict) {
+    const existing = conflict.entry;
+    const error =
+      conflict.reason === "device_quest"
+        ? "Already claimed on this device"
+        : conflict.reason === "wallet_quest"
+          ? "Already claimed for this wallet and quest"
+          : "Already claimed";
     return NextResponse.json(
       {
-        error: "Already claimed",
-        txHash: existing?.txHash,
-        amount: existing?.amount,
+        error,
+        txHash: existing.txHash,
+        amount: existing.amount,
         status: "claimed",
+        conflict: conflict.reason,
       },
       { status: 409 },
     );
@@ -294,6 +315,7 @@ export async function POST(req: NextRequest) {
     amount,
     txHash,
     claimedAt: new Date().toISOString(),
+    deviceId,
   });
 
   return NextResponse.json({

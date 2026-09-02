@@ -12,6 +12,7 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Quest } from "@/lib/quests";
+import { hasCompletedQuest } from "@/lib/completions";
 import {
   BASEMAPS,
   loadBasemapId,
@@ -145,6 +146,12 @@ export default function QuestMapInner({
               <br />
               {q.region} · {q.difficulty} · Tier {q.minTier}+ · {q.radiusMeters}m · {q.rewardOlC}{" "}
               OLC
+              {hasCompletedQuest(q.id) ? (
+                <>
+                  <br />
+                  <span style={{ color: "#34d399", fontWeight: 600 }}>Completed</span>
+                </>
+              ) : null}
             </Popup>
           </Marker>
         ))}

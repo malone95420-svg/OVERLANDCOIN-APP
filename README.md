@@ -69,3 +69,11 @@ Admin panels, passwords, auth backends, email systems.
 OLC is never credited from client-only claims. `POST /api/presale/deliver` and `POST /api/presale/confirm-deposit` verify the payment tx on BlockDAG / Ethereum / Bitcoin / Solana, recompute OLC from verified amount × live USD ÷ live batch price, then credit PresaleLock (idempotent by `paymentTxHash`).
 
 Users paste the payment tx hash and tap **Confirm payment**. Optional cron: `/api/cron/presale-scan` (needs `CRON_SECRET`). Optional `ETHEREUM_RPC_URL` / `SOLANA_RPC_URL`.
+
+## Quest completion (once per device)
+
+- Client device ledger: `overlandcoin.device.completedQuests.v1` (not account-scoped) + stable `overlandcoin.device.id.v1`.
+- `hasCompletedQuest` is true if the account ledger **or** the device ledger has the quest.
+- `POST /api/rewards/claim` accepts optional `deviceId` and rejects duplicates for `completionId`, `wallet+questId`, and `deviceId+questId`.
+- **MVP limit:** claim dedupe is in-memory (+ `/tmp` JSON). Serverless instances do not share memory; cold starts can reset the ledger. Use Redis/DB for production.
+

@@ -22,8 +22,13 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   const [routeCoords, setRouteCoords] = useState<[number, number][] | null>(null);
 
   const refreshCompletions = useCallback(() => {
-    setCompletedIds(new Set(loadCompletions().map((c) => c.questId)));
-  }, []);
+    const ids = new Set<string>();
+    for (const c of loadCompletions()) ids.add(c.questId);
+    for (const q of quests) {
+      if (hasCompletedQuest(q.id)) ids.add(q.id);
+    }
+    setCompletedIds(ids);
+  }, [quests]);
 
   useEffect(() => {
     refreshCompletions();
@@ -148,7 +153,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
                       !tierOk
                         ? `Needs Tier ${q.minTier}+ — check-in will explain`
                         : done
-                          ? "Already completed"
+                          ? "Already completed on this device"
                           : "Open GPS + photo check-in"
                     }
                   >

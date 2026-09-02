@@ -43,7 +43,7 @@ export const ROADMAP_PHASES: RoadmapPhase[] = [
       "Liquidity / DEX listing when ready (none live yet)",
       "Proof-of-adventure check-ins",
       "Leaderboard seasons",
-      "Staking design (research; no live contract yet)",
+      "Future: staking research (not live; not in the app yet)",
     ],
   },
   {

@@ -22,7 +22,8 @@ OLC exists ONLY on BlockDAG 1404. Same address on Base/Ethereum is an empty EOA.
 - /tokenomics
 - /roadmap
 - /presale
-- /staking
+- /feed
+- /garage
 - /map
 - /leaderboard
 - /faq
@@ -31,7 +32,7 @@ OLC exists ONLY on BlockDAG 1404. Same address on Base/Ethereum is an empty EOA.
 ## Configure
 
 - src/lib/token.ts
-- src/lib/site.ts (socials/DEX/treasury/staking placeholders)
+- src/lib/site.ts (socials/DEX/treasury placeholders)
 - src/lib/tokenomics.ts (draft allocations)
 - .env.example
 

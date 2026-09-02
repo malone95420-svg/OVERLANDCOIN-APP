@@ -95,8 +95,8 @@ export default function HomePage() {
 
       <section className="container-page py-16">
         <h2 className="section-title">How It Works</h2>
-        <p className="section-sub">Find → Visit → Earn → Stake</p>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <p className="section-sub">Find → Visit → Earn</p>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {HOW_IT_WORKS.map((s, i) => (
             <article key={s.step} className="card relative">
               <span className="text-xs font-bold uppercase tracking-wider text-cyan-accent">
@@ -124,7 +124,6 @@ export default function HomePage() {
           <Link href="/presale" className="btn-primary">Presale</Link>
           <Link href="/tokenomics" className="btn-secondary">Tokenomics</Link>
           <Link href="/roadmap" className="btn-secondary">Roadmap</Link>
-          <Link href="/staking" className="btn-secondary">Staking</Link>
           <Link href="/docs" className="btn-secondary">Docs</Link>
         </div>
       </section>

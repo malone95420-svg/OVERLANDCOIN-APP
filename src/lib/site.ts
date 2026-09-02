@@ -49,7 +49,7 @@ export const SITE = {
     bitcoin: "bc1qp6m0apc0mx6y88xw3ustezwaf7wfyvhvurs9ug",
     bitcoinNetwork: "Bitcoin (native SegWit)",
   },
-  /** Placeholder — staking is UI mock only; no live staking contract */
+  /** Future staking contract address — not live; staking removed from app UI for now */
   stakingContract: "",
 } as const;
 
@@ -68,19 +68,11 @@ export const PRESALE_META = {
   hardCapUsd: 500_000,
 } as const;
 
-/** Staking plan mock APYs (illustrative only — no live contract). */
-export const STAKING_PLANS = [
-  { days: 30, apyPercent: 15 },
-  { days: 90, apyPercent: 35 },
-  { days: 180, apyPercent: 65 },
-  { days: 365, apyPercent: 120 },
-] as const;
 
 export const HOW_IT_WORKS = [
   { step: "Find", body: "Browse quests on the map and pick your next waypoint." },
   { step: "Visit", body: "Get out there — overland to the location." },
-  { step: "Earn", body: "Check in with GPS + photo proof. OLC is recorded as pending claim until the reward contract is live." },
-  { step: "Stake", body: "Optionally stake OLC when staking goes live (mock UI today)." },
+  { step: "Earn", body: "Check in with GPS + photo proof, then claim OLC to your wallet." },
 ] as const;
 
 export const NAV_LINKS = [
@@ -90,7 +82,6 @@ export const NAV_LINKS = [
   { href: "/feed", label: "Feed" },
   { href: "/garage", label: "Garage" },
   { href: "/ranger", label: "Ranger" },
-  { href: "/staking", label: "Staking" },
   { href: "/tokenomics", label: "Tokenomics" },
   { href: "/roadmap", label: "Roadmap" },
   { href: "/leaderboard", label: "Leaderboard" },

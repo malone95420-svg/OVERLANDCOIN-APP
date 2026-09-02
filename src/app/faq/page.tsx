@@ -45,7 +45,7 @@ const FAQS = [
   },
   {
     q: "Is staking live?",
-    a: "No. The staking page shows example plans (30d 15%, 90d 35%, 180d 65%, 365d 120% APY) as a UI mock only.",
+    a: "No. Staking is not available yet and has been removed from the app for now. It may return as a future feature — there is no live staking contract and no mock plans page.",
   },
   {
     q: "Are allocation percentages final?",

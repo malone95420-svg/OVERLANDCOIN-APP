@@ -1,6 +1,7 @@
 /**
- * Quest catalog — curated corridors plus GeoNames / Overpass NA expansion.
- * Regenerate with `node scripts/generate-quests.mjs` (Wyoming-heavy NA set).
+ * Quest catalog — curated corridors plus GeoNames / Overpass NA + SA expansion.
+ * Spatially thinned (~25 km min spacing) via `node scripts/spread-quests.mjs`.
+ * Base generators: `scripts/generate-quests.mjs`, `scripts/append-quests-us-sa.mjs`.
  */
 import type { CapabilityTier } from "@/lib/vehicle";
 import { rewardForDifficulty } from "@/lib/questRewards";

@@ -1,9 +1,10 @@
 /**
- * Append ~2000 NEW US + South America overland quests to existing seed.json.
+ * Append NEW US + South America overland quests to existing seed.json.
  * Does NOT wipe existing quests. Preserves q-test-gale-rs at front.
  *
  * Sources: curated extras, OSM Overpass (cached), GeoNames US + SA dumps.
  * Dedupes within ~150m of existing + newly selected points.
+ * After appending, run `node scripts/spread-quests.mjs` to enforce ~25 km spacing.
  *
  * Run: node scripts/append-quests-us-sa.mjs
  */

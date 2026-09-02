@@ -8,7 +8,7 @@ import {
   useSendTransaction,
   useWriteContract,
 } from "wagmi";
-import { erc20Abi, parseEther, parseUnits, type Address, type Hash } from "viem";
+import { encodeFunctionData, erc20Abi, parseEther, parseUnits, type Address, type Hash } from "viem";
 import { waitForBlockdagReceipt } from "@/lib/waitForBlockdagReceipt";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { CopyAddress } from "@/components/CopyAddress";
@@ -35,6 +35,7 @@ import {
   type LocalPurchase,
 } from "@/lib/purchases";
 import { friendlyPaymentError, parsePaymentTxRef } from "@/lib/parsePaymentTxRef";
+import { getAnyInjectedProvider } from "@/lib/injectedWallets";
 import { PRESALE_BATCHES, SITE } from "@/lib/site";
 import { TOKEN, explorerTxUrl, explorerAddressUrl } from "@/lib/token";
 
@@ -83,6 +84,41 @@ function qrUrl(data: string): string {
   return `https://api.qrserver.com/v1/create-qr-code/?size=168x168&margin=8&data=${encodeURIComponent(data)}`;
 }
 
+/** Ethereum mainnet ERC-20 deposit tokens (exact amounts for pay orders). */
+const ETH_MAINNET_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7" as Address;
+const ETH_MAINNET_USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" as Address;
+const ETHEREUM_MAINNET_HEX = "0x1";
+
+async function ensureEthereumMainnet(): Promise<void> {
+  const eth = getAnyInjectedProvider();
+  if (!eth?.request) {
+    throw new Error("No injected wallet found (MetaMask / OKX / etc.).");
+  }
+  try {
+    const current = (await eth.request({ method: "eth_chainId" })) as string;
+    if (current?.toLowerCase() === ETHEREUM_MAINNET_HEX) return;
+  } catch {
+    /* proceed to switch */
+  }
+  try {
+    await eth.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: ETHEREUM_MAINNET_HEX }],
+    });
+  } catch (switchErr) {
+    const code =
+      switchErr && typeof switchErr === "object" && "code" in switchErr
+        ? Number((switchErr as { code: unknown }).code)
+        : undefined;
+    if (code === 4001) {
+      throw new Error("Switch to Ethereum mainnet was rejected in wallet.");
+    }
+    throw new Error(
+      "Could not switch wallet to Ethereum mainnet (chainId 1). Switch manually, then retry.",
+    );
+  }
+}
+
 function solanaPayUri(depositAddress: string, solAmount: number): string {
   const amount = Number(solAmount.toFixed(9)).toString();
   const params = new URLSearchParams({
@@ -127,7 +163,7 @@ function PresaleBuyInner() {
   const onCorrectChain = isConnected && chainId === TOKEN.chainId;
 
   const [assetId, setAssetId] = useState<AcceptedPayAsset["id"]>("BDAG");
-  const [mode, setMode] = useState<InputMode>("pay");
+  const [mode, setMode] = useState<InputMode>("olc");
   const [olcInput, setOlcInput] = useState("1000");
   const [payInput, setPayInput] = useState("10000");
   const [busy, setBusy] = useState(false);
@@ -142,6 +178,7 @@ function PresaleBuyInner() {
   const [orderBusy, setOrderBusy] = useState(false);
   const [activeOrder, setActiveOrder] = useState<ActivePayOrder | null>(null);
   const [phantomBusy, setPhantomBusy] = useState(false);
+  const [evmPayBusy, setEvmPayBusy] = useState(false);
 
   const selected = assets.find((a) => a.id === assetId) ?? assets[0];
   const payMode = paymentMode(selected);
@@ -149,6 +186,10 @@ function PresaleBuyInner() {
   useEffect(() => {
     setDepositTxHash("");
     setActiveOrder(null);
+    // Deposit flow is amount-of-OLC first ("I want 45 OLC")
+    if (paymentMode(selected) === "deposit") {
+      setMode("olc");
+    }
   }, [selected.id]);
 
   const usdPerPayUnit = liveUsdForAsset(selected, prices);
@@ -665,6 +706,78 @@ function PresaleBuyInner() {
     }
   }
 
+  async function onPayWithEvmWallet() {
+    if (!activeOrder) return;
+    const asset = activeOrder.payAsset.toUpperCase();
+    if (asset !== "ETH" && asset !== "USDT" && asset !== "USDC") return;
+
+    setEvmPayBusy(true);
+    setError(null);
+    setSuccessNote(null);
+    try {
+      await ensureEthereumMainnet();
+      const eth = getAnyInjectedProvider();
+      if (!eth?.request) {
+        throw new Error("No injected wallet found.");
+      }
+
+      let from: string | undefined;
+      try {
+        const accounts = (await eth.request({ method: "eth_requestAccounts" })) as string[];
+        from = accounts?.[0];
+      } catch (e) {
+        const code =
+          e && typeof e === "object" && "code" in e
+            ? Number((e as { code: unknown }).code)
+            : undefined;
+        if (code === 4001) throw new Error("Wallet connect was rejected.");
+        throw e instanceof Error ? e : new Error("Could not access wallet accounts.");
+      }
+      if (!from) throw new Error("No wallet account available.");
+
+      const to = activeOrder.depositAddress as Address;
+      let txHash: string | undefined;
+
+      if (asset === "ETH") {
+        const fixed = Number(activeOrder.payAmount).toFixed(18);
+        const valueWei = parseEther(fixed);
+        const valueHex = `0x${valueWei.toString(16)}` as `0x${string}`;
+        txHash = (await eth.request({
+          method: "eth_sendTransaction",
+          params: [{ from, to, value: valueHex }],
+        })) as string;
+      } else {
+        const token = asset === "USDT" ? ETH_MAINNET_USDT : ETH_MAINNET_USDC;
+        const amount = parseUnits(Number(activeOrder.payAmount).toFixed(6), 6);
+        const data = encodeFunctionData({
+          abi: erc20Abi,
+          functionName: "transfer",
+          args: [to, amount],
+        });
+        txHash = (await eth.request({
+          method: "eth_sendTransaction",
+          params: [{ from, to: token, data, value: "0x0" }],
+        })) as string;
+      }
+
+      if (txHash) {
+        setDepositTxHash(txHash);
+        setSuccessNote(
+          `Wallet payment submitted on Ethereum. Tx ${txHash.slice(0, 10)}… — wait a moment, then tap I’ve paid.`,
+        );
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Wallet payment failed.";
+      if (/4001|user rejected|denied/i.test(msg)) {
+        setError("Payment rejected in wallet.");
+      } else {
+        setError(msg);
+      }
+    } finally {
+      setEvmPayBusy(false);
+    }
+  }
+
   async function onConfirmPayOrder() {
     if (!activeOrder) return;
     setError(null);
@@ -886,7 +999,7 @@ function PresaleBuyInner() {
               }`}
               onClick={() => setMode("olc")}
             >
-              Enter OLC amount
+              I want OLC amount
             </button>
           </div>
         </div>
@@ -895,7 +1008,7 @@ function PresaleBuyInner() {
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         {mode === "olc" ? (
           <label className="block text-sm">
-            <span className="text-slate-400">OLC amount</span>
+            <span className="text-slate-400">I want this many OLC</span>
             <input
               type="number"
               min="0"
@@ -1104,6 +1217,21 @@ function PresaleBuyInner() {
                         {phantomBusy
                           ? "Opening wallet…"
                           : "Pay with Phantom / Solana wallet"}
+                      </button>
+                    )}
+
+                    {(activeOrder.payAsset === "ETH" ||
+                      activeOrder.payAsset === "USDT" ||
+                      activeOrder.payAsset === "USDC") && (
+                      <button
+                        type="button"
+                        className="rounded-xl border border-sky-400/50 bg-sky-500/10 px-4 py-2.5 text-sm font-semibold text-sky-100 hover:bg-sky-500/20 disabled:opacity-60"
+                        disabled={evmPayBusy}
+                        onClick={() => void onPayWithEvmWallet()}
+                      >
+                        {evmPayBusy
+                          ? "Confirm in wallet…"
+                          : `Pay with wallet (${activeOrder.payAsset} on Ethereum)`}
                       </button>
                     )}
 

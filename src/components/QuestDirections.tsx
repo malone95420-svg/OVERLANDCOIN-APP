@@ -18,14 +18,23 @@ type Props = {
   onRouteChange: (coords: [number, number][] | null) => void;
   /** Compact button row for quest cards. */
   compact?: boolean;
+  /** When true, open and draw the in-map route on mount (after explicit Find quest). */
+  autoStart?: boolean;
 };
 
-export function QuestDirections({ quest, userGeo, onRouteChange, compact }: Props) {
+export function QuestDirections({
+  quest,
+  userGeo,
+  onRouteChange,
+  compact,
+  autoStart = false,
+}: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(autoStart);
   const abortRef = useRef<AbortController | null>(null);
+  const autoStartedRef = useRef(false);
 
   const watchingLat = userGeo.status === "watching" ? userGeo.lat : null;
   const watchingLng = userGeo.status === "watching" ? userGeo.lng : null;
@@ -48,18 +57,6 @@ export function QuestDirections({ quest, userGeo, onRouteChange, compact }: Prop
     setError(null);
     setBusy(false);
   }, [onRouteChange]);
-
-  useEffect(() => {
-    clearRoute();
-    setOpen(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [quest.id]);
-
-  useEffect(() => {
-    return () => {
-      abortRef.current?.abort();
-    };
-  }, []);
 
   const drawInMapRoute = useCallback(async () => {
     setError(null);
@@ -87,6 +84,35 @@ export function QuestDirections({ quest, userGeo, onRouteChange, compact }: Prop
     );
   }, [origin, destination, onRouteChange]);
 
+  useEffect(() => {
+    clearRoute();
+    setOpen(autoStart);
+    autoStartedRef.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quest.id]);
+
+  useEffect(() => {
+    if (!autoStart || autoStartedRef.current) return;
+    autoStartedRef.current = true;
+    setOpen(true);
+    void drawInMapRoute();
+    // Only auto-start once per mount / quest; origin may arrive later via userGeo.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoStart, quest.id]);
+
+  // If autoStart ran before location was ready, retry once watching starts.
+  useEffect(() => {
+    if (!autoStart || !open || !origin || summary || busy) return;
+    void drawInMapRoute();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [origin]);
+
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+    };
+  }, []);
+
   const googleHref = googleMapsDirectionsUrl(destination, origin);
   const appleHref = appleMapsDirectionsUrl(destination, origin);
 
@@ -107,7 +133,7 @@ export function QuestDirections({ quest, userGeo, onRouteChange, compact }: Prop
             }
           }}
         >
-          {busy ? "Routing…" : open ? "Hide directions" : "Directions"}
+          {busy ? "Routing…" : open ? "Hide directions" : "Find quest"}
         </button>
         {open && summary && (
           <span className="self-center text-[11px] text-cyan-accent">{summary}</span>

@@ -41,20 +41,23 @@ L.Icon.Default.mergeOptions({
 type Props = {
   quests: Quest[];
   selectedId?: string;
+  /** Explicit fly target from Find quest — do not fly on selectedId alone. */
+  flyToId?: string;
   onSelect?: (id: string) => void;
   onUserGeoChange?: (geo: UserGeo) => void;
   /** Leaflet [lat, lng] pairs for the active directions route. */
   routeCoords?: [number, number][] | null;
 };
 
-function FlyTo({ quests, selectedId }: { quests: Quest[]; selectedId?: string }) {
+function FlyTo({ quests, flyToId }: { quests: Quest[]; flyToId?: string }) {
   const map = useMap();
   useEffect(() => {
-    const q = quests.find((x) => x.id === selectedId);
+    if (!flyToId) return;
+    const q = quests.find((x) => x.id === flyToId);
     if (q) {
       map.flyTo([q.lat, q.lng], 13, { duration: 0.8 });
     }
-  }, [map, quests, selectedId]);
+  }, [map, quests, flyToId]);
   return null;
 }
 
@@ -71,6 +74,7 @@ function FitRoute({ coords }: { coords: [number, number][] | null | undefined })
 export default function QuestMapInner({
   quests,
   selectedId,
+  flyToId,
   onSelect,
   onUserGeoChange,
   routeCoords,
@@ -118,7 +122,7 @@ export default function QuestMapInner({
           {...(basemap.subdomains ? { subdomains: basemap.subdomains } : {})}
         />
         <MapApiBridge mapRef={mapRef} />
-        <FlyTo quests={quests} selectedId={selectedId} />
+        <FlyTo quests={quests} flyToId={flyToId} />
         <FitRoute coords={routeCoords} />
         <UserLocationLayer onGeoChange={handleGeoChange} />
         {routeCoords && routeCoords.length >= 2 && (
@@ -137,6 +141,7 @@ export default function QuestMapInner({
           <Marker
             key={q.id}
             position={[q.lat, q.lng]}
+            opacity={selectedId && q.id === selectedId ? 1 : selectedId ? 0.75 : 1}
             eventHandlers={{
               click: () => onSelect?.(q.id),
             }}

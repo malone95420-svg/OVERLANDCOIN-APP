@@ -1,10 +1,16 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NAV_LINKS, SITE } from "@/lib/site";
 import { TOKEN, explorerAddressUrl } from "@/lib/token";
 import { CopyAddress } from "./CopyAddress";
 
 export function Footer() {
+  const pathname = usePathname();
+  if (pathname === "/map") return null;
+
   const socialEntries = [
     { key: "X / Twitter", href: SITE.social.twitter },
     { key: "Telegram", href: SITE.social.telegram },

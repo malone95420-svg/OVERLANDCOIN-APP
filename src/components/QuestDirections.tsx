@@ -20,6 +20,8 @@ type Props = {
   compact?: boolean;
   /** When true, open and draw the in-map route on mount (after explicit Find quest). */
   autoStart?: boolean;
+  /** Button label when directions are closed (Base44: Directions). */
+  primaryLabel?: string;
 };
 
 export function QuestDirections({
@@ -28,6 +30,7 @@ export function QuestDirections({
   onRouteChange,
   compact,
   autoStart = false,
+  primaryLabel = "Find quest",
 }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -133,7 +136,7 @@ export function QuestDirections({
             }
           }}
         >
-          {busy ? "Routing…" : open ? "Hide directions" : "Find quest"}
+          {busy ? "Routing…" : open ? "Hide directions" : primaryLabel}
         </button>
         {open && summary && (
           <span className="self-center text-[11px] text-cyan-accent">{summary}</span>

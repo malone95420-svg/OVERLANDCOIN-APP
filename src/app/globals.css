@@ -60,12 +60,20 @@ body {
 .leaflet-container {
   background: #0a0a0f;
   font-family: inherit;
-  border-radius: 1rem;
+  border-radius: 0;
   z-index: 0;
 }
 
-/* Live GPS marker (DivIcon) — reset Leaflet default icon chrome */
-.olc-user-location-icon {
+/* Live GPS + quest markers (DivIcon) — reset Leaflet default icon chrome */
+.olc-user-location-icon,
+.olc-quest-marker {
   background: transparent !important;
   border: none !important;
+}
+
+.leaflet-control-attribution {
+  font-size: 9px !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  color: #94a3b8 !important;
+  max-width: 55%;
 }

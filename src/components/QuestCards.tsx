@@ -2,46 +2,63 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { Quest, QuestDifficulty } from "@/lib/quests";
+import { useSession } from "next-auth/react";
+import type { Quest } from "@/lib/quests";
 import { filterQuestsByTier } from "@/lib/quests";
 import { useVehicle } from "@/hooks/useVehicle";
 import { canReachQuest, TIER_LABELS, tierLabel } from "@/lib/vehicle";
 import { hasCompletedQuest, loadCompletions } from "@/lib/completions";
 import { haversineMeters } from "@/lib/checkin";
+import {
+  DIFFICULTY_COLORS,
+  DIFFICULTY_FILTER_OPTIONS,
+  DIFFICULTY_LEGEND,
+  DIFFICULTY_UI_ACCENT,
+  difficultyToUiLabel,
+  uiFilterToDifficulty,
+  type DifficultyFilterUi,
+} from "@/lib/questDifficultyUi";
 import { QuestMap } from "./QuestMap";
 import { CheckInModal } from "./CheckInModal";
 import { QuestDirections } from "./QuestDirections";
 import type { UserGeo } from "./UserLocationLayer";
 
-const PAGE_SIZE = 40;
-
-const DIFFICULTY_OPTIONS: Array<"All" | QuestDifficulty> = [
-  "All",
-  "Easy",
-  "Moderate",
-  "Hard",
-  "Legendary",
-];
-
-function truncate(text: string, max = 90): string {
-  const t = text.trim();
-  if (t.length <= max) return t;
-  return `${t.slice(0, max - 1).trimEnd()}…`;
-}
+const QUEST_ALERTS_KEY = "overlandcoin.questAlerts.v1";
+const MAP_GUEST_KEY = "overlandcoin.map.guest.v1";
+const SEARCH_RESULT_LIMIT = 12;
+const NEARBY_ALERT_METERS = 5000;
 
 export function QuestCards({ quests }: { quests: Quest[] }) {
+  const { data: session, status: authStatus } = useSession();
   const { tier, hydrated, vehicle } = useVehicle();
   const [showAll, setShowAll] = useState(false);
+  const [guestOk, setGuestOk] = useState(false);
+  const [guestHydrated, setGuestHydrated] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [findingId, setFindingId] = useState<string | undefined>(undefined);
   const [flyToId, setFlyToId] = useState<string | undefined>(undefined);
   const [search, setSearch] = useState("");
-  const [difficulty, setDifficulty] = useState<"All" | QuestDifficulty>("All");
-  const [listLimit, setListLimit] = useState(PAGE_SIZE);
+  const [difficultyUi, setDifficultyUi] = useState<DifficultyFilterUi>("All");
   const [checkInQuest, setCheckInQuest] = useState<Quest | null>(null);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [userGeo, setUserGeo] = useState<UserGeo>({ status: "idle" });
   const [routeCoords, setRouteCoords] = useState<[number, number][] | null>(null);
+  const [alertsOn, setAlertsOn] = useState(false);
+  const [alertsHydrated, setAlertsHydrated] = useState(false);
+  const [nearbyToast, setNearbyToast] = useState<string | null>(null);
+  const [locateNonce, setLocateNonce] = useState(0);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      setGuestOk(localStorage.getItem(MAP_GUEST_KEY) === "1");
+      setAlertsOn(localStorage.getItem(QUEST_ALERTS_KEY) === "1");
+    } catch {
+      /* ignore */
+    }
+    setGuestHydrated(true);
+    setAlertsHydrated(true);
+  }, []);
 
   const refreshCompletions = useCallback(() => {
     const ids = new Set<string>();
@@ -61,7 +78,6 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
     return filterQuestsByTier(quests, tier, showAll);
   }, [quests, tier, showAll, hydrated]);
 
-  // selectedId stays undefined until the user picks a quest; clear if filtered out.
   const selectedId =
     selected && visible.some((q) => q.id === selected) ? selected : undefined;
 
@@ -70,40 +86,53 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
     : undefined;
 
   const searchQuery = search.trim().toLowerCase();
+  const difficulty = uiFilterToDifficulty(difficultyUi);
 
   const filtered = useMemo(() => {
     return visible.filter((q) => {
-      if (difficulty !== "All" && q.difficulty !== difficulty) return false;
+      if (difficulty && q.difficulty !== difficulty) return false;
       if (!searchQuery) return true;
       const hay = `${q.title} ${q.region} ${q.description} ${q.difficulty}`.toLowerCase();
       return hay.includes(searchQuery);
     });
   }, [visible, searchQuery, difficulty]);
 
-  const ranked = useMemo(() => {
-    if (userGeo.status !== "watching") return filtered;
-    const { lat, lng } = userGeo;
-    return [...filtered].sort(
-      (a, b) =>
-        haversineMeters({ lat, lng }, a) - haversineMeters({ lat, lng }, b),
-    );
-  }, [filtered, userGeo]);
+  const completedCount = useMemo(() => {
+    let n = 0;
+    for (const q of visible) {
+      if (completedIds.has(q.id) || hasCompletedQuest(q.id)) n += 1;
+    }
+    return n;
+  }, [visible, completedIds]);
 
-  // Reset page size when filters / search / geo ranking basis change.
-  useEffect(() => {
-    setListLimit(PAGE_SIZE);
-  }, [searchQuery, difficulty, showAll, tier, hydrated, userGeo.status]);
+  const searchHits = useMemo(() => {
+    if (!searchQuery) return [];
+    const ranked =
+      userGeo.status === "watching"
+        ? [...filtered].sort(
+            (a, b) =>
+              haversineMeters({ lat: userGeo.lat, lng: userGeo.lng }, a) -
+              haversineMeters({ lat: userGeo.lat, lng: userGeo.lng }, b),
+          )
+        : filtered;
+    return ranked.slice(0, SEARCH_RESULT_LIMIT);
+  }, [filtered, searchQuery, userGeo]);
 
-  const listed = useMemo(
-    () => ranked.slice(0, listLimit),
-    [ranked, listLimit],
-  );
-
+  // Map shows difficulty-filtered set (not a DOM list of 1500 cards).
   const mapQuests = useMemo(() => {
-    if (!selectedQuest) return listed;
-    if (listed.some((q) => q.id === selectedQuest.id)) return listed;
-    return [...listed, selectedQuest];
-  }, [listed, selectedQuest]);
+    if (searchQuery) {
+      // While searching, still show difficulty filter pins + ensure hits visible
+      const ids = new Set(filtered.map((q) => q.id));
+      if (selectedQuest && !ids.has(selectedQuest.id)) {
+        return [...filtered, selectedQuest];
+      }
+      return filtered;
+    }
+    if (selectedQuest && !filtered.some((q) => q.id === selectedQuest.id)) {
+      return [...filtered, selectedQuest];
+    }
+    return filtered;
+  }, [filtered, selectedQuest, searchQuery]);
 
   useEffect(() => {
     setRouteCoords(null);
@@ -111,265 +140,386 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
     setFlyToId(undefined);
   }, [selectedId]);
 
+  // Quest Alerts stub — notify when within ~5 km of an incomplete quest
+  useEffect(() => {
+    if (!alertsOn || userGeo.status !== "watching") return;
+    const { lat, lng } = userGeo;
+    let best: Quest | null = null;
+    let bestD = Infinity;
+    for (const q of filtered) {
+      if (completedIds.has(q.id)) continue;
+      const d = haversineMeters({ lat, lng }, q);
+      if (d < bestD) {
+        bestD = d;
+        best = q;
+      }
+    }
+    if (best && bestD <= NEARBY_ALERT_METERS) {
+      setNearbyToast(
+        `${best.title} is ~${Math.round(bestD)}m away · ${best.rewardOlC} OLC`,
+      );
+    } else {
+      setNearbyToast(null);
+    }
+  }, [alertsOn, userGeo, filtered, completedIds]);
+
   function selectQuest(id: string) {
     setSelected(id);
+    setSearchOpen(false);
   }
 
-  function startFinding(quest: Quest) {
+  function startDirections(quest: Quest) {
     setFindingId(quest.id);
     setFlyToId(quest.id);
   }
 
-  const detailPanel =
-    selectedQuest &&
-    (() => {
-      const q = selectedQuest;
-      const done = completedIds.has(q.id) || hasCompletedQuest(q.id);
-      const tierOk = !hydrated || canReachQuest(tier, q.minTier);
-      const finding = findingId === q.id;
-      return (
-        <div className="sticky top-0 z-10 rounded-xl border border-gold/50 bg-bg-card p-4 shadow-gold">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="font-semibold text-white">{q.title}</h3>
-            <span className="badge !text-[10px]">{q.difficulty}</span>
-          </div>
-          <p className="mt-1 text-xs text-slate-500">
-            {q.region} · Min Tier {q.minTier} {TIER_LABELS[q.minTier]} ·{" "}
-            {q.radiusMeters}m check-in
-          </p>
-          <p className="mt-2 text-sm text-slate-300">{q.description}</p>
-          {(q.terrainTags?.length ?? 0) > 0 && (
-            <p className="mt-2 flex flex-wrap gap-1">
-              {q.terrainTags!.slice(0, 8).map((t) => (
-                <span
-                  key={t}
-                  className="rounded-full border border-border px-2 py-0.5 text-[10px] text-slate-500"
-                >
-                  {t}
-                </span>
-              ))}
-            </p>
-          )}
-          <p className="mt-3 text-sm font-semibold text-gold-bright">
-            {q.rewardOlC} OLC reward
-            {done && (
-              <span className="ml-2 text-xs font-normal text-emerald-400">
-                Completed
-              </span>
-            )}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button
-              type="button"
-              className="btn-primary !py-1.5 !text-xs disabled:cursor-not-allowed disabled:opacity-40"
-              disabled={!hydrated || done}
-              onClick={() => setCheckInQuest(q)}
-              title={
-                !tierOk
-                  ? `Needs Tier ${q.minTier}+ — check-in will explain`
-                  : done
-                    ? "Already completed on this device"
-                    : "Open GPS + photo check-in"
-              }
-            >
-              {done ? "Checked in" : "Check in"}
-            </button>
-            {!finding ? (
-              <button
-                type="button"
-                className="btn-secondary !py-1.5 !text-xs"
-                onClick={() => startFinding(q)}
-              >
-                Find quest
-              </button>
-            ) : null}
-            {!tierOk && !done && (
-              <span className="self-center text-[11px] text-amber-400">
-                Needs Tier {q.minTier} {TIER_LABELS[q.minTier]}
-              </span>
-            )}
-          </div>
-          {finding && (
-            <QuestDirections
-              quest={q}
-              userGeo={userGeo}
-              onRouteChange={setRouteCoords}
-              compact
-              autoStart
-            />
-          )}
-        </div>
-      );
-    })();
+  function toggleAlerts() {
+    setAlertsOn((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem(QUEST_ALERTS_KEY, next ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+      if (!next) setNearbyToast(null);
+      return next;
+    });
+  }
+
+  function continueAsGuest() {
+    try {
+      localStorage.setItem(MAP_GUEST_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    setGuestOk(true);
+  }
+
+  const showAuthGate =
+    guestHydrated && authStatus !== "loading" && !session?.user && !guestOk;
+
+  const finding = selectedQuest && findingId === selectedQuest.id;
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-bg-panel/80 px-4 py-3">
-        <div className="text-sm text-slate-300">
-          {hydrated ? (
-            <>
-              Filtering for{" "}
-              <span className="font-semibold text-gold-bright">{vehicle.name}</span>{" "}
-              — Tier{" "}
-              <span className="font-semibold text-cyan-accent">{tierLabel(tier)}</span>
-              {" · "}
-              <span className="text-slate-400">
-                {visible.length} / {quests.length} quests
-              </span>
-            </>
-          ) : (
-            <span className="text-slate-500">Loading vehicle filter…</span>
-          )}
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-300">
+    <div className="relative h-full w-full overflow-hidden bg-[#0a121c]">
+      <QuestMap
+        quests={mapQuests}
+        selectedId={selectedId}
+        flyToId={flyToId}
+        onSelect={selectQuest}
+        onUserGeoChange={setUserGeo}
+        routeCoords={routeCoords}
+        completedIds={completedIds}
+        hideLocateControl
+        locateNonce={locateNonce}
+        className="absolute inset-0"
+      />
+
+      {/* Overlay chrome — Base44 Quest Map */}
+      <div className="pointer-events-none absolute inset-0 z-[1100]">
+        {/* Top-left: search + badges */}
+        <div className="pointer-events-auto absolute left-3 top-3 right-3 flex max-w-md flex-col gap-2 sm:right-auto">
+          <div className="relative">
             <input
-              type="checkbox"
-              checked={showAll}
-              onChange={(e) => setShowAll(e.target.checked)}
-              className="accent-gold"
+              type="search"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setSearchOpen(true);
+              }}
+              onFocus={() => setSearchOpen(true)}
+              placeholder="Search quests..."
+              className="w-full rounded-xl border border-white/15 bg-black/75 px-3.5 py-2.5 text-sm text-white shadow-lg backdrop-blur-md placeholder:text-slate-500 focus:border-cyan-accent/50 focus:outline-none"
+              aria-label="Search quests"
             />
-            Show all quests
-          </label>
-          <Link href="/garage" className="text-xs text-cyan-accent hover:text-gold-bright">
-            Edit Garage →
-          </Link>
-          <Link href="/feed" className="text-xs text-cyan-accent hover:text-gold-bright">
-            Adventure Feed →
-          </Link>
+            {searchOpen && searchQuery && (
+              <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-64 overflow-y-auto rounded-xl border border-white/15 bg-black/90 shadow-xl backdrop-blur-md">
+                {searchHits.length === 0 ? (
+                  <p className="px-3 py-2.5 text-xs text-slate-400">No quests match.</p>
+                ) : (
+                  searchHits.map((q) => (
+                    <button
+                      key={q.id}
+                      type="button"
+                      className="flex w-full items-start gap-2 border-b border-white/5 px-3 py-2 text-left last:border-0 hover:bg-white/10"
+                      onClick={() => {
+                        selectQuest(q.id);
+                        setSearch(q.title);
+                        setSearchOpen(false);
+                      }}
+                    >
+                      <span
+                        className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                        style={{ background: DIFFICULTY_COLORS[q.difficulty] }}
+                      />
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-medium text-white">
+                          {q.title}
+                        </span>
+                        <span className="block truncate text-[11px] text-slate-400">
+                          {q.region} · {difficultyToUiLabel(q.difficulty)} · {q.rewardOlC} OLC
+                        </span>
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full border border-white/15 bg-black/70 px-2.5 py-1 text-[11px] font-semibold text-slate-100 backdrop-blur-md">
+              {filtered.length} quests
+            </span>
+            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-1 text-[11px] font-semibold text-emerald-300 backdrop-blur-md">
+              {completedCount} completed
+            </span>
+            {/* Subtle garage tier chip — keep Base44 look */}
+            <button
+              type="button"
+              onClick={() => setShowAll((v) => !v)}
+              className={`rounded-full border px-2.5 py-1 text-[11px] font-medium backdrop-blur-md transition ${
+                showAll
+                  ? "border-amber-400/40 bg-amber-500/15 text-amber-200"
+                  : "border-white/15 bg-black/70 text-slate-300 hover:border-cyan-accent/40"
+              }`}
+              title="Toggle vehicle garage tier filter"
+            >
+              {hydrated
+                ? showAll
+                  ? "All tiers"
+                  : `Tier ${tierLabel(tier)}`
+                : "Garage…"}
+            </button>
+            <Link
+              href="/garage"
+              className="rounded-full border border-white/10 bg-black/50 px-2 py-1 text-[10px] text-cyan-accent/90 hover:text-cyan-accent"
+            >
+              Garage
+            </Link>
+          </div>
         </div>
+
+        {/* Top-center: difficulty segmented control */}
+        <div className="pointer-events-auto absolute left-1/2 top-3 hidden -translate-x-1/2 md:block">
+          <DifficultySeg
+            value={difficultyUi}
+            onChange={setDifficultyUi}
+          />
+        </div>
+        {/* Mobile difficulty under search */}
+        <div className="pointer-events-auto absolute left-3 right-3 top-[6.75rem] md:hidden">
+          <DifficultySeg value={difficultyUi} onChange={setDifficultyUi} compact />
+        </div>
+
+        {/* Top-right: Quest Alerts */}
+        <div className="pointer-events-auto absolute right-3 top-3 hidden sm:block md:top-3">
+          <button
+            type="button"
+            onClick={toggleAlerts}
+            className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold shadow-lg backdrop-blur-md transition ${
+              alertsOn
+                ? "border-cyan-accent/50 bg-cyan-accent/20 text-cyan-accent"
+                : "border-white/15 bg-black/75 text-slate-200 hover:bg-white/10"
+            }`}
+            aria-pressed={alertsHydrated ? alertsOn : false}
+          >
+            <span aria-hidden>🔔</span>
+            Quest Alerts
+            {alertsOn ? " · On" : ""}
+          </button>
+        </div>
+        <div className="pointer-events-auto absolute right-3 top-3 sm:hidden">
+          <button
+            type="button"
+            onClick={toggleAlerts}
+            className={`flex h-10 w-10 items-center justify-center rounded-xl border shadow-lg backdrop-blur-md ${
+              alertsOn
+                ? "border-cyan-accent/50 bg-cyan-accent/20 text-cyan-accent"
+                : "border-white/15 bg-black/75 text-slate-200"
+            }`}
+            aria-label="Quest Alerts"
+            aria-pressed={alertsOn}
+          >
+            🔔
+          </button>
+        </div>
+
+        {nearbyToast && alertsOn && (
+          <div className="pointer-events-auto absolute left-1/2 top-20 z-30 w-[min(92vw,22rem)] -translate-x-1/2 rounded-xl border border-cyan-accent/40 bg-black/85 px-3 py-2 text-center text-xs text-cyan-100 shadow-lg backdrop-blur-md md:top-16">
+            {nearbyToast}
+          </div>
+        )}
+
+        {/* Bottom-left legend */}
+        <div className="pointer-events-auto absolute bottom-14 left-3 max-w-[11rem] rounded-xl border border-white/15 bg-black/75 p-2.5 text-[11px] shadow-lg backdrop-blur-md sm:bottom-16 sm:max-w-[13rem]">
+          <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+            Legend
+          </p>
+          <ul className="space-y-1">
+            {DIFFICULTY_LEGEND.map((row) => (
+              <li key={row.ui} className="flex items-center gap-2 text-slate-200">
+                <span
+                  className="h-2.5 w-2.5 shrink-0 rounded-full"
+                  style={{ background: row.color }}
+                />
+                <span className="flex-1">{row.ui}</span>
+                <span className="font-semibold text-gold-bright">{row.reward} OLC</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Selected quest detail card — bottom-right / mobile bottom sheet */}
+        {selectedQuest && (
+          <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-20 sm:inset-x-auto sm:bottom-14 sm:right-3 sm:w-[min(100%-1.5rem,22rem)] md:bottom-16">
+            <div className="max-h-[55vh] overflow-y-auto rounded-t-2xl border border-white/15 bg-black/90 p-4 shadow-2xl backdrop-blur-md sm:max-h-[min(70vh,28rem)] sm:rounded-2xl">
+              <div className="mb-2 flex items-start justify-between gap-2 sm:hidden">
+                <div className="mx-auto h-1 w-10 rounded-full bg-white/25" />
+              </div>
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="text-base font-semibold text-white">{selectedQuest.title}</h3>
+                <button
+                  type="button"
+                  className="shrink-0 rounded-lg px-2 py-1 text-xs text-slate-400 hover:bg-white/10 hover:text-white"
+                  onClick={() => setSelected(undefined)}
+                  aria-label="Close quest detail"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                <span
+                  className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white"
+                  style={{
+                    background: DIFFICULTY_COLORS[selectedQuest.difficulty],
+                  }}
+                >
+                  {difficultyToUiLabel(selectedQuest.difficulty)}
+                </span>
+                <span className="text-xs text-slate-400">{selectedQuest.region}</span>
+              </div>
+              <p className="mt-2 text-sm leading-relaxed text-slate-300">
+                {selectedQuest.description}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-400">
+                <span className="font-semibold text-gold-bright">
+                  {selectedQuest.rewardOlC} OLC
+                </span>
+                <span>Check-in {selectedQuest.radiusMeters}m</span>
+                <span>
+                  Tier {selectedQuest.minTier}+ {TIER_LABELS[selectedQuest.minTier]}
+                </span>
+                {(completedIds.has(selectedQuest.id) ||
+                  hasCompletedQuest(selectedQuest.id)) && (
+                  <span className="font-medium text-emerald-400">Completed</span>
+                )}
+              </div>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                {!finding ? (
+                  <button
+                    type="button"
+                    className="btn-primary !py-2 !text-xs"
+                    onClick={() => startDirections(selectedQuest)}
+                  >
+                    Directions
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  className="btn-secondary !py-2 !text-xs"
+                  onClick={() => {
+                    if (userGeo.status === "watching") {
+                      setLocateNonce((n) => n + 1);
+                      return;
+                    }
+                    if (!navigator.geolocation) return;
+                    navigator.geolocation.getCurrentPosition(
+                      () => setLocateNonce((n) => n + 1),
+                      () => setLocateNonce((n) => n + 1),
+                      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 },
+                    );
+                  }}
+                >
+                  {userGeo.status === "watching" ? "Locate me" : "Enable location"}
+                </button>
+                <button
+                  type="button"
+                  className="btn-secondary !py-2 !text-xs disabled:cursor-not-allowed disabled:opacity-40"
+                  disabled={
+                    !hydrated ||
+                    completedIds.has(selectedQuest.id) ||
+                    hasCompletedQuest(selectedQuest.id)
+                  }
+                  onClick={() => setCheckInQuest(selectedQuest)}
+                >
+                  {completedIds.has(selectedQuest.id) ||
+                  hasCompletedQuest(selectedQuest.id)
+                    ? "Checked in"
+                    : "Check in"}
+                </button>
+              </div>
+
+              {hydrated &&
+                !canReachQuest(tier, selectedQuest.minTier) &&
+                !(
+                  completedIds.has(selectedQuest.id) ||
+                  hasCompletedQuest(selectedQuest.id)
+                ) && (
+                  <p className="mt-2 text-[11px] text-amber-300">
+                    Needs Tier {selectedQuest.minTier} {TIER_LABELS[selectedQuest.minTier]} —{" "}
+                    <Link href="/garage" className="underline hover:text-amber-200">
+                      edit Garage
+                    </Link>{" "}
+                    or show all tiers.
+                  </p>
+                )}
+
+              {finding && (
+                <QuestDirections
+                  quest={selectedQuest}
+                  userGeo={userGeo}
+                  onRouteChange={setRouteCoords}
+                  compact
+                  autoStart
+                  primaryLabel="Directions"
+                />
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-5">
-        <div className="space-y-3 lg:col-span-3">
-          <QuestMap
-            quests={mapQuests}
-            selectedId={selectedId}
-            flyToId={flyToId}
-            onSelect={selectQuest}
-            onUserGeoChange={setUserGeo}
-            routeCoords={routeCoords}
-          />
-          {/* Mobile: detail panel below map */}
-          <div className="lg:hidden">{detailPanel}</div>
-        </div>
-
-        <div className="flex max-h-[520px] flex-col gap-3 lg:col-span-2">
-          <div className="shrink-0 space-y-2">
-            <div>
-              <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-slate-500" htmlFor="quest-search">
-                Search quests
-              </label>
-              <input
-                id="quest-search"
-                type="search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by title, region, or trail notes…"
-                className="w-full rounded-lg border border-border bg-bg-panel px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-gold/50 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-slate-500" htmlFor="quest-difficulty">
-                Difficulty
-              </label>
-              <select
-                id="quest-difficulty"
-                value={difficulty}
-                onChange={(e) => setDifficulty(e.target.value as "All" | QuestDifficulty)}
-                className="w-full rounded-lg border border-border bg-bg-panel px-3 py-2 text-sm text-slate-200 focus:border-gold/50 focus:outline-none"
-              >
-                {DIFFICULTY_OPTIONS.map((d) => (
-                  <option key={d} value={d}>
-                    {d === "All" ? "All difficulties" : d}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <p className="text-[11px] text-slate-500">
-              Showing {listed.length} of {ranked.length}
-              {userGeo.status === "watching" && !searchQuery ? " · nearest first" : ""}
-              {searchQuery ? " · search" : ""}
-              {difficulty !== "All" ? ` · ${difficulty}` : ""}
+      {/* Soft auth gate — Base44 login prompt + Continue as guest */}
+      {showAuthGate && (
+        <div className="absolute inset-0 z-[2000] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-2xl border border-white/15 bg-[#0d1520] p-6 text-center shadow-2xl">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gold-bright">
+              Quest Map
             </p>
-          </div>
-
-          {/* Desktop: sticky detail above the list */}
-          <div className="hidden shrink-0 lg:block">{detailPanel}</div>
-
-          <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-1">
-            {visible.length === 0 && (
-              <p className="rounded-xl border border-border bg-bg-panel p-4 text-sm text-slate-400">
-                No quests match Tier {hydrated ? tier : "—"}. Toggle “Show all” or
-                upgrade in Garage.
-              </p>
-            )}
-            {visible.length > 0 && ranked.length === 0 && (
-              <p className="rounded-xl border border-border bg-bg-panel p-4 text-sm text-slate-400">
-                No quests match
-                {search.trim() ? ` “${search.trim()}”` : ""}
-                {difficulty !== "All" ? ` · ${difficulty}` : ""}. Try clearing search or difficulty.
-              </p>
-            )}
-            {!selectedId && ranked.length > 0 && (
-              <p className="rounded-lg border border-dashed border-border bg-bg-panel/50 px-3 py-2 text-xs text-slate-500">
-                Select a quest in the list or on the map to read details. Find
-                quest only after you choose one.
-              </p>
-            )}
-            {listed.map((q) => {
-              const active = q.id === selectedId;
-              const done = completedIds.has(q.id) || hasCompletedQuest(q.id);
-              return (
-                <button
-                  key={q.id}
-                  type="button"
-                  className={`w-full rounded-lg border px-3 py-2.5 text-left transition ${
-                    active
-                      ? "border-gold/60 bg-bg-card shadow-gold"
-                      : "border-border bg-bg-panel hover:border-gold/30"
-                  }`}
-                  onClick={() => selectQuest(q.id)}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="text-sm font-semibold text-white">{q.title}</h3>
-                    <span className="badge shrink-0 !text-[10px]">{q.difficulty}</span>
-                  </div>
-                  <p className="mt-0.5 text-[11px] text-slate-500">
-                    {q.region}
-                    <span className="mx-1 text-slate-600">·</span>
-                    <span className="font-medium text-gold-bright/90">
-                      {q.rewardOlC} OLC
-                    </span>
-                    {done && (
-                      <span className="ml-2 text-emerald-400">Completed</span>
-                    )}
-                  </p>
-                  <p className="mt-1 line-clamp-1 text-xs text-slate-400">
-                    {truncate(q.description)}
-                  </p>
-                </button>
-              );
-            })}
-            {listed.length < ranked.length && (
+            <h2 className="mt-2 text-xl font-bold text-white">Sign in to explore</h2>
+            <p className="mt-2 text-sm text-slate-400">
+              Log in to sync progress across devices. You can also continue as a guest
+              for local check-ins on this device.
+            </p>
+            <div className="mt-5 flex flex-col gap-2">
+              <Link href="/login?callbackUrl=/map" className="btn-primary w-full">
+                Log in
+              </Link>
+              <Link href="/register?callbackUrl=/map" className="btn-secondary w-full">
+                Register
+              </Link>
               <button
                 type="button"
-                className="btn-secondary shrink-0 !py-2 !text-xs"
-                onClick={() => setListLimit((n) => n + PAGE_SIZE)}
+                onClick={continueAsGuest}
+                className="mt-1 text-sm text-cyan-accent hover:underline"
               >
-                Load more ({Math.min(PAGE_SIZE, ranked.length - listed.length)}{" "}
-                more)
+                Continue as guest
               </button>
-            )}
+            </div>
           </div>
         </div>
-      </div>
-
-      <p className="text-xs text-slate-600">
-        {selectedQuest
-          ? `Selected: ${selectedQuest.title}. Check-in needs GPS within ${selectedQuest.radiusMeters}m + a photo.`
-          : "Browse and select a quest to read details. Check-in needs GPS within the quest radius + a photo."}
-      </p>
+      )}
 
       {checkInQuest && hydrated && (
         <CheckInModal
@@ -380,6 +530,54 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
           onSuccess={refreshCompletions}
         />
       )}
+
+      {/* Vehicle name hint for a11y / debugging — visually subtle */}
+      <span className="sr-only">
+        Filtering for {hydrated ? vehicle.name : "vehicle"} · {filtered.length} quests
+      </span>
+    </div>
+  );
+}
+
+function DifficultySeg({
+  value,
+  onChange,
+  compact,
+}: {
+  value: DifficultyFilterUi;
+  onChange: (v: DifficultyFilterUi) => void;
+  compact?: boolean;
+}) {
+  return (
+    <div
+      className={`flex overflow-x-auto rounded-full border border-white/15 bg-black/75 p-0.5 shadow-lg backdrop-blur-md ${
+        compact ? "w-full justify-between" : ""
+      }`}
+      role="group"
+      aria-label="Difficulty filter"
+    >
+      {DIFFICULTY_FILTER_OPTIONS.map((opt) => {
+        const active = value === opt;
+        const accent =
+          opt === "All" ? null : DIFFICULTY_UI_ACCENT[opt as Exclude<DifficultyFilterUi, "All">];
+        return (
+          <button
+            key={opt}
+            type="button"
+            onClick={() => onChange(opt)}
+            aria-pressed={active}
+            className={`shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition sm:px-3 sm:text-xs ${
+              active
+                ? opt === "All"
+                  ? "bg-white text-slate-900"
+                  : `${accent!.bg} text-white`
+                : "text-slate-300 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            {opt}
+          </button>
+        );
+      })}
     </div>
   );
 }

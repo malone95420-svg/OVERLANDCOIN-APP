@@ -222,7 +222,7 @@ export function LocationPermissionBanner({ geo }: { geo: UserGeo }) {
   if (geo.status !== "denied" && geo.status !== "unavailable") return null;
   return (
     <div
-      className="pointer-events-none absolute left-3 right-14 top-12 z-[1000] sm:right-auto sm:max-w-sm"
+      className="pointer-events-none absolute left-3 right-14 top-28 z-[1000] sm:right-auto sm:max-w-sm md:top-16"
       role="status"
     >
       <div className="rounded-lg border border-amber-500/40 bg-bg-panel/95 px-3 py-2 text-xs text-amber-100 shadow-lg backdrop-blur-sm">

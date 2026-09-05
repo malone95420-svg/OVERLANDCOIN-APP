@@ -47,6 +47,10 @@ import {
   solanaPayUri,
 } from "@/components/presale/checkoutAssets";
 import {
+  getInjectedSolanaProvider,
+  sendNativeSolTransfer,
+} from "@/lib/solanaNativeTransfer";
+import {
   ensureBlockdagNetwork,
   ensureEthereumMainnet,
   noInjectedProviderMessage,
@@ -130,6 +134,13 @@ declare global {
       isConnected?: boolean;
       publicKey?: { toString(): string };
       connect: (opts?: { onlyIfTrusted?: boolean }) => Promise<{ publicKey: { toString(): string } }>;
+      signAndSendTransaction?: (
+        transaction: unknown,
+        opts?: { skipPreflight?: boolean },
+      ) => Promise<{ signature: string } | string>;
+    };
+    phantom?: {
+      solana?: Window["solana"];
     };
   }
 }
@@ -967,26 +978,71 @@ function PresaleBuyInner() {
     }
   }
 
-  async function payWithSolana(order: ActivePayOrder) {
+  async function payWithSolana(order: ActivePayOrder): Promise<"paid" | "manual" | "canceled"> {
+    // Always keep the order card reachable — never navigate this tab to solana:
+    setManualFallback(true);
     setProgress("confirm_wallet");
-    const uri = solanaPayUri(order.depositAddress, order.payAmount);
-    const phantom = typeof window !== "undefined" ? window.solana : undefined;
-    if (phantom?.isPhantom) {
+
+    const provider = getInjectedSolanaProvider();
+    if (provider) {
       try {
-        await phantom.connect();
-      } catch {
-        /* still open URI */
+        const signature = await sendNativeSolTransfer({
+          provider,
+          toAddress: order.depositAddress,
+          solAmount: order.payAmount,
+        });
+        setDepositTxHash(signature);
+        setProgress("confirming_payment");
+
+        // Retry auto-confirm — Solana indexing can lag briefly
+        let confirmed = false;
+        let lastConfirmError: string | null = null;
+        for (let attempt = 0; attempt < 4; attempt++) {
+          if (attempt > 0) {
+            await new Promise((r) => setTimeout(r, 2500 * attempt));
+          } else {
+            await new Promise((r) => setTimeout(r, 2000));
+          }
+          setError(null);
+          confirmed = await confirmOrder(order, signature);
+          if (confirmed) break;
+          lastConfirmError =
+            "Payment submitted but not yet indexed — tap I’ve paid in a moment.";
+        }
+        if (!confirmed) {
+          setManualFallback(true);
+          setError(
+            lastConfirmError ||
+              "Wallet payment sent. If OLC is not locked yet, wait ~30s and tap I’ve paid.",
+          );
+          return "manual";
+        }
+        return "paid";
+      } catch (e) {
+        if (isUserRejection(e)) {
+          setError("Payment rejected in wallet.");
+          return "canceled";
+        }
+        const msg = formatWalletError(e);
+        setError(
+          msg ||
+            "Solana wallet payment failed. Stay on this page — pay the exact amount, then tap I’ve paid.",
+        );
+        setManualFallback(true);
+        return "manual";
       }
     }
-    window.location.href = uri;
-    setTimeout(() => {
-      try {
-        window.open(uri, "_blank", "noopener,noreferrer");
-      } catch {
-        /* ignore */
-      }
-    }, 400);
-    setManualFallback(true);
+
+    // No injected Phantom/Solana provider (e.g. mobile Safari): stay on QR/copy card.
+    setError(null);
+    const uri = solanaPayUri(order.depositAddress, order.payAmount);
+    try {
+      // Optional deep-link in a new browsing context only — never assign location.href
+      window.open(uri, "_blank", "noopener,noreferrer");
+    } catch {
+      /* ignore */
+    }
+    return "manual";
   }
 
   /** Single primary Buy / Pay action for all assets. */
@@ -1014,7 +1070,9 @@ function PresaleBuyInner() {
       }
 
       if (order.payAsset.toUpperCase() === "SOL") {
-        await payWithSolana(order);
+        const result = await payWithSolana(order);
+        if (result === "paid") return;
+        // manual / canceled — keep order card visible with clear next step
         setManualFallback(true);
         return;
       }
@@ -1309,13 +1367,19 @@ function PresaleBuyInner() {
                 </p>
               )}
               {activeOrder.payAsset === "SOL" && (
-                <button
-                  type="button"
-                  className="w-full rounded-xl border border-purple-400/50 bg-purple-500/10 px-4 py-2.5 text-sm font-semibold text-purple-100 sm:w-auto"
-                  onClick={() => void payWithSolana(activeOrder)}
-                >
-                  Open Phantom / Solana Pay
-                </button>
+                <>
+                  <p className="text-[11px] text-slate-300">
+                    Stay on this page. Pay the exact amount, then tap I’ve paid.
+                  </p>
+                  <button
+                    type="button"
+                    className="w-full rounded-xl border border-purple-400/50 bg-purple-500/10 px-4 py-2.5 text-sm font-semibold text-purple-100 sm:w-auto"
+                    disabled={busy}
+                    onClick={() => void payWithSolana(activeOrder)}
+                  >
+                    Pay SOL in wallet
+                  </button>
+                </>
               )}
               {isEvmDepositAsset(activeOrder.payAsset) && (
                 <button

@@ -13,6 +13,7 @@
     "append-quests-us-sa": "node scripts/append-quests-us-sa.mjs"
   },
   "dependencies": {
+    "@solana/web3.js": "^1.98.4",
     "@tanstack/react-query": "^5.102.8",
     "@upstash/redis": "^1.38.3",
     "@wagmi/connectors": "^8.2.0",

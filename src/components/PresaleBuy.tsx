@@ -203,6 +203,15 @@ function PresaleBuyInner() {
 
   useEffect(() => {
     setPurchases(loadPurchases());
+    // Hang affiliate ?ref= off real checkout URL (local only until backend exists)
+    try {
+      const ref = new URLSearchParams(window.location.search).get("ref");
+      if (ref && /^OLC[A-Z0-9]{6,12}$/i.test(ref)) {
+        localStorage.setItem("overlandcoin.affiliateRef.v1", ref.toUpperCase());
+      }
+    } catch {
+      /* ignore */
+    }
     const pending = listPendingLockCredits();
     if (pending.length > 0) {
       setPendingLockRetryTx(pending[0].txHash);
@@ -988,7 +997,7 @@ function PresaleBuyInner() {
           <p className="mt-1 text-sm text-slate-400">
             Live batch {batch.batch}:{" "}
             <span className="font-semibold text-gold-bright">${batchPrice.toFixed(3)}</span> / OLC.
-            One checkout — pick how you pay, OLC locks to your BlockDAG wallet.
+            Crypto-only checkout — pick how you pay, OLC locks to your BlockDAG wallet. No KYC.
           </p>
         </div>
         <ConnectWallet />
@@ -1127,30 +1136,52 @@ function PresaleBuyInner() {
         )}
       </div>
 
-      {/* Quote breakdown */}
+      {/* ROI / live quote calculator */}
       <div className="mt-4 rounded-xl border border-gold/30 bg-bg-panel/80 p-3 text-sm space-y-1.5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-gold-bright">
+            You get X OLC for $Y
+          </p>
+          <p className="text-[10px] text-slate-500">Live prices · batch {batch.batch}</p>
+        </div>
         <div className="flex justify-between gap-2 text-xs">
           <span className="text-slate-400">Presale batch</span>
           <span className="font-mono text-gold-bright">${batchPrice.toFixed(3)} / OLC</span>
         </div>
         <div className="flex justify-between gap-2 text-xs">
-          <span className="shrink-0 text-slate-400">You pay</span>
+          <span className="shrink-0 text-slate-400">You pay ($Y)</span>
           <span className="min-w-0 break-all text-right font-mono text-slate-100">
             {formatNum(derived.payAmount, 8)} {selected?.symbol} ≈ ${formatNum(derived.usd, 4)}
           </span>
         </div>
         <div className="flex justify-between gap-2 border-t border-border pt-1.5 text-sm">
-          <span className="text-slate-300">You receive</span>
+          <span className="text-slate-300">You get (X OLC)</span>
           <span className="font-semibold text-gold-bright">
             {formatNum(derived.olc, 4)} OLC{" "}
-            <span className="text-[10px] font-normal text-slate-400">(locked)</span>
+            <span className="text-[10px] font-normal text-slate-400">(locked in PresaleLock)</span>
           </span>
         </div>
+        {derived.usd > 0 && derived.olc > 0 && (
+          <p className="text-[11px] text-slate-400">
+            ≈ {formatNum(derived.olc / derived.usd, 2)} OLC per $1 at current live rates.
+          </p>
+        )}
         {selected?.id === "BDAG" && !prices.hasLiveBdag && (
           <p className="text-[11px] text-amber-300">
             Live BDAG price unavailable — Buy is blocked until a fresh quote loads.
           </p>
         )}
+      </div>
+
+      {/* Crypto-only + card stub (does not claim card works) */}
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
+        <span className="rounded-full border border-gold/40 bg-gold/10 px-2.5 py-1 font-semibold text-gold-bright">
+          Crypto only
+        </span>
+        <span className="rounded-full border border-border px-2.5 py-1 text-slate-500">
+          Card pay — coming soon (not available)
+        </span>
+        <span className="text-slate-500">No KYC</span>
       </div>
 
       {/* Primary Buy */}
@@ -1327,9 +1358,10 @@ function PresaleBuyInner() {
       )}
 
       <div className="mt-8 border-t border-border pt-6">
-        <h3 className="text-sm font-semibold text-white">Recent purchases (this browser)</h3>
+        <h3 className="text-sm font-semibold text-white">Purchase history</h3>
         <p className="mt-1 text-[11px] text-slate-500">
-          Local reminder only — OLC credits only after on-chain verify.
+          From your local purchases ledger (account-scoped). Reminder only — OLC credits after
+          on-chain verify. Full status + retry on Claim / Token Distribution.
         </p>
         {purchases.length === 0 ? (
           <p className="mt-3 text-sm text-slate-500">No local purchases yet.</p>

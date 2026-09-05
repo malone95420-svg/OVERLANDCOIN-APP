@@ -173,10 +173,13 @@ function ProfileCompletionsInner() {
       )}
 
       <div className="flex flex-wrap gap-3 pt-1">
-        <Link href="/feed" className="btn-secondary !py-2 !text-xs">
-          View Adventure Feed
+        <Link href="/claim" className="btn-primary !py-2 !text-xs">
+          Open Claim hub
         </Link>
-        <Link href="/map" className="btn-primary !py-2 !text-xs">
+        <Link href="/feed" className="btn-secondary !py-2 !text-xs">
+          Community feed
+        </Link>
+        <Link href="/map" className="btn-secondary !py-2 !text-xs">
           Check in on map
         </Link>
       </div>

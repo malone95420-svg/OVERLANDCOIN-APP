@@ -39,9 +39,9 @@ export function PendingOlCBadge({ className = "" }: { className?: string }) {
 
   return (
     <Link
-      href="/garage"
+      href="/claim"
       className={`hidden items-center gap-1.5 rounded-lg border border-border bg-bg-card px-2.5 py-1.5 text-[11px] text-slate-300 hover:border-gold/40 sm:inline-flex ${className}`}
-      title="Quest rewards — claim from Garage"
+      title="Quest rewards — open Claim hub"
     >
       {pending > 0 ? (
         <>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { loadPosts, type FeedPost } from "@/lib/completions";
 
 type ServerPost = {
@@ -55,6 +56,7 @@ function mergePosts(server: ServerPost[], local: FeedPost[]): FeedPost[] {
 }
 
 export function AdventureFeed() {
+  const { data: session } = useSession();
   const [posts, setPosts] = useState<FeedPost[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -98,16 +100,29 @@ export function AdventureFeed() {
 
   if (posts.length === 0) {
     return (
-      <div className="card w-full max-w-full space-y-3 text-center">
-        <p className="text-slate-300">No adventures on the wall yet.</p>
-        <p className="text-sm text-slate-500">
-          Complete a quest on the map with GPS + photo proof — your check-in will appear here for
-          everyone.
+      <div className="card w-full max-w-full space-y-4 text-center">
+        <p className="text-lg font-semibold text-white">Community adventure wall</p>
+        <p className="text-sm text-slate-400">
+          {session?.user
+            ? "No adventures on the wall yet. Complete a quest with GPS + photo proof — your check-in appears here for everyone."
+            : "Join the community to follow GPS-verified check-ins. Sign in to sync your adventure ledger, or open the Quest Map as a guest and check in."}
         </p>
         {loadError ? <p className="text-xs text-amber-400">{loadError}</p> : null}
-        <Link href="/map" className="btn-primary inline-flex !text-xs">
-          Open Quest Map
-        </Link>
+        <div className="flex flex-wrap justify-center gap-3">
+          {!session?.user && (
+            <>
+              <Link href="/login?callbackUrl=/feed" className="btn-primary !text-xs">
+                Sign in
+              </Link>
+              <Link href="/register" className="btn-secondary !text-xs">
+                Create account
+              </Link>
+            </>
+          )}
+          <Link href="/map" className="btn-primary inline-flex !text-xs">
+            Open Quest Map
+          </Link>
+        </div>
       </div>
     );
   }

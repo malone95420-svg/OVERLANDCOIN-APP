@@ -69,6 +69,27 @@ export function AccountMenu() {
               Dashboard
             </Link>
             <Link
+              href="/claim"
+              onClick={() => setOpen(false)}
+              className="block rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-bg-panel hover:text-gold-bright"
+            >
+              Claim
+            </Link>
+            <Link
+              href="/affiliates"
+              onClick={() => setOpen(false)}
+              className="block rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-bg-panel hover:text-gold-bright"
+            >
+              Affiliates
+            </Link>
+            <Link
+              href="/token-distribution"
+              onClick={() => setOpen(false)}
+              className="block rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-bg-panel hover:text-gold-bright"
+            >
+              Token Distribution
+            </Link>
+            <Link
               href="/garage"
               onClick={() => setOpen(false)}
               className="block rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-bg-panel hover:text-gold-bright"

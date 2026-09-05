@@ -24,9 +24,11 @@ import { loadPurchases, sumLocalLockedOlc } from "@/lib/purchases";
 const SHORTCUTS = [
   { href: "/map", label: "Quest Map", hint: "Find & check in" },
   { href: "/presale", label: "Presale", hint: "Buy locked OLC" },
-  { href: "/feed", label: "Feed", hint: "Adventure wall" },
+  { href: "/claim", label: "Claim", hint: "Quest + lock retry" },
+  { href: "/feed", label: "Community", hint: "Adventure wall" },
+  { href: "/affiliates", label: "Affiliates", hint: "Referral link" },
+  { href: "/token-distribution", label: "Token Dist.", hint: "Locked OLC" },
   { href: "/garage", label: "Garage", hint: "Your rig" },
-  { href: "/ranger", label: "Ranger", hint: "Trail guide" },
   { href: "/profile", label: "Profile", hint: "Account" },
 ] as const;
 

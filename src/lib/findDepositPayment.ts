@@ -34,8 +34,10 @@ function ethereumRpcUrls(): string[] {
       [
         env,
         "https://ethereum.publicnode.com",
+        "https://eth.llamarpc.com",
         "https://cloudflare-eth.com",
         "https://rpc.ankr.com/eth",
+        "https://1rpc.io/eth",
       ].filter((u): u is string => Boolean(u)),
     ),
   ];
@@ -49,6 +51,7 @@ function solanaRpcUrls(): string[] {
         env,
         "https://api.mainnet-beta.solana.com",
         "https://solana-rpc.publicnode.com",
+        "https://rpc.ankr.com/solana",
       ].filter((u): u is string => Boolean(u)),
     ),
   ];
@@ -66,7 +69,7 @@ async function findSolanaDeposit(opts: {
   expectedAmount: number;
   createdAtMs: number;
 }): Promise<FoundDeposit | null> {
-  const sinceSec = Math.floor(opts.createdAtMs / 1000) - 60; // small clock skew
+  const sinceSec = Math.floor(opts.createdAtMs / 1000) - 180; // clock skew + indexer lag
   for (const url of solanaRpcUrls()) {
     try {
       const sigRes = await fetch(url, {
@@ -76,7 +79,7 @@ async function findSolanaDeposit(opts: {
           jsonrpc: "2.0",
           id: 1,
           method: "getSignaturesForAddress",
-          params: [opts.depositAddress, { limit: 40 }],
+          params: [opts.depositAddress, { limit: 60 }],
         }),
         cache: "no-store",
       });
@@ -163,7 +166,7 @@ async function findBitcoinDeposit(opts: {
   createdAtMs: number;
 }): Promise<FoundDeposit | null> {
   const expected = opts.depositAddress.toLowerCase();
-  const sinceSec = Math.floor(opts.createdAtMs / 1000) - 60;
+  const sinceSec = Math.floor(opts.createdAtMs / 1000) - 180;
   const apis = [
     `https://mempool.space/api/address/${opts.depositAddress}/txs`,
     `https://blockstream.info/api/address/${opts.depositAddress}/txs`,
@@ -214,9 +217,11 @@ async function findEthereumNativeDeposit(opts: {
   const to = getAddress(opts.depositAddress);
   // Prefer Blockscout account tx list (fast) then fall back to recent-block scan
   const explorers = [
-    `https://eth.blockscout.com/api?module=account&action=txlist&address=${to}&sort=desc&page=1&offset=40`,
+    `https://eth.blockscout.com/api?module=account&action=txlist&address=${to}&sort=desc&page=1&offset=50`,
+    `https://api.etherscan.io/api?module=account&action=txlist&address=${to}&sort=desc&page=1&offset=50`,
   ];
-  const sinceSec = Math.floor(opts.createdAtMs / 1000) - 120;
+  // Wider skew for wallet/RPC clock drift + indexing lag
+  const sinceSec = Math.floor(opts.createdAtMs / 1000) - 300;
 
   for (const url of explorers) {
     try {
@@ -263,7 +268,8 @@ async function findEthereumNativeDeposit(opts: {
         transport: http(rpc, { timeout: 20_000 }),
       });
       const tip = await pc.getBlockNumber();
-      const lookback = 40n;
+      // ~180 blocks ≈ 30–45 min — covers slow wallet confirm + indexing lag
+      const lookback = 180n;
       const start = tip > lookback ? tip - lookback : 0n;
       for (let b = tip; b >= start; b--) {
         const block = await pc.getBlock({ blockNumber: b, includeTransactions: true });
@@ -283,7 +289,8 @@ async function findEthereumNativeDeposit(opts: {
           };
         }
       }
-      return null;
+      // No match on this RPC — try another endpoint (tip / indexing can differ)
+      continue;
     } catch {
       /* next rpc */
     }
@@ -300,10 +307,11 @@ async function findErc20Deposit(opts: {
   const to = getAddress(opts.depositAddress);
   const token = opts.payAsset === "USDT" ? ETH_USDT : ETH_USDC;
   const decimals = 6;
-  const sinceSec = Math.floor(opts.createdAtMs / 1000) - 120;
+  const sinceSec = Math.floor(opts.createdAtMs / 1000) - 300;
 
   const explorers = [
-    `https://eth.blockscout.com/api?module=account&action=tokentx&address=${to}&contractaddress=${token}&sort=desc&page=1&offset=40`,
+    `https://eth.blockscout.com/api?module=account&action=tokentx&address=${to}&contractaddress=${token}&sort=desc&page=1&offset=50`,
+    `https://api.etherscan.io/api?module=account&action=tokentx&address=${to}&contractaddress=${token}&sort=desc&page=1&offset=50`,
   ];
   for (const url of explorers) {
     try {
@@ -347,7 +355,7 @@ async function findErc20Deposit(opts: {
         transport: http(rpc, { timeout: 20_000 }),
       });
       const tip = await pc.getBlockNumber();
-      const lookback = 200n; // ~40 min
+      const lookback = 400n; // ~80 min — covers slow ERC-20 confirm + indexer lag
       const fromBlock = tip > lookback ? tip - lookback : 0n;
       const logs = await pc.getLogs({
         address: token,
@@ -377,7 +385,7 @@ async function findErc20Deposit(opts: {
           payerFrom: log.args.from ? getAddress(log.args.from) : undefined,
         };
       }
-      return null;
+      continue;
     } catch {
       /* next */
     }

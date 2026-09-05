@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useAccount,
   useChainId,
@@ -33,6 +33,12 @@ import {
   updatePurchase,
   type LocalPurchase,
 } from "@/lib/purchases";
+import {
+  clearOpenPayOrder,
+  listOpenPayOrdersForBuyer,
+  saveOpenPayOrder,
+  updateOpenPayOrderHint,
+} from "@/lib/openPayOrders";
 import { friendlyPaymentError, parsePaymentTxRef } from "@/lib/parsePaymentTxRef";
 import { getAnyInjectedProvider, getEthereumPaymentProvider } from "@/lib/injectedWallets";
 import { blockdag } from "@/lib/chain";
@@ -186,7 +192,11 @@ function PresaleBuyInner() {
   const [depositTxHash, setDepositTxHash] = useState("");
   const [confirmBusy, setConfirmBusy] = useState(false);
   const [activeOrder, setActiveOrder] = useState<ActivePayOrder | null>(null);
-  const [manualFallback, setManualFallback] = useState(false);
+  /** Silent background poll looking for deposit without tx hash */
+  const [autoLooking, setAutoLooking] = useState(false);
+  const confirmInFlight = useRef(false);
+  const activeOrderRef = useRef<ActivePayOrder | null>(null);
+  const depositTxHashRef = useRef("");
   /** True only when an in-page Solana provider is present — never deep-link. */
   const [hasInjectedSolana, setHasInjectedSolana] = useState(false);
 
@@ -262,11 +272,207 @@ function PresaleBuyInner() {
     };
   }, []);
 
+
+  useEffect(() => {
+    activeOrderRef.current = activeOrder;
+  }, [activeOrder]);
+
+  useEffect(() => {
+    depositTxHashRef.current = depositTxHash;
+  }, [depositTxHash]);
+
+  /**
+   * While a pay-order card is open: auto-poll confirm (no pasted tx required).
+   * Also re-check on tab focus / visibility. Stops when credited, expired, or canceled.
+   */
+  useEffect(() => {
+    if (!activeOrder) {
+      setAutoLooking(false);
+      return;
+    }
+    if (Date.now() > activeOrder.expiresAt) {
+      clearOpenPayOrder(activeOrder.orderId);
+      setActiveOrder(null);
+      setAutoLooking(false);
+      setError("Pay order expired — create a new Buy order with a fresh quote.");
+      return;
+    }
+
+    setAutoLooking(true);
+    let cancelled = false;
+    const POLL_MS = 12_000;
+
+    const tick = async () => {
+      if (cancelled) return;
+      const order = activeOrderRef.current;
+      if (!order) return;
+      if (Date.now() > order.expiresAt) {
+        clearOpenPayOrder(order.orderId);
+        setActiveOrder(null);
+        setAutoLooking(false);
+        setError("Pay order expired — create a new Buy order with a fresh quote.");
+        return;
+      }
+      if (document.visibilityState === "hidden") return;
+      const hint = (depositTxHashRef.current || "").trim() || undefined;
+      await confirmOrder(order, hint, { silent: true });
+    };
+
+    const onFocus = () => {
+      void tick();
+    };
+    const onVis = () => {
+      if (document.visibilityState === "visible") void tick();
+    };
+
+    // First check shortly after card opens (wallet path may already be retrying)
+    const first = window.setTimeout(() => void tick(), 4_000);
+    const interval = window.setInterval(() => void tick(), POLL_MS);
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVis);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(first);
+      window.clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVis);
+    };
+    // confirmOrder closes over latest buildRecord/lockedBal; activeOrder id drives restart
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeOrder?.orderId]);
+
+  /** On wallet connect / page load: restore recent open orders + retry pending credits. */
+  useEffect(() => {
+    if (!isConnected || !address) return;
+    let cancelled = false;
+
+    const run = async () => {
+      // Restore newest unexpired local open order into the pay card
+      try {
+        const open = listOpenPayOrdersForBuyer(address);
+        if (!cancelled && open.length > 0 && !activeOrderRef.current) {
+          const o = open[0];
+          setActiveOrder({
+            orderId: o.orderId,
+            buyer: o.buyer,
+            payAsset: o.payAsset,
+            payAmount: o.payAmount,
+            olcAmount: o.olcAmount,
+            depositAddress: o.depositAddress,
+            depositNetwork: o.depositNetwork,
+            expiresAt: o.expiresAt,
+            usdPaid: o.usdPaid,
+          });
+          setAutoLooking(true);
+          if (o.paymentTxHint) setDepositTxHash(o.paymentTxHint);
+        }
+      } catch {
+        /* ignore */
+      }
+
+      // Retry pending PresaleLock credits / open order: stubs
+      const pending = listPendingLockCredits(address);
+      const purchases = loadPurchases().filter((p) => {
+        if (p.from && p.from.toLowerCase() !== address.toLowerCase()) return false;
+        if (p.status === "locked") return false;
+        if (p.txHash.startsWith("order:")) return true;
+        return (
+          p.status === "locked_pending_chain" || p.status === "pending_external"
+        );
+      });
+      const seen = new Set<string>();
+      for (const p of [...pending, ...purchases].slice(0, 5)) {
+        if (cancelled) break;
+        if (seen.has(p.txHash)) continue;
+        seen.add(p.txHash);
+        try {
+          if (p.txHash.startsWith("order:")) {
+            const orderId = p.txHash.slice("order:".length);
+            const open = listOpenPayOrdersForBuyer(address).find(
+              (o) => o.orderId === orderId,
+            );
+            if (open) {
+              await confirmOrder(
+                {
+                  orderId: open.orderId,
+                  buyer: open.buyer,
+                  payAsset: open.payAsset,
+                  payAmount: open.payAmount,
+                  olcAmount: open.olcAmount,
+                  depositAddress: open.depositAddress,
+                  depositNetwork: open.depositNetwork,
+                  expiresAt: open.expiresAt,
+                  usdPaid: open.usdPaid,
+                },
+                open.paymentTxHint,
+                { silent: true },
+              );
+            } else {
+              // Confirm by order id without full card
+              await fetch(
+                `/api/presale/orders/${encodeURIComponent(orderId)}/confirm`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({}),
+                },
+              ).then(async (res) => {
+                const data = (await res.json().catch(() => ({}))) as {
+                  status?: string;
+                  creditTxHash?: string;
+                  olcAmount?: number;
+                  paymentTxHash?: string;
+                };
+                if (data.status === "locked" && data.creditTxHash) {
+                  clearOpenPayOrder(orderId);
+                  setPurchases(
+                    updatePurchase(p.txHash, {
+                      status: "locked",
+                      creditTxHash: data.creditTxHash,
+                      olcAmount:
+                        typeof data.olcAmount === "number"
+                          ? data.olcAmount
+                          : p.olcAmount,
+                      deliveryNote: undefined,
+                    }),
+                  );
+                  setPendingLockRetryTx(null);
+                  setSuccessNote(
+                    `${formatNum(
+                      typeof data.olcAmount === "number"
+                        ? data.olcAmount
+                        : p.olcAmount ?? 0,
+                      4,
+                    )} OLC locked to your wallet.`,
+                  );
+                  void lockedBal.refresh();
+                }
+              });
+            }
+          } else if (p.status === "locked_pending_chain") {
+            await retryLockCredit(p.txHash);
+          }
+        } catch {
+          /* best-effort resume */
+        }
+      }
+    };
+
+    const t = window.setTimeout(() => void run(), 1200);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(t);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected, address]);
+
   useEffect(() => {
     setError(null);
+    // Drop in-progress checkout UI when pay asset changes (keep local open-order for resume)
     setActiveOrder(null);
     setDepositTxHash("");
-    setManualFallback(false);
+    setAutoLooking(false);
     if (!pendingLockRetryTx) setSuccessNote(null);
     setSuccessExplorer(null);
     setMode("olc");
@@ -774,35 +980,67 @@ function PresaleBuyInner() {
     };
     setActiveOrder(order);
     setDepositTxHash("");
+    setAutoLooking(true);
+    try {
+      saveOpenPayOrder({
+        orderId: order.orderId,
+        buyer: order.buyer,
+        payAsset: order.payAsset,
+        payAmount: order.payAmount,
+        olcAmount: order.olcAmount,
+        depositAddress: order.depositAddress,
+        depositNetwork: order.depositNetwork,
+        expiresAt: order.expiresAt,
+        usdPaid: order.usdPaid,
+      });
+    } catch {
+      /* ignore localStorage */
+    }
     return order;
   }
 
   async function confirmOrder(
     order: ActivePayOrder,
     paymentTxHash?: string,
+    opts?: { silent?: boolean },
   ): Promise<boolean> {
-    setProgress("locking_olc");
-    setConfirmBusy(true);
-    const pasted = paymentTxHash ? parsePaymentTxRef(paymentTxHash) : parsePaymentTxRef(depositTxHash);
+    const silent = Boolean(opts?.silent);
+    if (confirmInFlight.current) return false;
+    confirmInFlight.current = true;
+
+    if (!silent) {
+      setProgress("locking_olc");
+      setConfirmBusy(true);
+    } else {
+      setAutoLooking(true);
+    }
+
+    const pasted = paymentTxHash
+      ? parsePaymentTxRef(paymentTxHash)
+      : parsePaymentTxRef(depositTxHashRef.current || depositTxHash);
     const localKey = pasted || `order:${order.orderId}`;
 
-    const pending = {
-      ...buildRecord({
-        txHash: localKey,
-        status: "locked_pending_chain" as const,
-        payMethod: "deposit" as const,
-        payAsset: order.payAsset,
-        payAmount: order.payAmount,
-        olc: order.olcAmount,
-        usd: order.usdPaid ?? derived.usd,
-        depositAddress: order.depositAddress,
-        depositNetwork: order.depositNetwork,
-      }),
-      from: order.buyer,
-      deliveryNote: pasted ? "Verifying payment on-chain…" : "Scanning for matching deposit…",
-    };
-    setPurchases(savePurchase(pending));
-    setPendingLockRetryTx(localKey);
+    if (!silent) {
+      const pending = {
+        ...buildRecord({
+          txHash: localKey,
+          status: "locked_pending_chain" as const,
+          payMethod: "deposit" as const,
+          payAsset: order.payAsset,
+          payAmount: order.payAmount,
+          olc: order.olcAmount,
+          usd: order.usdPaid ?? derived.usd,
+          depositAddress: order.depositAddress,
+          depositNetwork: order.depositNetwork,
+        }),
+        from: order.buyer,
+        deliveryNote: pasted
+          ? "Verifying payment on-chain…"
+          : "Scanning for matching deposit…",
+      };
+      setPurchases(savePurchase(pending));
+      setPendingLockRetryTx(localKey);
+    }
 
     try {
       const res = await fetch(`/api/presale/orders/${order.orderId}/confirm`, {
@@ -820,14 +1058,45 @@ function PresaleBuyInner() {
         paymentTxHash?: string;
       };
 
+      if (res.status === 410 || data.status === "expired") {
+        clearOpenPayOrder(order.orderId);
+        setActiveOrder(null);
+        setAutoLooking(false);
+        if (!silent) {
+          setError(
+            friendlyPaymentError(data.error || data.message) ||
+              "This pay order expired — create a new Buy order.",
+          );
+        } else {
+          setError("Pay order expired — create a new Buy order with a fresh quote.");
+        }
+        return false;
+      }
+
       const paymentKey = data.paymentTxHash || pasted || localKey;
       if (data.status === "locked" && data.creditTxHash) {
         const olc =
           typeof data.olcAmount === "number" ? data.olcAmount : order.olcAmount;
+        const existingPending = {
+          ...buildRecord({
+            txHash: localKey,
+            status: "locked" as const,
+            payMethod: "deposit" as const,
+            payAsset: order.payAsset,
+            payAmount: order.payAmount,
+            olc,
+            usd: order.usdPaid ?? derived.usd,
+            depositAddress: order.depositAddress,
+            depositNetwork: order.depositNetwork,
+          }),
+          from: order.buyer,
+          creditTxHash: data.creditTxHash,
+          deliveryNote: undefined,
+        };
         if (paymentKey !== localKey) {
           setPurchases(
             savePurchase({
-              ...pending,
+              ...existingPending,
               txHash: paymentKey,
               id: `${Date.now()}-${paymentKey.slice(0, 12)}`,
               status: "locked",
@@ -838,7 +1107,8 @@ function PresaleBuyInner() {
           );
         } else {
           setPurchases(
-            updatePurchase(localKey, {
+            savePurchase({
+              ...existingPending,
               status: "locked",
               creditTxHash: data.creditTxHash,
               olcAmount: olc,
@@ -846,14 +1116,18 @@ function PresaleBuyInner() {
             }),
           );
         }
+        clearOpenPayOrder(order.orderId);
         setPendingLockRetryTx(null);
         setActiveOrder(null);
-        setManualFallback(false);
+        setAutoLooking(false);
+        setError(null);
         setSuccessNote(
           `${formatNum(olc, 4)} OLC locked to your wallet. Non-transferable until listing.`,
         );
         setSuccessExplorer(
-          paymentKey.startsWith("0x") ? explorerTxUrl(paymentKey) : explorerTxUrl(data.creditTxHash),
+          paymentKey.startsWith("0x")
+            ? explorerTxUrl(paymentKey)
+            : explorerTxUrl(data.creditTxHash),
         );
         void lockedBal.refresh();
         return true;
@@ -863,18 +1137,44 @@ function PresaleBuyInner() {
         const olc =
           typeof data.olcAmount === "number" ? data.olcAmount : order.olcAmount;
         setPurchases(
-          updatePurchase(localKey, {
-            status: "locked_pending_chain",
-            olcAmount: olc,
+          savePurchase({
+            ...buildRecord({
+              txHash: data.paymentTxHash || localKey,
+              status: "locked_pending_chain" as const,
+              payMethod: "deposit" as const,
+              payAsset: order.payAsset,
+              payAmount: order.payAmount,
+              olc,
+              usd: order.usdPaid ?? derived.usd,
+              depositAddress: order.depositAddress,
+              depositNetwork: order.depositNetwork,
+            }),
+            from: order.buyer,
             deliveryNote:
-              data.message || data.error || "Payment verified — awaiting PresaleLock credit.",
+              data.message ||
+              data.error ||
+              "Payment verified — awaiting PresaleLock credit.",
           }),
         );
         setPendingLockRetryTx(data.paymentTxHash || localKey);
+        if (data.paymentTxHash) {
+          try {
+            updateOpenPayOrderHint(order.orderId, data.paymentTxHash);
+          } catch {
+            /* ignore */
+          }
+        }
         setSuccessNote(
           `Payment verified. ${formatNum(olc, 4)} OLC pending PresaleLock credit. ${data.error || data.message || ""}`,
         );
         void lockedBal.refresh();
+        // Keep polling — deliver may succeed on a later attempt
+        return false;
+      }
+
+      // Not found / unverified yet
+      if (silent) {
+        // Soft status only — do not flash hard errors every poll tick
         return false;
       }
 
@@ -883,18 +1183,34 @@ function PresaleBuyInner() {
           "No matching payment found yet — wait a minute and try again.",
       );
       setPurchases(
-        updatePurchase(localKey, {
-          status: "pending_external",
+        savePurchase({
+          ...buildRecord({
+            txHash: localKey,
+            status: "pending_external" as const,
+            payMethod: "deposit" as const,
+            payAsset: order.payAsset,
+            payAmount: order.payAmount,
+            olc: order.olcAmount,
+            usd: order.usdPaid ?? derived.usd,
+            depositAddress: order.depositAddress,
+            depositNetwork: order.depositNetwork,
+          }),
+          from: order.buyer,
           deliveryNote: data.error || "Unverified",
         }),
       );
       return false;
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Confirm request failed");
+      if (!silent) {
+        setError(e instanceof Error ? e.message : "Confirm request failed");
+      }
       return false;
     } finally {
-      setConfirmBusy(false);
-      setPurchases(loadPurchases());
+      confirmInFlight.current = false;
+      if (!silent) {
+        setConfirmBusy(false);
+        setPurchases(loadPurchases());
+      }
     }
   }
 
@@ -904,7 +1220,6 @@ function PresaleBuyInner() {
 
     const eth = getEthereumPaymentProvider() ?? getAnyInjectedProvider();
     if (!eth?.request) {
-      setManualFallback(true);
       setError(
         isMobileSafariNoWallet()
           ? "Safari mobile: use the deposit address / QR below, then tap I’ve paid. (Or open this page in MetaMask / OKX in-app browser for one-tap pay.)"
@@ -955,26 +1270,33 @@ function PresaleBuyInner() {
       setDepositTxHash(txHash);
       setProgress("confirming_payment");
 
-      // Retry auto-confirm — Ethereum indexing can lag a few seconds
+      try {
+        updateOpenPayOrderHint(order.orderId, txHash);
+      } catch {
+        /* ignore */
+      }
+      setAutoLooking(true);
+
+      // Retry auto-confirm — Ethereum indexing can lag; keep trying ~90s then poll continues
       let confirmed = false;
       let lastConfirmError: string | null = null;
-      for (let attempt = 0; attempt < 4; attempt++) {
+      for (let attempt = 0; attempt < 10; attempt++) {
         if (attempt > 0) {
-          await new Promise((r) => setTimeout(r, 2500 * attempt));
+          await new Promise((r) => setTimeout(r, Math.min(8_000, 2_000 + 1_500 * attempt)));
         } else {
-          await new Promise((r) => setTimeout(r, 2000));
+          await new Promise((r) => setTimeout(r, 2500));
         }
-        // Clear prior "not found yet" noise between retries
         setError(null);
         confirmed = await confirmOrder(order, txHash);
         if (confirmed) break;
-        lastConfirmError = "Payment submitted but not yet indexed — tap I’ve paid in a moment.";
+        lastConfirmError =
+          "Payment submitted — still confirming. We’ll keep looking automatically.";
       }
       if (!confirmed) {
-        setManualFallback(true);
+        setAutoLooking(true);
         setError(
           lastConfirmError ||
-            "Wallet payment sent. If OLC is not locked yet, wait ~30s and tap I’ve paid.",
+            "Wallet payment sent. Auto-checking continues — or tap I’ve paid to accelerate.",
         );
         return "manual";
       }
@@ -986,19 +1308,16 @@ function PresaleBuyInner() {
       }
       const msg = formatWalletError(e);
       if (/No Ethereum wallet detected|No injected wallet/i.test(msg)) {
-        setManualFallback(true);
         setError(msg);
         return "manual";
       }
       setError(msg || "Wallet payment failed.");
-      setManualFallback(true);
       return "manual";
     }
   }
 
   async function payWithSolana(order: ActivePayOrder): Promise<"paid" | "manual" | "canceled"> {
     // Always keep the order card reachable — never open solana: / window.open / location.href.
-    setManualFallback(true);
 
     const provider = getInjectedSolanaProvider();
     if (!provider) {
@@ -1018,26 +1337,33 @@ function PresaleBuyInner() {
       setDepositTxHash(signature);
       setProgress("confirming_payment");
 
-      // Retry auto-confirm — Solana indexing can lag briefly
+      try {
+        updateOpenPayOrderHint(order.orderId, signature);
+      } catch {
+        /* ignore */
+      }
+      setAutoLooking(true);
+
+      // Retry auto-confirm — Solana indexing can lag; keep trying ~90s then poll continues
       let confirmed = false;
       let lastConfirmError: string | null = null;
-      for (let attempt = 0; attempt < 4; attempt++) {
+      for (let attempt = 0; attempt < 10; attempt++) {
         if (attempt > 0) {
-          await new Promise((r) => setTimeout(r, 2500 * attempt));
+          await new Promise((r) => setTimeout(r, Math.min(8_000, 2_000 + 1_500 * attempt)));
         } else {
-          await new Promise((r) => setTimeout(r, 2000));
+          await new Promise((r) => setTimeout(r, 2500));
         }
         setError(null);
         confirmed = await confirmOrder(order, signature);
         if (confirmed) break;
         lastConfirmError =
-          "Payment submitted but not yet indexed — tap I’ve paid in a moment.";
+          "Payment submitted — still confirming. We’ll keep looking automatically.";
       }
       if (!confirmed) {
-        setManualFallback(true);
+        setAutoLooking(true);
         setError(
           lastConfirmError ||
-            "Wallet payment sent. If OLC is not locked yet, wait ~30s and tap I’ve paid.",
+            "Wallet payment sent. Auto-checking continues — or tap I’ve paid to accelerate.",
         );
         return "manual";
       }
@@ -1052,7 +1378,6 @@ function PresaleBuyInner() {
         msg ||
           "Solana wallet payment failed. Stay on this page — send the exact SOL from your wallet app, then tap I’ve paid.",
       );
-      setManualFallback(true);
       return "manual";
     }
   }
@@ -1077,7 +1402,6 @@ function PresaleBuyInner() {
         const result = await payWithEvmWallet(order);
         if (result === "paid") return;
         // manual / canceled — keep order card visible with clear next step
-        setManualFallback(true);
         return;
       }
 
@@ -1085,12 +1409,10 @@ function PresaleBuyInner() {
         const result = await payWithSolana(order);
         if (result === "paid") return;
         // manual / canceled — keep order card visible with clear next step
-        setManualFallback(true);
         return;
       }
 
       // BTC and anything else: copy/QR + I’ve paid
-      setManualFallback(true);
     } catch (e) {
       setError(formatWalletError(e, e instanceof Error ? e.message : "Buy failed"));
     } finally {
@@ -1122,15 +1444,7 @@ function PresaleBuyInner() {
     ? Math.max(0, Math.ceil((activeOrder.expiresAt - Date.now()) / 60_000))
     : 0;
 
-  const showOrderCard = Boolean(
-    activeOrder &&
-      (manualFallback ||
-        activeOrder.payAsset.toUpperCase() === "BTC" ||
-        activeOrder.payAsset.toUpperCase() === "SOL" ||
-        // Keep card visible while confirming / after wallet submit so I've paid is reachable
-        confirmBusy ||
-        Boolean(depositTxHash)),
-  );
+  const showOrderCard = Boolean(activeOrder);
 
   return (
     <section className="card min-w-0 w-full max-w-full overflow-hidden border-gold/40 shadow-gold !p-4 sm:!p-6">
@@ -1382,7 +1696,7 @@ function PresaleBuyInner() {
                 <>
                   <p className="text-[11px] text-slate-300">
                     Stay on this page. Send the exact SOL from your wallet app to the
-                    address above, then return here and tap I’ve paid.
+                    address above — we’ll auto-detect it (or tap I’ve paid to accelerate).
                   </p>
                   {hasInjectedSolana && (
                     <button
@@ -1437,6 +1751,14 @@ function PresaleBuyInner() {
               spellCheck={false}
             />
           </label>
+          {(autoLooking || confirmBusy) && (
+            <p className="text-xs text-cyan-200/90 animate-pulse">
+              Looking for payment…{" "}
+              <span className="text-slate-400">
+                (auto-checks every ~12s — you can still tap I’ve paid)
+              </span>
+            </p>
+          )}
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
@@ -1454,9 +1776,14 @@ function PresaleBuyInner() {
               type="button"
               className="text-[11px] text-slate-400 underline-offset-2 hover:underline"
               onClick={() => {
+                try {
+                  clearOpenPayOrder(activeOrder.orderId);
+                } catch {
+                  /* ignore */
+                }
                 setActiveOrder(null);
                 setDepositTxHash("");
-                setManualFallback(false);
+                setAutoLooking(false);
               }}
             >
               Cancel / change amount

@@ -30,7 +30,7 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 12;
+const RATE_LIMIT_MAX = 36;
 const rateBuckets = new Map<string, number[]>();
 
 function clientIp(req: NextRequest): string {

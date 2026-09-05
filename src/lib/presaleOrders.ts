@@ -173,13 +173,13 @@ export function amountTolerance(asset: PayAssetId, expected: number): number {
   switch (asset) {
     case "USDT":
     case "USDC":
-      return Math.max(0.02, expected * 0.002);
+      return Math.max(0.05, expected * 0.003);
     case "BTC":
-      return Math.max(0.00002, expected * 0.002); // ~2k sats floor
+      return Math.max(0.00003, expected * 0.003); // ~3k sats floor
     case "SOL":
-      return Math.max(0.00005, expected * 0.002);
+      return Math.max(0.0001, expected * 0.003);
     case "ETH":
-      return Math.max(0.00005, expected * 0.002);
+      return Math.max(0.00008, expected * 0.003);
     default:
       return Math.max(0.0001, expected * 0.005);
   }

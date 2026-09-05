@@ -9,6 +9,7 @@ export const ACCOUNT_PROFILE_KEYS = [
   "overlandcoin.posts.v1",
   "overlandcoin.claims.v1",
   "overlandcoin.purchases.v1",
+  "overlandcoin.explorerProfile.v1",
 ] as const;
 
 let currentAccountKey: string | null = null;

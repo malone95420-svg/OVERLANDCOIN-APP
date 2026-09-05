@@ -31,23 +31,36 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-hero-glow">
         <div className="container-page grid items-center gap-10 py-16 lg:grid-cols-2 lg:py-24">
           <div>
-            <span className="badge">Adventure crypto on BlockDAG</span>
-            <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-              {SITE.tagline}
+            <span className="badge border-gold/30 text-gold-bright">Explore. Discover. Earn.</span>
+            <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+              <span className="gold-text" style={{ textShadow: "0 0 40px rgba(201,149,42,0.35)" }}>
+                OVERLAND
+              </span>
+              <span className="text-white">COIN</span>
             </h1>
-            <p className="mt-3 text-xl font-semibold text-gold-bright">{SITE.homeHook}</p>
-            <p className="section-sub">{SITE.description}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/presale" className="btn-primary">
+            <p className="mt-3 text-xl font-semibold text-gold-bright">{SITE.tagline}</p>
+            <p className="section-sub">
+              Complete real-world quests, visit hidden locations, and earn{" "}
+              <span className="font-semibold text-gold-bright">$OLC</span> — proof-of-adventure on
+              BlockDAG. {SITE.homeHook}
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link href="/presale" className="btn-primary !px-8 !py-3.5 text-base">
                 Join Presale
               </Link>
-              <Link href="/map" className="btn-secondary">
+              <Link href="/map" className="btn-secondary !px-8 !py-3.5 text-base">
                 Explore Quest Map
               </Link>
-              <a href={explorerAddressUrl()} target="_blank" rel="noopener noreferrer" className="btn-secondary">
+            </div>
+            <p className="mt-3 text-xs text-slate-500">
+              <Link href="/dashboard" className="link-accent">
+                Open Dashboard
+              </Link>
+              {" · "}
+              <a href={explorerAddressUrl()} target="_blank" rel="noopener noreferrer" className="link-accent">
                 View Contract
               </a>
-            </div>
+            </p>
             {liveBatch && (
               <p className="mt-6 text-sm text-slate-400">
                 Presale Batch {liveBatch.batch}:{" "}

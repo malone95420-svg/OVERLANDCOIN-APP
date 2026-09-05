@@ -77,11 +77,13 @@ export const HOW_IT_WORKS = [
 
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/presale", label: "Presale" },
   { href: "/map", label: "Quest Map" },
   { href: "/feed", label: "Feed" },
   { href: "/garage", label: "Garage" },
   { href: "/ranger", label: "Ranger" },
+  { href: "/profile", label: "Profile" },
   { href: "/tokenomics", label: "Tokenomics" },
   { href: "/roadmap", label: "Roadmap" },
   { href: "/leaderboard", label: "Leaderboard" },

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { Quest } from "@/lib/quests";
+import type { Quest, QuestDifficulty } from "@/lib/quests";
 import { filterQuestsByTier } from "@/lib/quests";
 import { useVehicle } from "@/hooks/useVehicle";
 import { canReachQuest, TIER_LABELS, tierLabel } from "@/lib/vehicle";
@@ -14,6 +14,14 @@ import { QuestDirections } from "./QuestDirections";
 import type { UserGeo } from "./UserLocationLayer";
 
 const PAGE_SIZE = 40;
+
+const DIFFICULTY_OPTIONS: Array<"All" | QuestDifficulty> = [
+  "All",
+  "Easy",
+  "Moderate",
+  "Hard",
+  "Legendary",
+];
 
 function truncate(text: string, max = 90): string {
   const t = text.trim();
@@ -28,6 +36,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   const [findingId, setFindingId] = useState<string | undefined>(undefined);
   const [flyToId, setFlyToId] = useState<string | undefined>(undefined);
   const [search, setSearch] = useState("");
+  const [difficulty, setDifficulty] = useState<"All" | QuestDifficulty>("All");
   const [listLimit, setListLimit] = useState(PAGE_SIZE);
   const [checkInQuest, setCheckInQuest] = useState<Quest | null>(null);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
@@ -63,12 +72,13 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   const searchQuery = search.trim().toLowerCase();
 
   const filtered = useMemo(() => {
-    if (!searchQuery) return visible;
     return visible.filter((q) => {
-      const hay = `${q.title} ${q.region} ${q.description}`.toLowerCase();
+      if (difficulty !== "All" && q.difficulty !== difficulty) return false;
+      if (!searchQuery) return true;
+      const hay = `${q.title} ${q.region} ${q.description} ${q.difficulty}`.toLowerCase();
       return hay.includes(searchQuery);
     });
-  }, [visible, searchQuery]);
+  }, [visible, searchQuery, difficulty]);
 
   const ranked = useMemo(() => {
     if (userGeo.status !== "watching") return filtered;
@@ -82,7 +92,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   // Reset page size when filters / search / geo ranking basis change.
   useEffect(() => {
     setListLimit(PAGE_SIZE);
-  }, [searchQuery, showAll, tier, hydrated, userGeo.status]);
+  }, [searchQuery, difficulty, showAll, tier, hydrated, userGeo.status]);
 
   const listed = useMemo(
     () => ranked.slice(0, listLimit),
@@ -245,24 +255,42 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
         </div>
 
         <div className="flex max-h-[520px] flex-col gap-3 lg:col-span-2">
-          <div className="shrink-0">
-            <label className="sr-only" htmlFor="quest-search">
-              Search quests
-            </label>
-            <input
-              id="quest-search"
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search title, region, or description…"
-              className="w-full rounded-lg border border-border bg-bg-panel px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-gold/50 focus:outline-none"
-            />
-            <p className="mt-1 text-[11px] text-slate-500">
+          <div className="shrink-0 space-y-2">
+            <div>
+              <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-slate-500" htmlFor="quest-search">
+                Search quests
+              </label>
+              <input
+                id="quest-search"
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by title, region, or trail notes…"
+                className="w-full rounded-lg border border-border bg-bg-panel px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-gold/50 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-slate-500" htmlFor="quest-difficulty">
+                Difficulty
+              </label>
+              <select
+                id="quest-difficulty"
+                value={difficulty}
+                onChange={(e) => setDifficulty(e.target.value as "All" | QuestDifficulty)}
+                className="w-full rounded-lg border border-border bg-bg-panel px-3 py-2 text-sm text-slate-200 focus:border-gold/50 focus:outline-none"
+              >
+                {DIFFICULTY_OPTIONS.map((d) => (
+                  <option key={d} value={d}>
+                    {d === "All" ? "All difficulties" : d}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <p className="text-[11px] text-slate-500">
               Showing {listed.length} of {ranked.length}
-              {userGeo.status === "watching" && !searchQuery
-                ? " · nearest first"
-                : ""}
-              {searchQuery ? " · search filter" : ""}
+              {userGeo.status === "watching" && !searchQuery ? " · nearest first" : ""}
+              {searchQuery ? " · search" : ""}
+              {difficulty !== "All" ? ` · ${difficulty}` : ""}
             </p>
           </div>
 
@@ -278,7 +306,9 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
             )}
             {visible.length > 0 && ranked.length === 0 && (
               <p className="rounded-xl border border-border bg-bg-panel p-4 text-sm text-slate-400">
-                No quests match “{search.trim()}”.
+                No quests match
+                {search.trim() ? ` “${search.trim()}”` : ""}
+                {difficulty !== "All" ? ` · ${difficulty}` : ""}. Try clearing search or difficulty.
               </p>
             )}
             {!selectedId && ranked.length > 0 && (

@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { RangerWidget } from "@/components/RangerWidget";
+import { WelcomeModal } from "@/components/WelcomeModal";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Web3ErrorBoundary } from "@/components/providers/Web3ErrorBoundary";
 import { Web3Provider } from "@/components/providers/Web3Provider";
@@ -62,6 +63,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
       <main className="min-h-[70vh] min-w-0 max-w-full overflow-x-hidden">{children}</main>
       <Footer />
       <RangerWidget />
+      <WelcomeModal />
     </>
   );
 }

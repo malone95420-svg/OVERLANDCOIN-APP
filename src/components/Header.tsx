@@ -84,11 +84,18 @@ export function Header() {
               </Link>
             ))}
             <Link
-              href="/login"
+              href="/profile"
               onClick={() => setOpen(false)}
               className="rounded-lg px-3 py-2 text-sm text-gold-bright"
             >
-              Account / Sign in
+              Profile / Account
+            </Link>
+            <Link
+              href="/dashboard"
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-3 py-2 text-sm text-slate-300"
+            >
+              Dashboard
             </Link>
             <div className="flex flex-wrap items-center gap-2 px-3 py-2">
               <AddOlcButton compact />

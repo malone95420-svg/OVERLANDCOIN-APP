@@ -37,13 +37,13 @@ export default function LoginPage() {
         email,
         password,
         redirect: false,
-        callbackUrl: "/garage",
+        callbackUrl: "/dashboard",
       });
       if (res?.error) {
         setError("Invalid email or password.");
         return;
       }
-      window.location.href = res?.url || "/garage";
+      window.location.href = res?.url || "/dashboard";
     } catch {
       setError("Sign in failed.");
     } finally {
@@ -106,7 +106,7 @@ export default function LoginPage() {
             <button
               type="button"
               className="btn-secondary w-full"
-              onClick={() => void signIn("google", { callbackUrl: "/garage" })}
+              onClick={() => void signIn("google", { callbackUrl: "/dashboard" })}
             >
               Continue with Google
             </button>

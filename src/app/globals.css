@@ -31,6 +31,7 @@ body {
   }
   .card {
     @apply rounded-2xl border border-border bg-bg-card/90 p-4 shadow-gold backdrop-blur sm:p-6 min-w-0 max-w-full;
+    box-shadow: 0 0 0 1px rgba(26, 42, 58, 0.8), 0 0 28px rgba(201, 149, 42, 0.08);
   }
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-gold-dark via-gold to-gold-bright px-5 py-2.5 text-sm font-semibold text-bg-deep shadow-gold transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-bright/60;

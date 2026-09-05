@@ -19,6 +19,8 @@ OLC exists ONLY on BlockDAG 1404. Same address on Base/Ethereum is an empty EOA.
 ## Pages
 
 - / Home
+- /dashboard
+- /profile
 - /tokenomics
 - /roadmap
 - /presale

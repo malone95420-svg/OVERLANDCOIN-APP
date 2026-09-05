@@ -46,14 +46,14 @@ export default function RegisterPage() {
         email,
         password,
         redirect: false,
-        callbackUrl: "/garage",
+        callbackUrl: "/dashboard",
       });
       if (login?.error) {
         setError("Profile created — please sign in.");
         window.location.href = "/login";
         return;
       }
-      window.location.href = login?.url || "/garage";
+      window.location.href = login?.url || "/dashboard";
     } catch {
       setError("Registration failed.");
     } finally {

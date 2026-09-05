@@ -10,11 +10,11 @@ export const metadata: Metadata = {
 export default function FeedPage() {
   return (
     <div className="container-page w-full max-w-full overflow-x-hidden py-14">
-      <span className="badge">GPS verified · Photo proof</span>
+      <span className="badge">Community · GPS verified</span>
       <h1 className="section-title mt-4">Adventure Feed</h1>
       <p className="section-sub">
-        Public adventure wall of GPS + photo verified quest check-ins. Earn OLC when you check in,
-        then claim rewards to your wallet. Share the trail with the community.
+        Community adventure wall — GPS + photo verified check-ins from explorers on the trail. Earn
+        OLC when you check in, claim to your wallet, and share the journey.
       </p>
       <div className="mt-10 w-full max-w-full">
         <AdventureFeed />

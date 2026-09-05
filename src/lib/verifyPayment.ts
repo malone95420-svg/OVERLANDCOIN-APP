@@ -75,10 +75,18 @@ const BTC_MIN_CONFIRMATIONS = 1;
 /** Reject client olc if it exceeds computed by more than this fraction. */
 const CLIENT_OLC_TOLERANCE = 0.01;
 
-function treasuryEvm(): `0x${string}` {
+function treasuryEvm(payAsset?: PayAssetId): `0x${string}` {
+  const byAsset =
+    payAsset === "USDT"
+      ? process.env.NEXT_PUBLIC_DEPOSIT_USDT?.trim()
+      : payAsset === "USDC"
+        ? process.env.NEXT_PUBLIC_DEPOSIT_USDC?.trim()
+        : undefined;
   const raw =
+    byAsset ||
     process.env.NEXT_PUBLIC_DEPOSIT_ETH?.trim() ||
     SITE.treasuryAddress ||
+    SITE.deposits?.ethereumEvm ||
     DEFAULT_EVM_DEPOSIT_ADDRESS;
   return getAddress(raw);
 }
@@ -247,13 +255,35 @@ async function verifyBlockdagPayment(opts: {
         transport: http(url, { timeout: 15_000 }),
       });
 
-      const [tx, receipt] = await Promise.all([
-        pc.getTransaction({ hash }),
-        pc.getTransactionReceipt({ hash }),
-      ]);
-
-      if (!receipt || receipt.status !== "success") {
-        return { ok: false, error: "BlockDAG payment transaction failed or not successful" };
+      let tx;
+      let receipt;
+      try {
+        tx = await pc.getTransaction({ hash });
+      } catch (e) {
+        lastErr =
+          e instanceof Error
+            ? e.message
+            : "BlockDAG tx not found yet (indexing lag)";
+        continue;
+      }
+      try {
+        receipt = await pc.getTransactionReceipt({ hash });
+      } catch {
+        return {
+          ok: false,
+          error:
+            "BlockDAG payment tx found but not confirmed yet — retry shortly (indexing lag)",
+        };
+      }
+      if (!receipt) {
+        return {
+          ok: false,
+          error:
+            "BlockDAG payment tx found but not confirmed yet — retry shortly (indexing lag)",
+        };
+      }
+      if (receipt.status !== "success") {
+        return { ok: false, error: "BlockDAG payment transaction reverted on-chain" };
       }
 
       const preferAsset = opts.payAsset;
@@ -376,7 +406,7 @@ async function verifyEthereumPayment(opts: {
     return { ok: false, error: "Ethereum payAsset must be ETH, USDT, or USDC" };
   }
 
-  const treasury = treasuryEvm();
+  const treasury = treasuryEvm(opts.payAsset);
   let lastErr = "No Ethereum RPC available";
 
   for (const url of ethereumRpcUrls()) {
@@ -386,13 +416,35 @@ async function verifyEthereumPayment(opts: {
         transport: http(url, { timeout: 15_000 }),
       });
 
-      const [tx, receipt] = await Promise.all([
-        pc.getTransaction({ hash }),
-        pc.getTransactionReceipt({ hash }),
-      ]);
-
-      if (!receipt || receipt.status !== "success") {
-        return { ok: false, error: "Ethereum payment transaction failed or not successful" };
+      let tx;
+      let receipt;
+      try {
+        tx = await pc.getTransaction({ hash });
+      } catch (e) {
+        lastErr =
+          e instanceof Error
+            ? e.message
+            : "Ethereum tx not found yet (indexing lag)";
+        continue;
+      }
+      try {
+        receipt = await pc.getTransactionReceipt({ hash });
+      } catch {
+        return {
+          ok: false,
+          error:
+            "Ethereum payment tx found but not confirmed yet — retry shortly (indexing lag)",
+        };
+      }
+      if (!receipt) {
+        return {
+          ok: false,
+          error:
+            "Ethereum payment tx found but not confirmed yet — retry shortly (indexing lag)",
+        };
+      }
+      if (receipt.status !== "success") {
+        return { ok: false, error: "Ethereum payment transaction reverted on-chain" };
       }
 
       if (opts.payAsset === "ETH") {
@@ -707,7 +759,10 @@ export async function verifyPaymentAndQuote(opts: {
 }): Promise<VerifyAndQuoteResult> {
   const verified = await verifyPayment(opts);
   if (!verified.ok) {
-    return { ok: false, error: verified.error, status: 400 };
+    const pending = /not confirmed yet|not found yet|indexing lag|not found \(or not confirmed/i.test(
+      verified.error,
+    );
+    return { ok: false, error: verified.error, status: pending ? 409 : 400 };
   }
 
   const prices = await fetchAllLivePrices();

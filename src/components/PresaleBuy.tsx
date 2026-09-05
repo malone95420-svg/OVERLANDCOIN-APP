@@ -11,6 +11,7 @@ import {
 } from "wagmi";
 import { encodeFunctionData, erc20Abi, parseEther, parseUnits, type Address, type Hash } from "viem";
 import { waitForBlockdagReceipt } from "@/lib/waitForBlockdagReceipt";
+import { AddOlcButton } from "@/components/AddOlcButton";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { CopyAddress } from "@/components/CopyAddress";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
@@ -66,6 +67,10 @@ import {
   walletErrorCode,
 } from "@/components/presale/walletErrors";
 import { useLockedOlcBalance } from "@/components/presale/useLockedOlcBalance";
+
+function isDeliverOk(status?: string): boolean {
+  return status === "delivered" || status === "locked";
+}
 
 type InputMode = "olc" | "pay";
 type Progress =
@@ -248,7 +253,7 @@ function PresaleBuyInner() {
     if (pending.length > 0) {
       setPendingLockRetryTx(pending[0].txHash);
       setSuccessNote(
-        `You have ${pending.length} purchase(s) with payment confirmed but PresaleLock credit still pending. Use Retry credit to recover.`,
+        `You have ${pending.length} purchase(s) with payment confirmed but OLC wallet delivery still pending. Use Retry deliver to recover.`,
       );
     }
     const t = setInterval(() => setPurchases(loadPurchases()), 8000);
@@ -371,11 +376,11 @@ function PresaleBuyInner() {
         /* ignore */
       }
 
-      // Retry pending PresaleLock credits / open order: stubs
+      // Retry pending wallet deliveries / open order: stubs
       const pending = listPendingLockCredits(address);
       const purchases = loadPurchases().filter((p) => {
         if (p.from && p.from.toLowerCase() !== address.toLowerCase()) return false;
-        if (p.status === "locked") return false;
+        if (p.status === "delivered" || p.status === "locked") return false;
         if (p.txHash.startsWith("order:")) return true;
         return (
           p.status === "locked_pending_chain" || p.status === "pending_external"
@@ -433,7 +438,7 @@ function PresaleBuyInner() {
                 };
                 if (
                   res.status === 404 ||
-                  !(data.status === "locked" && data.creditTxHash)
+                  !(isDeliverOk(data.status) && data.creditTxHash)
                 ) {
                   const orderRes = await fetch(
                     `/api/presale/orders/${encodeURIComponent(orderId)}/confirm`,
@@ -444,11 +449,11 @@ function PresaleBuyInner() {
                     },
                   );
                   const orderData = (await orderRes.json().catch(() => ({}))) as typeof data;
-                  if (orderData.status === "locked" && orderData.creditTxHash) {
+                  if (isDeliverOk(orderData.status) && orderData.creditTxHash) {
                     data = orderData;
                   }
                 }
-                if (data.status === "locked" && data.creditTxHash) {
+                if (isDeliverOk(data.status) && data.creditTxHash) {
                   clearOpenPayOrder(orderId);
                   setPurchases(
                     updatePurchase(p.txHash, {
@@ -468,7 +473,7 @@ function PresaleBuyInner() {
                         ? data.olcAmount
                         : p.olcAmount ?? 0,
                       4,
-                    )} OLC locked to your wallet.`,
+                    )} OLC sent to your BlockDAG wallet.`,
                   );
                   void lockedBal.refresh();
                 }
@@ -605,7 +610,7 @@ function PresaleBuyInner() {
           ...base,
           from: address,
           olcAmount: olc,
-          deliveryNote: "Delivering to PresaleLock…",
+          deliveryNote: "Delivering OLC to your wallet…",
         }),
       );
 
@@ -634,21 +639,36 @@ function PresaleBuyInner() {
             error?: string;
             notConfigured?: boolean;
             olcAmount?: number;
+            retryable?: boolean;
           },
         };
       };
 
       setProgress("locking_olc");
       let { res, data } = await attempt();
-      if (!(data.status === "locked" && data.creditTxHash) && opts?.retryOnce !== false) {
-        await new Promise((r) => setTimeout(r, 1500));
-        ({ res, data } = await attempt());
+      // Always one follow-up; keep going longer when RPC/indexing lags or credit is pending.
+      if (!(isDeliverOk(data.status) && data.creditTxHash) && opts?.retryOnce !== false) {
+        const isLag = () =>
+          data.status === "pending_confirmation" ||
+          data.retryable === true ||
+          res.status === 409 ||
+          data.status === "locked_pending_chain" ||
+          /indexing lag|not confirmed yet|not found/i.test(
+            `${data.error || ""} ${data.message || ""}`,
+          );
+        const maxAttempts = isLag() ? 4 : 2;
+        for (let i = 1; i < maxAttempts; i++) {
+          await new Promise((r) => setTimeout(r, 1500 * i));
+          ({ res, data } = await attempt());
+          if (isDeliverOk(data.status) && data.creditTxHash) break;
+          if (!isLag() && data.status === "unverified") break;
+        }
       }
 
       const olcLabel = formatNum(olc, 4);
-      if (data.status === "locked" && data.creditTxHash) {
+      if (isDeliverOk(data.status) && data.creditTxHash) {
         const next = updatePurchase(paymentTxHash, {
-          status: "locked",
+          status: "delivered",
           creditTxHash: data.creditTxHash,
           olcAmount: typeof data.olcAmount === "number" ? data.olcAmount : olc,
           from: address,
@@ -658,7 +678,7 @@ function PresaleBuyInner() {
         setPendingLockRetryTx(null);
         setSuccessExplorer(explorerTxUrl(paymentTxHash));
         setSuccessNote(
-          `${olcLabel} OLC locked to your wallet. Non-transferable until listing.`,
+          `${olcLabel} OLC sent to your BlockDAG wallet. Tap Add OLC if it does not show in MetaMask.`,
         );
         void lockedBal.refresh();
         return true;
@@ -671,13 +691,13 @@ function PresaleBuyInner() {
         deliveryNote:
           data.message ||
           data.error ||
-          "Awaiting lock contract — payment is on-chain; use Retry credit.",
+          "Payment on-chain — OLC wallet delivery pending. Use Retry deliver.",
       });
       setPurchases(next);
       setPendingLockRetryTx(paymentTxHash);
       setSuccessExplorer(explorerTxUrl(paymentTxHash));
       setSuccessNote(
-        `Payment confirmed (${paymentTxHash.slice(0, 10)}…). ${olcLabel} OLC recorded locally but PresaleLock credit failed — tap Retry credit. ${
+        `Payment confirmed (${paymentTxHash.slice(0, 10)}…). ${olcLabel} OLC recorded locally but wallet delivery failed — tap Retry deliver. ${
           data.notConfigured || res.status === 503
             ? "Deliver service may need fund/RPC config."
             : data.error || data.message || ""
@@ -796,10 +816,10 @@ function PresaleBuyInner() {
         error?: string;
         olcAmount?: number;
       };
-      if (data.status === "locked" && data.creditTxHash) {
+      if (isDeliverOk(data.status) && data.creditTxHash) {
         setPurchases(
           updatePurchase(paymentTxHash, {
-            status: "locked",
+            status: "delivered",
             creditTxHash: data.creditTxHash,
             olcAmount: typeof data.olcAmount === "number" ? data.olcAmount : olcAmount,
             from: buyer,
@@ -808,7 +828,7 @@ function PresaleBuyInner() {
         );
         setPendingLockRetryTx(null);
         setSuccessNote(
-          `PresaleLock credit confirmed for ${formatNum(olcAmount, 4)} OLC.`,
+          `${formatNum(olcAmount, 4)} OLC delivered to your BlockDAG wallet.`,
         );
         setSuccessExplorer(explorerTxUrl(data.creditTxHash));
         void lockedBal.refresh();
@@ -1123,7 +1143,7 @@ function PresaleBuyInner() {
       const existingPending = {
         ...buildRecord({
           txHash: localKey,
-          status: "locked" as const,
+          status: "delivered" as const,
           payMethod: "deposit" as const,
           payAsset: order.payAsset,
           payAmount: order.payAmount,
@@ -1142,7 +1162,7 @@ function PresaleBuyInner() {
             ...existingPending,
             txHash: paymentKey,
             id: `${Date.now()}-${paymentKey.slice(0, 12)}`,
-            status: "locked",
+            status: "delivered",
             creditTxHash: data.creditTxHash,
             olcAmount: olc,
             deliveryNote: undefined,
@@ -1152,7 +1172,7 @@ function PresaleBuyInner() {
         setPurchases(
           savePurchase({
             ...existingPending,
-            status: "locked",
+            status: "delivered",
             creditTxHash: data.creditTxHash,
             olcAmount: olc,
             deliveryNote: undefined,
@@ -1165,7 +1185,7 @@ function PresaleBuyInner() {
       setAutoLooking(false);
       setError(null);
       setSuccessNote(
-        `${formatNum(olc, 4)} OLC locked to your wallet. Non-transferable until listing.`,
+        `${formatNum(olc, 4)} OLC sent to your BlockDAG wallet. Tap Add OLC if needed.`,
       );
       setSuccessExplorer(
         paymentKey.startsWith("0x")
@@ -1195,7 +1215,7 @@ function PresaleBuyInner() {
           deliveryNote:
             data.message ||
             data.error ||
-            "Payment verified — awaiting PresaleLock credit.",
+            "Payment verified — awaiting OLC wallet delivery.",
         }),
       );
       setPendingLockRetryTx(paymentKey);
@@ -1210,7 +1230,7 @@ function PresaleBuyInner() {
         }
       }
       setSuccessNote(
-        `Payment verified. ${formatNum(olc, 4)} OLC pending PresaleLock credit. ${data.error || data.message || ""}`,
+        `Payment verified. ${formatNum(olc, 4)} OLC pending wallet delivery. ${data.error || data.message || ""}`,
       );
       void lockedBal.refresh();
     };
@@ -1237,7 +1257,7 @@ function PresaleBuyInner() {
 
         // Optional: if deliver failed oddly, try legacy order confirm then fall through again
         if (
-          !(data.status === "locked" && data.creditTxHash) &&
+          !(isDeliverOk(data.status) && data.creditTxHash) &&
           !(data.verified && data.status === "locked_pending_chain") &&
           res.status !== 429
         ) {
@@ -1251,7 +1271,7 @@ function PresaleBuyInner() {
           );
           const orderData = (await orderRes.json().catch(() => ({}))) as CreditData;
           if (
-            (orderData.status === "locked" && orderData.creditTxHash) ||
+            (isDeliverOk(orderData.status) && orderData.creditTxHash) ||
             (orderData.verified && orderData.status === "locked_pending_chain")
           ) {
             res = orderRes;
@@ -1277,7 +1297,7 @@ function PresaleBuyInner() {
 
         // Legacy order confirm as soft fallback; on 404 ignore (ephemeral store).
         if (
-          !(data.status === "locked" && data.creditTxHash) &&
+          !(isDeliverOk(data.status) && data.creditTxHash) &&
           !(data.verified && data.status === "locked_pending_chain") &&
           res.status !== 429
         ) {
@@ -1291,7 +1311,7 @@ function PresaleBuyInner() {
           );
           const orderData = (await orderRes.json().catch(() => ({}))) as CreditData;
           if (
-            (orderData.status === "locked" && orderData.creditTxHash) ||
+            (isDeliverOk(orderData.status) && orderData.creditTxHash) ||
             (orderData.verified && orderData.status === "locked_pending_chain") ||
             orderData.status === "expired" ||
             orderRes.status === 410
@@ -1318,7 +1338,7 @@ function PresaleBuyInner() {
       }
 
       const paymentKey = data.paymentTxHash || pasted || localKey;
-      if (data.status === "locked" && data.creditTxHash) {
+      if (isDeliverOk(data.status) && data.creditTxHash) {
         applyLocked(data, paymentKey);
         return true;
       }
@@ -1777,7 +1797,7 @@ function PresaleBuyInner() {
           <span className="text-slate-300">You get (X OLC)</span>
           <span className="font-semibold text-gold-bright">
             {formatNum(derived.olc, 4)} OLC{" "}
-            <span className="text-[10px] font-normal text-slate-400">(locked in PresaleLock)</span>
+            <span className="text-[10px] font-normal text-slate-400">(wallet + any legacy lock)</span>
           </span>
         </div>
         {derived.usd > 0 && derived.olc > 0 && (
@@ -1962,26 +1982,29 @@ function PresaleBuyInner() {
       {successNote && (
         <div className="mt-3 rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-3 text-sm text-emerald-100 space-y-2">
           <p>{successNote}</p>
-          {successExplorer && (
-            <a
-              className="link-accent font-mono text-xs"
-              href={successExplorer}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View on explorer
-            </a>
-          )}
-          {pendingLockRetryTx && (
-            <button
-              type="button"
-              className="btn-primary !text-xs !px-3 !py-1.5"
-              disabled={retryBusy}
-              onClick={() => void retryLockCredit(pendingLockRetryTx)}
-            >
-              {retryBusy ? "Retrying…" : "Retry credit"}
-            </button>
-          )}
+          <div className="flex flex-wrap items-center gap-2">
+            {successExplorer && (
+              <a
+                className="link-accent font-mono text-xs"
+                href={successExplorer}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View on explorer
+              </a>
+            )}
+            {!pendingLockRetryTx && <AddOlcButton />}
+            {pendingLockRetryTx && (
+              <button
+                type="button"
+                className="btn-primary !text-xs !px-3 !py-1.5"
+                disabled={retryBusy}
+                onClick={() => void retryLockCredit(pendingLockRetryTx)}
+              >
+                {retryBusy ? "Retrying…" : "Retry deliver"}
+              </button>
+            )}
+          </div>
         </div>
       )}
       {pendingHash && (
@@ -2001,8 +2024,8 @@ function PresaleBuyInner() {
       <div className="mt-8 border-t border-border pt-6">
         <h3 className="text-sm font-semibold text-white">Purchase history</h3>
         <p className="mt-1 text-[11px] text-slate-500">
-          From your local purchases ledger (account-scoped). Reminder only — OLC credits after
-          on-chain verify. Full status + retry on Claim / Token Distribution.
+          From your local purchases ledger (account-scoped). Reminder only — OLC arrives in your
+          BlockDAG wallet after on-chain verify. Full status + retry on Claim / Token Distribution.
         </p>
         {purchases.length === 0 ? (
           <p className="mt-3 text-sm text-slate-500">No local purchases yet.</p>
@@ -2026,15 +2049,14 @@ function PresaleBuyInner() {
                 <div className="flex items-center gap-2">
                   {p.status === "locked_pending_chain" &&
                     p.txHash &&
-                    !p.txHash.startsWith("external:") &&
-                    !p.txHash.startsWith("order:") && (
+                    !p.txHash.startsWith("external:") && (
                       <button
                         type="button"
                         className="rounded-full border border-amber-500/40 px-2 py-0.5 text-[10px] text-amber-100 hover:bg-amber-500/10"
                         disabled={retryBusy}
                         onClick={() => void retryLockCredit(p.txHash)}
                       >
-                        {retryBusy && pendingLockRetryTx === p.txHash ? "…" : "Retry credit"}
+                        {retryBusy && pendingLockRetryTx === p.txHash ? "…" : "Retry deliver"}
                       </button>
                     )}
                   {p.txHash.startsWith("0x") ? (

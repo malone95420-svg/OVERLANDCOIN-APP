@@ -52,7 +52,8 @@ function TokenDistributionInner() {
 
   const liveBatch = PRESALE_BATCHES.find((b) => b.status === "LIVE") ?? PRESALE_BATCHES[0];
   const localByStatus = useMemo(() => {
-    const sums = {
+    const sums: Record<string, number> = {
+      delivered: 0,
       locked: 0,
       locked_pending_chain: 0,
       pending_delivery: 0,
@@ -73,8 +74,8 @@ function TokenDistributionInner() {
       <div className="card space-y-5 text-center">
         <p className="text-lg font-semibold text-white">Your OLC allocation</p>
         <p className="text-sm text-slate-400">
-          Connect a wallet (and optionally sign in) to poll PresaleLock locked-balance and see
-          purchase context from this device. No fake balances.
+          Connect a wallet (and optionally sign in) to see purchased OLC (wallet delivery) and any
+          legacy PresaleLock balances on this device. No fake balances.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link href="/login?callbackUrl=/token-distribution" className="btn-primary">
@@ -92,10 +93,10 @@ function TokenDistributionInner() {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-wide text-slate-500">Your allocation</p>
-            <h2 className="mt-1 text-xl font-bold text-white">Presale locked OLC</h2>
+            <h2 className="mt-1 text-xl font-bold text-white">Presale OLC</h2>
             <p className="mt-1 text-sm text-slate-400">
-              Polled from <code className="text-slate-300">/api/presale/locked-balance</code> when a
-              wallet is connected, merged with local purchase credits. Vesting = locked until
+              New purchases deliver OLC ERC-20 to your BlockDAG wallet. Legacy lock balance still
+              polls <code className="text-slate-300">/api/presale/locked-balance</code>. Vesting note =
               owner <code className="text-slate-300">enableTrading()</code> after exchange listing.
             </p>
           </div>
@@ -116,7 +117,7 @@ function TokenDistributionInner() {
             <p className="text-xs uppercase text-slate-500">Unlock / vesting</p>
             <p className="mt-2 text-lg font-semibold text-white">Locked until listing</p>
             <p className="mt-1 text-[11px] text-slate-500">
-              Non-transferable in PresaleLock until enableTrading
+              Legacy lock: non-transferable until enableTrading; new buys go to wallet
             </p>
           </div>
           <div className="rounded-xl border border-border bg-bg-panel/80 p-4">
@@ -167,8 +168,9 @@ function TokenDistributionInner() {
         <div className="grid gap-3 sm:grid-cols-2">
           {(
             [
-              ["locked", "Credited in PresaleLock"],
-              ["locked_pending_chain", "Pending on-chain credit"],
+              ["delivered", "Delivered to wallet"],
+              ["locked", "Legacy PresaleLock credit"],
+              ["locked_pending_chain", "Pending wallet delivery"],
               ["pending_delivery", "Legacy pending delivery"],
               ["pending_external", "Awaiting deposit verify"],
             ] as const

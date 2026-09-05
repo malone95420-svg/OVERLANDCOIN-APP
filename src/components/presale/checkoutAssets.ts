@@ -53,7 +53,13 @@ export function payChainForAsset(
 }
 
 export function isOnChainAsset(asset: AcceptedPayAsset): boolean {
-  return paymentMode(asset) === "onchain";
+  // Unified checkout: only BlockDAG-native assets pay via the connected 1404 wallet.
+  // ETH / USDT / USDC always use Ethereum deposit + wallet-pay (never BlockDAG
+  // PAY_TOKEN_* even if that env is set — those are separate / unused here).
+  if (asset.id === "BDAG" || asset.id === "BDUSD") {
+    return paymentMode(asset) === "onchain";
+  }
+  return false;
 }
 
 export function isEvmDepositAsset(id: string): boolean {

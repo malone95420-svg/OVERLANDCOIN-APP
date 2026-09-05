@@ -23,6 +23,10 @@ import {
 } from "@/lib/purchases";
 import { explorerTxUrl } from "@/lib/token";
 
+function isDeliverOk(status?: string): boolean {
+  return status === "delivered" || status === "locked";
+}
+
 function resolveOlc(p: LocalPurchase): number {
   if (typeof p.olcAmount === "number" && Number.isFinite(p.olcAmount)) return p.olcAmount;
   const n = Number(String(p.olcEstimated).replace(/,/g, ""));
@@ -34,10 +38,12 @@ function purchaseStatusLabel(status: LocalPurchase["status"]): {
   tone: string;
 } {
   switch (status) {
+    case "delivered":
+      return { label: "Delivered to wallet", tone: "text-emerald-400" };
     case "locked":
-      return { label: "Locked in PresaleLock", tone: "text-cyan-accent" };
+      return { label: "Legacy PresaleLock credit", tone: "text-cyan-accent" };
     case "locked_pending_chain":
-      return { label: "Pending lock credit", tone: "text-amber-300" };
+      return { label: "Pending wallet delivery", tone: "text-amber-300" };
     case "pending_delivery":
       return { label: "Pending delivery", tone: "text-amber-300" };
     case "pending_external":
@@ -62,9 +68,34 @@ async function postDeliver(p: LocalPurchase, buyerFallback?: string | null) {
         : asset === "ETH" || asset === "USDT" || asset === "USDC"
           ? "ethereum"
           : "blockdag";
-  const endpoint =
-    payChain === "blockdag" ? "/api/presale/deliver" : "/api/presale/confirm-deposit";
-  const res = await fetch(endpoint, {
+
+  // order: stubs are local UX keys — never treat as a payment hash. Scan by amount.
+  if (p.txHash.startsWith("order:")) {
+    const payAmt = Number(String(p.payAmount ?? "").replace(/,/g, ""));
+    const res = await fetch("/api/presale/confirm-deposit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        buyer,
+        olcAmount,
+        payAsset: p.payAsset,
+        payAmount: payAmt > 0 ? payAmt : undefined,
+        chain: payChain,
+      }),
+    });
+    const data = (await res.json().catch(() => ({}))) as {
+      status?: string;
+      creditTxHash?: string;
+      message?: string;
+      error?: string;
+      olcAmount?: number;
+      paymentTxHash?: string;
+    };
+    return { ok: res.ok || isDeliverOk(data.status), data, status: res.status };
+  }
+
+  // Real payment tx / signature → always /api/presale/deliver (no /tmp order store).
+  const res = await fetch("/api/presale/deliver", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -87,7 +118,7 @@ async function postDeliver(p: LocalPurchase, buyerFallback?: string | null) {
     error?: string;
     olcAmount?: number;
   };
-  return { ok: res.ok || data.status === "locked", data, status: res.status };
+  return { ok: res.ok || isDeliverOk(data.status), data, status: res.status };
 }
 
 export function ClaimHub() {
@@ -141,7 +172,7 @@ function ClaimHubInner() {
     return listPendingLockCredits(address);
   }, [purchases, address]);
   const lockedPurchases = useMemo(
-    () => purchases.filter((p) => p.status === "locked"),
+    () => purchases.filter((p) => p.status === "delivered" || p.status === "locked"),
     [purchases],
   );
 
@@ -173,30 +204,31 @@ function ClaimHubInner() {
     async (p: LocalPurchase) => {
       setRetryNote(null);
       if (!address && !p.from) {
-        setRetryNote("Connect the buying wallet to retry PresaleLock credit.");
+        setRetryNote("Connect the buying wallet to retry OLC delivery.");
         return;
       }
       setRetryBusy(p.txHash);
       try {
         const result = await postDeliver(p, address);
-        if (result.data?.status === "locked" && result.data.creditTxHash) {
+        const data = result.data;
+        if (data && isDeliverOk(data.status) && data.creditTxHash) {
           updatePurchase(p.txHash, {
-            status: "locked",
-            creditTxHash: result.data.creditTxHash,
+            status: "delivered",
+            creditTxHash: data.creditTxHash,
             olcAmount:
-              typeof result.data.olcAmount === "number" ? result.data.olcAmount : resolveOlc(p),
+              typeof data.olcAmount === "number" ? data.olcAmount : resolveOlc(p),
             from: p.from || address || undefined,
             deliveryNote: undefined,
           });
-          setRetryNote("PresaleLock credit confirmed on-chain.");
+          setRetryNote("OLC delivered to your BlockDAG wallet.");
         } else {
           updatePurchase(p.txHash, {
             status: "locked_pending_chain",
             deliveryNote:
-              result.data?.message || result.data?.error || "Still awaiting on-chain credit",
+              data?.message || data?.error || "Still awaiting OLC wallet delivery",
           });
           setRetryNote(
-            result.data?.message || result.data?.error || "Still pending lock credit.",
+            data?.message || data?.error || "Still pending wallet delivery.",
           );
         }
         refresh();
@@ -218,8 +250,8 @@ function ClaimHubInner() {
       <div className="card space-y-5 text-center">
         <p className="text-lg font-semibold text-white">Claim OLC</p>
         <p className="text-sm text-slate-400">
-          Sign in and/or connect a wallet to claim pending quest rewards and retry PresaleLock
-          credits from your local adventure + purchase ledgers.
+          Sign in and/or connect a wallet to claim pending quest rewards and retry OLC
+          delivery from your local adventure + purchase ledgers.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link href="/login?callbackUrl=/claim" className="btn-primary">
@@ -252,10 +284,10 @@ function ClaimHubInner() {
           <p className="mt-1 text-[11px] text-slate-500">Already paid on-chain</p>
         </div>
         <div className="card !p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-500">Presale lock retries</p>
+          <p className="text-xs uppercase tracking-wide text-slate-500">Presale delivery retries</p>
           <p className="mt-2 text-2xl font-bold text-amber-300">{pendingLock.length}</p>
           <p className="mt-1 text-[11px] text-slate-500">
-            locked_pending_chain — not claimable until listing unlock
+            locked_pending_chain — payment verified, wallet transfer pending
           </p>
         </div>
       </section>
@@ -349,10 +381,9 @@ function ClaimHubInner() {
         <div>
           <h2 className="text-xl font-bold text-white">Presale purchases</h2>
           <p className="mt-1 text-sm text-slate-400">
-            From your local purchase ledger. Locked OLC is{" "}
-            <strong className="text-slate-200">not</strong> claimable to a transferable wallet
-            until PresaleLock <code className="text-slate-300">enableTrading()</code>. Use Retry
-            credit when status is pending chain delivery.
+            Purchased OLC is transferred to your BlockDAG wallet after payment verifies.
+            Legacy PresaleLock balances (if any) still show separately. Use{" "}
+            <strong className="text-slate-200">Retry deliver</strong> when status is pending.
           </p>
         </div>
         {retryNote && (
@@ -375,8 +406,7 @@ function ClaimHubInner() {
               const canRetry =
                 p.status === "locked_pending_chain" &&
                 p.txHash &&
-                !p.txHash.startsWith("external:") &&
-                !p.txHash.startsWith("order:");
+                !p.txHash.startsWith("external:");
               return (
                 <li
                   key={p.id}

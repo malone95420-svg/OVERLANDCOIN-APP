@@ -1,22 +1,18 @@
 /**
  * Known-good BlockDAG Mainnet HTTP RPCs.
  *
- * https://rpc.bdagscan.com/ — divergent/stale tip (~17.65M vs ~19.80M); returns
- * TransactionReceiptNotFound for confirmed txs. Never use for wagmi transports,
- * receipt waits, wallet_addEthereumChain, or server deliver/credit clients.
+ * https://rpc.bdagscan.com/ — may accept eth_sendRawTransaction but STATE is
+ * empty/wrong (missing contract code, balances/nonce 0). NEVER use as sole (or
+ * any) RPC for delivery, reads, receipts, or wallet_addEthereumChain.
  * Explorer UI at https://bdagscan.com remains fine.
  *
  * https://rpc.blockdag.engineering/ — good tip for reads / receipt waits, but
- * eth_sendRawTransaction returns -32601 method not found. Treat as READ-ONLY /
- * no-send: OK in publicClient + receipt fallbacks, NEVER in MetaMask rpcUrls or
- * any broadcast path.
+ * eth_sendRawTransaction returns -32601. Prefer for READ paths. Never for send.
  *
- * https://rpc.west.bdag-us.org/ — send-capable (eth_sendRawTransaction works).
- * Prefer this first for wallet_addEthereumChain and server tx broadcast.
+ * https://rpc.east.bdag-us.org/ — send-capable with correct state. Prefer FIRST
+ * for eth_sendRawTransaction / OLC deliver / rescue when west returns 502.
  *
- * https://rpc.east.bdag-us.org/ — send-capable; same good tip as engineering.
- * Use as send fallback when west is down (502), and prefer early in read lists
- * so eth_call / receipts survive west outages.
+ * https://rpc.west.bdag-us.org/ — send-capable; use as fallback after east.
  */
 import { TOKEN } from "./token";
 
@@ -24,7 +20,7 @@ const WEST_RPC = "https://rpc.west.bdag-us.org/";
 const EAST_RPC = "https://rpc.east.bdag-us.org/";
 const ENGINEERING_RPC = "https://rpc.blockdag.engineering/";
 
-/** Divergent tip — never for clients / receipts / wallet */
+/** Empty/wrong state + bad tip — never for clients / receipts / wallet / deliver */
 const KNOWN_BAD_RECEIPT_RPC_HOSTS = new Set(["rpc.bdagscan.com"]);
 
 /** Good tip for reads, but eth_sendRawTransaction is missing */
@@ -65,23 +61,22 @@ function dedupe(urls: string[]): string[] {
 
 /**
  * Deduped HTTP RPC list for publicClient reads + receipt waits:
- * env overrides first, then east → west → engineering. Always filters bdagscan.
- * May include engineering (read-only / no-send, good tip).
- * Prefer east/west ahead of engineering so reads survive west 502 without
- * depending on a single send-capable host.
+ * env overrides first, then engineering → east → west. Always filters bdagscan.
+ * Prefer engineering for eth_call / receipts; west/east remain for tip diversity.
  */
 export function blockdagHttpRpcUrls(): string[] {
   const envPrimary = process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim();
   const envFallback = process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim();
+  // Reads: engineering tip first (after env), then east/west. Never bdagscan.
   const candidates = [
     envPrimary,
     envFallback,
+    ENGINEERING_RPC,
     EAST_RPC,
     WEST_RPC,
-    ENGINEERING_RPC,
-    TOKEN.rpcUrl,
-    TOKEN.rpcFallback,
     TOKEN.rpcAlt,
+    TOKEN.rpcFallback,
+    TOKEN.rpcUrl,
   ];
   const list = candidates.filter(
     (u): u is string => typeof u === "string" && u.length > 0 && isKnownGoodBlockdagRpc(u),
@@ -89,7 +84,7 @@ export function blockdagHttpRpcUrls(): string[] {
   const deduped = dedupe(list);
   if (deduped.length > 0) return deduped;
   // Absolute last resort if env somehow wiped everything to bad hosts
-  return [EAST_RPC, WEST_RPC, ENGINEERING_RPC];
+  return [ENGINEERING_RPC, EAST_RPC, WEST_RPC];
 }
 
 /**
@@ -100,13 +95,14 @@ export function blockdagHttpRpcUrls(): string[] {
 export function blockdagWalletRpcUrls(): string[] {
   const envPrimary = process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim();
   const envFallback = process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim();
-  const candidates = [envPrimary, envFallback, WEST_RPC, EAST_RPC, TOKEN.rpcUrl];
+  // Prefer east then west for broadcasts (west often 502; never bdagscan).
+  const candidates = [envPrimary, envFallback, EAST_RPC, WEST_RPC, TOKEN.rpcFallback, TOKEN.rpcUrl];
   const list = candidates.filter(
     (u): u is string => typeof u === "string" && u.length > 0 && isSendCapableBlockdagRpc(u),
   );
   const deduped = dedupe(list);
   if (deduped.length > 0) return deduped;
-  return [WEST_RPC, EAST_RPC];
+  return [EAST_RPC, WEST_RPC];
 }
 
 export { WEST_RPC, EAST_RPC, ENGINEERING_RPC };

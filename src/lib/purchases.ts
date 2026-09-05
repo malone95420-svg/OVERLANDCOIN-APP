@@ -5,9 +5,10 @@
  * External deposits use POST /api/presale/confirm-deposit with pasted tx hash.
  * Never credit from client-only / localStorage-only claims.
  * Status:
- *  - locked — credited on-chain into PresaleLock (non-transferable until listing)
- *  - locked_pending_chain — payment verified (or submitted) but lock credit pending
- *  - pending_delivery — legacy / failed path (should migrate toward locked*)
+ *  - delivered — OLC ERC-20 transferred to buyer BlockDAG wallet
+ *  - locked — legacy PresaleLock credit (still shown if present)
+ *  - locked_pending_chain — payment verified but wallet delivery pending
+ *  - pending_delivery — legacy / failed path
  *  - pending_external — awaiting tx hash verification (reminder only — no OLC yet)
  *
  * Keys are namespaced by accountKey when signed in (see accountScope).
@@ -18,10 +19,16 @@ import { scopedStorageKey } from "@/lib/auth/accountScope";
 export const PURCHASES_STORAGE_KEY = "overlandcoin.purchases.v1";
 
 export type PurchaseStatus =
+  | "delivered"
   | "locked"
   | "locked_pending_chain"
   | "pending_delivery"
   | "pending_external";
+
+/** Fulfilled purchase (wallet delivery or legacy lock credit). */
+export function isPurchaseFulfilled(status: PurchaseStatus | string | undefined): boolean {
+  return status === "delivered" || status === "locked";
+}
 
 export type LocalPurchase = {
   id: string;
@@ -50,9 +57,9 @@ export type LocalPurchase = {
   payMethod?: "onchain" | "deposit";
   depositAddress?: string;
   depositNetwork?: string;
-  /** PresaleLock credit tx when status === locked */
+  /** OLC delivery tx (wallet transfer) or legacy PresaleLock credit tx */
   creditTxHash?: string;
-  /** Honest note when awaiting lock config */
+  /** Honest note when awaiting deliver-wallet inventory / RPC */
   deliveryNote?: string;
 };
 
@@ -168,6 +175,7 @@ export function sumLocalLockedOlc(wallet?: string | null): number {
     .filter((p) => {
       if (wallet && p.from && p.from.toLowerCase() !== wallet.toLowerCase()) return false;
       return (
+        p.status === "delivered" ||
         p.status === "locked" ||
         p.status === "locked_pending_chain" ||
         p.status === "pending_delivery"

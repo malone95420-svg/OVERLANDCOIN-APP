@@ -1,7 +1,7 @@
 /**
  * POST /api/presale/deliver
  *
- * Credits OLC into PresaleLock ONLY after on-chain / network payment verification.
+ * After on-chain / network payment verification, transfers OLC ERC-20 to the buyer wallet.
  * Never trusts client olcAmount alone — recomputes from verified pay amount × live USD ÷ batch price.
  * Idempotent by paymentTxHash (in-memory MVP; use Redis/Postgres in prod).
  *
@@ -107,11 +107,12 @@ export async function POST(req: NextRequest) {
   const existing = getDeliveredByPayment(paymentTxHash);
   if (existing) {
     return NextResponse.json({
-      status: "locked" as const,
+      status: "delivered" as const,
       creditTxHash: existing.creditTxHash,
       buyer: existing.buyer,
       olcAmount: existing.olcAmount,
       alreadyDelivered: true,
+      mode: "wallet_transfer" as const,
       paymentTxHash,
       payAsset: existing.payAsset ?? payAsset,
       verified: true,
@@ -132,11 +133,13 @@ export async function POST(req: NextRequest) {
   });
 
   if (!verified.ok) {
+    const pending = (verified.status ?? 400) === 409;
     return NextResponse.json(
       {
         error: verified.error,
         verified: false,
-        status: "unverified" as const,
+        status: pending ? ("pending_confirmation" as const) : ("unverified" as const),
+        retryable: pending,
       },
       { status: verified.status ?? 400 },
     );
@@ -150,45 +153,48 @@ export async function POST(req: NextRequest) {
     quote: verified.quote,
   });
 
-  if (result.status === "locked") {
-    return NextResponse.json({
-      status: "locked" as const,
-      creditTxHash: result.creditTxHash,
-      buyer: result.buyer,
-      olcAmount: result.olcAmount,
-      mode: result.mode,
-      alreadyDelivered: result.alreadyDelivered,
-      paymentTxHash: result.payment.paymentTxHash,
-      payChain: result.payment.chain,
-      payAsset: result.payment.payAsset,
-      payAmount: result.payment.payAmount,
-      batchPriceUsed: result.quote.batchPriceUsed,
-      usdRateUsed: result.quote.usdRateUsed,
-      usdPaid: result.quote.usdPaid,
-      rateSource: result.quote.rateSource,
-      lockAddress: result.lockAddress,
-      verified: true,
-    });
+  if (result.status === "locked_pending_chain") {
+    return NextResponse.json(
+      {
+        status: "locked_pending_chain" as const,
+        notConfigured: result.notConfigured,
+        error: result.error,
+        message: result.message,
+        buyer: result.buyer,
+        olcAmount: result.olcAmount,
+        paymentTxHash: result.payment.paymentTxHash,
+        payChain: result.payment.chain,
+        payAsset: result.payment.payAsset,
+        payAmount: result.payment.payAmount,
+        batchPriceUsed: result.quote.batchPriceUsed,
+        usdRateUsed: result.quote.usdRateUsed,
+        usdPaid: result.quote.usdPaid,
+        transferTxHash: result.transferTxHash,
+        deliverWallet: result.deliverWallet,
+        inventoryOlC: result.inventoryOlC,
+        verified: true,
+      },
+      { status: result.httpStatus },
+    );
   }
 
-  return NextResponse.json(
-    {
-      status: "locked_pending_chain" as const,
-      notConfigured: result.notConfigured,
-      error: result.error,
-      message: result.message,
-      buyer: result.buyer,
-      olcAmount: result.olcAmount,
-      paymentTxHash: result.payment.paymentTxHash,
-      payChain: result.payment.chain,
-      payAsset: result.payment.payAsset,
-      payAmount: result.payment.payAmount,
-      batchPriceUsed: result.quote.batchPriceUsed,
-      usdRateUsed: result.quote.usdRateUsed,
-      usdPaid: result.quote.usdPaid,
-      transferTxHash: result.transferTxHash,
-      verified: true,
-    },
-    { status: result.httpStatus },
-  );
+  return NextResponse.json({
+    status: "delivered" as const,
+    creditTxHash: result.creditTxHash,
+    buyer: result.buyer,
+    olcAmount: result.olcAmount,
+    mode: result.mode ?? "wallet_transfer",
+    alreadyDelivered: result.alreadyDelivered,
+    paymentTxHash: result.payment.paymentTxHash,
+    payChain: result.payment.chain,
+    payAsset: result.payment.payAsset,
+    payAmount: result.payment.payAmount,
+    batchPriceUsed: result.quote.batchPriceUsed,
+    usdRateUsed: result.quote.usdRateUsed,
+    usdPaid: result.quote.usdPaid,
+    rateSource: result.quote.rateSource,
+    lockAddress: result.lockAddress,
+    deliverWallet: result.deliverWallet,
+    verified: true,
+  });
 }

@@ -154,14 +154,23 @@ const ERC20_ABI_MIN = [
 
 export { ERC20_ABI_MIN };
 
+/**
+ * Deployed PresaleLock on BlockDAG Mainnet (keep — do not redeploy/rescue).
+ * Env override wins; this fallback prevents verified pays with no lock credit
+ * when NEXT_PUBLIC_PRESALE_LOCK_ADDRESS is missing on a host.
+ */
+export const DEPLOYED_PRESALE_LOCK_ADDRESS =
+  "0x6BAa605f29dD215FCeC215dC4be8818B3350EF37" as const;
+
 /** Public client-side lock address (empty if not configured). */
 export function getPresaleLockAddress(): `0x${string}` | null {
   const raw =
     typeof process !== "undefined"
       ? process.env.NEXT_PUBLIC_PRESALE_LOCK_ADDRESS?.trim()
       : undefined;
-  if (!raw || !/^0x[a-fA-F0-9]{40}$/.test(raw)) return null;
-  return raw as `0x${string}`;
+  const candidate = raw || DEPLOYED_PRESALE_LOCK_ADDRESS;
+  if (!candidate || !/^0x[a-fA-F0-9]{40}$/.test(candidate)) return null;
+  return candidate as `0x${string}`;
 }
 
 /** Send-capable RPCs for PresaleLock credit / approve / transfer broadcasts. */

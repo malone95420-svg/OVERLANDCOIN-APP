@@ -1,12 +1,17 @@
 /**
- * Shared PresaleLock credit after payment verification.
+ * Deliver OLC ERC-20 to buyer after payment verification.
+ * Primary path: PRESALE_DELIVER_PRIVATE_KEY hot-wallet transfer (same idea as quest claims).
  * Call only with server-computed olcAmount from verifyPaymentAndQuote.
+ *
+ * Inventory: fund the deliver wallet with OLC (ops may rescueUnallocated from PresaleLock).
+ * Do not auto-rescue here — fail clearly when the hot wallet is empty.
  */
 
 import {
   createPublicClient,
   createWalletClient,
   fallback,
+  formatUnits,
   getAddress,
   http,
   parseUnits,
@@ -16,7 +21,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { blockdag } from "@/lib/chain";
 import {
   ERC20_ABI_MIN,
-  PRESALE_LOCK_ABI,
+  DEPLOYED_PRESALE_LOCK_ADDRESS,
   getPresaleLockAddress,
   presaleDeliverRpcUrls,
   presaleReadRpcUrls,
@@ -39,15 +44,17 @@ function normalizePrivateKey(raw: string): Hex {
 }
 
 export type CreditSuccess = {
-  status: "locked";
+  /** "delivered" = OLC transferred to buyer wallet. "locked" kept for legacy idempotent rows. */
+  status: "delivered" | "locked";
   creditTxHash: string;
   buyer: `0x${string}`;
   olcAmount: number;
-  mode?: "credit" | "transfer_then_credit";
+  mode?: "wallet_transfer" | "credit" | "transfer_then_credit";
   alreadyDelivered?: boolean;
   payment: VerifiedPayment;
   quote: OlcQuote;
   lockAddress: `0x${string}`;
+  deliverWallet?: `0x${string}`;
 };
 
 export type CreditPending = {
@@ -60,13 +67,22 @@ export type CreditPending = {
   payment: VerifiedPayment;
   quote: OlcQuote;
   transferTxHash?: string;
+  deliverWallet?: `0x${string}`;
+  inventoryOlC?: string;
   httpStatus: number;
 };
 
 export type CreditResult = CreditSuccess | CreditPending;
 
+function amountToWei(olcAmount: number): bigint {
+  return parseUnits(
+    Number(olcAmount).toFixed(8).replace(/\.?0+$/, "") || "0",
+    TOKEN.decimals,
+  );
+}
+
 /**
- * Credit verified OLC into PresaleLock for buyer.
+ * Transfer verified OLC to buyer's BlockDAG wallet (ERC-20).
  * Idempotent by payment.paymentTxHash.
  */
 export async function creditVerifiedPurchase(opts: {
@@ -78,32 +94,34 @@ export async function creditVerifiedPurchase(opts: {
   const { payment, quote } = opts;
   const olcAmount = quote.olcAmount;
   const paymentKey = payment.paymentTxHash;
+  const lockAddress =
+    getPresaleLockAddress() ?? (DEPLOYED_PRESALE_LOCK_ADDRESS as `0x${string}`);
 
   const existing = getDeliveredByPayment(paymentKey);
   if (existing) {
     return {
-      status: "locked",
+      status: "delivered",
       creditTxHash: existing.creditTxHash,
       buyer: getAddress(existing.buyer),
       olcAmount: existing.olcAmount,
       alreadyDelivered: true,
+      mode: "wallet_transfer",
       payment,
       quote: { ...quote, olcAmount: existing.olcAmount },
-      lockAddress: getPresaleLockAddress() ?? ("0x0000000000000000000000000000000000000000" as `0x${string}`),
+      lockAddress,
     };
   }
 
-  const lockAddress = getPresaleLockAddress();
   const pkRaw =
     process.env.PRESALE_DELIVER_PRIVATE_KEY?.trim() ||
     process.env.REWARD_PRIVATE_KEY?.trim();
 
-  if (!lockAddress || !pkRaw) {
+  if (!pkRaw) {
     return {
       status: "locked_pending_chain",
       notConfigured: true,
       message:
-        "Presale lock contract or deliver key not configured. Set NEXT_PUBLIC_PRESALE_LOCK_ADDRESS and PRESALE_DELIVER_PRIVATE_KEY (or REWARD_PRIVATE_KEY as operator). Payment was verified — OLC credit pending on-chain config.",
+        "Presale deliver key not configured. Set PRESALE_DELIVER_PRIVATE_KEY (or REWARD_PRIVATE_KEY). Payment was verified — OLC transfer to wallet is pending server config.",
       buyer,
       olcAmount,
       payment,
@@ -129,10 +147,7 @@ export async function creditVerifiedPurchase(opts: {
     };
   }
 
-  const amountWei = parseUnits(
-    Number(olcAmount).toFixed(8).replace(/\.?0+$/, "") || "0",
-    TOKEN.decimals,
-  );
+  const amountWei = amountToWei(olcAmount);
   if (amountWei <= 0n) {
     return {
       status: "locked_pending_chain",
@@ -149,12 +164,40 @@ export async function creditVerifiedPurchase(opts: {
   const sendUrls = presaleDeliverRpcUrls();
   let lastErr: unknown;
   let creditTxHash: Hex | undefined;
-  let mode: "credit" | "transfer_then_credit" | undefined;
 
   const pc = createPublicClient({
     chain: blockdag,
     transport: fallback(readUrls.map((url) => http(url))),
   });
+
+  // Inventory check once (clear ops signal when empty — do not silent-fail).
+  let walletBal = 0n;
+  try {
+    walletBal = await pc.readContract({
+      address: TOKEN.contractAddress,
+      abi: ERC20_ABI_MIN,
+      functionName: "balanceOf",
+      args: [account.address],
+    });
+  } catch (e) {
+    lastErr = e;
+  }
+
+  if (walletBal < amountWei) {
+    const have = formatUnits(walletBal, TOKEN.decimals);
+    return {
+      status: "locked_pending_chain",
+      error: "Insufficient OLC inventory in deliver wallet",
+      message: `Deliver wallet ${account.address} has ${have} OLC; need ${olcAmount} OLC. Fund it with OLC (ops: PresaleLock.rescueUnallocated → deliver wallet), then Retry deliver. Payment was verified.`,
+      buyer,
+      olcAmount,
+      payment,
+      quote,
+      deliverWallet: account.address,
+      inventoryOlC: have,
+      httpStatus: 503,
+    };
+  }
 
   for (const sendUrl of sendUrls) {
     try {
@@ -164,123 +207,40 @@ export async function creditVerifiedPurchase(opts: {
         transport: http(sendUrl),
       });
 
-      const [lockBal, totalLocked, operator] = await Promise.all([
-        pc.readContract({
-          address: TOKEN.contractAddress,
-          abi: ERC20_ABI_MIN,
-          functionName: "balanceOf",
-          args: [lockAddress],
-        }),
-        pc.readContract({
-          address: lockAddress,
-          abi: PRESALE_LOCK_ABI,
-          functionName: "totalLocked",
-        }),
-        pc.readContract({
-          address: lockAddress,
-          abi: PRESALE_LOCK_ABI,
-          functionName: "operator",
-        }),
-      ]);
-
-      const unallocated = lockBal - totalLocked;
-
-      if (unallocated >= amountWei) {
-        creditTxHash = await wc.writeContract({
-          address: lockAddress,
-          abi: PRESALE_LOCK_ABI,
-          functionName: "credit",
-          args: [buyer, amountWei],
-        });
-        mode = "credit";
-      } else {
-        const walletBal = await pc.readContract({
-          address: TOKEN.contractAddress,
-          abi: ERC20_ABI_MIN,
-          functionName: "balanceOf",
-          args: [account.address],
-        });
-        if (walletBal < amountWei) {
-          return {
-            status: "locked_pending_chain",
-            error: "Insufficient OLC inventory for lock delivery",
-            message: `Fund PresaleLock (${lockAddress}) or deliver wallet ${account.address} with OLC. Need ${olcAmount} OLC unallocated. Payment verified.`,
-            buyer,
-            olcAmount,
-            payment,
-            quote,
-            httpStatus: 503,
-          };
-        }
-
-        const allowance = await pc.readContract({
-          address: TOKEN.contractAddress,
-          abi: ERC20_ABI_MIN,
-          functionName: "allowance",
-          args: [account.address, lockAddress],
-        });
-        if (allowance < amountWei) {
-          const approveHash = await wc.writeContract({
-            address: TOKEN.contractAddress,
-            abi: ERC20_ABI_MIN,
-            functionName: "approve",
-            args: [lockAddress, amountWei],
-          });
-          try {
-            await pc.waitForTransactionReceipt({ hash: approveHash, timeout: 45_000 });
-          } catch {
-            /* continue */
-          }
-        }
-
-        const isOp =
-          operator.toLowerCase() === account.address.toLowerCase() ||
-          (
-            await pc.readContract({
-              address: lockAddress,
-              abi: PRESALE_LOCK_ABI,
-              functionName: "owner",
-            })
-          ).toLowerCase() === account.address.toLowerCase();
-
-        if (isOp) {
-          creditTxHash = await wc.writeContract({
-            address: lockAddress,
-            abi: PRESALE_LOCK_ABI,
-            functionName: "creditFrom",
-            args: [account.address, buyer, amountWei],
-          });
-          mode = "transfer_then_credit";
-        } else {
-          const transferHash = await wc.writeContract({
-            address: TOKEN.contractAddress,
-            abi: ERC20_ABI_MIN,
-            functionName: "transfer",
-            args: [lockAddress, amountWei],
-          });
-          try {
-            await pc.waitForTransactionReceipt({ hash: transferHash, timeout: 45_000 });
-          } catch {
-            /* */
-          }
-          return {
-            status: "locked_pending_chain",
-            error: "Deliver key is not PresaleLock operator/owner",
-            message: `Transferred OLC to lock (${transferHash}) but cannot credit. Call setOperator(${account.address}) or credit manually. Payment was verified.`,
-            transferTxHash: transferHash,
-            buyer,
-            olcAmount,
-            payment,
-            quote,
-            httpStatus: 503,
-          };
-        }
+      // Re-check on each send RPC in case tip differs
+      const bal = await pc.readContract({
+        address: TOKEN.contractAddress,
+        abi: ERC20_ABI_MIN,
+        functionName: "balanceOf",
+        args: [account.address],
+      });
+      if (bal < amountWei) {
+        const have = formatUnits(bal, TOKEN.decimals);
+        return {
+          status: "locked_pending_chain",
+          error: "Insufficient OLC inventory in deliver wallet",
+          message: `Deliver wallet ${account.address} has ${have} OLC; need ${olcAmount} OLC. Fund it (ops rescue from PresaleLock ${lockAddress}), then Retry deliver. Payment was verified.`,
+          buyer,
+          olcAmount,
+          payment,
+          quote,
+          deliverWallet: account.address,
+          inventoryOlC: have,
+          httpStatus: 503,
+        };
       }
 
+      creditTxHash = await wc.writeContract({
+        address: TOKEN.contractAddress,
+        abi: ERC20_ABI_MIN,
+        functionName: "transfer",
+        args: [buyer, amountWei],
+      });
+
       try {
-        await pc.waitForTransactionReceipt({ hash: creditTxHash!, timeout: 45_000 });
+        await pc.waitForTransactionReceipt({ hash: creditTxHash, timeout: 45_000 });
       } catch {
-        /* hash still valid */
+        /* hash still valid for explorer */
       }
       lastErr = undefined;
       break;
@@ -291,14 +251,16 @@ export async function creditVerifiedPurchase(opts: {
   }
 
   if (!creditTxHash) {
-    const msg = lastErr instanceof Error ? lastErr.message : "Credit failed";
+    const msg = lastErr instanceof Error ? lastErr.message : "Transfer failed";
     return {
       status: "locked_pending_chain",
-      error: `PresaleLock credit failed: ${msg}`,
+      error: `OLC wallet delivery failed: ${msg}`,
+      message: `Payment verified but OLC transfer to ${buyer} failed. Tap Retry deliver. ${msg}`,
       buyer,
       olcAmount,
       payment,
       quote,
+      deliverWallet: account.address,
       httpStatus: 502,
     };
   }
@@ -311,13 +273,14 @@ export async function creditVerifiedPurchase(opts: {
   });
 
   return {
-    status: "locked",
+    status: "delivered",
     creditTxHash,
     buyer,
     olcAmount,
-    mode,
+    mode: "wallet_transfer",
     payment,
     quote,
     lockAddress,
+    deliverWallet: account.address,
   };
 }

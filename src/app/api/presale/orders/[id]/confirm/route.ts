@@ -76,7 +76,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
 
   if (order.status === "credited" && order.creditTxHash && order.paymentTxHash) {
     return NextResponse.json({
-      status: "locked" as const,
+      status: "delivered" as const,
       orderId: order.orderId,
       creditTxHash: order.creditTxHash,
       buyer: order.buyer,
@@ -138,7 +138,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
       olcAmount: existing.olcAmount,
     });
     return NextResponse.json({
-      status: "locked" as const,
+      status: "delivered" as const,
       orderId: order.orderId,
       creditTxHash: existing.creditTxHash,
       buyer: existing.buyer,
@@ -200,46 +200,49 @@ export async function POST(req: NextRequest, ctx: Ctx) {
     quote,
   });
 
-  if (result.status === "locked") {
-    markOrderCredited(order.orderId, {
-      paymentTxHash: result.payment.paymentTxHash,
-      creditTxHash: result.creditTxHash,
-      olcAmount: result.olcAmount,
-    });
-    return NextResponse.json({
-      status: "locked" as const,
-      orderId: order.orderId,
-      creditTxHash: result.creditTxHash,
-      buyer: result.buyer,
-      olcAmount: result.olcAmount,
-      mode: result.mode,
-      alreadyDelivered: result.alreadyDelivered,
-      paymentTxHash: result.payment.paymentTxHash,
-      payChain: result.payment.chain,
-      payAsset: result.payment.payAsset,
-      payAmount: result.payment.payAmount,
-      batchPriceUsed: result.quote.batchPriceUsed,
-      usdRateUsed: result.quote.usdRateUsed,
-      usdPaid: result.quote.usdPaid,
-      lockAddress: result.lockAddress,
-      verified: true,
-    });
+  if (result.status === "locked_pending_chain") {
+    return NextResponse.json(
+      {
+        status: "locked_pending_chain" as const,
+        orderId: order.orderId,
+        notConfigured: result.notConfigured,
+        error: friendlyPaymentError(result.error || result.message),
+        message: result.message,
+        buyer: result.buyer,
+        olcAmount: result.olcAmount,
+        paymentTxHash: result.payment.paymentTxHash,
+        payAsset: result.payment.payAsset,
+        payAmount: result.payment.payAmount,
+        deliverWallet: result.deliverWallet,
+        inventoryOlC: result.inventoryOlC,
+        verified: true,
+      },
+      { status: result.httpStatus },
+    );
   }
 
-  return NextResponse.json(
-    {
-      status: "locked_pending_chain" as const,
-      orderId: order.orderId,
-      notConfigured: result.notConfigured,
-      error: friendlyPaymentError(result.error || result.message),
-      message: result.message,
-      buyer: result.buyer,
-      olcAmount: result.olcAmount,
-      paymentTxHash: result.payment.paymentTxHash,
-      payAsset: result.payment.payAsset,
-      payAmount: result.payment.payAmount,
-      verified: true,
-    },
-    { status: result.httpStatus },
-  );
+  markOrderCredited(order.orderId, {
+    paymentTxHash: result.payment.paymentTxHash,
+    creditTxHash: result.creditTxHash,
+    olcAmount: result.olcAmount,
+  });
+  return NextResponse.json({
+    status: "delivered" as const,
+    orderId: order.orderId,
+    creditTxHash: result.creditTxHash,
+    buyer: result.buyer,
+    olcAmount: result.olcAmount,
+    mode: result.mode ?? "wallet_transfer",
+    alreadyDelivered: result.alreadyDelivered,
+    paymentTxHash: result.payment.paymentTxHash,
+    payChain: result.payment.chain,
+    payAsset: result.payment.payAsset,
+    payAmount: result.payment.payAmount,
+    batchPriceUsed: result.quote.batchPriceUsed,
+    usdRateUsed: result.quote.usdRateUsed,
+    usdPaid: result.quote.usdPaid,
+    lockAddress: result.lockAddress,
+    deliverWallet: result.deliverWallet,
+    verified: true,
+  });
 }

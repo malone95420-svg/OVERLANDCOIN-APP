@@ -47,7 +47,11 @@ export function friendlyPaymentError(raw: string | undefined | null): string {
   if (!msg) {
     return "No matching payment found yet — wait a minute and try again.";
   }
-  if (/no matching|not found|not confirmed yet|no .* transfer|no .* output|no positive SOL/i.test(msg)) {
+  if (
+    /no matching|not found|not confirmed yet|indexing lag|no .* transfer|no .* output|no positive SOL/i.test(
+      msg,
+    )
+  ) {
     return "No matching payment found yet — wait a minute and try again.";
   }
   if (/rate limit|429|too many/i.test(msg)) {

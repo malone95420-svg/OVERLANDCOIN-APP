@@ -1,3 +1,9 @@
+# Presale delivery inventory
+
+**Product:** After payment verifies, OLC is **ERC-20 transferred** to the buyer wallet from `PRESALE_DELIVER_PRIVATE_KEY` (not credited into PresaleLock).
+
+If the deliver wallet is empty, `/api/presale/deliver` returns 503 with a clear inventory error. Ops: see `ops/RESCUE_TO_DELIVER.md`.
+
 # OVERLANDCOIN ops funding (BlockDAG Mainnet, chainId 1404)
 
 **Do not commit private keys.** Wallet JSON lives only under the agent secrets directory  

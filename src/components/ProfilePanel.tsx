@@ -29,8 +29,15 @@ function purchaseOlc(p: LocalPurchase): number {
 }
 
 export function ProfilePanel() {
-  const { data: session, status } = useSession();
   const web3Mounted = useWeb3Mounted();
+  if (!web3Mounted) {
+    return <div className="card text-sm text-slate-500">Loading profile…</div>;
+  }
+  return <ProfilePanelInner />;
+}
+
+function ProfilePanelInner() {
+  const { data: session, status } = useSession();
   const { address, isConnected } = useAccount();
   const wallet = address || session?.user?.address || undefined;
   const { locked, loading: lockedLoading } = useLockedOlcBalance(wallet);
@@ -186,7 +193,7 @@ export function ProfilePanel() {
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-bg-panel/80 p-4">
           <div>
             <p className="text-xs uppercase tracking-wide text-slate-500">Connected wallet</p>
-            {web3Mounted && isConnected && address ? (
+            {isConnected && address ? (
               <p className="mt-1 font-mono text-sm text-cyan-accent">{shortWallet(address)}</p>
             ) : session.user.address ? (
               <p className="mt-1 font-mono text-sm text-cyan-accent">

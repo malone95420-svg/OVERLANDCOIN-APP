@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
+import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { useLockedOlcBalance } from "@/components/presale/useLockedOlcBalance";
 import {
   loadCompletions,
@@ -33,6 +34,14 @@ const SHORTCUTS = [
 ] as const;
 
 export function DashboardPanel() {
+  const web3Mounted = useWeb3Mounted();
+  if (!web3Mounted) {
+    return <div className="card text-sm text-slate-500">Loading dashboard…</div>;
+  }
+  return <DashboardPanelInner />;
+}
+
+function DashboardPanelInner() {
   const { data: session, status } = useSession();
   const { address } = useAccount();
   const wallet = address || session?.user?.address || undefined;

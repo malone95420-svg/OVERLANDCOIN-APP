@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import {
   affiliateReferralUrl,
   getOrCreateAffiliateCode,
@@ -13,6 +14,14 @@ import { accountKeyFromSessionUser } from "@/lib/auth/accountScope";
 import { SITE } from "@/lib/site";
 
 export function AffiliatesPanel() {
+  const web3Mounted = useWeb3Mounted();
+  if (!web3Mounted) {
+    return <div className="card text-sm text-slate-500">Loading affiliates…</div>;
+  }
+  return <AffiliatesPanelInner />;
+}
+
+function AffiliatesPanelInner() {
   const { data: session, status } = useSession();
   const { address } = useAccount();
   const [code, setCode] = useState("");

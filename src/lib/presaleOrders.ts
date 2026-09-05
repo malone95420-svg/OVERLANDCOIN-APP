@@ -1,8 +1,10 @@
 /**
  * Presale Pay Orders (external deposits: SOL / ETH / USDT / USDC / BTC).
- * In-memory + /tmp JSON MVP. Document Redis/Postgres for production.
+ * In-memory + /tmp JSON MVP — NOT durable on Vercel serverless (ephemeral FS /
+ * different instances). Credit must use /api/presale/deliver (or confirm-deposit
+ * scan) with buyer + paymentTxHash / amount hints — do not rely on getOrder().
  *
- * Flow: create order → user sends exact payAmount → confirm scans & credits.
+ * Flow: create order (quote UX) → user pays → deliver by tx hash (BDAG-style).
  */
 
 import fs from "fs";

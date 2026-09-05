@@ -409,21 +409,45 @@ function PresaleBuyInner() {
                 { silent: true },
               );
             } else {
-              // Confirm by order id without full card
-              await fetch(
-                `/api/presale/orders/${encodeURIComponent(orderId)}/confirm`,
-                {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({}),
-                },
-              ).then(async (res) => {
-                const data = (await res.json().catch(() => ({}))) as {
+              // No open card: deliver/confirm-deposit from purchase fields (not order store)
+              const payChain = payChainForAsset(p.payAsset || "ETH");
+              const payAmt = Number(String(p.payAmount || "").replace(/,/g, ""));
+              const endpoint = "/api/presale/confirm-deposit";
+              await fetch(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  buyer: address,
+                  payAsset: p.payAsset,
+                  payAmount: payAmt > 0 ? payAmt : undefined,
+                  chain: payChain,
+                  olcAmount: p.olcAmount,
+                }),
+              }).then(async (res) => {
+                let data = (await res.json().catch(() => ({}))) as {
                   status?: string;
                   creditTxHash?: string;
                   olcAmount?: number;
                   paymentTxHash?: string;
+                  error?: string;
                 };
+                if (
+                  res.status === 404 ||
+                  !(data.status === "locked" && data.creditTxHash)
+                ) {
+                  const orderRes = await fetch(
+                    `/api/presale/orders/${encodeURIComponent(orderId)}/confirm`,
+                    {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({}),
+                    },
+                  );
+                  const orderData = (await orderRes.json().catch(() => ({}))) as typeof data;
+                  if (orderData.status === "locked" && orderData.creditTxHash) {
+                    data = orderData;
+                  }
+                }
                 if (data.status === "locked" && data.creditTxHash) {
                   clearOpenPayOrder(orderId);
                   setPurchases(
@@ -700,15 +724,55 @@ function PresaleBuyInner() {
       let res: Response;
       if (paymentTxHash.startsWith("order:")) {
         const orderId = paymentTxHash.slice("order:".length);
-        res = await fetch(`/api/presale/orders/${encodeURIComponent(orderId)}/confirm`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({}),
-        });
+        const open = listOpenPayOrdersForBuyer(buyer).find((o) => o.orderId === orderId);
+        const hint = open?.paymentTxHint?.trim();
+        if (hint) {
+          // Known payment hash → deliver (BDAG-style), ignore ephemeral order store
+          res = await fetch("/api/presale/deliver", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              buyer,
+              olcAmount,
+              paymentTxHash: hint,
+              payChain,
+              payAsset: record.payAsset || open?.payAsset,
+              payAmount: record.payAmount || String(open?.payAmount ?? ""),
+            }),
+          });
+        } else {
+          // Scan without order id
+          const payAmt =
+            Number(String(record.payAmount).replace(/,/g, "")) ||
+            open?.payAmount ||
+            0;
+          res = await fetch("/api/presale/confirm-deposit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              buyer,
+              olcAmount,
+              payAsset: record.payAsset || open?.payAsset,
+              payAmount: payAmt,
+              chain: payChain,
+            }),
+          });
+          if (res.status === 404) {
+            // Soft try legacy order confirm; ignore Order not found
+            const orderRes = await fetch(
+              `/api/presale/orders/${encodeURIComponent(orderId)}/confirm`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({}),
+              },
+            );
+            if (orderRes.status !== 404) res = orderRes;
+          }
+        }
       } else {
-        const endpoint =
-          payChain === "blockdag" ? "/api/presale/deliver" : "/api/presale/confirm-deposit";
-        res = await fetch(endpoint, {
+        // Real payment tx/signature → always deliver (all chains, like BDAG)
+        res = await fetch("/api/presale/deliver", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -1018,6 +1082,7 @@ function PresaleBuyInner() {
     const pasted = paymentTxHash
       ? parsePaymentTxRef(paymentTxHash)
       : parsePaymentTxRef(depositTxHashRef.current || depositTxHash);
+    const payChain = payChainForAsset(order.payAsset);
     const localKey = pasted || `order:${order.orderId}`;
 
     if (!silent) {
@@ -1042,21 +1107,200 @@ function PresaleBuyInner() {
       setPendingLockRetryTx(localKey);
     }
 
-    try {
-      const res = await fetch(`/api/presale/orders/${order.orderId}/confirm`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(pasted ? { paymentTxHash: pasted } : {}),
-      });
-      const data = (await res.json().catch(() => ({}))) as {
-        status?: string;
-        creditTxHash?: string;
-        message?: string;
-        error?: string;
-        olcAmount?: number;
-        verified?: boolean;
-        paymentTxHash?: string;
+    type CreditData = {
+      status?: string;
+      creditTxHash?: string;
+      message?: string;
+      error?: string;
+      olcAmount?: number;
+      verified?: boolean;
+      paymentTxHash?: string;
+    };
+
+    const applyLocked = (data: CreditData, paymentKey: string) => {
+      const olc =
+        typeof data.olcAmount === "number" ? data.olcAmount : order.olcAmount;
+      const existingPending = {
+        ...buildRecord({
+          txHash: localKey,
+          status: "locked" as const,
+          payMethod: "deposit" as const,
+          payAsset: order.payAsset,
+          payAmount: order.payAmount,
+          olc,
+          usd: order.usdPaid ?? derived.usd,
+          depositAddress: order.depositAddress,
+          depositNetwork: order.depositNetwork,
+        }),
+        from: order.buyer,
+        creditTxHash: data.creditTxHash,
+        deliveryNote: undefined,
       };
+      if (paymentKey !== localKey) {
+        setPurchases(
+          savePurchase({
+            ...existingPending,
+            txHash: paymentKey,
+            id: `${Date.now()}-${paymentKey.slice(0, 12)}`,
+            status: "locked",
+            creditTxHash: data.creditTxHash,
+            olcAmount: olc,
+            deliveryNote: undefined,
+          }),
+        );
+      } else {
+        setPurchases(
+          savePurchase({
+            ...existingPending,
+            status: "locked",
+            creditTxHash: data.creditTxHash,
+            olcAmount: olc,
+            deliveryNote: undefined,
+          }),
+        );
+      }
+      clearOpenPayOrder(order.orderId);
+      setPendingLockRetryTx(null);
+      setActiveOrder(null);
+      setAutoLooking(false);
+      setError(null);
+      setSuccessNote(
+        `${formatNum(olc, 4)} OLC locked to your wallet. Non-transferable until listing.`,
+      );
+      setSuccessExplorer(
+        paymentKey.startsWith("0x")
+          ? explorerTxUrl(paymentKey)
+          : explorerTxUrl(data.creditTxHash!),
+      );
+      void lockedBal.refresh();
+    };
+
+    const applyPendingChain = (data: CreditData, paymentKey: string) => {
+      const olc =
+        typeof data.olcAmount === "number" ? data.olcAmount : order.olcAmount;
+      setPurchases(
+        savePurchase({
+          ...buildRecord({
+            txHash: paymentKey,
+            status: "locked_pending_chain" as const,
+            payMethod: "deposit" as const,
+            payAsset: order.payAsset,
+            payAmount: order.payAmount,
+            olc,
+            usd: order.usdPaid ?? derived.usd,
+            depositAddress: order.depositAddress,
+            depositNetwork: order.depositNetwork,
+          }),
+          from: order.buyer,
+          deliveryNote:
+            data.message ||
+            data.error ||
+            "Payment verified — awaiting PresaleLock credit.",
+        }),
+      );
+      setPendingLockRetryTx(paymentKey);
+      if (data.paymentTxHash || pasted) {
+        try {
+          updateOpenPayOrderHint(
+            order.orderId,
+            data.paymentTxHash || pasted!,
+          );
+        } catch {
+          /* ignore */
+        }
+      }
+      setSuccessNote(
+        `Payment verified. ${formatNum(olc, 4)} OLC pending PresaleLock credit. ${data.error || data.message || ""}`,
+      );
+      void lockedBal.refresh();
+    };
+
+    try {
+      let res: Response;
+      let data: CreditData;
+
+      if (pasted) {
+        // Primary credit path (same as BDAG): deliver by payment tx — no order store.
+        res = await fetch("/api/presale/deliver", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            buyer: order.buyer,
+            paymentTxHash: pasted,
+            payChain,
+            payAsset: order.payAsset,
+            olcAmount: order.olcAmount,
+            payAmount: String(order.payAmount),
+          }),
+        });
+        data = (await res.json().catch(() => ({}))) as CreditData;
+
+        // Optional: if deliver failed oddly, try legacy order confirm then fall through again
+        if (
+          !(data.status === "locked" && data.creditTxHash) &&
+          !(data.verified && data.status === "locked_pending_chain") &&
+          res.status !== 429
+        ) {
+          const orderRes = await fetch(
+            `/api/presale/orders/${encodeURIComponent(order.orderId)}/confirm`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ paymentTxHash: pasted }),
+            },
+          );
+          const orderData = (await orderRes.json().catch(() => ({}))) as CreditData;
+          if (
+            (orderData.status === "locked" && orderData.creditTxHash) ||
+            (orderData.verified && orderData.status === "locked_pending_chain")
+          ) {
+            res = orderRes;
+            data = orderData;
+          } else if (orderRes.status === 404 || /order not found/i.test(orderData.error || "")) {
+            // Expected on Vercel ephemeral /tmp order store — keep deliver result
+          }
+        }
+      } else {
+        // No hash yet: amount-matched scan via confirm-deposit (client fields; no order id).
+        res = await fetch("/api/presale/confirm-deposit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            buyer: order.buyer,
+            payAsset: order.payAsset,
+            payAmount: order.payAmount,
+            chain: payChain,
+            olcAmount: order.olcAmount,
+          }),
+        });
+        data = (await res.json().catch(() => ({}))) as CreditData;
+
+        // Legacy order confirm as soft fallback; on 404 ignore (ephemeral store).
+        if (
+          !(data.status === "locked" && data.creditTxHash) &&
+          !(data.verified && data.status === "locked_pending_chain") &&
+          res.status !== 429
+        ) {
+          const orderRes = await fetch(
+            `/api/presale/orders/${encodeURIComponent(order.orderId)}/confirm`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({}),
+            },
+          );
+          const orderData = (await orderRes.json().catch(() => ({}))) as CreditData;
+          if (
+            (orderData.status === "locked" && orderData.creditTxHash) ||
+            (orderData.verified && orderData.status === "locked_pending_chain") ||
+            orderData.status === "expired" ||
+            orderRes.status === 410
+          ) {
+            res = orderRes;
+            data = orderData;
+          }
+        }
+      }
 
       if (res.status === 410 || data.status === "expired") {
         clearOpenPayOrder(order.orderId);
@@ -1075,99 +1319,12 @@ function PresaleBuyInner() {
 
       const paymentKey = data.paymentTxHash || pasted || localKey;
       if (data.status === "locked" && data.creditTxHash) {
-        const olc =
-          typeof data.olcAmount === "number" ? data.olcAmount : order.olcAmount;
-        const existingPending = {
-          ...buildRecord({
-            txHash: localKey,
-            status: "locked" as const,
-            payMethod: "deposit" as const,
-            payAsset: order.payAsset,
-            payAmount: order.payAmount,
-            olc,
-            usd: order.usdPaid ?? derived.usd,
-            depositAddress: order.depositAddress,
-            depositNetwork: order.depositNetwork,
-          }),
-          from: order.buyer,
-          creditTxHash: data.creditTxHash,
-          deliveryNote: undefined,
-        };
-        if (paymentKey !== localKey) {
-          setPurchases(
-            savePurchase({
-              ...existingPending,
-              txHash: paymentKey,
-              id: `${Date.now()}-${paymentKey.slice(0, 12)}`,
-              status: "locked",
-              creditTxHash: data.creditTxHash,
-              olcAmount: olc,
-              deliveryNote: undefined,
-            }),
-          );
-        } else {
-          setPurchases(
-            savePurchase({
-              ...existingPending,
-              status: "locked",
-              creditTxHash: data.creditTxHash,
-              olcAmount: olc,
-              deliveryNote: undefined,
-            }),
-          );
-        }
-        clearOpenPayOrder(order.orderId);
-        setPendingLockRetryTx(null);
-        setActiveOrder(null);
-        setAutoLooking(false);
-        setError(null);
-        setSuccessNote(
-          `${formatNum(olc, 4)} OLC locked to your wallet. Non-transferable until listing.`,
-        );
-        setSuccessExplorer(
-          paymentKey.startsWith("0x")
-            ? explorerTxUrl(paymentKey)
-            : explorerTxUrl(data.creditTxHash),
-        );
-        void lockedBal.refresh();
+        applyLocked(data, paymentKey);
         return true;
       }
 
       if (data.verified && data.status === "locked_pending_chain") {
-        const olc =
-          typeof data.olcAmount === "number" ? data.olcAmount : order.olcAmount;
-        setPurchases(
-          savePurchase({
-            ...buildRecord({
-              txHash: data.paymentTxHash || localKey,
-              status: "locked_pending_chain" as const,
-              payMethod: "deposit" as const,
-              payAsset: order.payAsset,
-              payAmount: order.payAmount,
-              olc,
-              usd: order.usdPaid ?? derived.usd,
-              depositAddress: order.depositAddress,
-              depositNetwork: order.depositNetwork,
-            }),
-            from: order.buyer,
-            deliveryNote:
-              data.message ||
-              data.error ||
-              "Payment verified — awaiting PresaleLock credit.",
-          }),
-        );
-        setPendingLockRetryTx(data.paymentTxHash || localKey);
-        if (data.paymentTxHash) {
-          try {
-            updateOpenPayOrderHint(order.orderId, data.paymentTxHash);
-          } catch {
-            /* ignore */
-          }
-        }
-        setSuccessNote(
-          `Payment verified. ${formatNum(olc, 4)} OLC pending PresaleLock credit. ${data.error || data.message || ""}`,
-        );
-        void lockedBal.refresh();
+        applyPendingChain(data, paymentKey);
         // Keep polling — deliver may succeed on a later attempt
         return false;
       }
@@ -1277,7 +1434,7 @@ function PresaleBuyInner() {
       }
       setAutoLooking(true);
 
-      // Retry auto-confirm — Ethereum indexing can lag; keep trying ~90s then poll continues
+      // Deliver-first confirm (same /api/presale/deliver path as BDAG) with indexing retries
       let confirmed = false;
       let lastConfirmError: string | null = null;
       for (let attempt = 0; attempt < 10; attempt++) {
@@ -1287,7 +1444,10 @@ function PresaleBuyInner() {
           await new Promise((r) => setTimeout(r, 2500));
         }
         setError(null);
-        confirmed = await confirmOrder(order, txHash);
+        // First attempt shows locking UX; later attempts stay quiet while indexing catches up
+        confirmed = await confirmOrder(order, txHash, {
+          silent: attempt > 0,
+        });
         if (confirmed) break;
         lastConfirmError =
           "Payment submitted — still confirming. We’ll keep looking automatically.";
@@ -1344,7 +1504,7 @@ function PresaleBuyInner() {
       }
       setAutoLooking(true);
 
-      // Retry auto-confirm — Solana indexing can lag; keep trying ~90s then poll continues
+      // Deliver-first confirm (Solana signature → /api/presale/deliver) with indexing retries
       let confirmed = false;
       let lastConfirmError: string | null = null;
       for (let attempt = 0; attempt < 10; attempt++) {
@@ -1354,7 +1514,9 @@ function PresaleBuyInner() {
           await new Promise((r) => setTimeout(r, 2500));
         }
         setError(null);
-        confirmed = await confirmOrder(order, signature);
+        confirmed = await confirmOrder(order, signature, {
+          silent: attempt > 0,
+        });
         if (confirmed) break;
         lastConfirmError =
           "Payment submitted — still confirming. We’ll keep looking automatically.";

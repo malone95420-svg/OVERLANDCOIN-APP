@@ -9,7 +9,7 @@ import { CopyAddress } from "./CopyAddress";
 
 export function Footer() {
   const pathname = usePathname();
-  if (pathname === "/map") return null;
+  if (pathname === "/map" || pathname === "/tg" || pathname.startsWith("/tg/")) return null;
 
   const socialEntries = [
     { key: "X / Twitter", href: SITE.social.twitter },

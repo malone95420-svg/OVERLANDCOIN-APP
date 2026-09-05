@@ -3,12 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTelegramWebApp } from "@/hooks/useTelegramWebApp";
 import { RangerChat } from "./RangerChat";
 
 export function RangerWidget() {
   const pathname = usePathname();
+  const isTelegram = useTelegramWebApp();
   const [open, setOpen] = useState(false);
-  if (pathname === "/map") return null;
+  const onMiniMap = pathname === "/map" && !isTelegram;
+  if (onMiniMap) return null;
+  if (pathname === "/tg" || pathname.startsWith("/tg/")) return null;
 
   return (
     <div className="fixed bottom-4 right-4 z-[60] flex flex-col items-end gap-3">

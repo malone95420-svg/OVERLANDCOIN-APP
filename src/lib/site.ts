@@ -23,7 +23,7 @@ export const SITE = {
   /** Placeholder — replace when official accounts launch */
   social: {
     twitter: "",
-    telegram: "",
+    telegram: "https://t.me/OVERLANDCOIN_bot",
     discord: "",
   },
   /** Placeholder — no DEX pairs yet */

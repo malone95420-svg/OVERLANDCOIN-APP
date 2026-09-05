@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { RangerWidget } from "@/components/RangerWidget";
+import { TelegramWebApp } from "@/components/TelegramWebApp";
 import { WelcomeModal } from "@/components/WelcomeModal";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Web3ErrorBoundary } from "@/components/providers/Web3ErrorBoundary";
@@ -64,6 +65,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
       <Footer />
       <RangerWidget />
       <WelcomeModal />
+      <TelegramWebApp />
     </>
   );
 }

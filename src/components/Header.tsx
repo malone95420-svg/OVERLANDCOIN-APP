@@ -8,11 +8,22 @@ import { AccountMenu } from "@/components/AccountMenu";
 import { AddOlcButton } from "@/components/AddOlcButton";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { PendingOlCBadge } from "@/components/PendingOlCBadge";
+import { useTelegramWebApp } from "@/hooks/useTelegramWebApp";
 import { NAV_LINKS, SITE } from "@/lib/site";
+
+const MINI_LINKS = [
+  { href: "/map", label: "Map" },
+  { href: "/ranger", label: "Ranger" },
+  { href: "/claim", label: "Claim" },
+  { href: "/garage", label: "Garage" },
+] as const;
 
 export function Header() {
   const pathname = usePathname();
+  const isTelegram = useTelegramWebApp();
   const [open, setOpen] = useState(false);
+  const compact = isTelegram || pathname === "/tg" || pathname.startsWith("/tg/");
+  const links = compact ? MINI_LINKS : NAV_LINKS;
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-bg/80 backdrop-blur-xl">
@@ -25,7 +36,7 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {NAV_LINKS.map((link) => {
+          {links.map((link) => {
             const active = pathname === link.href;
             return (
               <Link
@@ -44,12 +55,14 @@ export function Header() {
         </nav>
 
         <div className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-2">
-          <PendingOlCBadge />
-          <Link href="/presale" className="btn-secondary hidden sm:inline-flex !py-2 !text-xs">
-            Presale
-          </Link>
+          {!compact && <PendingOlCBadge />}
+          {!compact && (
+            <Link href="/presale" className="btn-secondary hidden sm:inline-flex !py-2 !text-xs">
+              Presale
+            </Link>
+          )}
           <AccountMenu />
-          <AddOlcButton compact showStatus={false} className="hidden sm:inline-flex" />
+          {!compact && <AddOlcButton compact showStatus={false} className="hidden sm:inline-flex" />}
           <ConnectWallet compact />
           <button
             type="button"
@@ -71,7 +84,7 @@ export function Header() {
       {open && (
         <div className="border-t border-border bg-bg-deep lg:hidden">
           <nav className="container-page flex flex-col gap-1 py-3">
-            {NAV_LINKS.map((link) => (
+            {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}

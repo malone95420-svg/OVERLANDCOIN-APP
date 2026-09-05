@@ -76,6 +76,19 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
     refreshCompletions();
   }, [refreshCompletions]);
 
+  // Deep-link: /map?quest=<id> (Telegram Mini App + bot)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const questId = params.get("quest");
+    if (!questId) return;
+    if (!quests.some((q) => q.id === questId)) return;
+    setShowAll(true);
+    setSelected(questId);
+    setFlyToId(questId);
+    setFlyNonce((n) => n + 1);
+  }, [quests]);
+
   const visible = useMemo(() => {
     if (!hydrated) return quests;
     return filterQuestsByTier(quests, tier, showAll);

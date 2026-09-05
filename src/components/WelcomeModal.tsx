@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PRESALE_BATCHES } from "@/lib/site";
 
@@ -26,18 +27,22 @@ const SLIDES = [
 ] as const;
 
 export function WelcomeModal() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+  const hide = pathname === "/tg" || pathname.startsWith("/tg/");
 
   useEffect(() => {
+    if (hide) return;
     try {
       if (localStorage.getItem(STORAGE_KEY)) return;
+      if (window.Telegram?.WebApp?.initData) return;
     } catch {
       return;
     }
     const t = window.setTimeout(() => setOpen(true), 1200);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [hide]);
 
   function dismiss() {
     try {
@@ -48,7 +53,7 @@ export function WelcomeModal() {
     setOpen(false);
   }
 
-  if (!open) return null;
+  if (hide || !open) return null;
 
   const last = step >= SLIDES.length - 1;
 

@@ -65,12 +65,3 @@ export function qrUrl(data: string): string {
   return `https://api.qrserver.com/v1/create-qr-code/?size=168x168&margin=8&data=${encodeURIComponent(data)}`;
 }
 
-export function solanaPayUri(depositAddress: string, solAmount: number): string {
-  const amount = Number(solAmount.toFixed(9)).toString();
-  const params = new URLSearchParams({
-    amount,
-    label: "OVERLANDCOIN Presale",
-    message: "OLC locked until listing",
-  });
-  return `solana:${depositAddress}?${params.toString()}`;
-}

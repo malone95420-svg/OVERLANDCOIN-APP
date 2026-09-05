@@ -44,7 +44,6 @@ import {
   isOnChainAsset,
   payChainForAsset,
   qrUrl,
-  solanaPayUri,
 } from "@/components/presale/checkoutAssets";
 import {
   getInjectedSolanaProvider,
@@ -188,6 +187,8 @@ function PresaleBuyInner() {
   const [confirmBusy, setConfirmBusy] = useState(false);
   const [activeOrder, setActiveOrder] = useState<ActivePayOrder | null>(null);
   const [manualFallback, setManualFallback] = useState(false);
+  /** True only when an in-page Solana provider is present — never deep-link. */
+  const [hasInjectedSolana, setHasInjectedSolana] = useState(false);
 
   const selected = assets.find((a) => a.id === assetId) ?? assets[0];
   const onChain = selected ? isOnChainAsset(selected) : false;
@@ -242,6 +243,23 @@ function PresaleBuyInner() {
     }
     const t = setInterval(() => setPurchases(loadPurchases()), 8000);
     return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    function refresh() {
+      setHasInjectedSolana(Boolean(getInjectedSolanaProvider()));
+    }
+    refresh();
+    // Wallets often inject after first paint (Phantom fires solana#initialized).
+    const onInit = () => refresh();
+    window.addEventListener("solana#initialized", onInit);
+    const poll = setInterval(refresh, 750);
+    const stop = setTimeout(() => clearInterval(poll), 8000);
+    return () => {
+      window.removeEventListener("solana#initialized", onInit);
+      clearInterval(poll);
+      clearTimeout(stop);
+    };
   }, []);
 
   useEffect(() => {
@@ -979,70 +997,64 @@ function PresaleBuyInner() {
   }
 
   async function payWithSolana(order: ActivePayOrder): Promise<"paid" | "manual" | "canceled"> {
-    // Always keep the order card reachable — never navigate this tab to solana:
+    // Always keep the order card reachable — never open solana: / window.open / location.href.
     setManualFallback(true);
-    setProgress("confirm_wallet");
 
     const provider = getInjectedSolanaProvider();
-    if (provider) {
-      try {
-        const signature = await sendNativeSolTransfer({
-          provider,
-          toAddress: order.depositAddress,
-          solAmount: order.payAmount,
-        });
-        setDepositTxHash(signature);
-        setProgress("confirming_payment");
+    if (!provider) {
+      // No injected wallet (typical mobile Safari): QR + copy only. Never deep-link.
+      setProgress(null);
+      setError(null);
+      return "manual";
+    }
 
-        // Retry auto-confirm — Solana indexing can lag briefly
-        let confirmed = false;
-        let lastConfirmError: string | null = null;
-        for (let attempt = 0; attempt < 4; attempt++) {
-          if (attempt > 0) {
-            await new Promise((r) => setTimeout(r, 2500 * attempt));
-          } else {
-            await new Promise((r) => setTimeout(r, 2000));
-          }
-          setError(null);
-          confirmed = await confirmOrder(order, signature);
-          if (confirmed) break;
-          lastConfirmError =
-            "Payment submitted but not yet indexed — tap I’ve paid in a moment.";
+    setProgress("confirm_wallet");
+    try {
+      const signature = await sendNativeSolTransfer({
+        provider,
+        toAddress: order.depositAddress,
+        solAmount: order.payAmount,
+      });
+      setDepositTxHash(signature);
+      setProgress("confirming_payment");
+
+      // Retry auto-confirm — Solana indexing can lag briefly
+      let confirmed = false;
+      let lastConfirmError: string | null = null;
+      for (let attempt = 0; attempt < 4; attempt++) {
+        if (attempt > 0) {
+          await new Promise((r) => setTimeout(r, 2500 * attempt));
+        } else {
+          await new Promise((r) => setTimeout(r, 2000));
         }
-        if (!confirmed) {
-          setManualFallback(true);
-          setError(
-            lastConfirmError ||
-              "Wallet payment sent. If OLC is not locked yet, wait ~30s and tap I’ve paid.",
-          );
-          return "manual";
-        }
-        return "paid";
-      } catch (e) {
-        if (isUserRejection(e)) {
-          setError("Payment rejected in wallet.");
-          return "canceled";
-        }
-        const msg = formatWalletError(e);
-        setError(
-          msg ||
-            "Solana wallet payment failed. Stay on this page — pay the exact amount, then tap I’ve paid.",
-        );
+        setError(null);
+        confirmed = await confirmOrder(order, signature);
+        if (confirmed) break;
+        lastConfirmError =
+          "Payment submitted but not yet indexed — tap I’ve paid in a moment.";
+      }
+      if (!confirmed) {
         setManualFallback(true);
+        setError(
+          lastConfirmError ||
+            "Wallet payment sent. If OLC is not locked yet, wait ~30s and tap I’ve paid.",
+        );
         return "manual";
       }
+      return "paid";
+    } catch (e) {
+      if (isUserRejection(e)) {
+        setError("Payment rejected in wallet.");
+        return "canceled";
+      }
+      const msg = formatWalletError(e);
+      setError(
+        msg ||
+          "Solana wallet payment failed. Stay on this page — send the exact SOL from your wallet app, then tap I’ve paid.",
+      );
+      setManualFallback(true);
+      return "manual";
     }
-
-    // No injected Phantom/Solana provider (e.g. mobile Safari): stay on QR/copy card.
-    setError(null);
-    const uri = solanaPayUri(order.depositAddress, order.payAmount);
-    try {
-      // Optional deep-link in a new browsing context only — never assign location.href
-      window.open(uri, "_blank", "noopener,noreferrer");
-    } catch {
-      /* ignore */
-    }
-    return "manual";
   }
 
   /** Single primary Buy / Pay action for all assets. */
@@ -1369,16 +1381,19 @@ function PresaleBuyInner() {
               {activeOrder.payAsset === "SOL" && (
                 <>
                   <p className="text-[11px] text-slate-300">
-                    Stay on this page. Pay the exact amount, then tap I’ve paid.
+                    Stay on this page. Send the exact SOL from your wallet app to the
+                    address above, then return here and tap I’ve paid.
                   </p>
-                  <button
-                    type="button"
-                    className="w-full rounded-xl border border-purple-400/50 bg-purple-500/10 px-4 py-2.5 text-sm font-semibold text-purple-100 sm:w-auto"
-                    disabled={busy}
-                    onClick={() => void payWithSolana(activeOrder)}
-                  >
-                    Pay SOL in wallet
-                  </button>
+                  {hasInjectedSolana && (
+                    <button
+                      type="button"
+                      className="w-full rounded-xl border border-purple-400/50 bg-purple-500/10 px-4 py-2.5 text-sm font-semibold text-purple-100 sm:w-auto"
+                      disabled={busy}
+                      onClick={() => void payWithSolana(activeOrder)}
+                    >
+                      Pay with Phantom
+                    </button>
+                  )}
                 </>
               )}
               {isEvmDepositAsset(activeOrder.payAsset) && (

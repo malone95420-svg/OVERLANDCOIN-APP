@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { createUser, emailAuthAvailable } from "@/lib/auth/userStore";
+import { sendWelcomeEmail } from "@/lib/email/sendWelcome";
 
 export const runtime = "nodejs";
 
@@ -37,9 +38,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: result.error }, { status });
     }
 
+    let welcomeEmailSent = false;
+    try {
+      const welcome = await sendWelcomeEmail({
+        to: result.email,
+        name: result.name,
+      });
+      welcomeEmailSent = welcome.sent;
+      if (!welcome.sent) {
+        console.warn("[welcome-email] not sent:", welcome.reason);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "unknown";
+      console.warn("[welcome-email] soft error:", msg);
+    }
+
     return NextResponse.json({
       ok: true,
       user: { id: result.id, email: result.email, name: result.name },
+      welcomeEmailSent,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Registration failed";

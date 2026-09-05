@@ -64,23 +64,25 @@ export default function RegisterPage() {
   return (
     <div className="container-page py-14">
       <span className="badge">Account</span>
-      <h1 className="section-title mt-4">Create profile</h1>
+      <h1 className="section-title mt-4">Create your OVERLANDCOIN profile</h1>
       <p className="section-sub">
-        Prefer wallet sign-in for a no-setup account. Email profiles need Upstash Redis in production.
+        Sign up with email to join the trail. We&apos;ll send a{" "}
+        <strong className="font-medium text-slate-200">Welcome to OVERLANDCOIN</strong>{" "}
+        note with links to the Quest Map, presale, and dashboard. Wallet sign-in is
+        here too if you prefer.
       </p>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-2">
         <div className="card space-y-4">
-          <h2 className="text-lg font-semibold text-white">Wallet (recommended)</h2>
-          <WalletSignInButton />
-        </div>
-
-        <div className="card space-y-4">
-          <h2 className="text-lg font-semibold text-white">Email profile</h2>
+          <h2 className="text-lg font-semibold text-white">Email</h2>
+          <p className="text-sm text-slate-400">
+            First-class email signup. Create a password profile and we&apos;ll
+            welcome you in the inbox.
+          </p>
           {emailOk === false && (
             <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-100">
               {emailHint ||
-                "Email auth needs Upstash — use wallet login."}
+                "Email signup is temporarily unavailable. Use wallet sign-in, or try again shortly."}
             </p>
           )}
           <form onSubmit={onSubmit} className="space-y-3">
@@ -127,6 +129,14 @@ export default function RegisterPage() {
               Sign in
             </Link>
           </p>
+        </div>
+
+        <div className="card space-y-4">
+          <h2 className="text-lg font-semibold text-white">Wallet</h2>
+          <p className="text-sm text-slate-400">
+            No password — sign a message to create or open a wallet profile.
+          </p>
+          <WalletSignInButton />
         </div>
       </div>
     </div>

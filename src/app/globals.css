@@ -21,8 +21,11 @@ body {
   color: #e8eef4;
   background: var(--bg);
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   max-width: 100%;
+  /* Sticky header owns top inset; keep a bottom pad so fixed widgets clear home indicator */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 @layer components {

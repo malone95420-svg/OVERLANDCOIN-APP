@@ -89,7 +89,7 @@ export async function claimRewardToWallet(input: ClaimInput): Promise<ClaimResul
         error:
           data.message ||
           data.error ||
-          "Rewards wallet is not configured. Set REWARD_PRIVATE_KEY on the server.",
+          "Quest rewards payouts are temporarily unavailable. Try again later, or check Claim for status.",
         status: 503,
         notConfigured: true,
       };

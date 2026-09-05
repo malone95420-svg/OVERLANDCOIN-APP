@@ -144,7 +144,7 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
 
   return (
     <div
-      className="fixed inset-0 z-[1000] flex items-end justify-center bg-black/70 p-4 sm:items-center"
+      className="fixed inset-0 z-[1000] flex items-end justify-center bg-black/70 p-4 pt-[max(1rem,env(safe-area-inset-top,0px))] pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:items-center"
       role="dialog"
       aria-modal="true"
       aria-labelledby="checkin-title"
@@ -152,7 +152,7 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-bg-card p-5 shadow-gold">
+      <div className="max-h-[min(90vh,calc(100dvh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-2rem))] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-bg-card p-5 shadow-gold">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-wide text-cyan-accent">Check in</p>
@@ -175,9 +175,8 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
 
         <p className="mt-3 rounded-lg border border-border/80 bg-bg-panel px-3 py-2 text-xs text-slate-400">
           Rewards are <span className="text-gold-bright">GPS + photo verified</span>. After check-in,
-          claim OLC to your connected wallet from the Overland rewards wallet (when{" "}
-          <span className="font-mono text-cyan-accent">REWARD_PRIVATE_KEY</span> is configured). No
-          fake on-chain success without a real tx hash.
+          claim OLC to your connected wallet. Claims only succeed with a real on-chain transaction —
+          never a fake success screen.
         </p>
 
         {!tierOk && (

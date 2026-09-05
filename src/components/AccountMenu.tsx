@@ -11,7 +11,7 @@ function shortLabel(name?: string | null, email?: string | null, address?: strin
   return "Account";
 }
 
-export function AccountMenu() {
+export function AccountMenu({ compact = false }: { compact?: boolean }) {
   const { data: session, status } = useSession();
   const [busy, setBusy] = useState(false);
   const [open, setOpen] = useState(false);
@@ -26,7 +26,10 @@ export function AccountMenu() {
 
   if (!session?.user) {
     return (
-      <Link href="/login" className="btn-secondary !py-1.5 !text-xs">
+      <Link
+        href="/login"
+        className={`btn-secondary !py-1.5 !text-xs ${compact ? "!px-2.5 sm:!px-5" : ""}`}
+      >
         Account
       </Link>
     );
@@ -38,7 +41,9 @@ export function AccountMenu() {
     <div className="relative">
       <button
         type="button"
-        className="btn-secondary max-w-[9rem] truncate !py-1.5 !text-xs"
+        className={`btn-secondary truncate !py-1.5 !text-xs ${
+          compact ? "max-w-[5.5rem] !px-2.5 sm:max-w-[9rem] sm:!px-5" : "max-w-[9rem]"
+        }`}
         title={session.user.accountKey || session.user.email || undefined}
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
@@ -53,7 +58,7 @@ export function AccountMenu() {
             aria-label="Close account menu"
             onClick={() => setOpen(false)}
           />
-          <div className="absolute right-0 z-50 mt-2 w-44 rounded-xl border border-border bg-bg-card p-1.5 shadow-gold">
+          <div className="fixed left-3 right-3 z-50 top-[calc(env(safe-area-inset-top,0px)+3.75rem)] max-h-[min(70vh,24rem)] overflow-y-auto rounded-xl border border-border bg-bg-card p-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom,0px))] shadow-gold sm:absolute sm:left-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-52 sm:max-w-none">
             <Link
               href="/profile"
               onClick={() => setOpen(false)}

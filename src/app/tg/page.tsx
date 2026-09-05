@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function TelegramMiniAppPage() {
   return (
-    <div className="flex min-h-[calc(100dvh-4rem)] flex-col">
+    <div className="flex min-h-[calc(100dvh-3.5rem-env(safe-area-inset-top,0px))] flex-col sm:min-h-[calc(100dvh-4rem-env(safe-area-inset-top,0px))]">
       <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-border bg-bg-deep/90 px-3 py-2 text-xs">
         <span className="font-semibold text-gold-bright">Mini App</span>
         <Link href="/map" className="rounded-lg bg-bg-card px-2 py-1 text-slate-200">
@@ -31,10 +31,10 @@ export default function TelegramMiniAppPage() {
           Check-in stays on the live map — same completions + /api/rewards/claim.
         </span>
       </div>
-      <div className="relative min-h-[55vh] flex-1 overflow-hidden">
+      <div className="relative min-h-[45vh] flex-1 overflow-hidden">
         <QuestCards quests={QUESTS} />
       </div>
-      <div className="border-t border-border bg-bg-deep px-3 py-3">
+      <div className="border-t border-border bg-bg-deep px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))]">
         <p className="mb-2 text-xs uppercase tracking-wider text-slate-500">RANGER</p>
         <RangerChat compact />
       </div>

@@ -56,8 +56,9 @@ export default function LoginPage() {
       <span className="badge">Account</span>
       <h1 className="section-title mt-4">Sign in</h1>
       <p className="section-sub">
-        Wallet login works now. Email/password needs AUTH_SECRET and Upstash Redis in production.
-        Progress stays on this device under your account key until cross-device sync ships.
+        Sign in with email or wallet. Email signup is live — create a profile and we&apos;ll send a
+        welcome note. Progress stays on this device under your account key until cross-device sync
+        ships.
       </p>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-2">
@@ -71,7 +72,7 @@ export default function LoginPage() {
           {emailOk === false && (
             <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-100">
               {emailHint ||
-                "Email auth needs Upstash — use wallet login."}
+                "Email sign-in is temporarily unavailable — use wallet login, or try again shortly."}
             </p>
           )}
           <form onSubmit={onSubmit} className="space-y-3">

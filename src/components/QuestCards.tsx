@@ -503,7 +503,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
 
         {/* Selected quest detail card — bottom-right / mobile bottom sheet */}
         {selectedQuest && (
-          <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-20 sm:inset-x-auto sm:bottom-14 sm:right-3 sm:w-[min(100%-1.5rem,22rem)] md:bottom-16">
+          <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-20 pb-[env(safe-area-inset-bottom,0px)] sm:inset-x-auto sm:bottom-14 sm:right-3 sm:w-[min(100%-1.5rem,22rem)] sm:pb-0 md:bottom-16">
             <div className="max-h-[55vh] overflow-y-auto rounded-t-2xl border border-white/15 bg-black/90 p-4 shadow-2xl backdrop-blur-md sm:max-h-[min(70vh,28rem)] sm:rounded-2xl">
               <div className="mb-2 flex items-start justify-between gap-2 sm:hidden">
                 <div className="mx-auto h-1 w-10 rounded-full bg-white/25" />

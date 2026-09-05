@@ -65,12 +65,18 @@ const NAMED_IDS = new Set<string>(["okx", "trust", "rabby", "coinbase", "bitget"
 function ConnectWalletButton({
   disabled,
   label = "Connect Wallet",
+  compact = false,
 }: {
   disabled?: boolean;
   label?: string;
+  compact?: boolean;
 }) {
   return (
-    <button type="button" className="btn-primary !py-2 !text-xs" disabled={disabled}>
+    <button
+      type="button"
+      className={`btn-primary !py-2 !text-xs ${compact ? "!px-2.5 sm:!px-5" : ""}`}
+      disabled={disabled}
+    >
       {label}
     </button>
   );
@@ -80,7 +86,13 @@ function ConnectWalletButton({
 export function ConnectWallet({ compact = false }: { compact?: boolean }) {
   const web3Mounted = useWeb3Mounted();
   if (!web3Mounted) {
-    return <ConnectWalletButton disabled label="Connect Wallet" />;
+    return (
+      <ConnectWalletButton
+        disabled
+        compact={compact}
+        label={compact ? "Connect" : "Connect Wallet"}
+      />
+    );
   }
   return <ConnectWalletInner compact={compact} />;
 }
@@ -301,8 +313,12 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
 
   if (isConnected && address) {
     return (
-      <div className={`relative flex items-center gap-2 ${compact ? "" : ""}`}>
-        <div className="flex flex-wrap items-center gap-1.5">
+      <div className="relative flex min-w-0 items-center gap-1 sm:gap-2">
+        <div
+          className={`flex-wrap items-center gap-1.5 ${
+            compact ? "hidden sm:flex" : "flex"
+          }`}
+        >
           {wrongNetwork ? (
             <>
               <button
@@ -335,18 +351,31 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
             </button>
           )}
         </div>
+        {wrongNetwork && compact && (
+          <button
+            type="button"
+            onClick={onSwitch}
+            disabled={isSwitching || adding}
+            className="btn-primary !px-2 !py-1.5 !text-xs sm:hidden"
+            title="Switch to BlockDAG"
+          >
+            {isSwitching || adding ? "…" : "BDAG"}
+          </button>
+        )}
         <button
           type="button"
           onClick={() => disconnect()}
-          className="btn-secondary !py-1.5 !text-xs"
-          title={`Connected on chain ${chainId}`}
+          className={`btn-secondary min-w-0 truncate !py-1.5 !text-xs ${compact ? "!px-2 sm:!px-5" : ""}`}
+          title={`Connected on chain ${chainId} — tap to disconnect`}
         >
-          {wrongNetwork ? "Wrong network · " : ""}
+          {wrongNetwork && !compact ? "Wrong network · " : ""}
           {shortAddr(address)}
-          <span className="ml-1 text-slate-500">Disconnect</span>
+          <span className={`ml-1 text-slate-500 ${compact ? "hidden sm:inline" : ""}`}>
+            Disconnect
+          </span>
         </button>
         {netError && (
-          <p className="absolute right-0 top-full z-20 mt-1 max-w-xs rounded-lg border border-red-500/40 bg-bg-deep p-2 text-[11px] text-red-300">
+          <p className="absolute right-0 top-full z-20 mt-1 max-w-[min(18rem,calc(100vw-2rem))] rounded-lg border border-red-500/40 bg-bg-deep p-2 text-[11px] text-red-300">
             {netError}
           </p>
         )}
@@ -358,15 +387,19 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
     <div className="relative">
       <button
         type="button"
-        className="btn-primary !py-2 !text-xs"
+        className={`btn-primary !py-2 !text-xs ${compact ? "!px-2.5 sm:!px-5" : ""}`}
         disabled={isConnecting || status === "connecting" || !mounted}
         onClick={() => void onPrimaryClick()}
       >
-        {isConnecting || status === "connecting" ? "Connecting…" : "Connect Wallet"}
+        {isConnecting || status === "connecting"
+          ? "Connecting…"
+          : compact
+            ? "Connect"
+            : "Connect Wallet"}
       </button>
 
       {menuOpen && menuConnectors.length > 0 && (
-        <div className="absolute right-0 z-30 mt-2 w-72 rounded-xl border border-border bg-bg-deep p-2 shadow-gold">
+        <div className="absolute right-0 z-30 mt-2 w-[min(18rem,calc(100vw-1.5rem))] max-h-[min(70vh,24rem)] overflow-y-auto rounded-xl border border-border bg-bg-deep p-2 shadow-gold">
           <p className="px-2 pb-1 text-[10px] uppercase tracking-wide text-slate-500">
             BlockDAG only (chain {TOKEN.chainId})
           </p>
@@ -399,7 +432,7 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
       )}
 
       {displayError && (
-        <div className="absolute right-0 top-full z-30 mt-2 w-72 rounded-xl border border-red-500/40 bg-bg-deep p-3 text-[11px] text-red-300 shadow-gold">
+        <div className="absolute right-0 top-full z-30 mt-2 w-[min(18rem,calc(100vw-1.5rem))] max-h-[min(70vh,20rem)] overflow-y-auto rounded-xl border border-red-500/40 bg-bg-deep p-3 text-[11px] text-red-300 shadow-gold">
           <p className="font-medium text-red-200">Could not connect</p>
           <p className="mt-1 break-words">{displayError}</p>
           {showInstallHint && (

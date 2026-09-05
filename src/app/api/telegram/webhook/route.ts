@@ -31,6 +31,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
 
-  await handleTelegramUpdate(update);
+  try {
+    await handleTelegramUpdate(update);
+  } catch (err) {
+    const name = err instanceof Error ? err.name : "Error";
+    console.error("telegram_webhook_error", name);
+    // Always 200-shaped ok so Telegram does not retry-storm; handler also swallows.
+    return NextResponse.json({ ok: true, handled: false });
+  }
   return NextResponse.json({ ok: true });
 }

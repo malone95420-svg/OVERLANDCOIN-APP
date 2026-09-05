@@ -225,9 +225,9 @@ export async function POST(req: NextRequest) {
   if (!pkRaw) {
     return NextResponse.json(
       {
-        error: "Rewards wallet is not configured",
+        error: "Quest rewards payouts are temporarily unavailable",
         message:
-          "Set REWARD_PRIVATE_KEY (and optionally REWARD_RPC_URL) on the server, then fund that wallet with OLC. UI works in demo mode until then — no fake on-chain success.",
+          "Rewards wallet is not configured on the server yet. No fake on-chain success — try again after payouts go live.",
         notConfigured: true,
       },
       { status: 503 },
@@ -240,8 +240,8 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     return NextResponse.json(
       {
-        error: "Invalid REWARD_PRIVATE_KEY",
-        message: e instanceof Error ? e.message : "Bad private key",
+        error: "Quest rewards payouts are misconfigured",
+        message: "Server rewards wallet key is invalid. No payout was sent.",
         notConfigured: true,
       },
       { status: 503 },

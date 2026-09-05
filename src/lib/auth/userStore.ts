@@ -57,7 +57,7 @@ export async function createUser(input: {
   if (!hasUpstashRedis() && process.env.NODE_ENV === "production") {
     return {
       error:
-        "Email auth needs Upstash Redis (UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN). Use wallet login for now.",
+        "Email signup is temporarily unavailable. Use wallet login, or try again shortly.",
     };
   }
   const existing = await getUserByEmail(email);
@@ -86,7 +86,7 @@ export async function createUser(input: {
 
 export function emailAuthAvailable(): { ok: true } | { ok: false; reason: string } {
   if (!process.env.AUTH_SECRET?.trim()) {
-    return { ok: false, reason: "AUTH_SECRET is required for email login." };
+    return { ok: false, reason: "Email signup is temporarily unavailable. Use wallet login, or try again shortly." };
   }
   if (!hasUpstashRedis()) {
     if (process.env.NODE_ENV !== "production") {
@@ -95,7 +95,7 @@ export function emailAuthAvailable(): { ok: true } | { ok: false; reason: string
     return {
       ok: false,
       reason:
-        "Email auth needs Upstash Redis (UPSTASH_REDIS_REST_URL + TOKEN). Use wallet login, or add Upstash env vars.",
+        "Email signup is temporarily unavailable. Use wallet login, or try again shortly.",
     };
   }
   return { ok: true };

@@ -136,10 +136,10 @@ function ClaimHubInner() {
     () => completions.filter((c) => c.status === "claimed"),
     [completions],
   );
-  const pendingLock = useMemo(
-    () => listPendingLockCredits(address),
-    [purchases, address],
-  );
+  const pendingLock = useMemo(() => {
+    void purchases; // refresh when local purchase ledger changes
+    return listPendingLockCredits(address);
+  }, [purchases, address]);
   const lockedPurchases = useMemo(
     () => purchases.filter((p) => p.status === "locked"),
     [purchases],

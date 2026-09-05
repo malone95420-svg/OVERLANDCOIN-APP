@@ -18,7 +18,7 @@ export function Footer() {
   ] as const;
 
   return (
-    <footer className="mt-20 border-t border-border bg-bg-deep">
+    <footer className="mt-20 border-t border-border bg-bg-deep pb-[env(safe-area-inset-bottom,0px)]">
       <div className="container-page grid gap-10 py-12 md:grid-cols-3">
         <div>
           <div className="flex items-center gap-2">

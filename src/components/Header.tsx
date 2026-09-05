@@ -26,11 +26,11 @@ export function Header() {
   const links = compact ? MINI_LINKS : NAV_LINKS;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-bg/80 backdrop-blur-xl">
-      <div className="container-page flex h-16 min-w-0 items-center justify-between gap-2 sm:gap-4">
-        <Link href="/" className="flex min-w-0 shrink items-center gap-2 sm:gap-2.5">
-          <Image src="/logo.png" alt="OVERLANDCOIN" width={36} height={36} className="rounded-full shrink-0" priority />
-          <span className="truncate font-bold tracking-wide text-white">
+    <header className="sticky top-0 z-50 border-b border-border/80 bg-bg/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+      <div className="container-page flex h-14 min-w-0 items-center justify-between gap-1.5 sm:h-16 sm:gap-4">
+        <Link href="/" className="flex min-w-0 shrink items-center gap-1.5 sm:gap-2.5">
+          <Image src="/logo.png" alt="OVERLANDCOIN" width={36} height={36} className="h-8 w-8 rounded-full shrink-0 sm:h-9 sm:w-9" priority />
+          <span className="truncate text-sm font-bold tracking-wide text-white sm:text-base">
             OVERLAND<span className="gold-text">COIN</span>
           </span>
         </Link>
@@ -54,20 +54,22 @@ export function Header() {
           })}
         </nav>
 
-        <div className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-2">
+        <div className="flex min-w-0 shrink-0 items-center gap-1 sm:gap-2">
           {!compact && <PendingOlCBadge />}
           {!compact && (
             <Link href="/presale" className="btn-secondary hidden sm:inline-flex !py-2 !text-xs">
               Presale
             </Link>
           )}
-          <AccountMenu />
-          {!compact && <AddOlcButton compact showStatus={false} className="hidden sm:inline-flex" />}
+          {/* Account stays visible; secondary wallet actions compact on xs */}
+          <AccountMenu compact />
+          {!compact && <AddOlcButton compact showStatus={false} className="hidden md:inline-flex" />}
           <ConnectWallet compact />
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-lg border border-border p-2 text-slate-200 lg:hidden"
             aria-label="Toggle menu"
+            aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -82,7 +84,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="border-t border-border bg-bg-deep lg:hidden">
+        <div className="max-h-[min(70vh,calc(100dvh-env(safe-area-inset-top)-3.5rem))] overflow-y-auto border-t border-border bg-bg-deep pb-[env(safe-area-inset-bottom)] lg:hidden">
           <nav className="container-page flex flex-col gap-1 py-3">
             {links.map((link) => (
               <Link
@@ -110,6 +112,15 @@ export function Header() {
             >
               Dashboard
             </Link>
+            {!compact && (
+              <Link
+                href="/presale"
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-3 py-2 text-sm text-slate-300 sm:hidden"
+              >
+                Presale
+              </Link>
+            )}
             <div className="flex flex-wrap items-center gap-2 px-3 py-2">
               <AddOlcButton compact />
               <ConnectWallet />

@@ -16,8 +16,9 @@ const QuestMapInner = dynamic(() => import("./QuestMapInner"), {
 type Props = {
   quests: Quest[];
   selectedId?: string;
-  /** Fly the map only when Directions is tapped — not on every selection. */
+  /** Fly the map only on explicit request (Directions / list / Locate). */
   flyToId?: string;
+  flyNonce?: number;
   onSelect?: (id: string) => void;
   onUserGeoChange?: (geo: UserGeo) => void;
   routeCoords?: [number, number][] | null;

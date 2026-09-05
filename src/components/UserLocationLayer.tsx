@@ -30,6 +30,22 @@ function locationIcon(heading: number | null): L.DivIcon {
   });
 }
 
+function haversineMeters(
+  a: { lat: number; lng: number },
+  b: { lat: number; lng: number },
+): number {
+  const R = 6371000;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
 /** Exposes the Leaflet map instance to a parent ref (for Locate Me outside MapContainer). */
 export function MapApiBridge({
   mapRef,
@@ -48,7 +64,7 @@ export function MapApiBridge({
 
 /**
  * Watches GPS while the map is mounted: blue accuracy circle + location marker.
- * Clears the watch on unmount. Optional heading cone when the device reports it.
+ * Debounces watchPosition updates so the map does not vibrate on every GPS tick.
  */
 export function UserLocationLayer({ onGeoChange }: Props) {
   const map = useMap();
@@ -56,6 +72,56 @@ export function UserLocationLayer({ onGeoChange }: Props) {
   const watchIdRef = useRef<number | null>(null);
   const onGeoChangeRef = useRef(onGeoChange);
   onGeoChangeRef.current = onGeoChange;
+  const lastEmittedRef = useRef<{
+    lat: number;
+    lng: number;
+    accuracy: number;
+    heading: number | null;
+    at: number;
+  } | null>(null);
+  const pendingTimerRef = useRef<number | null>(null);
+  const latestPosRef = useRef<GeolocationPosition | null>(null);
+
+  const emitWatching = useCallback((pos: GeolocationPosition, force = false) => {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    const accuracy = pos.coords.accuracy || 0;
+    const rawHeading = pos.coords.heading;
+    const heading =
+      rawHeading != null && Number.isFinite(rawHeading) ? rawHeading : null;
+    const prev = lastEmittedRef.current;
+    const now = Date.now();
+
+    if (!force && prev) {
+      const moved = haversineMeters(prev, { lat, lng });
+      const accDelta = Math.abs(accuracy - prev.accuracy);
+      const headingDelta =
+        heading != null && prev.heading != null
+          ? Math.abs(heading - prev.heading)
+          : heading !== prev.heading
+            ? 999
+            : 0;
+      // Ignore sub-meter GPS jitter and rapid heading flicker
+      if (moved < 4 && accDelta < 8 && headingDelta < 12 && now - prev.at < 1200) {
+        return;
+      }
+      // Hard debounce: at most ~1.5 Hz meaningful updates
+      if (now - prev.at < 650 && moved < 12) {
+        return;
+      }
+    }
+
+    lastEmittedRef.current = { lat, lng, accuracy, heading, at: now };
+    const next: UserGeo = {
+      status: "watching",
+      lat,
+      lng,
+      accuracy,
+      heading,
+    };
+    setGeo(next);
+    onGeoChangeRef.current?.(next);
+  }, []);
 
   const updateGeo = useCallback((next: UserGeo) => {
     setGeo(next);
@@ -73,14 +139,19 @@ export function UserLocationLayer({ onGeoChange }: Props) {
 
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
-        const heading = pos.coords.heading;
-        updateGeo({
-          status: "watching",
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-          accuracy: pos.coords.accuracy || 0,
-          heading: heading != null && Number.isFinite(heading) ? heading : null,
-        });
+        latestPosRef.current = pos;
+        // Coalesce GPS ticks into a single emit shortly after movement settles
+        if (pendingTimerRef.current != null) {
+          window.clearTimeout(pendingTimerRef.current);
+        }
+        const first = lastEmittedRef.current == null;
+        pendingTimerRef.current = window.setTimeout(
+          () => {
+            pendingTimerRef.current = null;
+            if (latestPosRef.current) emitWatching(latestPosRef.current, first);
+          },
+          first ? 0 : 400,
+        );
       },
       (err) => {
         if (err.code === err.PERMISSION_DENIED) {
@@ -95,7 +166,7 @@ export function UserLocationLayer({ onGeoChange }: Props) {
           });
         }
       },
-      { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 },
+      { enableHighAccuracy: true, maximumAge: 8000, timeout: 20000 },
     );
 
     return () => {
@@ -103,11 +174,15 @@ export function UserLocationLayer({ onGeoChange }: Props) {
         navigator.geolocation.clearWatch(watchIdRef.current);
         watchIdRef.current = null;
       }
+      if (pendingTimerRef.current != null) {
+        window.clearTimeout(pendingTimerRef.current);
+        pendingTimerRef.current = null;
+      }
     };
-  }, [updateGeo]);
+  }, [updateGeo, emitWatching]);
 
   useEffect(() => {
-    const t = window.setTimeout(() => map.invalidateSize(), 100);
+    const t = window.setTimeout(() => map.invalidateSize({ animate: false }), 120);
     return () => window.clearTimeout(t);
   }, [map]);
 
@@ -118,7 +193,8 @@ export function UserLocationLayer({ onGeoChange }: Props) {
 
   if (geo.status !== "watching" || !icon) return null;
 
-  const radius = Math.max(geo.accuracy || 0, 8);
+  // Round accuracy for Circle radius so small GPS noise doesn't redraw the path
+  const radius = Math.max(Math.round((geo.accuracy || 0) / 2) * 2, 8);
 
   return (
     <>

@@ -96,6 +96,16 @@ function shortAddr(addr: string) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
+/** iOS Safari (no injected wallet) — always show clear manual deposit path. */
+function isMobileSafariNoWallet(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  const iOS = /iP(hone|od|ad)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const webkit = /WebKit/i.test(ua);
+  const other = /(CriOS|FxiOS|OPiOS|EdgiOS|Chrome|Firefox|Android)/i.test(ua);
+  return iOS && webkit && !other;
+}
+
 function progressLabel(p: Progress): string | null {
   switch (p) {
     case "switching_network":
@@ -452,24 +462,34 @@ function PresaleBuyInner() {
       }
       const assetIdRetry = (record.payAsset as AcceptedPayAsset["id"]) || selected?.id || "BDAG";
       const payChain = payChainForAsset(assetIdRetry);
-      const endpoint =
-        payChain === "blockdag" ? "/api/presale/deliver" : "/api/presale/confirm-deposit";
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          buyer,
-          olcAmount,
-          paymentTxHash,
-          payChain,
-          chain: payChain,
-          batchPriceUsed: record.batchPriceUsed ?? record.batchPriceUsdt,
-          usdRateUsed: record.usdRateUsed,
-          usdPaid: record.usdPaid ?? record.usdEstimated,
-          payAsset: record.payAsset,
-          payAmount: record.payAmount,
-        }),
-      });
+      let res: Response;
+      if (paymentTxHash.startsWith("order:")) {
+        const orderId = paymentTxHash.slice("order:".length);
+        res = await fetch(`/api/presale/orders/${encodeURIComponent(orderId)}/confirm`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
+        });
+      } else {
+        const endpoint =
+          payChain === "blockdag" ? "/api/presale/deliver" : "/api/presale/confirm-deposit";
+        res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            buyer,
+            olcAmount,
+            paymentTxHash,
+            payChain,
+            chain: payChain,
+            batchPriceUsed: record.batchPriceUsed ?? record.batchPriceUsdt,
+            usdRateUsed: record.usdRateUsed,
+            usdPaid: record.usdPaid ?? record.usdEstimated,
+            payAsset: record.payAsset,
+            payAmount: record.payAmount,
+          }),
+        });
+      }
       const data = (await res.json().catch(() => ({}))) as {
         status?: string;
         creditTxHash?: string;
@@ -610,6 +630,19 @@ function PresaleBuyInner() {
 
       setProgress("confirming_payment");
       const waited = await waitForBlockdagReceipt(hash, { timeoutMs: 90_000, pollMs: 2_000 });
+      if (waited.ok && waited.receipt.status === "reverted") {
+        setError(
+          `Transaction reverted on BlockDAG (${hash.slice(0, 10)}…). No OLC was locked — check balance/gas and retry.`,
+        );
+        setPurchases(
+          updatePurchase(hash, {
+            status: "pending_external",
+            deliveryNote: "On-chain payment reverted",
+          }),
+        );
+        setPendingLockRetryTx(null);
+        return;
+      }
       if (!waited.ok) {
         setSuccessNote(
           `Payment submitted (${hash.slice(0, 10)}…) but confirmation timed out. Attempting lock credit…`,
@@ -665,11 +698,21 @@ function PresaleBuyInner() {
     if (mode === "olc") body.olcAmount = derived.olc;
     else body.payAmount = derived.payAmount;
 
-    const res = await fetch("/api/presale/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    let res: Response;
+    try {
+      res = await fetch("/api/presale/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? `Network error creating order: ${e.message}`
+          : "Network error creating pay order.",
+      );
+      return null;
+    }
     const data = (await res.json().catch(() => ({}))) as {
       orderId?: string;
       buyer?: string;
@@ -683,7 +726,10 @@ function PresaleBuyInner() {
       error?: string;
     };
     if (!res.ok || !data.orderId || !data.depositAddress) {
-      setError(friendlyPaymentError(data.error) || "Could not create pay order.");
+      setError(
+        friendlyPaymentError(data.error) ||
+          `Could not create pay order (HTTP ${res.status}).`,
+      );
       return null;
     }
     const order: ActivePayOrder = {
@@ -830,7 +876,11 @@ function PresaleBuyInner() {
     const eth = getEthereumPaymentProvider() ?? getAnyInjectedProvider();
     if (!eth?.request) {
       setManualFallback(true);
-      setError(noInjectedProviderMessage(asset, order.payAmount));
+      setError(
+        isMobileSafariNoWallet()
+          ? "Safari mobile: use the deposit address / QR below, then tap I’ve paid. (Or open this page in MetaMask / OKX in-app browser for one-tap pay.)"
+          : noInjectedProviderMessage(asset, order.payAmount),
+      );
       return "manual";
     }
 
@@ -875,8 +925,30 @@ function PresaleBuyInner() {
       if (!txHash) throw new Error("Wallet did not return a transaction hash.");
       setDepositTxHash(txHash);
       setProgress("confirming_payment");
-      await new Promise((r) => setTimeout(r, 2500));
-      await confirmOrder(order, txHash);
+
+      // Retry auto-confirm — Ethereum indexing can lag a few seconds
+      let confirmed = false;
+      let lastConfirmError: string | null = null;
+      for (let attempt = 0; attempt < 4; attempt++) {
+        if (attempt > 0) {
+          await new Promise((r) => setTimeout(r, 2500 * attempt));
+        } else {
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+        // Clear prior "not found yet" noise between retries
+        setError(null);
+        confirmed = await confirmOrder(order, txHash);
+        if (confirmed) break;
+        lastConfirmError = "Payment submitted but not yet indexed — tap I’ve paid in a moment.";
+      }
+      if (!confirmed) {
+        setManualFallback(true);
+        setError(
+          lastConfirmError ||
+            "Wallet payment sent. If OLC is not locked yet, wait ~30s and tap I’ve paid.",
+        );
+        return "manual";
+      }
       return "paid";
     } catch (e) {
       if (isUserRejection(e)) {
@@ -936,17 +1008,18 @@ function PresaleBuyInner() {
       if (isEvmDepositAsset(order.payAsset)) {
         const result = await payWithEvmWallet(order);
         if (result === "paid") return;
-        // manual / canceled — keep order card visible
+        // manual / canceled — keep order card visible with clear next step
         setManualFallback(true);
         return;
       }
 
       if (order.payAsset.toUpperCase() === "SOL") {
         await payWithSolana(order);
+        setManualFallback(true);
         return;
       }
 
-      // BTC and anything else: copy/QR only
+      // BTC and anything else: copy/QR + I’ve paid
       setManualFallback(true);
     } catch (e) {
       setError(formatWalletError(e, e instanceof Error ? e.message : "Buy failed"));

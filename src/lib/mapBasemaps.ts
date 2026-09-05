@@ -1,6 +1,6 @@
 /**
  * Quest map basemap (tile layer) definitions + localStorage persistence.
- * All layers are key-free public tile endpoints (no Mapbox/Google Maps keys).
+ * All layers are key-free public tile endpoints (no Mapbox/Google Maps/CARTO keys).
  */
 
 export type BasemapId = "satellite" | "topo" | "street" | "voyager";
@@ -14,7 +14,8 @@ export type BasemapDef = {
   subdomains?: string | string[];
 };
 
-export const BASEMAP_STORAGE_KEY = "overlandcoin.map.basemap.v4";
+/** Bump when tile URLs change so clients drop stale basemap cache. */
+export const BASEMAP_STORAGE_KEY = "overlandcoin.map.basemap.v5";
 
 export const BASEMAPS: Record<BasemapId, BasemapDef> = {
   satellite: {
@@ -45,12 +46,12 @@ export const BASEMAPS: Record<BasemapId, BasemapDef> = {
   voyager: {
     id: "voyager",
     label: "Voyager",
-    // CartoCDN Voyager — free public tiles, no API key
-    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    // Esri World Street Map — key-free, colorful streets (distinct from dark Street)
+    // Replaces former CartoCDN Voyager which now requires an API key.
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
     attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: "abcd",
-    maxZoom: 20,
+      "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom",
+    maxZoom: 19,
   },
 };
 
@@ -81,6 +82,7 @@ export function loadBasemapId(): BasemapId {
     const migrated = migrateLegacy(raw);
     if (migrated) return migrated;
     for (const legacyKey of [
+      "overlandcoin.map.basemap.v4",
       "overlandcoin.map.basemap.v3",
       "overlandcoin.map.basemap.v2",
       "overlandcoin.map.basemap.v1",

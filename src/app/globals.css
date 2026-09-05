@@ -69,6 +69,18 @@ body {
 .olc-quest-marker {
   background: transparent !important;
   border: none !important;
+  /* Prevent CSS transitions/animations from jittering pins on filter/GPS updates */
+  transition: none !important;
+  animation: none !important;
+}
+.olc-user-location-icon *,
+.olc-quest-marker * {
+  transition: none !important;
+  animation: none !important;
+}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  transition: none !important;
 }
 
 .leaflet-control-attribution {

@@ -38,6 +38,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [findingId, setFindingId] = useState<string | undefined>(undefined);
   const [flyToId, setFlyToId] = useState<string | undefined>(undefined);
+  const [flyNonce, setFlyNonce] = useState(0);
   const [search, setSearch] = useState("");
   const [difficultyUi, setDifficultyUi] = useState<DifficultyFilterUi>("All");
   const [checkInQuest, setCheckInQuest] = useState<Quest | null>(null);
@@ -139,7 +140,6 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   useEffect(() => {
     setRouteCoords(null);
     setFindingId(undefined);
-    setFlyToId(undefined);
   }, [selectedId]);
 
   // Quest Alerts stub — notify when within ~5 km of an incomplete quest
@@ -165,15 +165,22 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
     }
   }, [alertsOn, userGeo, filtered, completedIds]);
 
-  function selectQuest(id: string) {
+  function requestFlyTo(id: string) {
+    setFlyToId(id);
+    setFlyNonce((n) => n + 1);
+  }
+
+  /** Map pin select: no fly. List/search: pass { fly: true } once. */
+  function selectQuest(id: string, opts?: { fly?: boolean }) {
     setSelected(id);
     setSearchOpen(false);
     setListOpen(false);
+    if (opts?.fly) requestFlyTo(id);
   }
 
   function startDirections(quest: Quest) {
     setFindingId(quest.id);
-    setFlyToId(quest.id);
+    requestFlyTo(quest.id);
   }
 
   function toggleAlerts() {
@@ -235,7 +242,8 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
         quests={mapQuests}
         selectedId={selectedId}
         flyToId={flyToId}
-        onSelect={selectQuest}
+        flyNonce={flyNonce}
+        onSelect={(id) => selectQuest(id)}
         onUserGeoChange={setUserGeo}
         routeCoords={routeCoords}
         completedIds={completedIds}
@@ -272,7 +280,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
                       type="button"
                       className="flex w-full items-start gap-2 border-b border-white/5 px-3 py-2 text-left last:border-0 hover:bg-white/10"
                       onClick={() => {
-                        selectQuest(q.id);
+                        selectQuest(q.id, { fly: true });
                         setSearch(q.title);
                         setSearchOpen(false);
                       }}
@@ -442,7 +450,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
                           active ? "bg-white/10" : "hover:bg-white/5"
                         }`}
                         onClick={() => {
-                          selectQuest(q.id);
+                          selectQuest(q.id, { fly: true });
                         }}
                       >
                         <span

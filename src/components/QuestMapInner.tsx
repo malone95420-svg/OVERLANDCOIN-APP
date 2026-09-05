@@ -42,8 +42,10 @@ L.Icon.Default.mergeOptions({
 type Props = {
   quests: Quest[];
   selectedId?: string;
-  /** Explicit fly target from Directions — do not fly on selectedId alone. */
+  /** Explicit fly target — only set from Directions / list select / Locate. */
   flyToId?: string;
+  /** Bumps only on explicit fly requests so GPS/filter churn never re-triggers flyTo. */
+  flyNonce?: number;
   onSelect?: (id: string) => void;
   onUserGeoChange?: (geo: UserGeo) => void;
   /** Leaflet [lat, lng] pairs for the active directions route. */
@@ -78,33 +80,64 @@ function questMarkerIcon(
   });
 }
 
-function FlyTo({ quests, flyToId }: { quests: Quest[]; flyToId?: string }) {
+function FlyTo({
+  quests,
+  flyToId,
+  flyNonce,
+}: {
+  quests: Quest[];
+  flyToId?: string;
+  flyNonce?: number;
+}) {
   const map = useMap();
+  const questsRef = useRef(quests);
+  questsRef.current = quests;
+
   useEffect(() => {
-    if (!flyToId) return;
-    const q = quests.find((x) => x.id === flyToId);
+    if (!flyToId || !flyNonce) return;
+    const q = questsRef.current.find((x) => x.id === flyToId);
     if (q) {
-      map.flyTo([q.lat, q.lng], 13, { duration: 0.8 });
+      map.flyTo([q.lat, q.lng], 13, { duration: 0.75 });
     }
-  }, [map, quests, flyToId]);
+    // Intentionally omit `quests` — filter refreshes must not re-fly.
+  }, [map, flyToId, flyNonce]);
   return null;
 }
 
-
-function FlyToUser({ geo, locateNonce }: { geo: UserGeo; locateNonce?: number }) {
+function FlyToUser({
+  geo,
+  locateNonce,
+}: {
+  geo: UserGeo;
+  locateNonce?: number;
+}) {
   const map = useMap();
+  const geoRef = useRef(geo);
+  geoRef.current = geo;
+
   useEffect(() => {
     if (!locateNonce) return;
-    if (geo.status !== "watching") return;
-    map.flyTo([geo.lat, geo.lng], Math.max(map.getZoom(), 14), { duration: 0.85 });
-  }, [locateNonce, geo, map]);
+    const g = geoRef.current;
+    if (g.status !== "watching") return;
+    map.flyTo([g.lat, g.lng], Math.max(map.getZoom(), 14), { duration: 0.85 });
+    // Only fly when user taps Locate (nonce bump) — never on GPS ticks.
+  }, [locateNonce, map]);
   return null;
 }
 
 function FitRoute({ coords }: { coords: [number, number][] | null | undefined }) {
   const map = useMap();
+  const fittedKeyRef = useRef<string>("");
+
   useEffect(() => {
-    if (!coords || coords.length < 2) return;
+    if (!coords || coords.length < 2) {
+      fittedKeyRef.current = "";
+      return;
+    }
+    // Fingerprint so identical routes from new array refs don't re-fit / shake
+    const key = `${coords.length}:${coords[0][0].toFixed(5)},${coords[0][1].toFixed(5)}:${coords[coords.length - 1][0].toFixed(5)},${coords[coords.length - 1][1].toFixed(5)}`;
+    if (key === fittedKeyRef.current) return;
+    fittedKeyRef.current = key;
     const bounds = L.latLngBounds(coords.map(([lat, lng]) => L.latLng(lat, lng)));
     map.fitBounds(bounds, { padding: [48, 48], maxZoom: 14, animate: true });
   }, [map, coords]);
@@ -131,10 +164,23 @@ function VisibleQuestMarkers({
 }) {
   const map = useMap();
   const [version, setVersion] = useState(0);
+  const throttleRef = useRef<number | null>(null);
 
   useMapEvents({
-    moveend: () => setVersion((v) => v + 1),
-    zoomend: () => setVersion((v) => v + 1),
+    moveend: () => {
+      if (throttleRef.current != null) return;
+      throttleRef.current = window.setTimeout(() => {
+        throttleRef.current = null;
+        setVersion((v) => v + 1);
+      }, 80);
+    },
+    zoomend: () => {
+      if (throttleRef.current != null) window.clearTimeout(throttleRef.current);
+      throttleRef.current = window.setTimeout(() => {
+        throttleRef.current = null;
+        setVersion((v) => v + 1);
+      }, 80);
+    },
   });
 
   const visible = useMemo(() => {
@@ -201,6 +247,7 @@ export default function QuestMapInner({
   quests,
   selectedId,
   flyToId,
+  flyNonce,
   onSelect,
   onUserGeoChange,
   routeCoords,
@@ -232,6 +279,8 @@ export default function QuestMapInner({
   }
 
   const basemap = BASEMAPS[basemapId];
+  // Stable tile key: avoid remounting MapContainer; only swap TileLayer when basemap id changes
+  const tileKey = hydratedBasemap ? basemap.id : "street-pending";
 
   return (
     <div className={`relative h-full w-full ${className ?? ""}`}>
@@ -243,18 +292,19 @@ export default function QuestMapInner({
         zoom={3}
         scrollWheelZoom
         zoomControl={false}
+        preferCanvas
         className="h-full w-full !bg-[#0a121c]"
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
-          key={hydratedBasemap ? basemap.id : "street"}
+          key={tileKey}
           attribution={basemap.attribution}
           url={basemap.url}
           maxZoom={basemap.maxZoom ?? 19}
           {...(basemap.subdomains ? { subdomains: basemap.subdomains } : {})}
         />
         <MapApiBridge mapRef={mapRef} />
-        <FlyTo quests={quests} flyToId={flyToId} />
+        <FlyTo quests={quests} flyToId={flyToId} flyNonce={flyNonce} />
         <FitRoute coords={routeCoords} />
         <UserLocationLayer onGeoChange={handleGeoChange} />
         <FlyToUser geo={userGeo} locateNonce={locateNonce} />

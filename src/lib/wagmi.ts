@@ -31,23 +31,24 @@ const browserInjected = injected({ shimDisconnect: true });
 
 const wcProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID?.trim();
 
+const wcConnector = wcProjectId
+  ? walletConnect({
+      projectId: wcProjectId,
+      showQrModal: true,
+      metadata: {
+        name: "OVERLANDCOIN",
+        description: "OVERLANDCOIN on BlockDAG — Move. Explore. Earn.",
+        url: "https://www.overlandcoin.tech",
+        icons: ["https://www.overlandcoin.tech/logo.png"],
+      },
+    })
+  : null;
+
+/** WalletConnect first when configured so mobile Safari/Chrome can connect without an in-app browser. */
 const connectors = [
+  ...(wcConnector ? [wcConnector] : []),
   ...namedInjected,
   browserInjected,
-  ...(wcProjectId
-    ? [
-        walletConnect({
-          projectId: wcProjectId,
-          showQrModal: true,
-          metadata: {
-            name: "OVERLANDCOIN",
-            description: "OVERLANDCOIN on BlockDAG — Move. Explore. Earn.",
-            url: "https://overlandcoin.com",
-            icons: ["https://overlandcoin.com/logo.png"],
-          },
-        }),
-      ]
-    : []),
 ];
 
 export const wagmiConfig = createConfig({

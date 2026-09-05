@@ -18,10 +18,19 @@ import {
   type InjectedWalletId,
 } from "@/lib/injectedWallets";
 import { TOKEN } from "@/lib/token";
+import { walletConnectEnabled } from "@/lib/wagmi";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 
 function shortAddr(addr: string) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+}
+
+function isMobileBrowser(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  if (/Android|iPhone|iPad|iPod|Mobile/i.test(ua)) return true;
+  // iPadOS desktop UA with touch
+  return navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
 }
 
 async function providerFromConnector(connector?: Connector | null): Promise<Eip1193Provider | undefined> {
@@ -46,7 +55,10 @@ async function addBlockdagNetwork(provider?: Eip1193Provider | null): Promise<vo
 }
 
 const INSTALL_MSG =
-  "No wallet detected. Install OKX, Trust, Rabby, Coinbase, Bitget, or MetaMask — or open this site in a wallet browser. External deposits (USDT/ETH/BTC/SOL) work without a BlockDAG wallet.";
+  "No wallet detected. Install OKX, Trust, Rabby, Coinbase, Bitget, or MetaMask — or connect with WalletConnect from this page. External deposits (USDT/ETH/BTC/SOL) work without a BlockDAG wallet.";
+
+const WC_MISSING_MOBILE_MSG =
+  "WalletConnect isn’t configured yet on this deployment (set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID). Injected wallets still work if your browser has one.";
 
 const NAMED_IDS = new Set<string>(["okx", "trust", "rabby", "coinbase", "bitget"]);
 
@@ -86,10 +98,12 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
   const [hasWallet, setHasWallet] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [detectedIds, setDetectedIds] = useState<InjectedWalletId[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
   const autoSwitchedFor = useRef<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    setIsMobile(isMobileBrowser());
     const ids = detectedInjectedWalletIds();
     setDetectedIds(ids);
     setHasWallet(ids.length > 0 || Boolean(getAnyInjectedProvider()));
@@ -102,13 +116,17 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
     const seen = new Set<string>();
     const detected = new Set<string>(detectedIds);
 
+    // WalletConnect first whenever the connector exists
     for (const c of connectors) {
-      if (seen.has(c.uid)) continue;
-      if (c.id === "walletConnect") {
+      if (c.id === "walletConnect" && !seen.has(c.uid)) {
         list.push(c);
         seen.add(c.uid);
-        continue;
       }
+    }
+
+    for (const c of connectors) {
+      if (seen.has(c.uid)) continue;
+      if (c.id === "walletConnect") continue;
       if (NAMED_IDS.has(c.id)) {
         if (detected.has(c.id)) {
           list.push(c);
@@ -129,6 +147,7 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
   }, [connectors, detectedIds]);
 
   const primaryConnector = menuConnectors[0] ?? null;
+  const hasWcConnector = connectors.some((c) => c.id === "walletConnect");
 
   const resolveActiveProvider = useCallback(async () => {
     return (
@@ -179,8 +198,12 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
     void onSwitch();
   }, [isConnected, address, wrongNetwork, onSwitch]);
 
-  const showInstallError = useCallback(() => {
+  const showNoWalletGuidance = useCallback(() => {
     setMenuOpen(false);
+    if (!walletConnectEnabled && isMobileBrowser()) {
+      setLocalError(WC_MISSING_MOBILE_MSG);
+      return;
+    }
     setLocalError(INSTALL_MSG);
   }, []);
 
@@ -193,7 +216,7 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
         setDetectedIds(ids);
         if (ids.length === 0 && !getAnyInjectedProvider()) {
           setHasWallet(false);
-          showInstallError();
+          showNoWalletGuidance();
           return;
         }
       }
@@ -206,13 +229,13 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
         if (/rejected|denied|canceled|cancelled/i.test(msg)) {
           setLocalError("Connection canceled in wallet");
         } else if (!getAnyInjectedProvider() && connector.id !== "walletConnect") {
-          showInstallError();
+          showNoWalletGuidance();
         } else {
           setLocalError(msg);
         }
       }
     },
-    [connectAsync, showInstallError],
+    [connectAsync, showNoWalletGuidance],
   );
 
   const onPrimaryClick = useCallback(async () => {
@@ -223,19 +246,39 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
     setDetectedIds(ids);
     const ethNow = ids.length > 0 || Boolean(getAnyInjectedProvider());
     setHasWallet(ethNow);
+    const mobile = isMobileBrowser();
+    setIsMobile(mobile);
 
-    const hasWc = connectors.some((c) => c.id === "walletConnect");
-    if (!ethNow && !hasWc) {
-      showInstallError();
+    const wc = connectors.find((c) => c.id === "walletConnect");
+
+    // Mobile Safari/Chrome with no injected wallet: open WalletConnect directly
+    if (mobile && !ethNow) {
+      if (wc) {
+        await connectWith(wc);
+        return;
+      }
+      showNoWalletGuidance();
       return;
     }
 
-    // Rebuild visible list after fresh detection
-    const visible = connectors.filter((c) => {
-      if (c.id === "walletConnect") return true;
-      if (NAMED_IDS.has(c.id)) return ids.includes(c.id as InjectedWalletId);
-      return (c.id === "injected" || c.type === "injected") && ids.includes("injected");
-    });
+    if (!ethNow && !wc) {
+      showNoWalletGuidance();
+      return;
+    }
+
+    // Rebuild visible list after fresh detection (WC first)
+    const visible: Connector[] = [];
+    if (wc) visible.push(wc);
+    for (const c of connectors) {
+      if (c.id === "walletConnect") continue;
+      if (NAMED_IDS.has(c.id) && ids.includes(c.id as InjectedWalletId)) {
+        visible.push(c);
+        continue;
+      }
+      if ((c.id === "injected" || c.type === "injected") && ids.includes("injected")) {
+        visible.push(c);
+      }
+    }
 
     if (visible.length > 1) {
       setMenuOpen((v) => !v);
@@ -244,13 +287,17 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
 
     const target = visible[0] ?? primaryConnector;
     if (!target) {
-      showInstallError();
+      showNoWalletGuidance();
       return;
     }
     await connectWith(target);
-  }, [mounted, connectors, primaryConnector, connectWith, showInstallError]);
+  }, [mounted, connectors, primaryConnector, connectWith, showNoWalletGuidance]);
 
   const displayError = localError || connectError?.message || null;
+  const showWcMissingHint = !walletConnectEnabled && (isMobile || displayError === WC_MISSING_MOBILE_MSG);
+  const showInstallHint =
+    Boolean(displayError) &&
+    (!hasWallet || displayError === INSTALL_MSG || displayError === WC_MISSING_MOBILE_MSG);
 
   if (isConnected && address) {
     return (
@@ -331,11 +378,22 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
               onClick={() => void connectWith(c)}
             >
               {connectorDisplayName(c.name, c.id)}
+              {c.id === "walletConnect" ? (
+                <span className="ml-auto text-[10px] text-slate-500">QR / wallet app</span>
+              ) : null}
             </button>
           ))}
+          {!hasWcConnector && (
+            <p className="mt-1 border-t border-border px-2 pt-2 text-[11px] text-amber-200/90">
+              WalletConnect isn’t configured yet. On mobile Safari/Chrome, set{" "}
+              <span className="font-mono text-[10px]">NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID</span> to
+              connect without an in-app browser.
+            </p>
+          )}
           <p className="mt-1 border-t border-border px-2 pt-2 text-[11px] text-slate-500">
-            Use a wallet that supports BlockDAG 1404 with a send-capable RPC (west/east). No BlockDAG
-            wallet? Buy via external USDT/ETH/BTC/SOL deposit on Presale.
+            Prefer WalletConnect (QR or open wallet app) from this page on mobile. Use a wallet that
+            supports BlockDAG 1404 with a send-capable RPC (west/east). No BlockDAG wallet? Buy via
+            external USDT/ETH/BTC/SOL deposit on Presale.
           </p>
         </div>
       )}
@@ -344,39 +402,57 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
         <div className="absolute right-0 top-full z-30 mt-2 w-72 rounded-xl border border-red-500/40 bg-bg-deep p-3 text-[11px] text-red-300 shadow-gold">
           <p className="font-medium text-red-200">Could not connect</p>
           <p className="mt-1 break-words">{displayError}</p>
-          {(!hasWallet || displayError === INSTALL_MSG) && (
+          {showInstallHint && (
             <div className="mt-2 space-y-1 border-t border-border pt-2 text-slate-400">
-              <p>
-                Install{" "}
-                <a
-                  href="https://www.okx.com/download"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gold-bright underline"
-                >
-                  OKX
-                </a>
-                ,{" "}
-                <a
-                  href="https://trustwallet.com/download"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gold-bright underline"
-                >
-                  Trust
-                </a>
-                , or{" "}
-                <a
-                  href="https://metamask.io/download/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gold-bright underline"
-                >
-                  MetaMask
-                </a>
-                — or use external deposits on Presale.
-              </p>
-              <p>On mobile, open this site inside your wallet’s in-app browser.</p>
+              {showWcMissingHint || displayError === WC_MISSING_MOBILE_MSG ? (
+                <p>
+                  WalletConnect isn’t configured yet. Add{" "}
+                  <span className="font-mono text-[10px] text-slate-300">
+                    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+                  </span>{" "}
+                  in Vercel to connect from mobile Safari/Chrome via QR / wallet app. Injected wallets
+                  still work if present.
+                </p>
+              ) : (
+                <>
+                  <p>
+                    Use <span className="text-gold-bright">WalletConnect</span> from this page (QR or
+                    open your wallet app), or install{" "}
+                    <a
+                      href="https://www.okx.com/download"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gold-bright underline"
+                    >
+                      OKX
+                    </a>
+                    ,{" "}
+                    <a
+                      href="https://trustwallet.com/download"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gold-bright underline"
+                    >
+                      Trust
+                    </a>
+                    , or{" "}
+                    <a
+                      href="https://metamask.io/download/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gold-bright underline"
+                    >
+                      MetaMask
+                    </a>
+                    . External deposits on Presale work without a BlockDAG wallet.
+                  </p>
+                  {!hasWcConnector && (
+                    <p className="text-amber-200/90">
+                      WalletConnect isn’t configured on this deployment yet.
+                    </p>
+                  )}
+                </>
+              )}
             </div>
           )}
         </div>

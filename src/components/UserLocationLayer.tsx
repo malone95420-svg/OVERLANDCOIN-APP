@@ -264,10 +264,12 @@ export function LocateMeControl({ geo, mapRef }: LocateProps) {
     );
   }, [geo, mapRef]);
 
+  const active = geo.status === "watching";
+
   return (
-    <div className="pointer-events-auto absolute bottom-3 right-3 z-[1000] flex flex-col items-end gap-1">
+    <div className="pointer-events-auto absolute bottom-28 right-3 z-[1000] flex flex-col items-end gap-1 sm:bottom-24">
       {hint && (
-        <div className="max-w-[220px] rounded-md border border-border bg-bg-panel/95 px-2 py-1 text-[11px] text-slate-300 shadow">
+        <div className="max-w-[220px] rounded-md border border-amber-500/40 bg-black/90 px-2 py-1 text-[11px] text-amber-100 shadow-lg backdrop-blur-md">
           {hint}
         </div>
       )}
@@ -275,9 +277,13 @@ export function LocateMeControl({ geo, mapRef }: LocateProps) {
         type="button"
         onClick={flyToUser}
         disabled={busy}
-        title="Locate me"
-        aria-label="Locate me"
-        className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-bg-panel/95 text-cyan-accent shadow-lg backdrop-blur-sm transition hover:bg-white/5 disabled:opacity-60"
+        title="My location"
+        aria-label="My location"
+        className={`flex h-11 items-center gap-2 rounded-xl border px-3 text-xs font-semibold shadow-lg backdrop-blur-md transition disabled:opacity-60 ${
+          active
+            ? "border-cyan-accent/50 bg-cyan-accent/20 text-cyan-accent"
+            : "border-white/15 bg-black/80 text-gold-bright hover:border-gold-bright/40 hover:bg-white/10"
+        }`}
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
           <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
@@ -289,6 +295,7 @@ export function LocateMeControl({ geo, mapRef }: LocateProps) {
           />
           <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
         </svg>
+        <span className="pr-0.5">{busy ? "Locating…" : "My location"}</span>
       </button>
     </div>
   );

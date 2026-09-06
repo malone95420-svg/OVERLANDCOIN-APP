@@ -118,8 +118,25 @@ function FlyToUser({
   useEffect(() => {
     if (!locateNonce) return;
     const g = geoRef.current;
-    if (g.status !== "watching") return;
-    map.flyTo([g.lat, g.lng], Math.max(map.getZoom(), 14), { duration: 0.85 });
+    if (g.status === "watching") {
+      map.flyTo([g.lat, g.lng], Math.max(map.getZoom(), 14), { duration: 0.85 });
+      return;
+    }
+    // Permission just granted or watch not ready yet — one-shot then fly.
+    if (typeof navigator === "undefined" || !navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        map.flyTo(
+          [pos.coords.latitude, pos.coords.longitude],
+          Math.max(map.getZoom(), 14),
+          { duration: 0.85 },
+        );
+      },
+      () => {
+        /* UserLocationLayer / banner handles denied */
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    );
     // Only fly when user taps Locate (nonce bump) — never on GPS ticks.
   }, [locateNonce, map]);
   return null;

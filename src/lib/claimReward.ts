@@ -4,10 +4,11 @@
  */
 
 import {
-  loadCompletions,
   loadPosts,
   markCompletionClaimed,
+  pendingCompletions,
   publishFeedPostToServer,
+  setCompletionsWallet,
   type Completion,
 } from "@/lib/completions";
 import { getOrCreateDeviceId } from "@/lib/deviceId";
@@ -44,6 +45,16 @@ export async function claimRewardToWallet(input: ClaimInput): Promise<ClaimResul
   if (!wallet) {
     return { ok: false, error: "Connect a wallet first." };
   }
+  if (
+    completion.completedByWallet &&
+    completion.completedByWallet.toLowerCase() !== wallet.trim().toLowerCase()
+  ) {
+    return {
+      ok: false,
+      error: "This reward was earned by a different wallet.",
+    };
+  }
+
   if (completion.status === "claimed" && completion.txHash) {
     return {
       ok: true,
@@ -143,11 +154,23 @@ export async function claimAllPending(wallet: string): Promise<{
   claimed: ClaimSuccess[];
   failed: { completionId: string; error: string }[];
 }> {
-  const pending = loadCompletions().filter((c) => c.status === "pending_claim");
+  setCompletionsWallet(wallet);
+  const pending = pendingCompletions(undefined, wallet);
   const claimed: ClaimSuccess[] = [];
   const failed: { completionId: string; error: string }[] = [];
 
   for (const c of pending) {
+    // Refuse to pay a completion earned by a different wallet.
+    if (
+      c.completedByWallet &&
+      c.completedByWallet.toLowerCase() !== wallet.trim().toLowerCase()
+    ) {
+      failed.push({
+        completionId: c.id,
+        error: "This reward belongs to a different wallet.",
+      });
+      continue;
+    }
     const res = await claimRewardToWallet({ completion: c, wallet });
     if (res.ok) claimed.push(res);
     else failed.push({ completionId: c.id, error: res.error });

@@ -10,6 +10,8 @@ import { claimAllPending } from "@/lib/claimReward";
 import { getQuestById } from "@/lib/quests";
 import {
   loadCompletions,
+  pendingCompletions,
+  setCompletionsWallet,
   totalClaimedOlC,
   totalPendingOlC,
   WALLET_CHANGE_EVENT,
@@ -37,8 +39,9 @@ function ProfileCompletionsInner() {
   const [bulkMsg, setBulkMsg] = useState<string | null>(null);
 
   const refresh = useCallback(() => {
+    setCompletionsWallet(isConnected && address ? address : null);
     setCompletions(loadCompletions());
-  }, []);
+  }, [address, isConnected]);
 
   useEffect(() => {
     refresh();
@@ -58,8 +61,8 @@ function ProfileCompletionsInner() {
   const pending = useMemo(() => totalPendingOlC(completions), [completions]);
   const claimed = useMemo(() => totalClaimedOlC(completions), [completions]);
   const pendingRows = useMemo(
-    () => completions.filter((c) => c.status === "pending_claim"),
-    [completions],
+    () => pendingCompletions(completions, address),
+    [completions, address],
   );
 
   const onClaimAll = useCallback(async () => {

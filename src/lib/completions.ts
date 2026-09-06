@@ -102,6 +102,8 @@ export function setCompletionsWallet(address: string | null | undefined): void {
   currentWalletChecksum = checksum;
   if (checksum && lower) {
     migrateLegacyLedgerToWallet(checksum, lower);
+    adoptUntaggedGuestLedger(checksum, lower);
+    dedupePoisonedWalletLedgers();
   }
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(WALLET_CHANGE_EVENT, { detail: checksum }));
@@ -131,17 +133,189 @@ function readRawList<T>(key: string): T[] {
 }
 
 /**
+ * IDs present in the unscoped guest ledger — used to detect completions that were
+ * wrongly copied into a wallet namespace via migrateGuestDataToAccount.
+ */
+/**
+ * When the same completion id appears in multiple wallet namespaces (guest-migrate
+ * leak + re-tag), keep it only for the true earner:
+ * 1) completedByWallet match on a namespace, else
+ * 2) guest ledger completedByWallet, else
+ * 3) earliest completedAt among matching namespaces.
+ */
+function dedupePoisonedWalletLedgers(): void {
+  if (typeof window === "undefined") return;
+  try {
+    const prefix = `${COMPLETIONS_STORAGE_KEY}::wallet:`;
+    const buckets = new Map<
+      string,
+      { key: string; walletLower: string; row: Completion; idx: number }[]
+    >();
+    const keyLists = new Map<string, Completion[]>();
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key || !key.startsWith(prefix)) continue;
+      const walletLower = key.slice(prefix.length).toLowerCase();
+      if (!walletLower) continue;
+      const list = safeParse<Completion[]>(localStorage.getItem(key), []);
+      if (!Array.isArray(list)) continue;
+      keyLists.set(key, list);
+      list.forEach((row, idx) => {
+        if (!row?.id) return;
+        const arr = buckets.get(row.id) || [];
+        arr.push({ key, walletLower, row, idx });
+        buckets.set(row.id, arr);
+      });
+    }
+
+    let guestById = new Map<string, Completion>();
+    try {
+      const guest = safeParse<Completion[]>(localStorage.getItem(COMPLETIONS_STORAGE_KEY), []);
+      if (Array.isArray(guest)) {
+        guestById = new Map(guest.filter((c) => c?.id).map((c) => [c.id, c]));
+      }
+    } catch {
+      /* ignore */
+    }
+
+    const drop = new Map<string, Set<number>>(); // key -> idxs to remove
+    for (const [id, homes] of buckets) {
+      if (homes.length < 2) continue;
+      const guest = guestById.get(id);
+      const guestEarner = guest?.completedByWallet?.trim().toLowerCase();
+
+      let winner = homes.find(
+        (h) => h.row.completedByWallet?.trim().toLowerCase() === h.walletLower,
+      );
+      if (guestEarner) {
+        const gWin = homes.find((h) => h.walletLower === guestEarner);
+        if (gWin) winner = gWin;
+      }
+      if (!winner) {
+        winner = [...homes].sort((a, b) =>
+          String(a.row.completedAt || "").localeCompare(String(b.row.completedAt || "")),
+        )[0];
+      }
+      for (const h of homes) {
+        if (h.key === winner!.key && h.idx === winner!.idx) continue;
+        // Drop clones from other namespaces (and duplicate rows in same key)
+        if (h.walletLower === winner!.walletLower && h.idx === winner!.idx) continue;
+        if (h.walletLower === winner!.walletLower) {
+          // same wallet duplicate row
+          const set = drop.get(h.key) || new Set<number>();
+          set.add(h.idx);
+          drop.set(h.key, set);
+          continue;
+        }
+        const set = drop.get(h.key) || new Set<number>();
+        set.add(h.idx);
+        drop.set(h.key, set);
+      }
+    }
+
+    for (const [key, idxs] of drop) {
+      const list = keyLists.get(key);
+      if (!list) continue;
+      const next = list.filter((_, i) => !idxs.has(i));
+      localStorage.setItem(key, JSON.stringify(next));
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+function guestCompletionIds(): Set<string> {
+  const ids = new Set<string>();
+  try {
+    const list = safeParse<Completion[]>(localStorage.getItem(COMPLETIONS_STORAGE_KEY), []);
+    if (Array.isArray(list)) {
+      for (const c of list) {
+        if (c && typeof c.id === "string") ids.add(c.id);
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return ids;
+}
+
+/**
+ * Keep only rows earned by this wallet. Untagged legacy rows are kept only when
+ * they live in THIS wallet's namespace and were NOT also present on the guest
+ * global ledger (guest copy leak).
+ */
+function selectRowsForWallet<T extends { id?: string; completedByWallet?: string }>(
+  list: T[],
+  checksum: string,
+  walletLower: string,
+  guestIds: Set<string>,
+  tag: boolean,
+): T[] {
+  const out: T[] = [];
+  for (const row of list) {
+    if (!row || typeof row !== "object") continue;
+    const tagged = row.completedByWallet?.trim();
+    if (tagged) {
+      if (tagged.toLowerCase() !== walletLower) continue;
+      out.push(tag ? { ...row, completedByWallet: checksum } : row);
+      continue;
+    }
+    // Untagged: reject if this id still exists on the guest/global ledger
+    // (almost always a migrateGuestDataToAccount leak onto a new wallet).
+    if (typeof row.id === "string" && guestIds.has(row.id)) continue;
+    if (tag) {
+      out.push({ ...row, completedByWallet: checksum });
+    } else {
+      out.push(row);
+    }
+  }
+  return out;
+}
+
+/**
  * One-time: copy account-scoped ledger for THIS same address into wallet namespace.
- * Does NOT import device-sealed quest IDs or another wallet's data.
+ * Never imports unscoped guest/global completions or another wallet's rows.
+ * Also scrubs an existing wallet namespace that was poisoned by guest migration.
  */
 function migrateLegacyLedgerToWallet(checksum: string, walletLower: string): void {
   if (typeof window === "undefined") return;
+  const guestIds = guestCompletionIds();
 
   const migrateOne = (base: string, tagWallet: boolean) => {
     const dest = walletNamespacedKey(base, walletLower);
     try {
-      if (localStorage.getItem(dest)) return;
+      const existingRaw = localStorage.getItem(dest);
+      if (existingRaw) {
+        // Heal poisoned wallet ledgers (guest copy + wrong re-tag).
+        if (tagWallet) {
+          const existing = safeParse<Completion[]>(existingRaw, []);
+          if (!Array.isArray(existing)) return;
+          const cleaned = selectRowsForWallet(existing, checksum, walletLower, guestIds, true);
+          const healed = cleaned.filter((c) => {
+            if (typeof c.id === "string" && guestIds.has(c.id)) {
+              const guestList = safeParse<Completion[]>(
+                localStorage.getItem(COMPLETIONS_STORAGE_KEY),
+                [],
+              );
+              const g = Array.isArray(guestList)
+                ? guestList.find((x) => x?.id === c.id)
+                : undefined;
+              if (!g) return true;
+              // Guest row untagged or tagged to someone else → this wallet did not earn it.
+              if (!g.completedByWallet) return false;
+              if (g.completedByWallet.toLowerCase() !== walletLower) return false;
+            }
+            return true;
+          });
+          if (healed.length !== existing.length) {
+            localStorage.setItem(dest, JSON.stringify(healed));
+          }
+        }
+        return;
+      }
 
+      // Never read unscoped `base` — that is the guest/global leak vector.
       const candidates: string[] = [
         `${base}::${walletLower}`,
         scopedStorageKey(base, walletLower),
@@ -172,11 +346,8 @@ function migrateLegacyLedgerToWallet(checksum: string, walletLower: string): voi
 
       const list = safeParse<Completion[]>(raw, []);
       if (!Array.isArray(list) || list.length === 0) return;
-      const tagged = list.map((c) => ({
-        ...c,
-        completedByWallet: c.completedByWallet || checksum,
-        claimedWallet: c.claimedWallet,
-      }));
+      const tagged = selectRowsForWallet(list, checksum, walletLower, guestIds, true);
+      if (tagged.length === 0) return;
       localStorage.setItem(dest, JSON.stringify(tagged));
     } catch {
       /* quota / private mode */
@@ -188,21 +359,119 @@ function migrateLegacyLedgerToWallet(checksum: string, walletLower: string): voi
   migrateOne(CLAIMS_STORAGE_KEY, false);
 }
 
+const GUEST_ADOPTED_BY_KEY = "overlandcoin.completions.guestAdoptedBy.v1";
+
+/**
+ * Move untagged guest/global completions into a wallet namespace only when:
+ * - No other wallet has already adopted the guest slate, AND
+ * - Either there is no account session, or the session account IS this wallet.
+ * Connecting a secondary wallet while logged in as the owner must NOT inherit guest OLC.
+ */
+function adoptUntaggedGuestLedger(checksum: string, walletLower: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    const prior = localStorage.getItem(GUEST_ADOPTED_BY_KEY)?.trim().toLowerCase();
+    if (prior && prior !== walletLower) return;
+
+    const accountKey = getAccountKey();
+    if (accountKey && accountKey !== walletLower) return;
+
+    const guestRaw = localStorage.getItem(COMPLETIONS_STORAGE_KEY);
+    if (!guestRaw) return;
+    const guestList = safeParse<Completion[]>(guestRaw, []);
+    if (!Array.isArray(guestList) || guestList.length === 0) return;
+
+    const adoptable = guestList.filter((c) => {
+      if (!c || typeof c.id !== "string") return false;
+      if (!c.completedByWallet) return true;
+      return c.completedByWallet.toLowerCase() === walletLower;
+    });
+    if (adoptable.length === 0) return;
+
+    const adoptIds = new Set(adoptable.map((c) => c.id));
+    const destKey = walletNamespacedKey(COMPLETIONS_STORAGE_KEY, walletLower);
+    const existing = safeParse<Completion[]>(localStorage.getItem(destKey), []);
+    const have = new Set(
+      (Array.isArray(existing) ? existing : []).map((c) => c?.id).filter(Boolean),
+    );
+    const tagged = adoptable
+      .filter((c) => !have.has(c.id))
+      .map((c) => ({ ...c, completedByWallet: c.completedByWallet || checksum }));
+    const merged = [...tagged, ...(Array.isArray(existing) ? existing : [])];
+    localStorage.setItem(destKey, JSON.stringify(merged));
+    localStorage.setItem(GUEST_ADOPTED_BY_KEY, walletLower);
+
+    const remaining = guestList.filter((c) => !adoptIds.has(c.id));
+    if (remaining.length === 0) localStorage.removeItem(COMPLETIONS_STORAGE_KEY);
+    else localStorage.setItem(COMPLETIONS_STORAGE_KEY, JSON.stringify(remaining));
+
+    const guestPosts = safeParse<FeedPost[]>(localStorage.getItem(POSTS_STORAGE_KEY), []);
+    if (Array.isArray(guestPosts) && guestPosts.length > 0) {
+      const postDest = walletNamespacedKey(POSTS_STORAGE_KEY, walletLower);
+      const existingPosts = safeParse<FeedPost[]>(localStorage.getItem(postDest), []);
+      const haveP = new Set(
+        (Array.isArray(existingPosts) ? existingPosts : []).map((p) => p?.id).filter(Boolean),
+      );
+      const adoptPosts = guestPosts.filter((p) => {
+        if (!p || typeof p.id !== "string") return false;
+        if (p.completionId && adoptIds.has(p.completionId)) return true;
+        if (!p.completedByWallet) return Boolean(p.completionId && adoptIds.has(p.completionId));
+        return p.completedByWallet.toLowerCase() === walletLower;
+      });
+      const taggedPosts = adoptPosts
+        .filter((p) => !haveP.has(p.id))
+        .map((p) => ({ ...p, completedByWallet: p.completedByWallet || checksum }));
+      const mergedPosts = [...taggedPosts, ...(Array.isArray(existingPosts) ? existingPosts : [])];
+      localStorage.setItem(postDest, JSON.stringify(mergedPosts));
+      const adoptPostIds = new Set(adoptPosts.map((p) => p.id));
+      const remainPosts = guestPosts.filter((p) => !adoptPostIds.has(p.id));
+      if (remainPosts.length === 0) localStorage.removeItem(POSTS_STORAGE_KEY);
+      else localStorage.setItem(POSTS_STORAGE_KEY, JSON.stringify(remainPosts));
+    }
+  } catch {
+    /* quota / private mode */
+  }
+}
+
 function filterForActiveWallet(list: Completion[]): Completion[] {
   if (currentWalletLower) {
     return list.filter((c) => {
-      if (!c.completedByWallet) return true; // legacy row in this wallet namespace
+      // Strict: only rows earned by the connected wallet.
+      // Untagged legacy rows in this wallet's namespace are allowed only when
+      // they are not also on the guest/global ledger (leak guard).
+      if (!c.completedByWallet) {
+        try {
+          const guest = safeParse<Completion[]>(
+            localStorage.getItem(COMPLETIONS_STORAGE_KEY),
+            [],
+          );
+          if (Array.isArray(guest) && guest.some((g) => g?.id === c.id)) return false;
+        } catch {
+          /* ignore */
+        }
+        return true;
+      }
       return c.completedByWallet.toLowerCase() === currentWalletLower;
     });
   }
   // No wallet connected: never paint another wallet's completions as yours.
+  // Also never surface the unscoped guest ledger as claimable for a random viewer
+  // when an account scope is active with foreign tagged rows.
   return list.filter((c) => !c.completedByWallet);
 }
 
 function filterPostsForActiveWallet(list: FeedPost[]): FeedPost[] {
   if (currentWalletLower) {
     return list.filter((p) => {
-      if (!p.completedByWallet) return true;
+      if (!p.completedByWallet) {
+        try {
+          const guest = safeParse<FeedPost[]>(localStorage.getItem(POSTS_STORAGE_KEY), []);
+          if (Array.isArray(guest) && guest.some((g) => g?.id === p.id)) return false;
+        } catch {
+          /* ignore */
+        }
+        return true;
+      }
       return p.completedByWallet.toLowerCase() === currentWalletLower;
     });
   }
@@ -279,8 +548,18 @@ export function totalClaimedOlC(completions = loadCompletions()): number {
     .reduce((sum, c) => sum + (c.olcEarned || 0), 0);
 }
 
-export function pendingCompletions(completions = loadCompletions()): Completion[] {
-  return completions.filter((c) => c.status === "pending_claim");
+export function pendingCompletions(
+  completions = loadCompletions(),
+  wallet?: string | null,
+): Completion[] {
+  const pending = completions.filter((c) => c.status === "pending_claim");
+  const want = normalizeWalletAddress(wallet ?? currentWalletChecksum);
+  if (!want) return pending;
+  const lower = want.toLowerCase();
+  return pending.filter((c) => {
+    if (!c.completedByWallet) return true;
+    return c.completedByWallet.toLowerCase() === lower;
+  });
 }
 
 export function makeId(prefix: string): string {

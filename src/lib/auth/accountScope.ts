@@ -3,13 +3,21 @@
  * Guest (no session) keeps legacy unscoped keys. Cross-device sync needs Redis later.
  */
 
+/** Keys safe to copy from guest → account on login (not wallet-earned). */
 export const ACCOUNT_PROFILE_KEYS = [
   "overlandcoin.garage.vehicle.v1",
+  "overlandcoin.purchases.v1",
+  "overlandcoin.explorerProfile.v1",
+] as const;
+
+/**
+ * Quest ledgers are per connected wallet — never copy guest/global completions
+ * into a newly connected account/wallet that did not earn them.
+ */
+export const WALLET_EARNED_LEDGER_KEYS = [
   "overlandcoin.completions.v1",
   "overlandcoin.posts.v1",
   "overlandcoin.claims.v1",
-  "overlandcoin.purchases.v1",
-  "overlandcoin.explorerProfile.v1",
 ] as const;
 
 let currentAccountKey: string | null = null;
@@ -44,8 +52,9 @@ export function scopedStorageKey(base: string, accountKey?: string | null): stri
 }
 
 /**
- * When logging in, copy guest (unscoped) data into the account namespace if empty.
- * Same-device continuity; does not overwrite existing account data.
+ * When logging in, copy guest (unscoped) profile/purchase data into the account
+ * namespace if empty. Does NOT migrate quest completions/posts/claims — those are
+ * wallet-earned and must not leak into every newly connected wallet.
  */
 export function migrateGuestDataToAccount(accountKey: string): void {
   if (typeof window === "undefined") return;
@@ -60,6 +69,7 @@ export function migrateGuestDataToAccount(accountKey: string): void {
       /* quota / private mode */
     }
   }
+  // Explicitly skip WALLET_EARNED_LEDGER_KEYS (completions / posts / claims).
 }
 
 export function accountKeyFromSessionUser(

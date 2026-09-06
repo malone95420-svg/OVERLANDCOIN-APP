@@ -10,6 +10,8 @@ import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { claimAllPending } from "@/lib/claimReward";
 import {
   loadCompletions,
+  pendingCompletions,
+  setCompletionsWallet,
   totalClaimedOlC,
   totalPendingOlC,
   WALLET_CHANGE_EVENT,
@@ -142,9 +144,13 @@ function ClaimHubInner() {
   const [retryNote, setRetryNote] = useState<string | null>(null);
 
   const refresh = useCallback(() => {
-    setCompletions(loadCompletions());
+    // Bind ledger to the connected address before reading so we never paint
+    // guest/owner completions onto a different wallet (race with WalletCompletionsSync).
+    setCompletionsWallet(address ?? null);
+    const list = loadCompletions();
+    setCompletions(list);
     setPurchases(loadPurchases());
-  }, []);
+  }, [address]);
 
   useEffect(() => {
     refresh();
@@ -163,8 +169,8 @@ function ClaimHubInner() {
   const pendingOlC = useMemo(() => totalPendingOlC(completions), [completions]);
   const claimedOlC = useMemo(() => totalClaimedOlC(completions), [completions]);
   const pendingRows = useMemo(
-    () => completions.filter((c) => c.status === "pending_claim"),
-    [completions],
+    () => pendingCompletions(completions, address),
+    [completions, address],
   );
   const claimedRows = useMemo(
     () => completions.filter((c) => c.status === "claimed"),

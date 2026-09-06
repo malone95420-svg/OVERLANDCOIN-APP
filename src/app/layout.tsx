@@ -6,7 +6,6 @@ import { RangerWidget } from "@/components/RangerWidget";
 import { TelegramWebApp } from "@/components/TelegramWebApp";
 import { WelcomeModal } from "@/components/WelcomeModal";
 import { AuthProvider } from "@/components/providers/AuthProvider";
-import { Web3ErrorBoundary } from "@/components/providers/Web3ErrorBoundary";
 import { Web3Provider } from "@/components/providers/Web3Provider";
 import { SITE } from "@/lib/site";
 import "./globals.css";
@@ -82,9 +81,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body className={`${sans.variable} ${mono.variable} max-w-full overflow-x-hidden font-sans antialiased`}>
         <AuthProvider>
-          <Web3ErrorBoundary fallback={shell}>
-            <Web3Provider>{shell}</Web3Provider>
-          </Web3ErrorBoundary>
+          <Web3Provider>{shell}</Web3Provider>
         </AuthProvider>
       </body>
     </html>

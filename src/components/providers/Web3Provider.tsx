@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { WagmiProvider } from "wagmi";
+import { Web3ErrorBoundary } from "@/components/providers/Web3ErrorBoundary";
 import { wagmiConfig } from "@/lib/wagmi";
 
 /** False until WagmiProvider is mounted; default false so hooks stay gated outside. */
@@ -22,6 +23,9 @@ export function useWeb3Mounted() {
  * Client-mount only: do not render WagmiProvider until after useEffect so
  * SSR/first paint and Safari without ethereum cannot blow up the whole app.
  * Consumers must gate wagmi hooks with useWeb3Mounted() / an Inner component.
+ *
+ * Error boundary wraps Wagmi only — on failure we keep children mounted with
+ * web3Mounted=false so UI can exit "Loading wallet…" instead of hanging forever.
  */
 export function Web3Provider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -34,7 +38,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
             refetchOnWindowFocus: false,
           },
         },
-      })
+      }),
   );
 
   useEffect(() => {
@@ -50,10 +54,16 @@ export function Web3Provider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <Web3MountedContext.Provider value={true}>
-      <WagmiProvider config={wagmiConfig}>
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      </WagmiProvider>
-    </Web3MountedContext.Provider>
+    <Web3ErrorBoundary
+      fallback={
+        <Web3MountedContext.Provider value={false}>{children}</Web3MountedContext.Provider>
+      }
+    >
+      <Web3MountedContext.Provider value={true}>
+        <WagmiProvider config={wagmiConfig}>
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        </WagmiProvider>
+      </Web3MountedContext.Provider>
+    </Web3ErrorBoundary>
   );
 }

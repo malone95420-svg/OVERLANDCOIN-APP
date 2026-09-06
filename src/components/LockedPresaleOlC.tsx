@@ -102,13 +102,8 @@ type LockedBalanceApi = {
 
 export function LockedPresaleOlC() {
   const web3Mounted = useWeb3Mounted();
-  if (!web3Mounted) {
-    return (
-      <div className="rounded-xl border border-border bg-bg-card p-4 text-sm text-slate-400">
-        Loading wallet…
-      </div>
-    );
-  }
+  // Secondary legacy lock UI — stay silent while wallet mounts (avoid duplicate Loading wallet…)
+  if (!web3Mounted) return null;
   return <LockedPresaleOlCInner />;
 }
 
@@ -457,14 +452,14 @@ function LockedPresaleOlCInner() {
               : "Awaiting config"}
           </p>
           <p className="mt-1 text-[11px] text-slate-500">
-            Owner calls <code className="text-slate-400">enableTrading()</code> after listings.
+            Legacy PresaleLock only. New buys deliver OLC ERC-20 to your wallet after verified pay.
           </p>
         </div>
         <div className="rounded-xl border border-border bg-bg-panel/80 p-4 flex flex-col justify-between">
           <div>
             <p className="text-xs uppercase tracking-wide text-slate-500">Withdraw</p>
             <p className="mt-1 text-[11px] text-slate-500">
-              Pulls your full locked balance to this wallet when unlocked.
+              Legacy unlock path for balances still in PresaleLock (not new wallet deliveries).
             </p>
           </div>
           <button

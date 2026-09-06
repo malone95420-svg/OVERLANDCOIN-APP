@@ -10,6 +10,20 @@
  * - https://rpc.blockdag.engineering/ — read-only / no-send (good tip for receipts; NO eth_sendRawTransaction).
  * Explorer https://bdagscan.com is still OK.
  */
+/** Reject empty/wrong-state RPC (never recommend for wallets or broadcasts). */
+function envSendRpc(raw: string | undefined, fallback: string): string {
+  const u = raw?.trim();
+  if (!u) return fallback;
+  try {
+    const host = new URL(u).hostname.toLowerCase();
+    if (host === "rpc.bdagscan.com") return fallback;
+    if (host === "rpc.blockdag.engineering") return fallback;
+  } catch {
+    return fallback;
+  }
+  return u;
+}
+
 export const TOKEN = {
   name: "OVERLANDCOIN",
   symbol: "OLC",
@@ -21,16 +35,17 @@ export const TOKEN = {
   chainId: 1404,
   chainName: "BlockDAG Mainnet",
   nativeCurrency: { name: "BDAG", symbol: "BDAG", decimals: 18 },
-  /** Primary send-capable RPC */
-  rpcUrl: process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim() || "https://rpc.west.bdag-us.org/",
+  /** Primary send-capable RPC (prefer east — west often 502) */
+  rpcUrl: envSendRpc(process.env.NEXT_PUBLIC_BLOCKDAG_RPC, "https://rpc.east.bdag-us.org/"),
   /**
-   * Fallback RPC (east is send-capable + good tip).
+   * Fallback send-capable RPC (west).
    * Engineering remains available via rpcAlt / blockdagHttpRpcUrls for reads only.
-   * Never put engineering in wallet_addEthereumChain rpcUrls.
+   * Never put engineering or bdagscan in wallet_addEthereumChain rpcUrls.
    */
-  rpcFallback:
-    process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim() ||
-    "https://rpc.east.bdag-us.org/",
+  rpcFallback: envSendRpc(
+    process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK,
+    "https://rpc.west.bdag-us.org/",
+  ),
   /** Additional read-only RPC (no eth_sendRawTransaction) */
   rpcAlt: "https://rpc.blockdag.engineering/",
   explorers: {

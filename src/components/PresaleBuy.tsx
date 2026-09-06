@@ -157,10 +157,29 @@ declare global {
 
 export function PresaleBuy() {
   const web3Mounted = useWeb3Mounted();
+  const [waited, setWaited] = useState(false);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setWaited(true), 2000);
+    return () => window.clearTimeout(id);
+  }, []);
+
   if (!web3Mounted) {
+    // Avoid infinite "Loading wallet…" when wagmi fails / ErrorBoundary strips provider
+    if (!waited) {
+      return (
+        <div className="rounded-xl border border-border bg-bg-card p-6 text-sm text-slate-400">
+          Loading wallet…
+        </div>
+      );
+    }
     return (
-      <div className="rounded-xl border border-border bg-bg-card p-6 text-sm text-slate-400">
-        Loading wallet…
+      <div className="rounded-xl border border-border bg-bg-card p-6 text-sm text-slate-300 space-y-2">
+        <p className="font-medium text-white">Wallet connector unavailable</p>
+        <p className="text-slate-400">
+          Refresh the page to retry Connect Wallet. You can still prepare an external USDT / ETH /
+          BTC / SOL deposit from a desktop browser with an injected wallet, or try again shortly.
+        </p>
       </div>
     );
   }

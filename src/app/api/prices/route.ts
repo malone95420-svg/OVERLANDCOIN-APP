@@ -27,7 +27,10 @@ export async function GET() {
     const body = await fetchAllLivePrices();
     // Cache successful BDAG quotes; still cache partials briefly so we don't hammer APIs
     cache = { body, expiresAt: now + CACHE_TTL_MS };
-    const status = body.bdagUsd == null ? 502 : 200;
+    const hasAnyMarket =
+      body.bdagUsd != null || body.btcUsd != null || body.ethUsd != null || body.solUsd != null;
+    // Prefer 200 for partials so the client strip leaves Loading… and shows what we have
+    const status = hasAnyMarket ? 200 : 502;
     return NextResponse.json(body, {
       status,
       headers: {

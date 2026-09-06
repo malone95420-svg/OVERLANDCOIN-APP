@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { LivePricesResponse } from "@/lib/livePrices";
 
 const POLL_MS = 60_000;
+const CLIENT_TIMEOUT_MS = 12_000;
 
 const EMPTY: LivePricesResponse = {
   bdagUsd: null,
@@ -26,6 +27,10 @@ export type UseLivePricesState = LivePricesResponse & {
   refresh: () => Promise<void>;
 };
 
+function isLivePricesResponse(v: unknown): v is LivePricesResponse {
+  return Boolean(v) && typeof v === "object" && "updatedAt" in (v as object);
+}
+
 export function useLivePrices(): UseLivePricesState {
   const [data, setData] = useState<LivePricesResponse>(EMPTY);
   const [loading, setLoading] = useState(true);
@@ -33,18 +38,38 @@ export function useLivePrices(): UseLivePricesState {
   const mounted = useRef(true);
 
   const refresh = useCallback(async () => {
+    const ctrl = new AbortController();
+    const timer = window.setTimeout(() => ctrl.abort(), CLIENT_TIMEOUT_MS);
     try {
-      const res = await fetch("/api/prices", { cache: "no-store" });
-      const json = (await res.json()) as LivePricesResponse;
+      const res = await fetch("/api/prices", { cache: "no-store", signal: ctrl.signal });
+      const json: unknown = await res.json().catch(() => null);
       if (!mounted.current) return;
+      if (!isLivePricesResponse(json)) {
+        setFetchError("Invalid prices response");
+        return;
+      }
       setData(json);
+      const missingMajors = json.bdagUsd == null && json.btcUsd == null && json.ethUsd == null;
       setFetchError(
-        json.error ?? (json.bdagUsd == null ? "Live BDAG price unavailable" : null)
+        json.error ??
+          (missingMajors
+            ? "Live market prices unavailable"
+            : json.bdagUsd == null
+              ? "Live BDAG price unavailable"
+              : null),
       );
     } catch (e) {
       if (!mounted.current) return;
-      setFetchError(e instanceof Error ? e.message : "Failed to load live prices");
+      const aborted = e instanceof DOMException && e.name === "AbortError";
+      setFetchError(
+        aborted
+          ? "Price request timed out — tap Refresh"
+          : e instanceof Error
+            ? e.message
+            : "Failed to load live prices",
+      );
     } finally {
+      window.clearTimeout(timer);
       if (mounted.current) setLoading(false);
     }
   }, []);

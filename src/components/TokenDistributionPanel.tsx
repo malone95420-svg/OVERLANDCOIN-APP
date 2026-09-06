@@ -97,7 +97,7 @@ function TokenDistributionInner() {
             <p className="mt-1 text-sm text-slate-400">
               New purchases deliver OLC ERC-20 to your BlockDAG wallet. Legacy lock balance still
               polls <code className="text-slate-300">/api/presale/locked-balance</code>. Vesting note =
-              owner <code className="text-slate-300">enableTrading()</code> after exchange listing.
+              legacy lock only — new verified buys deliver OLC to your wallet.
             </p>
           </div>
           {!isConnected && <ConnectWallet compact />}

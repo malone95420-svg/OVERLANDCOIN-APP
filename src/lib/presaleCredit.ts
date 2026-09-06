@@ -32,6 +32,7 @@ import {
   type OlcQuote,
   type VerifiedPayment,
 } from "@/lib/verifyPayment";
+import { appendPublicRecentBuy } from "@/lib/recentBuys";
 import { TOKEN } from "@/lib/token";
 
 function normalizePrivateKey(raw: string): Hex {
@@ -270,6 +271,15 @@ export async function creditVerifiedPurchase(opts: {
     buyer,
     olcAmount,
     payAsset: payment.payAsset,
+  });
+
+  // Public recent-buys feed (best-effort; never block delivery)
+  void appendPublicRecentBuy({
+    buyer,
+    olcAmount,
+    payAsset: payment.payAsset,
+    paymentTxHash: payment.paymentTxHash,
+    deliveryTxHash: creditTxHash,
   });
 
   return {

@@ -26,9 +26,9 @@ const DOCS = [
     href: "/presale",
   },
   {
-    title: "PresaleLock",
-    status: "Deploy",
-    body: "Instant locked delivery: deploy contracts/PresaleLock.sol on BlockDAG 1404, fund with OLC, set NEXT_PUBLIC_PRESALE_LOCK_ADDRESS + PRESALE_DELIVER_PRIVATE_KEY. Owner calls enableTrading() after exchange listings. See contracts/README.md.",
+    title: "Presale delivery",
+    status: "Live",
+    body: "After verified pay, OLC ERC-20 is transferred to the buyer wallet (PRESALE_DELIVER_PRIVATE_KEY). PresaleLock remains for legacy locked balances only — do not redeploy. See /presale.",
     href: "/presale",
   },
   {

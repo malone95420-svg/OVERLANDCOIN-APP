@@ -26,7 +26,7 @@ export type LivePricesResponse = {
 
 export type PriceQuote = { price: number; source: string };
 
-const FETCH_TIMEOUT_MS = 8_000;
+const FETCH_TIMEOUT_MS = 5_000;
 
 /** Stablecoins always $1 for OLC buy math. */
 export const STABLE_USD = 1 as const;
@@ -124,14 +124,16 @@ export async function fetchBdagFromCoinPaprika(): Promise<PriceQuote | null> {
 }
 
 export async function fetchLiveBdagUsd(): Promise<PriceQuote | null> {
-  for (const fn of [
-    fetchBdagFromCoinGecko,
-    fetchBdagFromLBank,
-    fetchBdagFromP2B,
-    fetchBdagFromCoinPaprika,
-  ]) {
-    const quote = await fn();
-    if (quote) return quote;
+  // Race sources in parallel — sequential waterfall can exceed serverless limits
+  // and leave the client stuck on Loading…
+  const settled = await Promise.allSettled([
+    fetchBdagFromCoinGecko(),
+    fetchBdagFromLBank(),
+    fetchBdagFromP2B(),
+    fetchBdagFromCoinPaprika(),
+  ]);
+  for (const s of settled) {
+    if (s.status === "fulfilled" && s.value) return s.value;
   }
   return null;
 }

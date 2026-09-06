@@ -41,7 +41,7 @@ function purchaseStatusLabel(status: LocalPurchase["status"]): {
     case "delivered":
       return { label: "Delivered to wallet", tone: "text-emerald-400" };
     case "locked":
-      return { label: "Legacy PresaleLock credit", tone: "text-cyan-accent" };
+      return { label: "Credited (ledger)", tone: "text-cyan-accent" };
     case "locked_pending_chain":
       return { label: "Pending wallet delivery", tone: "text-amber-300" };
     case "pending_delivery":
@@ -381,8 +381,7 @@ function ClaimHubInner() {
         <div>
           <h2 className="text-xl font-bold text-white">Presale purchases</h2>
           <p className="mt-1 text-sm text-slate-400">
-            Purchased OLC is transferred to your BlockDAG wallet after payment verifies.
-            Legacy PresaleLock balances (if any) still show separately. Use{" "}
+            Purchased OLC is transferred to your BlockDAG wallet after payment verifies. Use{" "}
             <strong className="text-slate-200">Retry deliver</strong> when status is pending.
           </p>
         </div>
@@ -465,7 +464,7 @@ function ClaimHubInner() {
             <Link href="/token-distribution" className="link-accent">
               Token Distribution
             </Link>{" "}
-            for on-chain locked balance + unlock messaging.
+            for purchase breakdown and batch context.
           </p>
         )}
       </section>

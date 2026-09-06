@@ -10,6 +10,7 @@ export function formatTokenAmount(
   value: bigint | undefined,
   decimals = 18,
   maxFrac = 4,
+  opts?: { compact?: boolean },
 ): string {
   if (value == null) return "…";
   try {
@@ -17,6 +18,12 @@ export function formatTokenAmount(
     if (!Number.isFinite(n)) return "—";
     if (n === 0) return "0";
     if (n > 0 && n < 1 / 10 ** maxFrac) return `<${(1 / 10 ** maxFrac).toFixed(maxFrac)}`;
+    if (opts?.compact) {
+      const trim = (s: string) => s.replace(/\.0+$/, "").replace(/(\.[0-9]*?)0+$/, "$1");
+      if (n >= 1_000_000_000) return `${trim((n / 1_000_000_000).toFixed(2))}B`;
+      if (n >= 1_000_000) return `${trim((n / 1_000_000).toFixed(2))}M`;
+      if (n >= 10_000) return `${trim((n / 1_000).toFixed(2))}K`;
+    }
     return n.toLocaleString("en-US", {
       maximumFractionDigits: maxFrac,
       minimumFractionDigits: 0,
@@ -91,7 +98,7 @@ export function useWalletBalances(opts?: {
     olcValue,
     olcFormatted:
       onCorrectChain && includeOlc
-        ? formatTokenAmount(olcValue, TOKEN.decimals, 4)
+        ? formatTokenAmount(olcValue, TOKEN.decimals, 4, { compact: true })
         : null,
     olcLoading: includeOlc && (olc.isLoading || olc.isFetching),
     refetch,

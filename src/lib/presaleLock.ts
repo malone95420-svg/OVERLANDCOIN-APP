@@ -1,6 +1,7 @@
 /**
  * PresaleLock contract helpers — ABI + env config.
- * Locked OLC is non-transferable until owner enableTrading() after exchange listing.
+ * Contract kept on-chain; product UX no longer surfaces lock/unlock.
+ * Do not call enableTrading for abandoned test dust.
  */
 
 import {
@@ -155,9 +156,10 @@ const ERC20_ABI_MIN = [
 export { ERC20_ABI_MIN };
 
 /**
- * Deployed PresaleLock on BlockDAG Mainnet (keep — do not redeploy/rescue).
- * Env override wins; this fallback prevents verified pays with no lock credit
- * when NEXT_PUBLIC_PRESALE_LOCK_ADDRESS is missing on a host.
+ * Deployed PresaleLock on BlockDAG Mainnet (keep — do not redeploy).
+ * Product UX no longer surfaces lock/unlock; test dust may stay abandoned.
+ * Do not call enableTrading for tests. New buys deliver OLC to wallet.
+ * Env override wins when NEXT_PUBLIC_PRESALE_LOCK_ADDRESS is set.
  */
 export const DEPLOYED_PRESALE_LOCK_ADDRESS =
   "0x6BAa605f29dD215FCeC215dC4be8818B3350EF37" as const;

@@ -6,7 +6,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
-import { useLockedOlcBalance } from "@/components/presale/useLockedOlcBalance";
 import {
   loadCompletions,
   totalClaimedOlC,
@@ -40,7 +39,6 @@ function ProfilePanelInner() {
   const { data: session, status } = useSession();
   const { address, isConnected } = useAccount();
   const wallet = address || session?.user?.address || undefined;
-  const { locked, loading: lockedLoading } = useLockedOlcBalance(wallet);
 
   const [hydrated, setHydrated] = useState(false);
   const [displayName, setDisplayName] = useState("");
@@ -100,7 +98,7 @@ function ProfilePanelInner() {
       <div className="card space-y-4 text-center">
         <p className="text-lg font-semibold text-white">Sign in to view your profile</p>
         <p className="text-sm text-slate-400">
-          Wallet or email login unlocks your explorer profile, locked OLC summaries, and purchase
+          Wallet or email login unlocks your explorer profile, purchase
           history on this device.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
@@ -230,9 +228,14 @@ function ProfilePanelInner() {
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
           {
-            label: "Locked OLC",
-            value: lockedLoading && locked == null ? "…" : formatOlc(locked ?? 0),
-            hint: "Presale lock",
+            label: "Purchased OLC",
+            value: formatOlc(
+              purchases.reduce((sum, p) => {
+                if (p.status !== "delivered" && p.status !== "locked_pending_chain") return sum;
+                return sum + purchaseOlc(p);
+              }, 0),
+            ),
+            hint: "To wallet (ledger)",
           },
           { label: "Pending claim", value: formatOlc(pending), hint: "Quest rewards" },
           { label: "Claimed OLC", value: formatOlc(claimed), hint: "To wallet" },

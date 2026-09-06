@@ -5,8 +5,6 @@ import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import { ConnectWallet } from "@/components/ConnectWallet";
-import { LockedPresaleOlC } from "@/components/LockedPresaleOlC";
-import { useLockedOlcBalance } from "@/components/presale/useLockedOlcBalance";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { loadPurchases, type LocalPurchase } from "@/lib/purchases";
 import { PRESALE_BATCHES, PRESALE_META } from "@/lib/site";
@@ -32,9 +30,7 @@ export function TokenDistributionPanel() {
 
 function TokenDistributionInner() {
   const { data: session, status } = useSession();
-  const { address, isConnected } = useAccount();
-  const wallet = address || session?.user?.address || undefined;
-  const { locked, apiLocked, localSum, loading } = useLockedOlcBalance(wallet);
+  const { isConnected } = useAccount();
   const [purchases, setPurchases] = useState<LocalPurchase[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
@@ -65,6 +61,8 @@ function TokenDistributionInner() {
     return sums;
   }, [purchases]);
 
+  const deliveredTotal = (localByStatus.delivered || 0) + (localByStatus.locked || 0);
+
   if (status === "loading" || !hydrated) {
     return <div className="card text-sm text-slate-500">Loading allocation…</div>;
   }
@@ -74,8 +72,8 @@ function TokenDistributionInner() {
       <div className="card space-y-5 text-center">
         <p className="text-lg font-semibold text-white">Your OLC allocation</p>
         <p className="text-sm text-slate-400">
-          Connect a wallet (and optionally sign in) to see purchased OLC (wallet delivery) and any
-          legacy PresaleLock balances on this device. No fake balances.
+          Connect a wallet (and optionally sign in) to see purchased OLC on this device. Verified
+          buys deliver ERC-20 to your BlockDAG wallet. No fake balances.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link href="/login?callbackUrl=/token-distribution" className="btn-primary">
@@ -95,29 +93,20 @@ function TokenDistributionInner() {
             <p className="text-xs uppercase tracking-wide text-slate-500">Your allocation</p>
             <h2 className="mt-1 text-xl font-bold text-white">Presale OLC</h2>
             <p className="mt-1 text-sm text-slate-400">
-              New purchases deliver OLC ERC-20 to your BlockDAG wallet. Legacy lock balance still
-              polls <code className="text-slate-300">/api/presale/locked-balance</code>. Vesting note =
-              legacy lock only — new verified buys deliver OLC to your wallet.
+              New purchases deliver OLC ERC-20 to your BlockDAG wallet after payment verifies.
+              Header shows your live wallet balance when connected on chain 1404.
             </p>
           </div>
           {!isConnected && <ConnectWallet compact />}
         </div>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div className="rounded-xl border border-border bg-bg-panel/80 p-4">
-            <p className="text-xs uppercase text-slate-500">Displayed locked</p>
+            <p className="text-xs uppercase text-slate-500">Delivered (local ledger)</p>
             <p className="mt-2 text-2xl font-bold text-gold-bright">
-              {loading && locked == null ? "…" : `${formatOlc(locked ?? 0)} OLC`}
+              {formatOlc(deliveredTotal)} OLC
             </p>
             <p className="mt-1 text-[11px] text-slate-500">
-              max(on-chain{apiLocked != null ? ` ${formatOlc(apiLocked)}` : ""}, local{" "}
-              {formatOlc(localSum)})
-            </p>
-          </div>
-          <div className="rounded-xl border border-border bg-bg-panel/80 p-4">
-            <p className="text-xs uppercase text-slate-500">Unlock / vesting</p>
-            <p className="mt-2 text-lg font-semibold text-white">Locked until listing</p>
-            <p className="mt-1 text-[11px] text-slate-500">
-              Legacy lock: non-transferable until enableTrading; new buys go to wallet
+              From purchase records on this device — wallet is source of truth
             </p>
           </div>
           <div className="rounded-xl border border-border bg-bg-panel/80 p-4">
@@ -169,9 +158,8 @@ function TokenDistributionInner() {
           {(
             [
               ["delivered", "Delivered to wallet"],
-              ["locked", "Legacy PresaleLock credit"],
               ["locked_pending_chain", "Pending wallet delivery"],
-              ["pending_delivery", "Legacy pending delivery"],
+              ["pending_delivery", "Pending delivery"],
               ["pending_external", "Awaiting deposit verify"],
             ] as const
           ).map(([key, label]) => (
@@ -214,9 +202,6 @@ function TokenDistributionInner() {
           </Link>
         </div>
       </section>
-
-      {/* Reuse existing PresaleLock withdraw / retry UI — do not duplicate withdraw logic */}
-      <LockedPresaleOlC />
     </div>
   );
 }

@@ -132,7 +132,7 @@ function progressLabel(p: Progress): string | null {
     case "confirming_payment":
       return "Confirming payment…";
     case "locking_olc":
-      return "Locking OLC…";
+      return "Delivering OLC…";
     default:
       return null;
   }
@@ -910,7 +910,7 @@ function PresaleBuyInner() {
       return;
     }
     if (!isConnected || !address) {
-      setError("Connect your BlockDAG wallet first — OLC locks to that address.");
+      setError("Connect your BlockDAG wallet first — OLC delivers to that address.");
       return;
     }
     if (!buyRateReady) {
@@ -1018,7 +1018,7 @@ function PresaleBuyInner() {
 
   async function createPayOrder(): Promise<ActivePayOrder | null> {
     if (!isConnected || !address) {
-      setError("Connect your BlockDAG wallet first — OLC locks to that address.");
+      setError("Connect your BlockDAG wallet first — OLC delivers to that address.");
       return null;
     }
     if (!selected) return null;
@@ -1657,59 +1657,25 @@ function PresaleBuyInner() {
   const showOrderCard = Boolean(activeOrder);
 
   return (
-    <section className="card min-w-0 w-full max-w-full overflow-hidden border-gold/40 shadow-gold !p-4 sm:!p-6">
-      <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <h2 className="text-xl font-bold text-white">Buy OLC</h2>
-          <p className="mt-1 text-sm text-slate-400">
-            Live batch {batch.batch}:{" "}
-            <span className="font-semibold text-gold-bright">${batchPrice.toFixed(3)}</span> / OLC.
-            Crypto-only checkout — pick how you pay, OLC locks to your BlockDAG wallet. No KYC.
-          </p>
-        </div>
-        <ConnectWallet />
+    <section className="card min-w-0 w-full max-w-full overflow-hidden border-gold/40 shadow-gold !p-5 sm:!p-7">
+      <div className="min-w-0">
+        <h2 className="text-xl font-bold text-white">Buy OLC</h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-400">
+          Live batch {batch.batch}:{" "}
+          <span className="font-semibold text-gold-bright">${batchPrice.toFixed(3)}</span> / OLC.
+          Crypto-only checkout — pick how you pay; verified buys deliver OLC to your BlockDAG wallet. No KYC.
+        </p>
       </div>
 
-      {/* Connected wallet + native BDAG / locked balance */}
-      <div className="mt-4 flex min-w-0 flex-wrap items-center gap-3 rounded-xl border border-border bg-bg-panel/60 px-3 py-2.5">
+      {/* Destination only — balances live in site header; no second wallet panel */}
+      <div className="mt-6 flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-border bg-bg-panel/60 px-3.5 py-3.5">
         {isConnected && address ? (
           <>
             <div className="min-w-0">
-              <p className="text-[10px] uppercase tracking-wide text-slate-500">Lock to</p>
+              <p className="text-[10px] uppercase tracking-wide text-slate-500">Deliver to</p>
               <p className="font-mono text-sm text-cyan-100">{shortAddr(address)}</p>
             </div>
-            {onCorrectChain ? (
-              <div className="min-w-0 border-l border-border pl-3">
-                <p className="text-[10px] uppercase tracking-wide text-slate-500">Wallet</p>
-                <p className="font-mono text-sm text-slate-200">
-                  <span className="font-semibold text-gold-bright tabular-nums">
-                    {walletBal.bdagFormatted ?? (walletBal.bdagLoading ? "…" : "—")}
-                  </span>{" "}
-                  <span className="text-slate-500">BDAG</span>
-                  {walletBal.olcFormatted != null && (
-                    <>
-                      <span className="mx-1 text-slate-600">·</span>
-                      <span className="font-semibold text-cyan-100/90 tabular-nums">
-                        {walletBal.olcFormatted}
-                      </span>{" "}
-                      <span className="text-slate-500">OLC</span>
-                    </>
-                  )}
-                </p>
-              </div>
-            ) : (
-              <div className="min-w-0 border-l border-border pl-3">
-                <p className="text-[10px] uppercase tracking-wide text-slate-500">Wallet</p>
-                <p className="text-xs text-amber-200/90">Switch to BlockDAG for BDAG balance</p>
-              </div>
-            )}
-            <div className="min-w-0 border-l border-border pl-3">
-              <p className="text-[10px] uppercase tracking-wide text-slate-500">Locked OLC</p>
-              <p className="font-semibold text-gold-bright">
-                {lockedBal.locked != null ? formatNum(lockedBal.locked, 4) : lockedBal.loading ? "…" : "0"}
-              </p>
-            </div>
-            {isConnected && !onCorrectChain && (
+            {!onCorrectChain && (
               <button
                 type="button"
                 className="ml-auto rounded-lg border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-100"
@@ -1721,14 +1687,14 @@ function PresaleBuyInner() {
           </>
         ) : (
           <p className="text-sm text-slate-400">
-            Connect a BlockDAG wallet — purchased OLC locks to that address. Native BDAG balance shows when connected.
+            Connect via the header — purchased OLC delivers to that BlockDAG address.
           </p>
         )}
       </div>
 
-      <div className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-100/90 space-y-1">
+      <div className="mt-5 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-xs text-amber-100/90 space-y-1">
         <p>
-          <strong>Safety:</strong> OLC credits only after on-chain payment verify. Wrong network = lost funds.
+          <strong>Safety:</strong> OLC is delivered to your wallet only after on-chain payment verify. Wrong network = lost funds.
           Treasury{" "}
           <a
             className="link-accent break-all font-mono text-[11px]"
@@ -1743,7 +1709,7 @@ function PresaleBuyInner() {
       </div>
 
       {/* I want OLC */}
-      <div className="mt-5 space-y-3">
+      <div className="mt-7 space-y-4">
         <div className="flex gap-2">
           <button
             type="button"
@@ -1799,7 +1765,7 @@ function PresaleBuyInner() {
       </div>
 
       {/* Pay with chips */}
-      <div className="mt-4">
+      <div className="mt-6">
         <p className="text-sm text-slate-400">Pay with</p>
         <div className="mt-2 flex min-w-0 flex-wrap gap-2">
           {assets.map((a) => {
@@ -1829,7 +1795,7 @@ function PresaleBuyInner() {
       </div>
 
       {/* ROI / live quote calculator */}
-      <div className="mt-4 rounded-xl border border-gold/30 bg-bg-panel/80 p-3 text-sm space-y-1.5">
+      <div className="mt-6 rounded-xl border border-gold/30 bg-bg-panel/80 p-4 text-sm space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-xs font-semibold uppercase tracking-wide text-gold-bright">
             You get X OLC for $Y
@@ -1850,7 +1816,7 @@ function PresaleBuyInner() {
           <span className="text-slate-300">You get (X OLC)</span>
           <span className="font-semibold text-gold-bright">
             {formatNum(derived.olc, 4)} OLC{" "}
-            <span className="text-[10px] font-normal text-slate-400">(wallet + any legacy lock)</span>
+            <span className="text-[10px] font-normal text-slate-400">(to your wallet)</span>
           </span>
         </div>
         {derived.usd > 0 && derived.olc > 0 && (
@@ -1866,7 +1832,7 @@ function PresaleBuyInner() {
       </div>
 
       {/* Crypto-only + card stub (does not claim card works) */}
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
+      <div className="mt-5 flex flex-wrap items-center gap-2 text-[11px]">
         <span className="rounded-full border border-gold/40 bg-gold/10 px-2.5 py-1 font-semibold text-gold-bright">
           Crypto only
         </span>
@@ -1876,8 +1842,24 @@ function PresaleBuyInner() {
         <span className="text-slate-500">No KYC</span>
       </div>
 
-      {/* Primary Buy */}
-      <div className="mt-5 space-y-3">
+      {/* Primary Buy — compact wallet reminder only (full chip stays in site header) */}
+      <div className="mt-7 space-y-4">
+        {isConnected && address ? (
+          <p className="text-center text-[11px] text-slate-500">
+            Paying as{" "}
+            <span className="font-mono text-slate-300">{shortAddr(address)}</span>
+            {onCorrectChain && walletBal.bdagFormatted != null && (
+              <>
+                {" · "}
+                <span className="font-mono text-gold-bright/90">{walletBal.bdagFormatted} BDAG</span>
+              </>
+            )}
+          </p>
+        ) : (
+          <div className="flex justify-center">
+            <ConnectWallet compact />
+          </div>
+        )}
         <button
           type="button"
           className="btn-primary w-full py-3 text-base"
@@ -1889,11 +1871,6 @@ function PresaleBuyInner() {
         >
           {primaryLabel}
         </button>
-        {!isConnected && (
-          <div className="flex justify-center">
-            <ConnectWallet />
-          </div>
-        )}
         <button
           type="button"
           className="text-xs text-slate-400 underline-offset-2 hover:underline"
@@ -1905,12 +1882,12 @@ function PresaleBuyInner() {
 
       {/* Order / manual pay card (deposit assets) — same product, not a second panel */}
       {showOrderCard && activeOrder && (
-        <div className="mt-5 min-w-0 rounded-xl border border-cyan-accent/30 bg-cyan-accent/5 p-3 space-y-3 sm:p-4">
+        <div className="mt-7 min-w-0 rounded-xl border border-cyan-accent/30 bg-cyan-accent/5 p-4 space-y-4 sm:p-5">
           <p className="text-sm font-semibold text-cyan-100">
             Send exactly {formatNum(activeOrder.payAmount, 8)} {activeOrder.payAsset}
           </p>
           <p className="text-xs text-slate-400">
-            → {formatNum(activeOrder.olcAmount, 4)} OLC locked
+            → {formatNum(activeOrder.olcAmount, 4)} OLC to your wallet
             {activeOrder.usdPaid != null ? ` · ≈ $${formatNum(activeOrder.usdPaid, 4)}` : ""}
             {" · "}
             Network: <strong className="text-amber-200">{activeOrder.depositNetwork}</strong>
@@ -2074,11 +2051,11 @@ function PresaleBuyInner() {
         </p>
       )}
 
-      <div className="mt-8 border-t border-border pt-6">
+      <div className="mt-10 border-t border-border pt-8">
         <h3 className="text-sm font-semibold text-white">Purchase history</h3>
         <p className="mt-1 text-[11px] text-slate-500">
-          From your local purchases ledger (account-scoped). Reminder only — OLC arrives in your
-          BlockDAG wallet after on-chain verify. Full status + retry on Claim / Token Distribution.
+          From your local purchases ledger (account-scoped). Reminder only — new buys deliver OLC
+          ERC-20 to your BlockDAG wallet after on-chain verify. Full status + retry on Claim / Token Distribution.
         </p>
         {purchases.length === 0 ? (
           <p className="mt-3 text-sm text-slate-500">No local purchases yet.</p>

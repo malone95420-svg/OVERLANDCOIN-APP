@@ -28,7 +28,7 @@ const DOCS = [
   {
     title: "Presale delivery",
     status: "Live",
-    body: "After verified pay, OLC ERC-20 is transferred to the buyer wallet (PRESALE_DELIVER_PRIVATE_KEY). PresaleLock remains for legacy locked balances only — do not redeploy. See /presale.",
+    body: "After verified pay, OLC ERC-20 is transferred to the buyer wallet (PRESALE_DELIVER_PRIVATE_KEY). See /presale.",
     href: "/presale",
   },
   {

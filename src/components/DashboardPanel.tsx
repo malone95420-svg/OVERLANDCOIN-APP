@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
-import { useLockedOlcBalance } from "@/components/presale/useLockedOlcBalance";
 import {
   loadCompletions,
   loadPosts,
@@ -20,15 +19,15 @@ import {
   shortWallet,
 } from "@/lib/explorerProfile";
 import { getQuestById } from "@/lib/quests";
-import { loadPurchases, sumLocalLockedOlc } from "@/lib/purchases";
+import { loadPurchases } from "@/lib/purchases";
 
 const SHORTCUTS = [
   { href: "/map", label: "Quest Map", hint: "Find & check in" },
-  { href: "/presale", label: "Presale", hint: "Buy locked OLC" },
-  { href: "/claim", label: "Claim", hint: "Quest + lock retry" },
+  { href: "/presale", label: "Presale", hint: "Buy OLC" },
+  { href: "/claim", label: "Claim", hint: "Quest + deliver retry" },
   { href: "/feed", label: "Community", hint: "Adventure wall" },
   { href: "/affiliates", label: "Affiliates", hint: "Referral link" },
-  { href: "/token-distribution", label: "Token Dist.", hint: "Locked OLC" },
+  { href: "/token-distribution", label: "Token Dist.", hint: "Your allocation" },
   { href: "/garage", label: "Garage", hint: "Your rig" },
   { href: "/profile", label: "Profile", hint: "Account" },
 ] as const;
@@ -45,15 +44,14 @@ function DashboardPanelInner() {
   const { data: session, status } = useSession();
   const { address } = useAccount();
   const wallet = address || session?.user?.address || undefined;
-  const { locked, loading: lockedLoading } = useLockedOlcBalance(wallet);
 
   const [hydrated, setHydrated] = useState(false);
   const [questsDone, setQuestsDone] = useState(0);
   const [pending, setPending] = useState(0);
   const [claimed, setClaimed] = useState(0);
-  const [localLocked, setLocalLocked] = useState(0);
   const [posts, setPosts] = useState<FeedPost[]>([]);
   const [purchaseCount, setPurchaseCount] = useState(0);
+  const [purchasedOlc, setPurchasedOlc] = useState(0);
   const [displayName, setDisplayName] = useState("");
   const [recentCompletions, setRecentCompletions] = useState<
     ReturnType<typeof loadCompletions>
@@ -64,13 +62,23 @@ function DashboardPanelInner() {
     setQuestsDone(completions.length);
     setPending(totalPendingOlC(completions));
     setClaimed(totalClaimedOlC(completions));
-    setLocalLocked(sumLocalLockedOlc(wallet));
+    const buys = loadPurchases();
     setPosts(loadPosts().slice(0, 5));
-    setPurchaseCount(loadPurchases().length);
+    setPurchaseCount(buys.length);
+    setPurchasedOlc(
+      buys.reduce((sum, p) => {
+        if (p.status !== "delivered" && p.status !== "locked_pending_chain") return sum;
+        const n =
+          typeof p.olcAmount === "number" && Number.isFinite(p.olcAmount)
+            ? p.olcAmount
+            : Number(String(p.olcEstimated).replace(/,/g, ""));
+        return sum + (Number.isFinite(n) ? n : 0);
+      }, 0),
+    );
     setRecentCompletions(loadCompletions().slice(0, 5));
     const profile = loadExplorerProfile();
     setDisplayName(profile.displayName);
-  }, [wallet]);
+  }, []);
 
   useEffect(() => {
     refresh();
@@ -90,7 +98,6 @@ function DashboardPanelInner() {
   }, [displayName, session?.user?.name, wallet]);
 
   const rank = explorerRank(questsDone);
-  const lockedDisplay = locked ?? localLocked;
 
   if (status === "loading" || !hydrated) {
     return <div className="card text-sm text-slate-500">Loading dashboard…</div>;
@@ -101,7 +108,7 @@ function DashboardPanelInner() {
       <div className="card space-y-5 text-center">
         <p className="text-lg font-semibold text-white">Explorer Dashboard</p>
         <p className="text-sm text-slate-400">
-          Sign in to see locked OLC, quest progress, and your recent adventure feed. Progress on
+          Sign in to see quest progress, purchases, and your recent adventure feed. Progress on
           this device is namespaced to your account after login.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
@@ -143,8 +150,8 @@ function DashboardPanelInner() {
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {[
           {
-            label: "Locked OLC",
-            value: lockedLoading && locked == null ? "…" : formatOlc(lockedDisplay),
+            label: "Presale OLC",
+            value: formatOlc(purchasedOlc),
             color: "text-gold-bright",
           },
           {

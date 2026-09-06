@@ -85,15 +85,15 @@ const SECTIONS: FaqSection[] = [
       },
       {
         q: "When can I sell or transfer presale OLC?",
-        a: "Bought OLC is yours immediately but non-transferable until listing unlock. Presale purchases are credited into a PresaleLock contract; after OVERLANDCOIN is listed on exchanges, the owner enables trading and you can withdraw to your wallet. Quest rewards are different — they claim straight to your wallet and are not locked in PresaleLock.",
+        a: "After payment verifies on-chain, bought OLC is delivered as ERC-20 to your BlockDAG wallet. Quest rewards are separate and also claim straight to your wallet. Official markets will be published when available — do not trust unofficial swap links.",
       },
       {
         q: "Where can I trade OLC?",
-        a: "No official DEX pairs are listed yet. Do not trust unofficial swap links. Official market links will be published when available. Presale OLC stays locked until that unlock.",
+        a: "No official DEX pairs are listed yet. Do not trust unofficial swap links. Official market links will be published when available. Presale OLC is already in your wallet after verified delivery.",
       },
       {
         q: "Where do I see my allocation?",
-        a: "Token Distribution (/token-distribution) polls locked-balance when your wallet is connected and shows batch/price context from your local purchase ledger.",
+        a: "Token Distribution (/token-distribution) shows batch/price context and your local purchase ledger (wallet deliveries). Your OLC balance also appears in the site header when connected on BlockDAG.",
       },
     ],
   },

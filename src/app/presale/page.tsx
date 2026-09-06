@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { AddOlcButton } from "@/components/AddOlcButton";
 import { CopyAddress } from "@/components/CopyAddress";
 import { LiveMarketPrices } from "@/components/LiveMarketPrices";
-import { LockedPresaleOlC } from "@/components/LockedPresaleOlC";
 import { PresaleBuy } from "@/components/PresaleBuy";
 import { RecentBuysFeed } from "@/components/RecentBuysFeed";
 import { PRESALE_BATCHES, PRESALE_META, SITE } from "@/lib/site";
@@ -48,10 +47,6 @@ export default function PresalePage() {
 
       <div className="mt-6">
         <RecentBuysFeed />
-      </div>
-
-      <div className="mt-6">
-        <LockedPresaleOlC />
       </div>
 
       <section className="mt-10">
@@ -152,9 +147,8 @@ export default function PresalePage() {
         <h2 className="text-xl font-bold text-white">3. Markets</h2>
         <ul className="mt-3 space-y-2 text-sm text-slate-400">
           <li>• On-site purchases use native BDAG and official BDUSD on BlockDAG — not CEX USDT.</li>
-          <li>• After verified payment, OLC ERC-20 is delivered to your BlockDAG wallet (not held in PresaleLock).</li>
+          <li>• After verified payment, OLC ERC-20 is delivered to your BlockDAG wallet.</li>
           <li>• No DEX pairs are listed yet — do not trust unofficial swap links. Liquidity links will be published when ready.</li>
-          <li>• Legacy PresaleLock balances (if any) remain secondary until unlocked — new buys go straight to your wallet.</li>
           <li>• Always verify contract and treasury addresses character-for-character.</li>
         </ul>
       </section>

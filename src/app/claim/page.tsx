@@ -4,7 +4,7 @@ import { ClaimHub } from "@/components/ClaimHub";
 export const metadata: Metadata = {
   title: "Claim OLC",
   description:
-    "Claim pending OVERLANDCOIN quest rewards and retry PresaleLock credits from your adventure and purchase ledgers.",
+    "Claim pending OVERLANDCOIN quest rewards and retry pending presale wallet deliveries.",
 };
 
 export default function ClaimPage() {
@@ -13,8 +13,8 @@ export default function ClaimPage() {
       <span className="badge">Rewards</span>
       <h1 className="section-title mt-4">Claim OLC</h1>
       <p className="section-sub">
-        Quest rewards claim straight to your wallet. Presale buys stay locked in PresaleLock until
-        listing unlock — retry credit if delivery is still pending.
+        Quest rewards claim straight to your wallet. Presale buys deliver OLC ERC-20 after payment
+        verifies — use Retry deliver if a transfer is still pending.
       </p>
       <div className="mt-8 max-w-4xl">
         <ClaimHub />

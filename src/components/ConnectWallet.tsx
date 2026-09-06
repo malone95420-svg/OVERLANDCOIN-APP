@@ -318,43 +318,32 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
         {!wrongNetwork && (
           <WalletBalanceChip compact={compact} showOlc className="max-w-[9.5rem] sm:max-w-none" />
         )}
-        <div
-          className={`flex-wrap items-center gap-1.5 ${
-            compact ? "hidden sm:flex" : "flex"
-          }`}
-        >
-          {wrongNetwork ? (
-            <>
-              <button
-                type="button"
-                onClick={onSwitch}
-                disabled={isSwitching || adding}
-                className="btn-primary !py-1.5 !text-xs"
-              >
-                {isSwitching || adding ? "Switching…" : "Switch to BlockDAG"}
-              </button>
-              <button
-                type="button"
-                onClick={onAdd}
-                disabled={adding}
-                className="btn-secondary !py-1.5 !text-xs"
-                title="Re-add BlockDAG with send-capable RPCs (west + east)"
-              >
-                {adding ? "Adding…" : "Add BlockDAG"}
-              </button>
-            </>
-          ) : (
+        {/* Network actions only when wrong chain — avoids mid-page / header overlap with balance chip */}
+        {wrongNetwork && (
+          <div
+            className={`flex-wrap items-center gap-1.5 ${
+              compact ? "hidden sm:flex" : "flex"
+            }`}
+          >
+            <button
+              type="button"
+              onClick={onSwitch}
+              disabled={isSwitching || adding}
+              className="btn-primary !py-1.5 !text-xs"
+            >
+              {isSwitching || adding ? "Switching…" : "Switch to BlockDAG"}
+            </button>
             <button
               type="button"
               onClick={onAdd}
               disabled={adding}
               className="btn-secondary !py-1.5 !text-xs"
-              title="Re-offer BlockDAG with send-capable west/east RPCs on the connected wallet"
+              title="Re-add BlockDAG with send-capable RPCs (west + east)"
             >
-              {adding ? "Updating…" : "Add BlockDAG"}
+              {adding ? "Adding…" : "Add BlockDAG"}
             </button>
-          )}
-        </div>
+          </div>
+        )}
         {wrongNetwork && compact && (
           <button
             type="button"

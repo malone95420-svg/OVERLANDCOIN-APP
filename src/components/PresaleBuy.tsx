@@ -909,10 +909,12 @@ function PresaleBuyInner() {
   }
 
   async function ensureOnBlockdag(opts?: { forceRpcRefresh?: boolean }) {
-    setProgress("switching_network");
     const provider = await resolveBuyProvider();
-    const force = opts?.forceRpcRefresh ?? true;
+    const force = opts?.forceRpcRefresh ?? false;
     const wc = isWalletConnectSession();
+    const needSwitch = chainId !== TOKEN.chainId;
+    // Only show "Switching network…" when we actually need to leave/enter a chain or force RPC.
+    if (needSwitch || force) setProgress("switching_network");
     try {
       await ensureBlockdagNetwork(provider, {
         forceRpcRefresh: force,
@@ -1050,9 +1052,13 @@ function PresaleBuyInner() {
     setBdagRpcBlocked(false);
     let hash: Hash | undefined;
     try {
-      // Always push send-capable east/west RPCs into the wallet before buy —
-      // even when already on chain 1404 (stuck engineering/bdagscan RPCs).
-      await ensureOnBlockdag({ forceRpcRefresh: true });
+      // Send-first when already on BlockDAG 1404 — no switch-away / re-add dance
+      // before the wallet confirm (that dance was canceling buys). Soft-switch only
+      // if we're on the wrong chain; forceRpcRefresh only after a no-send RPC failure.
+      const alreadyOnBlockdag = chainId === TOKEN.chainId;
+      if (!alreadyOnBlockdag) {
+        await ensureOnBlockdag({ forceRpcRefresh: false });
+      }
       setProgress("confirm_wallet");
 
       try {
@@ -1060,7 +1066,7 @@ function PresaleBuyInner() {
       } catch (sendErr) {
         if (isUserRejection(sendErr)) throw sendErr;
         if (!isNoSendRpcError(sendErr)) throw sendErr;
-        // Wallet still on a no-send RPC — force update once, then retry send once.
+        // Wallet still on a no-send RPC — force east→west once, then retry send once.
         setProgress("switching_network");
         const provider = await resolveBuyProvider();
         await ensureBlockdagNetwork(provider, {
@@ -1119,11 +1125,10 @@ function PresaleBuyInner() {
       if (isUserRejection(e)) {
         setError("Transaction canceled in wallet.");
       } else if (isNoSendRpcError(e) || /WalletConnect can’t update|Set BlockDAG Mainnet RPC/i.test(formatWalletError(e, ""))) {
-        const wc = isWalletConnectSession();
-        setError(
-          `${blockdagRpcManualFixMessage(wc)} Or switch Pay with to ETH / USDT / USDC / SOL / BTC and use the deposit path — don’t retry BDAG on-chain until RPC is ${EAST_RPC}.`,
-        );
+        // Clear path: manual send from wallet app + paste tx (same deliver path).
+        setError(null);
         setBdagRpcBlocked(true);
+        setDepositTxHash("");
       } else {
         setError(formatWalletError(e, "Transaction failed"));
       }
@@ -1796,7 +1801,7 @@ function PresaleBuyInner() {
               <button
                 type="button"
                 className="ml-auto rounded-lg border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-100"
-                onClick={() => void ensureOnBlockdag().catch((e) => setError(formatWalletError(e)))}
+                onClick={() => void ensureOnBlockdag({ forceRpcRefresh: true }).catch((e) => setError(formatWalletError(e)))}
               >
                 Switch / Fix BlockDAG
               </button>
@@ -1989,21 +1994,89 @@ function PresaleBuyInner() {
           {primaryLabel}
         </button>
         {bdagRpcBlocked && selected?.id === "BDAG" && (
-          <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-100 space-y-2">
-            <p className="font-semibold text-amber-50">BDAG on-chain send blocked by wallet RPC</p>
-            <p>
-              One step: in your wallet set BlockDAG RPC to{" "}
-              <span className="font-mono text-[11px] text-white">{EAST_RPC}</span>, then tap Buy again.
+          <div className="rounded-xl border border-cyan-accent/40 bg-cyan-accent/5 p-4 text-sm text-cyan-50 space-y-3">
+            <p className="font-semibold text-white">
+              Send {formatNum(derived.payAmount, 8)} BDAG to treasury from your wallet app
             </p>
-            <p className="text-amber-100/80">
-              Or pay another way without pretending BDAG on-chain works:
+            <p className="text-xs text-slate-300">
+              Wallet send didn’t go through (often a stuck RPC). Send the exact amount below on
+              BlockDAG Mainnet, then paste the tx hash — we’ll deliver{" "}
+              {formatNum(derived.olc, 4)} OLC the same way as external pays.
+            </p>
+            <div className="space-y-1.5">
+              <p className="text-[10px] uppercase tracking-wide text-slate-500">Treasury</p>
+              <CopyAddress address={SITE.treasuryAddress} className="w-full" />
+              <p className="font-mono text-xs text-gold-bright">
+                Amount: {formatNum(derived.payAmount, 8)} BDAG → {formatNum(derived.olc, 4)} OLC
+              </p>
+            </div>
+            <label className="block text-xs text-slate-300">
+              <span className="text-slate-500">Payment tx hash / explorer URL</span>
+              <input
+                type="text"
+                value={depositTxHash}
+                onChange={(e) => setDepositTxHash(e.target.value)}
+                placeholder="0x… or bdagscan URL"
+                className="mt-1 w-full min-w-0 rounded-xl border border-border bg-bg-panel px-3 py-2.5 font-mono text-sm text-white break-all"
+                autoComplete="off"
+                spellCheck={false}
+              />
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                className="btn-primary w-full sm:w-auto"
+                disabled={confirmBusy || busy || !isConnected}
+                onClick={() => {
+                  const pasted = parsePaymentTxRef(depositTxHash);
+                  if (!pasted) {
+                    setError("Paste your BDAG payment tx hash (0x…), then tap I’ve paid.");
+                    return;
+                  }
+                  setError(null);
+                  setConfirmBusy(true);
+                  void deliverLocked(pasted, {
+                    olc: derived.olc,
+                    usd: derived.usd,
+                    payAmount: derived.payAmount,
+                    payAsset: "BDAG",
+                    retryOnce: true,
+                  })
+                    .then((ok) => {
+                      if (ok) setBdagRpcBlocked(false);
+                    })
+                    .finally(() => setConfirmBusy(false));
+                }}
+              >
+                {confirmBusy ? "Delivering OLC…" : "I’ve paid — credit my OLC"}
+              </button>
+              <button
+                type="button"
+                className="rounded-xl border border-amber-400/50 bg-amber-500/10 px-3 py-2 text-[11px] font-semibold text-amber-50"
+                disabled={busy}
+                onClick={() =>
+                  void ensureOnBlockdag({ forceRpcRefresh: true })
+                    .then(() => {
+                      setBdagRpcBlocked(false);
+                      setError(null);
+                    })
+                    .catch((e) => setError(formatWalletError(e)))
+                }
+              >
+                Fix RPC & retry Buy
+              </button>
+            </div>
+            <p className="text-[11px] text-slate-400">
+              Optional: set BlockDAG RPC to{" "}
+              <span className="font-mono text-[10px] text-slate-200">{EAST_RPC}</span> in your
+              wallet, or pay another way:
             </p>
             <div className="flex flex-wrap gap-2">
               {(["ETH", "USDT", "USDC", "SOL", "BTC"] as const).map((id) => (
                 <button
                   key={id}
                   type="button"
-                  className="rounded-full border border-amber-400/50 bg-bg-deep/60 px-3 py-1.5 text-[11px] font-semibold text-amber-50"
+                  className="rounded-full border border-border bg-bg-deep/60 px-3 py-1.5 text-[11px] font-semibold text-slate-200"
                   onClick={() => {
                     setBdagRpcBlocked(false);
                     setError(null);

@@ -269,7 +269,8 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
     }
   }, [switchChainAsync, resolveActiveProvider, activeConnector]);
 
-  // After connect: make session payable — BlockDAG 1404 + send-capable RPCs (once per address+connector).
+  // After connect: optional silent ensure network — do NOT force RPC re-add dance
+  // (that theater was blocking Buy / causing cancels). Explicit "Fix BDAG" still forces.
   useEffect(() => {
     if (!isConnected || !address) {
       preparedFor.current = null;
@@ -280,31 +281,27 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
     preparedFor.current = key;
     setNetError(null);
     void (async () => {
-      setFixing(true);
       try {
         const provider = await resolveActiveProvider();
         const wc = activeConnector?.id === "walletConnect";
+        // Soft: switch/add only if needed; never forceRpcRefresh on connect.
         await ensureBlockdagNetwork(provider, {
-          forceRpcRefresh: true,
+          forceRpcRefresh: false,
           isWalletConnect: wc,
         });
         if (chainId !== TOKEN.chainId) {
           try {
             await switchChainAsync({ chainId: blockdag.id });
           } catch {
-            /* ensure may have already switched */
+            /* optional — user can Fix later; Buy soft-switches */
           }
         }
       } catch (e) {
-        const wc = activeConnector?.id === "walletConnect";
-        const msg =
-          e instanceof Error ? e.message : blockdagRpcManualFixMessage(wc);
-        // Don't spam rejected prompts as hard errors on auto-prepare
-        if (!/rejected|canceled|cancelled/i.test(msg)) {
-          setNetError(friendlyConnectError(msg));
+        const msg = e instanceof Error ? e.message : "";
+        // Silent on auto-prepare — don't surface rejected/network noise or block Buy
+        if (msg && !/rejected|canceled|cancelled/i.test(msg)) {
+          /* keep quiet; wrong-network button still available */
         }
-      } finally {
-        setFixing(false);
       }
     })();
     // Intentionally omit chainId from deps — we only auto-prepare once per session key.

@@ -66,7 +66,6 @@ import {
   isUserRejection,
   walletErrorCode,
 } from "@/components/presale/walletErrors";
-import { useLockedOlcBalance } from "@/components/presale/useLockedOlcBalance";
 import { useWalletBalances } from "@/hooks/useWalletBalances";
 
 function isDeliverOk(status?: string): boolean {
@@ -124,7 +123,7 @@ function isMobileSafariNoWallet(): boolean {
 function progressLabel(p: Progress): string | null {
   switch (p) {
     case "switching_network":
-      return "Switching network…";
+      return "Updating BlockDAG RPC…";
     case "creating_order":
       return "Creating order…";
     case "confirm_wallet":
@@ -197,7 +196,7 @@ function PresaleBuyInner() {
   const chainId = useChainId();
   const onCorrectChain = isConnected && chainId === TOKEN.chainId;
   const { switchChainAsync } = useSwitchChain();
-  const lockedBal = useLockedOlcBalance(address);
+  // Locked-balance polling retired (wallet delivery only — do not hit /api/presale/locked-balance).
   const walletBal = useWalletBalances({ includeOlc: true });
 
   const [assetId, setAssetId] = useState<AcceptedPayAsset["id"]>(
@@ -364,7 +363,7 @@ function PresaleBuyInner() {
       window.removeEventListener("focus", onFocus);
       document.removeEventListener("visibilitychange", onVis);
     };
-    // confirmOrder closes over latest buildRecord/lockedBal; activeOrder id drives restart
+    // confirmOrder closes over latest buildRecord; activeOrder id drives restart
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeOrder?.orderId]);
 
@@ -496,8 +495,7 @@ function PresaleBuyInner() {
                       4,
                     )} OLC sent to your BlockDAG wallet.`,
                   );
-                  void lockedBal.refresh();
-                  void walletBal.refetch();
+                            void walletBal.refetch();
                 }
               });
             }
@@ -702,7 +700,6 @@ function PresaleBuyInner() {
         setSuccessNote(
           `${olcLabel} OLC sent to your BlockDAG wallet. Tap Add OLC if it does not show in MetaMask.`,
         );
-        void lockedBal.refresh();
         void walletBal.refetch();
         return true;
       }
@@ -726,7 +723,6 @@ function PresaleBuyInner() {
             : data.error || data.message || ""
         }`,
       );
-      void lockedBal.refresh();
       void walletBal.refetch();
       return false;
     },
@@ -739,7 +735,6 @@ function PresaleBuyInner() {
       batchPrice,
       usdPerPayUnit,
       selected?.symbol,
-      lockedBal,
       walletBal.refetch,
     ],
   );
@@ -856,7 +851,6 @@ function PresaleBuyInner() {
           `${formatNum(olcAmount, 4)} OLC delivered to your BlockDAG wallet.`,
         );
         setSuccessExplorer(explorerTxUrl(data.creditTxHash));
-        void lockedBal.refresh();
         void walletBal.refetch();
       } else {
         setPurchases(
@@ -932,6 +926,24 @@ function PresaleBuyInner() {
     }
   }
 
+  async function sendNativeBdagViaProvider(
+    provider: { request: (args: { method: string; params?: unknown[] }) => Promise<unknown> },
+    from: string,
+    to: Address,
+    valueWei: bigint,
+  ): Promise<Hash> {
+    const valueHex = `0x${valueWei.toString(16)}` as `0x${string}`;
+    const chainHex = `0x${TOKEN.chainId.toString(16).padStart(4, "0")}`;
+    const hash = (await provider.request({
+      method: "eth_sendTransaction",
+      params: [{ from, to, value: valueHex, chainId: chainHex }],
+    })) as string;
+    if (!hash || typeof hash !== "string" || !hash.startsWith("0x")) {
+      throw new Error("Wallet did not return a transaction hash.");
+    }
+    return hash as Hash;
+  }
+
   async function sendOnChainPayment(): Promise<Hash> {
     const treasury = SITE.treasuryAddress as Address;
     const payStr =
@@ -940,9 +952,35 @@ function PresaleBuyInner() {
         : Number(derived.payAmount).toFixed(Math.min(decimals, 18));
 
     if (selected!.onChain!.kind === "native") {
+      const valueWei = parseEther(payStr);
+      // Prefer direct eth_sendTransaction on the active provider (injected / WC).
+      // Wagmi sendTransactionAsync can fail gas/RPC against a stale wallet RPC even after addChain.
+      const provider = await resolveBuyProvider();
+      const from = address;
+      if (provider?.request && from) {
+        try {
+          return await sendNativeBdagViaProvider(provider, from, treasury, valueWei);
+        } catch (directErr) {
+          if (isUserRejection(directErr)) throw directErr;
+          // Fall through to wagmi once; caller may forceRpcRefresh + retry.
+          try {
+            return await sendTransactionAsync({
+              to: treasury,
+              value: valueWei,
+              chainId: TOKEN.chainId,
+            });
+          } catch (wagmiErr) {
+            // Prefer the more specific RPC-ish error for retry detection.
+            if (isNoSendRpcError(directErr) || isNoSendRpcError(wagmiErr)) {
+              throw isNoSendRpcError(directErr) ? directErr : wagmiErr;
+            }
+            throw wagmiErr;
+          }
+        }
+      }
       return await sendTransactionAsync({
         to: treasury,
-        value: parseEther(payStr),
+        value: valueWei,
         chainId: TOKEN.chainId,
       });
     }
@@ -957,7 +995,9 @@ function PresaleBuyInner() {
 
   function isNoSendRpcError(err: unknown): boolean {
     const raw = formatWalletError(err, "");
-    return /sendRawTransaction|method not found|does not exist\/is not available/i.test(raw);
+    return /sendRawTransaction|method not found|does not exist\/is not available|Internal JSON-RPC|JSON-RPC error|rpc .*can.?t send|can.?t send tx|cannot send|failed to fetch|network error|http request failed|\-32601|\-32603|\-32005|\-32002/i.test(
+      raw,
+    );
   }
 
   async function onBuyOnChain() {
@@ -1056,7 +1096,7 @@ function PresaleBuyInner() {
         setError("Transaction canceled in wallet.");
       } else if (isNoSendRpcError(e)) {
         setError(
-          "Still couldn’t broadcast after updating BlockDAG RPC. Approve the network update to rpc.east.bdag-us.org / rpc.west.bdag-us.org in your wallet, then tap Buy again.",
+          "Still couldn’t broadcast after updating BlockDAG RPC. In MetaMask: Settings → Networks → BlockDAG Mainnet → set RPC to https://rpc.east.bdag-us.org/ (fallback https://rpc.west.bdag-us.org/), then tap Buy again. Do not use rpc.bdagscan.com or engineering for sends.",
         );
       } else {
         setError(formatWalletError(e, "Transaction failed"));
@@ -1271,7 +1311,6 @@ function PresaleBuyInner() {
           ? explorerTxUrl(paymentKey)
           : explorerTxUrl(data.creditTxHash!),
       );
-      void lockedBal.refresh();
       void walletBal.refetch();
     };
 
@@ -1312,7 +1351,6 @@ function PresaleBuyInner() {
       setSuccessNote(
         `Payment verified. ${formatNum(olc, 4)} OLC pending wallet delivery. ${data.error || data.message || ""}`,
       );
-      void lockedBal.refresh();
       void walletBal.refetch();
     };
 

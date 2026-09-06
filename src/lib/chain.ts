@@ -39,10 +39,16 @@ export const blockdag = defineChain({
  * EIP-3085 params for wallet_addEthereumChain.
  * Send-capable URLs only (prefer east then west) — never engineering or bdagscan.
  */
+/** EIP-155 chainId hex with even digit length (MetaMask mobile is picky about 0x57c vs 0x057c). */
+export function blockdagChainIdHex(): `0x${string}` {
+  const h = TOKEN.chainId.toString(16);
+  return `0x${h.length % 2 === 1 ? `0${h}` : h}` as `0x${string}`;
+}
+
 export function blockdagAddChainParams() {
   const walletRpcs = blockdagWalletRpcUrls();
   return {
-    chainId: `0x${TOKEN.chainId.toString(16)}`,
+    chainId: blockdagChainIdHex(),
     chainName: TOKEN.chainName,
     nativeCurrency: {
       name: TOKEN.nativeCurrency.name,

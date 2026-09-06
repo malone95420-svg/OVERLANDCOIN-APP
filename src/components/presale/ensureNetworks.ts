@@ -1,14 +1,21 @@
-import { blockdagAddChainParams } from "@/lib/chain";
+import { blockdagAddChainParams, blockdagChainIdHex } from "@/lib/chain";
 import { getAnyInjectedProvider, getEthereumPaymentProvider } from "@/lib/injectedWallets";
 import { TOKEN } from "@/lib/token";
 import { formatWalletError, walletErrorCode } from "./walletErrors";
 
 const ETHEREUM_MAINNET_HEX = "0x1";
-const BLOCKDAG_HEX = `0x${TOKEN.chainId.toString(16)}`;
+const BLOCKDAG_HEX = blockdagChainIdHex();
 
 type Eip1193 = {
   request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
 };
+
+function sameChainId(a: string | null | undefined, b: string): boolean {
+  if (!a) return false;
+  const na = BigInt(a);
+  const nb = BigInt(b);
+  return na === nb;
+}
 
 export type EnsureBlockdagOptions = {
   /**
@@ -47,6 +54,31 @@ export async function ensureBlockdagNetwork(
   }
 
   if (opts?.forceRpcRefresh) {
+    // MetaMask often IGNORES rpcUrls on wallet_addEthereumChain when chain 1404
+    // already exists. Switch away (Ethereum) then re-add so send-capable east/west stick.
+    try {
+      const current = String(
+        (await eth.request({ method: "eth_chainId" }).catch(() => "")) || "",
+      ).toLowerCase();
+      if (sameChainId(current, BLOCKDAG_HEX)) {
+        try {
+          await eth.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: ETHEREUM_MAINNET_HEX }],
+          });
+        } catch (switchAwayErr) {
+          if (walletErrorCode(switchAwayErr) === 4001) {
+            throw new Error("Update BlockDAG network was rejected in wallet.");
+          }
+          /* continue — some WC sessions cannot leave 1404 */
+        }
+      }
+    } catch (e) {
+      if (walletErrorCode(e) === 4001 || /rejected/i.test(formatWalletError(e, ""))) {
+        throw e instanceof Error ? e : new Error("Update BlockDAG network was rejected in wallet.");
+      }
+    }
+
     try {
       await addBlockdagWithSendRpcs(eth);
       return;
@@ -82,7 +114,7 @@ export async function ensureBlockdagNetwork(
 
   try {
     const current = (await eth.request({ method: "eth_chainId" })) as string;
-    if (current?.toLowerCase() === BLOCKDAG_HEX.toLowerCase()) return;
+    if (sameChainId(current, BLOCKDAG_HEX)) return;
   } catch {
     /* proceed to switch */
   }
@@ -141,7 +173,7 @@ export async function ensureEthereumMainnet(
   }
   try {
     const current = (await eth.request({ method: "eth_chainId" })) as string;
-    if (current?.toLowerCase() === ETHEREUM_MAINNET_HEX) return;
+    if (sameChainId(current, ETHEREUM_MAINNET_HEX)) return;
   } catch {
     /* proceed to switch */
   }

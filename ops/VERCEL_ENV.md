@@ -8,16 +8,17 @@ Set these in the Vercel project → Settings → Environment Variables.
 | Name | Notes |
 |------|--------|
 | `REWARD_PRIVATE_KEY` | From `reward-wallet.json` (server-only) |
-| `REWARD_RPC_URL` | `https://rpc.west.bdag-us.org/` |
+| `REWARD_RPC_URL` | Prefer `https://rpc.east.bdag-us.org/` (west fallback OK in code) |
 | `PRESALE_DELIVER_PRIVATE_KEY` | From `presale-deliver-wallet.json` (server-only) |
 | `NEXT_PUBLIC_PRESALE_LOCK_ADDRESS` | `0x6BAa605f29dD215FCeC215dC4be8818B3350EF37` |
-| `PRESALE_RPC_URL` | `https://rpc.west.bdag-us.org/` |
+| `PRESALE_RPC_URL` | Prefer `https://rpc.east.bdag-us.org/` (west fallback OK in code) |
 
 ## Optional / already documented in `.env.example`
 
 | Name | Notes |
 |------|--------|
-| `NEXT_PUBLIC_BLOCKDAG_RPC` | `https://rpc.west.bdag-us.org/` |
+| `NEXT_PUBLIC_BLOCKDAG_RPC` | `https://rpc.east.bdag-us.org/` |
+| `NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK` | `https://rpc.west.bdag-us.org/` (never bdagscan) |
 | `NEXT_PUBLIC_SITE_URL` | Production site URL |
 | `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | WalletConnect Cloud (if used) |
 

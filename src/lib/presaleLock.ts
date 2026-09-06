@@ -177,11 +177,12 @@ export function getPresaleLockAddress(): `0x${string}` | null {
 
 /** Send-capable RPCs for PresaleLock credit / approve / transfer broadcasts. */
 export function presaleDeliverRpcUrls(): string[] {
+  // Prefer code east→west order; env RPC is included but must not jump ahead of east.
   const envRpc =
     process.env.PRESALE_RPC_URL?.trim() || process.env.REWARD_RPC_URL?.trim();
   const list = [
-    envRpc && isSendCapableBlockdagRpc(envRpc) ? envRpc : undefined,
     ...blockdagWalletRpcUrls(),
+    envRpc && isSendCapableBlockdagRpc(envRpc) ? envRpc : undefined,
   ].filter((u): u is string => Boolean(u));
   return [...new Set(list)];
 }

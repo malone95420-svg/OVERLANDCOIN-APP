@@ -23,7 +23,7 @@ function olcImageUrl(): string {
 }
 
 async function ensureBlockdag(eth: EthereumProvider): Promise<void> {
-  const chainHex = `0x${TOKEN.chainId.toString(16)}`;
+  const chainHex = `0x${TOKEN.chainId.toString(16).padStart(4, "0")}`;
   try {
     const current = (await eth.request({ method: "eth_chainId" })) as string;
     if (current?.toLowerCase() === chainHex.toLowerCase()) return;

@@ -96,19 +96,20 @@ export function blockdagWalletRpcUrls(): string[] {
   const envPrimary = process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim();
   const envFallback = process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim();
   // Prefer east then west for broadcasts (west often 502; never bdagscan/engineering).
-  const candidates = [envPrimary, envFallback, EAST_RPC, WEST_RPC, TOKEN.rpcUrl, TOKEN.rpcFallback];
+  // Hard-order: EAST first, WEST second — never let env push west (or other) ahead of east.
+  const candidates = [EAST_RPC, WEST_RPC, envPrimary, envFallback, TOKEN.rpcUrl, TOKEN.rpcFallback];
   const list = candidates.filter(
     (u): u is string => typeof u === "string" && u.length > 0 && isSendCapableBlockdagRpc(u),
   );
   const deduped = dedupe(list);
-  // Stable order: east before west for known hosts; other send-capable URLs keep relative order.
   const east = deduped.filter((u) => hostOf(u) === "rpc.east.bdag-us.org");
   const west = deduped.filter((u) => hostOf(u) === "rpc.west.bdag-us.org");
   const other = deduped.filter((u) => {
     const h = hostOf(u);
     return h !== "rpc.east.bdag-us.org" && h !== "rpc.west.bdag-us.org";
   });
-  const ordered = [...other, ...east, ...west];
+  // East → west → any other send-capable env RPCs (never ahead of east).
+  const ordered = [...east, ...west, ...other];
   if (ordered.length > 0) return ordered;
   return [EAST_RPC, WEST_RPC];
 }

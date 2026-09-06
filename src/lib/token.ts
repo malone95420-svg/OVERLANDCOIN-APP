@@ -35,17 +35,33 @@ export const TOKEN = {
   chainId: 1404,
   chainName: "BlockDAG Mainnet",
   nativeCurrency: { name: "BDAG", symbol: "BDAG", decimals: 18 },
-  /** Primary send-capable RPC (prefer east — west often 502) */
-  rpcUrl: envSendRpc(process.env.NEXT_PUBLIC_BLOCKDAG_RPC, "https://rpc.east.bdag-us.org/"),
+  /**
+   * Primary send-capable RPC for docs / wallet_addEthereumChain display.
+   * Always prefer east — ignore env if it points at west/bdagscan/engineering so the
+   * client bundle never teaches buyers the flaky/wrong RPC.
+   */
+  rpcUrl: (() => {
+    const preferred = "https://rpc.east.bdag-us.org/";
+    const fromEnv = envSendRpc(process.env.NEXT_PUBLIC_BLOCKDAG_RPC, preferred);
+    try {
+      if (new URL(fromEnv).hostname.toLowerCase() === "rpc.east.bdag-us.org") return fromEnv;
+    } catch { /* use preferred */ }
+    return preferred;
+  })(),
   /**
    * Fallback send-capable RPC (west).
    * Engineering remains available via rpcAlt / blockdagHttpRpcUrls for reads only.
    * Never put engineering or bdagscan in wallet_addEthereumChain rpcUrls.
    */
-  rpcFallback: envSendRpc(
-    process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK,
-    "https://rpc.west.bdag-us.org/",
-  ),
+  rpcFallback: (() => {
+    const preferred = "https://rpc.west.bdag-us.org/";
+    const fromEnv = envSendRpc(process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK, preferred);
+    try {
+      const h = new URL(fromEnv).hostname.toLowerCase();
+      if (h === "rpc.west.bdag-us.org" || h === "rpc.east.bdag-us.org") return fromEnv;
+    } catch { /* use preferred */ }
+    return preferred;
+  })(),
   /** Additional read-only RPC (no eth_sendRawTransaction) */
   rpcAlt: "https://rpc.blockdag.engineering/",
   explorers: {

@@ -1,7 +1,8 @@
 /**
  * Quest catalog — curated corridors plus GeoNames / Overpass NA + SA expansion.
  * Spatially thinned (~25 km min spacing) via `node scripts/spread-quests.mjs`.
- * Base generators: `scripts/generate-quests.mjs`, `scripts/append-quests-us-sa.mjs`.
+ * Base generators: `scripts/generate-quests.mjs`, `scripts/append-quests-us-sa.mjs`,
+ * `scripts/append-poi-history-quests.mjs` (US/Canada/Hawaii history POIs).
  */
 import type { CapabilityTier } from "@/lib/vehicle";
 import { rewardForDifficulty } from "@/lib/questRewards";

@@ -12,6 +12,7 @@ import {
   loadCompletions,
   totalClaimedOlC,
   totalPendingOlC,
+  WALLET_CHANGE_EVENT,
   type Completion,
 } from "@/lib/completions";
 import { explorerTxUrl } from "@/lib/token";
@@ -42,6 +43,16 @@ function ProfileCompletionsInner() {
   useEffect(() => {
     refresh();
     setHydrated(true);
+  }, [refresh, address, isConnected]);
+
+  useEffect(() => {
+    const onWallet = () => refresh();
+    window.addEventListener(WALLET_CHANGE_EVENT, onWallet);
+    window.addEventListener("olc-account-change", onWallet);
+    return () => {
+      window.removeEventListener(WALLET_CHANGE_EVENT, onWallet);
+      window.removeEventListener("olc-account-change", onWallet);
+    };
   }, [refresh]);
 
   const pending = useMemo(() => totalPendingOlC(completions), [completions]);

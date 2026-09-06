@@ -194,7 +194,7 @@ export async function POST(req: NextRequest) {
   }
 
   // MVP: in-memory (+ /tmp) ledger — not shared across serverless instances.
-  // Blocks duplicate completionId, wallet+questId, and deviceId+questId when provided.
+  // Blocks duplicate completionId and wallet+questId (per-wallet). deviceId is audit-only.
   const conflict = await findClaimConflict({
     completionId,
     questId,
@@ -204,11 +204,9 @@ export async function POST(req: NextRequest) {
   if (conflict) {
     const existing = conflict.entry;
     const error =
-      conflict.reason === "device_quest"
-        ? "Already claimed on this device"
-        : conflict.reason === "wallet_quest"
-          ? "Already claimed for this wallet and quest"
-          : "Already claimed";
+      conflict.reason === "wallet_quest"
+        ? "Already claimed for this wallet and quest"
+        : "Already claimed";
     return NextResponse.json(
       {
         error,

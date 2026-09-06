@@ -1,6 +1,12 @@
 /**
- * Device-level quest completion ledger (NOT account-scoped).
- * Survives guest↔login / account switches on the same phone/browser.
+ * Legacy device-level quest completion ledger (NOT wallet-scoped).
+ *
+ * Historically used to “seal” completions onto a phone/browser so account
+ * switches could not re-earn. That leaked “completed” UI across wallets on
+ * the same device — fixed: UI eligibility is per wallet in completions.ts.
+ *
+ * These helpers remain for optional soft fraud analytics only. Do NOT use
+ * them to paint a different wallet’s quests as completed.
  */
 
 export const DEVICE_COMPLETED_QUESTS_KEY = "overlandcoin.device.completedQuests.v1";
@@ -8,6 +14,8 @@ export const DEVICE_COMPLETED_QUESTS_KEY = "overlandcoin.device.completedQuests.
 export type DeviceQuestEntry = {
   questId: string;
   completedAt: string; // ISO
+  /** Optional: wallet that completed (when recorded after the per-wallet fix). */
+  completedByWallet?: string;
 };
 
 function safeParseEntries(raw: string | null): DeviceQuestEntry[] {
@@ -29,6 +37,8 @@ function safeParseEntries(raw: string | null): DeviceQuestEntry[] {
         out.push({
           questId: e.questId,
           completedAt: typeof e.completedAt === "string" ? e.completedAt : "",
+          completedByWallet:
+            typeof e.completedByWallet === "string" ? e.completedByWallet : undefined,
         });
       }
     }
@@ -47,17 +57,36 @@ export function loadDeviceCompletedQuests(): DeviceQuestEntry[] {
   }
 }
 
+/** @deprecated Do not gate UI completion on this — use hasCompletedQuest (wallet ledger). */
 export function hasCompletedQuestOnDevice(questId: string): boolean {
   if (!questId) return false;
   return loadDeviceCompletedQuests().some((e) => e.questId === questId);
 }
 
-export function markQuestCompletedOnDevice(questId: string): void {
+/**
+ * Optional soft record for analytics. Does not affect UI “completed” state.
+ */
+export function markQuestCompletedOnDevice(
+  questId: string,
+  completedByWallet?: string | null,
+): void {
   if (typeof window === "undefined" || !questId) return;
   try {
     const list = loadDeviceCompletedQuests();
-    if (list.some((e) => e.questId === questId)) return;
-    list.push({ questId, completedAt: new Date().toISOString() });
+    const wallet = completedByWallet?.trim() || undefined;
+    const existing = list.find((e) => e.questId === questId);
+    if (existing) {
+      if (wallet && !existing.completedByWallet) {
+        existing.completedByWallet = wallet;
+        localStorage.setItem(DEVICE_COMPLETED_QUESTS_KEY, JSON.stringify(list));
+      }
+      return;
+    }
+    list.push({
+      questId,
+      completedAt: new Date().toISOString(),
+      ...(wallet ? { completedByWallet: wallet } : {}),
+    });
     localStorage.setItem(DEVICE_COMPLETED_QUESTS_KEY, JSON.stringify(list));
   } catch {
     /* quota / private mode */

@@ -7,7 +7,7 @@ import type { Quest } from "@/lib/quests";
 import { filterQuestsByTier } from "@/lib/quests";
 import { useVehicle } from "@/hooks/useVehicle";
 import { canReachQuest, TIER_LABELS, tierLabel } from "@/lib/vehicle";
-import { hasCompletedQuest, loadCompletions } from "@/lib/completions";
+import { hasCompletedQuest, loadCompletions, WALLET_CHANGE_EVENT } from "@/lib/completions";
 import { haversineMeters } from "@/lib/checkin";
 import {
   DIFFICULTY_COLORS,
@@ -33,6 +33,7 @@ const NEARBY_ALERT_METERS = 5000;
 export function QuestCards({ quests }: { quests: Quest[] }) {
   const { data: session, status: authStatus } = useSession();
   const { tier, hydrated, vehicle } = useVehicle();
+  const [walletEpoch, setWalletEpoch] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [guestOk, setGuestOk] = useState(false);
   const [guestHydrated, setGuestHydrated] = useState(false);
@@ -75,6 +76,19 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
 
   useEffect(() => {
     refreshCompletions();
+  }, [refreshCompletions, walletEpoch]);
+
+  useEffect(() => {
+    const onWallet = () => {
+      setWalletEpoch((n) => n + 1);
+      refreshCompletions();
+    };
+    window.addEventListener(WALLET_CHANGE_EVENT, onWallet);
+    window.addEventListener("olc-account-change", onWallet);
+    return () => {
+      window.removeEventListener(WALLET_CHANGE_EVENT, onWallet);
+      window.removeEventListener("olc-account-change", onWallet);
+    };
   }, [refreshCompletions]);
 
   // Deep-link: /map?quest=<id> (Telegram Mini App + bot)
@@ -648,7 +662,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
                   disabled={isSelectedCompleted}
                   title={
                     isSelectedCompleted
-                      ? "Location locked — quest already completed"
+                      ? "Location locked — already completed for this wallet"
                       : undefined
                   }
                   onClick={() => {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { loadCompletions, totalClaimedOlC, totalPendingOlC } from "@/lib/completions";
+import { loadCompletions, totalClaimedOlC, totalPendingOlC, WALLET_CHANGE_EVENT } from "@/lib/completions";
 
 /** Header / garage chip: pending claimable OLC vs claimed. */
 export function PendingOlCBadge({ className = "" }: { className?: string }) {
@@ -28,9 +28,13 @@ export function PendingOlCBadge({ className = "" }: { className?: string }) {
       }
     };
     window.addEventListener("storage", onStorage);
+    window.addEventListener(WALLET_CHANGE_EVENT, sync);
+    window.addEventListener("olc-account-change", sync);
     const id = window.setInterval(sync, 4000);
     return () => {
       window.removeEventListener("storage", onStorage);
+      window.removeEventListener(WALLET_CHANGE_EVENT, sync);
+      window.removeEventListener("olc-account-change", sync);
       window.clearInterval(id);
     };
   }, []);

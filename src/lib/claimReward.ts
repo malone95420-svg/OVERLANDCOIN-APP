@@ -11,7 +11,6 @@ import {
   type Completion,
 } from "@/lib/completions";
 import { getOrCreateDeviceId } from "@/lib/deviceId";
-import { markQuestCompletedOnDevice } from "@/lib/deviceQuests";
 import { explorerTxUrl } from "@/lib/token";
 
 export type ClaimSuccess = {
@@ -111,16 +110,12 @@ export async function claimRewardToWallet(input: ClaimInput): Promise<ClaimResul
       amount: typeof data.amount === "number" ? data.amount : completion.olcEarned,
     });
     if (!marked.ok) {
-      // Still seal the device so the quest cannot be re-completed after a paid claim.
-      markQuestCompletedOnDevice(completion.questId);
       return {
         ok: false,
         error: `Paid on-chain (${txHash.slice(0, 10)}…) but local save failed: ${marked.error}`,
         status: res.status,
       };
     }
-
-    markQuestCompletedOnDevice(completion.questId);
 
     // Best-effort: refresh shared wall badge / txHash
     const feedPost = loadPosts().find((p) => p.completionId === completion.id);

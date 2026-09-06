@@ -4,7 +4,7 @@
  * Keys tracked (MVP in-memory + optional JSON under /tmp):
  * - completionId
  * - wallet:questId  (lowercased wallet)
- * - deviceId:questId (when client sends deviceId)
+ * - deviceId recorded for audit (NOT a hard block — claims are per wallet)
  *
  * LIMITATION (serverless MVP): memory is per-instance and resets on cold start.
  * /tmp persistence helps within one machine but does NOT sync across Vercel
@@ -121,10 +121,9 @@ export async function findClaimByDeviceQuest(
 
 export type ClaimConflict =
   | { reason: "completion"; entry: ClaimLedgerEntry }
-  | { reason: "wallet_quest"; entry: ClaimLedgerEntry }
-  | { reason: "device_quest"; entry: ClaimLedgerEntry };
+  | { reason: "wallet_quest"; entry: ClaimLedgerEntry };
 
-/** Prefer blocking wallet+questId AND deviceId+questId when provided. */
+/** Block duplicate completionId and wallet+questId. Device is audit-only (per-wallet claims). */
 export async function findClaimConflict(input: {
   completionId: string;
   questId: string;
@@ -138,10 +137,9 @@ export async function findClaimConflict(input: {
   const byWallet = await findClaimByWalletQuest(input.wallet, input.questId);
   if (byWallet) return { reason: "wallet_quest", entry: byWallet };
 
-  if (input.deviceId?.trim()) {
-    const byDevice = await findClaimByDeviceQuest(input.deviceId, input.questId);
-    if (byDevice) return { reason: "device_quest", entry: byDevice };
-  }
+  // deviceId is still recorded on claim entries for soft fraud review, but does not
+  // block a different wallet from claiming the same quest on this device.
+  void input.deviceId;
 
   return null;
 }

@@ -12,6 +12,7 @@ import {
   loadCompletions,
   totalClaimedOlC,
   totalPendingOlC,
+  WALLET_CHANGE_EVENT,
   type Completion,
 } from "@/lib/completions";
 import { getQuestById } from "@/lib/quests";
@@ -150,12 +151,14 @@ function ClaimHubInner() {
     setHydrated(true);
     const onAccount = () => refresh();
     window.addEventListener("olc-account-change", onAccount);
+    window.addEventListener(WALLET_CHANGE_EVENT, onAccount);
     const t = setInterval(refresh, 5000);
     return () => {
       window.removeEventListener("olc-account-change", onAccount);
+      window.removeEventListener(WALLET_CHANGE_EVENT, onAccount);
       clearInterval(t);
     };
-  }, [refresh]);
+  }, [refresh, address]);
 
   const pendingOlC = useMemo(() => totalPendingOlC(completions), [completions]);
   const claimedOlC = useMemo(() => totalClaimedOlC(completions), [completions]);

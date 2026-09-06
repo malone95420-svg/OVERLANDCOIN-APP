@@ -11,6 +11,7 @@ import {
 import { WagmiProvider } from "wagmi";
 import { Web3ErrorBoundary } from "@/components/providers/Web3ErrorBoundary";
 import { wagmiConfig } from "@/lib/wagmi";
+import { WalletCompletionsSync } from "@/components/providers/WalletCompletionsSync";
 
 /** False until WagmiProvider is mounted; default false so hooks stay gated outside. */
 export const Web3MountedContext = createContext(false);
@@ -61,7 +62,10 @@ export function Web3Provider({ children }: { children: ReactNode }) {
     >
       <Web3MountedContext.Provider value={true}>
         <WagmiProvider config={wagmiConfig}>
-          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+          <QueryClientProvider client={queryClient}>
+            <WalletCompletionsSync />
+            {children}
+          </QueryClientProvider>
         </WagmiProvider>
       </Web3MountedContext.Provider>
     </Web3ErrorBoundary>

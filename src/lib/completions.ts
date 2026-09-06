@@ -1,20 +1,23 @@
 /**
- * Quest completions + adventure feed posts (localStorage v1).
+ * Quest completions + adventure feed posts (localStorage).
  * OLC starts as pending_claim; claim via POST /api/rewards/claim sets status claimed + txHash.
+ *
+ * Completion UI / check-in eligibility is per connected wallet (checksummed 0x…).
+ * Device-sealed IDs must NOT mark a different wallet as completed.
  */
+
+import { getAddress, isAddress } from "viem";
 
 import type { Quest } from "@/data/quests";
 
-import { scopedStorageKey } from "@/lib/auth/accountScope";
-import {
-  hasCompletedQuestOnDevice,
-  markQuestCompletedOnDevice,
-} from "@/lib/deviceQuests";
+import { getAccountKey, scopedStorageKey } from "@/lib/auth/accountScope";
 
 export const COMPLETIONS_STORAGE_KEY = "overlandcoin.completions.v1";
 export const POSTS_STORAGE_KEY = "overlandcoin.posts.v1";
 /** Client-side claimed completion ids (mirrors server ledger for UX / anti-double-claim). */
 export const CLAIMS_STORAGE_KEY = "overlandcoin.claims.v1";
+
+export const WALLET_CHANGE_EVENT = "olc-wallet-change";
 
 export type CompletionStatus = "pending_claim" | "claimed";
 
@@ -34,6 +37,8 @@ export type Completion = {
   txHash?: string;
   claimedAt?: string;
   claimedWallet?: string;
+  /** Checksummed 0x… wallet that earned this completion (per-wallet slate). */
+  completedByWallet?: string;
 };
 
 export type FeedPostBadge =
@@ -52,7 +57,13 @@ export type FeedPost = {
   createdAt: string; // ISO
   badge: FeedPostBadge;
   txHash?: string;
+  completedByWallet?: string;
 };
+
+/** Active connected wallet (lowercased) for ledger namespacing. */
+let currentWalletLower: string | null = null;
+/** Checksummed form of currentWalletLower when set. */
+let currentWalletChecksum: string | null = null;
 
 function safeParse<T>(raw: string | null, fallback: T): T {
   if (!raw) return fallback;
@@ -63,27 +74,160 @@ function safeParse<T>(raw: string | null, fallback: T): T {
   }
 }
 
+/** Normalize to checksummed 0x… or null. */
+export function normalizeWalletAddress(address: string | null | undefined): string | null {
+  if (!address) return null;
+  const raw = address.trim();
+  if (!isAddress(raw)) return null;
+  try {
+    return getAddress(raw);
+  } catch {
+    return null;
+  }
+}
+
+export function getCompletionsWallet(): string | null {
+  return currentWalletChecksum;
+}
+
+/**
+ * Bind the completions ledger to the connected wagmi wallet.
+ * Switching wallets loads that wallet's slate (not device-sealed history).
+ */
+export function setCompletionsWallet(address: string | null | undefined): void {
+  const checksum = normalizeWalletAddress(address);
+  const lower = checksum ? checksum.toLowerCase() : null;
+  if (lower === currentWalletLower) return;
+  currentWalletLower = lower;
+  currentWalletChecksum = checksum;
+  if (checksum && lower) {
+    migrateLegacyLedgerToWallet(checksum, lower);
+  }
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(WALLET_CHANGE_EVENT, { detail: checksum }));
+  }
+}
+
+function walletNamespacedKey(base: string, walletLower: string): string {
+  return `${base}::wallet:${walletLower}`;
+}
+
+/**
+ * Storage key for completions/posts/claims:
+ * - Connected wallet → `base::wallet:0x…` (per-wallet)
+ * - No wallet → account/guest scope (legacy); callers filter other wallets out
+ */
+function ledgerKey(base: string): string {
+  if (currentWalletLower) {
+    return walletNamespacedKey(base, currentWalletLower);
+  }
+  return scopedStorageKey(base);
+}
+
+function readRawList<T>(key: string): T[] {
+  if (typeof window === "undefined") return [];
+  const list = safeParse<T[]>(localStorage.getItem(key), []);
+  return Array.isArray(list) ? list : [];
+}
+
+/**
+ * One-time: copy account-scoped ledger for THIS same address into wallet namespace.
+ * Does NOT import device-sealed quest IDs or another wallet's data.
+ */
+function migrateLegacyLedgerToWallet(checksum: string, walletLower: string): void {
+  if (typeof window === "undefined") return;
+
+  const migrateOne = (base: string, tagWallet: boolean) => {
+    const dest = walletNamespacedKey(base, walletLower);
+    try {
+      if (localStorage.getItem(dest)) return;
+
+      const candidates: string[] = [
+        `${base}::${walletLower}`,
+        scopedStorageKey(base, walletLower),
+      ];
+      const accountKey = getAccountKey();
+      if (accountKey && accountKey === walletLower) {
+        candidates.unshift(scopedStorageKey(base, accountKey));
+      }
+
+      let raw: string | null = null;
+      for (const k of candidates) {
+        try {
+          const v = localStorage.getItem(k);
+          if (v) {
+            raw = v;
+            break;
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+      if (!raw) return;
+
+      if (!tagWallet) {
+        localStorage.setItem(dest, raw);
+        return;
+      }
+
+      const list = safeParse<Completion[]>(raw, []);
+      if (!Array.isArray(list) || list.length === 0) return;
+      const tagged = list.map((c) => ({
+        ...c,
+        completedByWallet: c.completedByWallet || checksum,
+        claimedWallet: c.claimedWallet,
+      }));
+      localStorage.setItem(dest, JSON.stringify(tagged));
+    } catch {
+      /* quota / private mode */
+    }
+  };
+
+  migrateOne(COMPLETIONS_STORAGE_KEY, true);
+  migrateOne(POSTS_STORAGE_KEY, true);
+  migrateOne(CLAIMS_STORAGE_KEY, false);
+}
+
+function filterForActiveWallet(list: Completion[]): Completion[] {
+  if (currentWalletLower) {
+    return list.filter((c) => {
+      if (!c.completedByWallet) return true; // legacy row in this wallet namespace
+      return c.completedByWallet.toLowerCase() === currentWalletLower;
+    });
+  }
+  // No wallet connected: never paint another wallet's completions as yours.
+  return list.filter((c) => !c.completedByWallet);
+}
+
+function filterPostsForActiveWallet(list: FeedPost[]): FeedPost[] {
+  if (currentWalletLower) {
+    return list.filter((p) => {
+      if (!p.completedByWallet) return true;
+      return p.completedByWallet.toLowerCase() === currentWalletLower;
+    });
+  }
+  return list.filter((p) => !p.completedByWallet);
+}
+
 export function loadCompletions(): Completion[] {
   if (typeof window === "undefined") return [];
-  const list = safeParse<Completion[]>(localStorage.getItem(scopedStorageKey(COMPLETIONS_STORAGE_KEY)), []);
-  return Array.isArray(list) ? list : [];
+  return filterForActiveWallet(readRawList<Completion>(ledgerKey(COMPLETIONS_STORAGE_KEY)));
 }
 
 export function loadPosts(): FeedPost[] {
   if (typeof window === "undefined") return [];
-  const list = safeParse<FeedPost[]>(localStorage.getItem(scopedStorageKey(POSTS_STORAGE_KEY)), []);
-  return Array.isArray(list) ? list : [];
+  return filterPostsForActiveWallet(readRawList<FeedPost>(ledgerKey(POSTS_STORAGE_KEY)));
 }
 
 export function loadClaimedIds(): string[] {
   if (typeof window === "undefined") return [];
-  const list = safeParse<string[]>(localStorage.getItem(scopedStorageKey(CLAIMS_STORAGE_KEY)), []);
-  return Array.isArray(list) ? list : [];
+  const list = readRawList<string>(ledgerKey(CLAIMS_STORAGE_KEY));
+  return list.filter((id) => typeof id === "string");
 }
 
 export function saveCompletions(list: Completion[]): { ok: true } | { ok: false; error: string } {
   try {
-    localStorage.setItem(scopedStorageKey(COMPLETIONS_STORAGE_KEY), JSON.stringify(list));
+    localStorage.setItem(ledgerKey(COMPLETIONS_STORAGE_KEY), JSON.stringify(list));
     return { ok: true };
   } catch (e) {
     const msg =
@@ -96,7 +240,7 @@ export function saveCompletions(list: Completion[]): { ok: true } | { ok: false;
 
 export function savePosts(list: FeedPost[]): { ok: true } | { ok: false; error: string } {
   try {
-    localStorage.setItem(scopedStorageKey(POSTS_STORAGE_KEY), JSON.stringify(list));
+    localStorage.setItem(ledgerKey(POSTS_STORAGE_KEY), JSON.stringify(list));
     return { ok: true };
   } catch (e) {
     const msg =
@@ -109,19 +253,18 @@ export function savePosts(list: FeedPost[]): { ok: true } | { ok: false; error: 
 
 function saveClaimedIds(ids: string[]): void {
   try {
-    localStorage.setItem(scopedStorageKey(CLAIMS_STORAGE_KEY), JSON.stringify(ids));
+    localStorage.setItem(ledgerKey(CLAIMS_STORAGE_KEY), JSON.stringify(ids));
   } catch {
     /* ignore quota for id list */
   }
 }
 
+/**
+ * UI “completed” / check-in eligibility — per connected wallet ledger only.
+ * Never consults device-sealed IDs (those leaked across wallet switches).
+ */
 export function hasCompletedQuest(questId: string, completions = loadCompletions()): boolean {
-  if (completions.some((c) => c.questId === questId)) {
-    // Seal legacy account-scoped completions onto this device so account switches cannot re-earn.
-    markQuestCompletedOnDevice(questId);
-    return true;
-  }
-  return hasCompletedQuestOnDevice(questId);
+  return completions.some((c) => c.questId === questId);
 }
 
 export function totalPendingOlC(completions = loadCompletions()): number {
@@ -151,20 +294,29 @@ export type RecordCheckInInput = {
   distanceM: number;
   photoDataUrl: string;
   caption: string;
+  /** Connected wallet — namespaces the completion to this address. */
+  wallet?: string | null;
 };
 
 /**
  * Persist completion + feed post. Rewards start as pending_claim until claim API succeeds.
+ * Eligibility is per-wallet (or guest when no wallet); device seal is not used.
  */
 export function recordCheckIn(
   input: RecordCheckInInput,
 ): { ok: true; completion: Completion; post: FeedPost } | { ok: false; error: string } {
-  if (hasCompletedQuestOnDevice(input.quest.id)) {
-    return { ok: false, error: "Already completed on this device" };
+  const wallet = normalizeWalletAddress(input.wallet ?? currentWalletChecksum);
+  if (wallet && currentWalletLower !== wallet.toLowerCase()) {
+    setCompletionsWallet(wallet);
   }
-  // Also block if this account already has a completion (keeps account ledger coherent).
+
   if (loadCompletions().some((c) => c.questId === input.quest.id)) {
-    return { ok: false, error: "Already completed on this device" };
+    return {
+      ok: false,
+      error: wallet
+        ? "Already completed for this wallet"
+        : "Already completed — connect a wallet or finish guest check-in claim first",
+    };
   }
 
   const completion: Completion = {
@@ -178,6 +330,7 @@ export function recordCheckIn(
     caption: input.caption.trim().slice(0, 280),
     olcEarned: input.quest.rewardOlC,
     status: "pending_claim",
+    ...(wallet ? { completedByWallet: wallet } : {}),
   };
 
   const post: FeedPost = {
@@ -191,6 +344,7 @@ export function recordCheckIn(
     olcEarned: completion.olcEarned,
     createdAt: completion.completedAt,
     badge: "GPS verified · Photo proof",
+    ...(wallet ? { completedByWallet: wallet } : {}),
   };
 
   const completions = [completion, ...loadCompletions()];
@@ -203,7 +357,6 @@ export function recordCheckIn(
     saveCompletions(completions.slice(1));
     return pRes;
   }
-  markQuestCompletedOnDevice(input.quest.id);
   return { ok: true, completion, post };
 }
 
@@ -224,6 +377,11 @@ export function markCompletionClaimed(
     return { ok: false, error: "Invalid txHash — refusing to mark claimed without a real transaction." };
   }
 
+  const wallet = normalizeWalletAddress(input.wallet);
+  if (!wallet) {
+    return { ok: false, error: "Invalid wallet address." };
+  }
+
   const completions = loadCompletions();
   const idx = completions.findIndex((c) => c.id === completionId);
   if (idx < 0) return { ok: false, error: "Completion not found in local ledger." };
@@ -233,7 +391,8 @@ export function markCompletionClaimed(
     status: "claimed",
     txHash: input.txHash,
     claimedAt: new Date().toISOString(),
-    claimedWallet: input.wallet,
+    claimedWallet: wallet,
+    completedByWallet: completions[idx].completedByWallet || wallet,
     olcEarned: input.amount ?? completions[idx].olcEarned,
   };
   completions[idx] = next;
@@ -250,12 +409,11 @@ export function markCompletionClaimed(
           ...p,
           badge: "GPS verified · Photo proof · OLC sent" as const,
           txHash: input.txHash,
+          completedByWallet: p.completedByWallet || wallet,
         }
       : p,
   );
   savePosts(posts);
-
-  markQuestCompletedOnDevice(next.questId);
 
   return { ok: true, completion: next };
 }

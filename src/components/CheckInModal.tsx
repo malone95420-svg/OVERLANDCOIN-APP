@@ -3,16 +3,19 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Quest } from "@/lib/quests";
 import { formatDistance, haversineMeters, isWithinRadius } from "@/lib/checkin";
+import { useAccount } from "wagmi";
 import {
   compressImageToDataUrl,
   hasCompletedQuest,
   publishFeedPostToServer,
   recordCheckIn,
+  WALLET_CHANGE_EVENT,
   type Completion,
 } from "@/lib/completions";
 import { getOrCreateDeviceId } from "@/lib/deviceId";
 import { canReachQuest, tierLabel, TIER_LABELS, type CapabilityTier } from "@/lib/vehicle";
 import { ClaimOlCButton } from "@/components/ClaimOlCButton";
+import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 
 type Props = {
   quest: Quest;
@@ -28,7 +31,28 @@ type GeoState =
   | { status: "ready"; lat: number; lng: number; accuracy?: number }
   | { status: "error"; message: string };
 
-export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: Props) {
+export function CheckInModal(props: Props) {
+  const web3Mounted = useWeb3Mounted();
+  if (!web3Mounted) {
+    return <CheckInModalInner {...props} wallet={undefined} />;
+  }
+  return <CheckInModalWithWallet {...props} />;
+}
+
+function CheckInModalWithWallet(props: Props) {
+  const { address, isConnected } = useAccount();
+  const wallet = isConnected ? address : undefined;
+  return <CheckInModalInner {...props} wallet={wallet} />;
+}
+
+function CheckInModalInner({
+  quest,
+  vehicleTier,
+  open,
+  onClose,
+  onSuccess,
+  wallet,
+}: Props & { wallet?: `0x${string}` }) {
   const [geo, setGeo] = useState<GeoState>({ status: "idle" });
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
   const [photoName, setPhotoName] = useState<string>("");
@@ -37,9 +61,9 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
   const [error, setError] = useState<string | null>(null);
   const [feedSyncError, setFeedSyncError] = useState<string | null>(null);
   const [done, setDone] = useState<Completion | null>(null);
+  const [alreadyDone, setAlreadyDone] = useState(false);
 
   const tierOk = canReachQuest(vehicleTier, quest.minTier);
-  const alreadyDone = hasCompletedQuest(quest.id);
 
   const requestGeo = useCallback(() => {
     if (!navigator.geolocation) {
@@ -75,10 +99,22 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
     setPhotoName("");
     setCaption("");
     setSubmitting(false);
-    // Ensure stable device id exists before check-in / claim.
+    setAlreadyDone(hasCompletedQuest(quest.id));
+    // Device id still sent with claims for audit; not used for UI completion.
     getOrCreateDeviceId();
     requestGeo();
-  }, [open, quest.id, requestGeo]);
+  }, [open, quest.id, requestGeo, wallet]);
+
+  useEffect(() => {
+    const sync = () => setAlreadyDone(hasCompletedQuest(quest.id));
+    sync();
+    window.addEventListener(WALLET_CHANGE_EVENT, sync);
+    window.addEventListener("olc-account-change", sync);
+    return () => {
+      window.removeEventListener(WALLET_CHANGE_EVENT, sync);
+      window.removeEventListener("olc-account-change", sync);
+    };
+  }, [quest.id, wallet]);
 
   if (!open) return null;
 
@@ -123,6 +159,7 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
         distanceM: distanceM ?? 0,
         photoDataUrl,
         caption,
+        wallet,
       });
       if (!res.ok) {
         setError(res.error);
@@ -189,8 +226,8 @@ export function CheckInModal({ quest, vehicleTier, open, onClose, onSuccess }: P
 
         {alreadyDone && !done && (
           <div className="mt-4 rounded-xl border border-gold/40 bg-bg-panel px-3 py-3 text-sm text-gold-bright">
-            Already completed on this device. Each quest can only be completed once per phone/browser —
-            switching accounts does not unlock another check-in. Claim pending OLC from Garage if needed.
+            Already completed for this wallet. Switch wallets to see that address&apos;s own quest slate —
+            each wallet earns check-ins independently. Claim pending OLC from Garage if needed.
           </div>
         )}
 

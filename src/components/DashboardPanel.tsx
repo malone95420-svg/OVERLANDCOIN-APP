@@ -10,6 +10,7 @@ import {
   loadPosts,
   totalClaimedOlC,
   totalPendingOlC,
+  WALLET_CHANGE_EVENT,
   type FeedPost,
 } from "@/lib/completions";
 import {
@@ -85,8 +86,12 @@ function DashboardPanelInner() {
     setHydrated(true);
     const onAccount = () => refresh();
     window.addEventListener("olc-account-change", onAccount);
-    return () => window.removeEventListener("olc-account-change", onAccount);
-  }, [refresh]);
+    window.addEventListener(WALLET_CHANGE_EVENT, onAccount);
+    return () => {
+      window.removeEventListener("olc-account-change", onAccount);
+      window.removeEventListener(WALLET_CHANGE_EVENT, onAccount);
+    };
+  }, [refresh, address]);
 
   const greeting = useMemo(() => {
     const raw =

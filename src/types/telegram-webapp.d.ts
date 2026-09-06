@@ -9,6 +9,7 @@ declare global {
     setHeaderColor?: (color: string) => void;
     setBackgroundColor?: (color: string) => void;
     enableClosingConfirmation?: () => void;
+    disableVerticalSwipes?: () => void;
   }
 
   interface Window {

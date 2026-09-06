@@ -1,4 +1,5 @@
 import {
+  browserMapUrl,
   claimUrl,
   garageUrl,
   miniAppHomeUrl,
@@ -8,10 +9,18 @@ import {
 import type { InlineKeyboardMarkup, ReplyKeyboardMarkup } from "./types";
 import type { Quest } from "@/data/quests";
 
+/** Telegram inline button text max is 64 chars. */
+function truncateButtonText(text: string, max = 64): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  return `${t.slice(0, Math.max(0, max - 1)).trimEnd()}…`;
+}
+
 export function startInlineKeyboard(): InlineKeyboardMarkup {
   return {
     inline_keyboard: [
       [{ text: "Open Quest Map", web_app: { url: miniAppMapUrl() } }],
+      [{ text: "Open in browser", url: browserMapUrl() }],
       [{ text: "Mini App Home", web_app: { url: miniAppHomeUrl() } }],
       [
         { text: "Featured Quests", callback_data: "quests" },
@@ -29,6 +38,7 @@ export function mapInlineKeyboard(): InlineKeyboardMarkup {
   return {
     inline_keyboard: [
       [{ text: "Open Quest Map", web_app: { url: miniAppMapUrl() } }],
+      [{ text: "Open in browser", url: browserMapUrl() }],
       [{ text: "Mini App Home", web_app: { url: miniAppHomeUrl() } }],
     ],
   };
@@ -42,6 +52,7 @@ export function claimInlineKeyboard(): InlineKeyboardMarkup {
         { text: "Garage", web_app: { url: garageUrl() } },
       ],
       [{ text: "Open Quest Map", web_app: { url: miniAppMapUrl() } }],
+      [{ text: "Open in browser", url: browserMapUrl() }],
     ],
   };
 }
@@ -51,6 +62,7 @@ export function rangerInlineKeyboard(): InlineKeyboardMarkup {
     inline_keyboard: [
       [{ text: "Open Ranger in Mini App", web_app: { url: miniAppHomeUrl() } }],
       [{ text: "Quest Map", web_app: { url: miniAppMapUrl() } }],
+      [{ text: "Open in browser", url: browserMapUrl() }],
     ],
   };
 }
@@ -71,11 +83,21 @@ export function questsInlineKeyboard(
     inline_keyboard: [
       ...quests.map((q) => [
         {
-          text: `${q.title} · ${q.rewardOlC} OLC`,
+          text: truncateButtonText(`${q.title} · ${q.rewardOlC} OLC`),
           web_app: { url: questMapUrl(q.id, telegramUserId) },
         },
       ]),
-      [{ text: "Open Quest Map", web_app: { url: miniAppMapUrl({ telegram_user_id: telegramUserId }) } }],
+      [
+        {
+          text: "Open Quest Map",
+          web_app: {
+            url: telegramUserId
+              ? miniAppMapUrl({ telegram_user_id: telegramUserId })
+              : miniAppMapUrl(),
+          },
+        },
+      ],
+      [{ text: "Open in browser", url: browserMapUrl() }],
     ],
   };
 }

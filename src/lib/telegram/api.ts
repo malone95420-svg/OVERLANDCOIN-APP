@@ -1,4 +1,4 @@
-import { miniAppMapUrl, telegramBotToken } from "./config";
+import { CLEAN_MINI_APP_MAP_URL, telegramBotToken } from "./config";
 import type { ReplyMarkup } from "./types";
 
 type TelegramApiResult = {
@@ -58,12 +58,13 @@ export async function setMyCommands(): Promise<TelegramApiResult> {
   });
 }
 
+/** Menu button must use a clean HTTPS map URL (no query) for BotFather domain checks. */
 export async function setChatMenuButton(): Promise<TelegramApiResult> {
   return telegramCall("setChatMenuButton", {
     menu_button: {
       type: "web_app",
       text: "Quest Map",
-      web_app: { url: miniAppMapUrl() },
+      web_app: { url: CLEAN_MINI_APP_MAP_URL },
     },
   });
 }

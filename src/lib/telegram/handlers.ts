@@ -23,6 +23,7 @@ const START_TEXT = [
   "",
   "Commands: /map · /quests · /ranger · /claim",
   "Share your location anytime for nearby quests.",
+  "Tip: Mini App opens most reliably in a private chat with this bot (desktop groups can block web_app).",
 ].join("\n");
 
 const CLAIM_TEXT = [
@@ -38,14 +39,19 @@ function userIdOf(msg?: TelegramMessage, cb?: TelegramCallbackQuery): number | u
   return cb?.from.id ?? msg?.from?.id;
 }
 
-async function sendStart(chatId: number): Promise<void> {
-  await sendMessage(chatId, START_TEXT, startInlineKeyboard());
+function groupMiniAppTip(chatType?: string): string {
+  if (!chatType || chatType === "private") return "";
+  return "\n\nTip: On desktop, web_app buttons often fail in groups — message @OVERLANDCOIN_bot privately, tap Quest Map, or use Open in browser.";
 }
 
-async function sendMap(chatId: number): Promise<void> {
+async function sendStart(chatId: number, chatType?: string): Promise<void> {
+  await sendMessage(chatId, START_TEXT + groupMiniAppTip(chatType), startInlineKeyboard());
+}
+
+async function sendMap(chatId: number, chatType?: string): Promise<void> {
   await sendMessage(
     chatId,
-    `Quest Map Mini App:\n${miniAppMapUrl()}\n\nCheck-in and OLC claims stay in the app.`,
+    `Quest Map Mini App:\n${miniAppMapUrl()}\n\nCheck-in and OLC claims stay in the app.${groupMiniAppTip(chatType)}`,
     mapInlineKeyboard(),
   );
 }
@@ -91,6 +97,7 @@ async function sendClaim(chatId: number): Promise<void> {
 
 async function handleCallback(cb: TelegramCallbackQuery): Promise<void> {
   const chatId = cb.message?.chat.id;
+  const chatType = cb.message?.chat.type;
   const data = (cb.data ?? "").trim();
   if (!chatId) {
     await answerCallbackQuery(cb.id);
@@ -117,7 +124,7 @@ async function handleCallback(cb: TelegramCallbackQuery): Promise<void> {
   if (data === "map") {
     exitRanger(chatId);
     await answerCallbackQuery(cb.id);
-    await sendMap(chatId);
+    await sendMap(chatId, chatType);
     return;
   }
   await answerCallbackQuery(cb.id);
@@ -125,6 +132,7 @@ async function handleCallback(cb: TelegramCallbackQuery): Promise<void> {
 
 async function handleMessage(msg: TelegramMessage): Promise<void> {
   const chatId = msg.chat.id;
+  const chatType = msg.chat.type;
   const fromId = userIdOf(msg);
 
   if (msg.location) {
@@ -140,12 +148,12 @@ async function handleMessage(msg: TelegramMessage): Promise<void> {
 
   if (cmd === "/start" || cmd === "/help") {
     exitRanger(chatId);
-    await sendStart(chatId);
+    await sendStart(chatId, chatType);
     return;
   }
   if (cmd === "/map") {
     exitRanger(chatId);
-    await sendMap(chatId);
+    await sendMap(chatId, chatType);
     return;
   }
   if (cmd === "/quests") {

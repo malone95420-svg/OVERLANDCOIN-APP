@@ -383,6 +383,11 @@ function ClaimHubInner() {
           <p className="mt-1 text-sm text-slate-400">
             Purchased OLC is transferred to your BlockDAG wallet after payment verifies. Use{" "}
             <strong className="text-slate-200">Retry deliver</strong> when status is pending.
+            Operators:{" "}
+            <Link href="/admin/presale" className="link-accent">
+              Admin confirm
+            </Link>{" "}
+            (secret required) for past pending non-BlockDAG deposits.
           </p>
         </div>
         {retryNote && (

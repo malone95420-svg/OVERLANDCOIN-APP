@@ -46,3 +46,11 @@ Same EVM receive address as BlockDAG treasury (user-confirmed). Set all for Prod
 
 Code also falls back to these defaults if env is unset (USDT network label defaults to `Ethereum (ERC-20)` in UI).
 
+## Presale admin confirm (past pending deposits)
+
+| Name | Notes |
+|------|--------|
+| `PRESALE_ADMIN_SECRET` | Server-only. Required for `POST/GET /api/presale/admin/confirm` and the `/admin/presale` UI. Generate a strong random string (e.g. `openssl rand -hex 32`). Send as `Authorization: Bearer <secret>` or header `x-presale-admin-secret`. **Never** prefix with `NEXT_PUBLIC_`. If unset, admin routes return 503. |
+
+Admin UI: `/admin/presale` — paste payment tx hash + buyer BlockDAG wallet + asset; secret stays in browser `sessionStorage` only for the session. Reuses on-chain verify + OLC wallet deliver (same as public confirm-deposit). There is no durable pending-purchase DB; confirm by pasting the past tx.
+

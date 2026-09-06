@@ -179,3 +179,52 @@ export async function listPublicRecentBuys(limit = 30): Promise<{
 }
 
 export { maskBuyer };
+
+/**
+ * Admin-only: recent buys with full buyer addresses (no masking).
+ * Used by /api/presale/admin/confirm GET — never expose publicly.
+ */
+export async function listAdminRecentBuys(limit = 40): Promise<{
+  buys: PublicRecentBuy[];
+  durable: boolean;
+  limit: number;
+}> {
+  const n = Math.min(Math.max(1, Math.floor(limit) || 40), MAX_ITEMS);
+  const durable = hasUpstashRedis();
+
+  try {
+    const r = redisClient();
+    let rows: PublicRecentBuy[] = [];
+    if (r) {
+      const raw = await r.lrange(REDIS_KEY, 0, n - 1);
+      rows = (Array.isArray(raw) ? raw : [])
+        .map((item) => {
+          if (!item) return null;
+          if (typeof item === "string") {
+            try {
+              return JSON.parse(item) as PublicRecentBuy;
+            } catch {
+              return null;
+            }
+          }
+          return item as PublicRecentBuy;
+        })
+        .filter((b): b is PublicRecentBuy => Boolean(b));
+    } else {
+      rows = memory.slice(0, n);
+    }
+
+    const buys = rows.filter(
+      (b) =>
+        b &&
+        typeof b.buyer === "string" &&
+        typeof b.olcAmount === "number" &&
+        typeof b.ts === "number",
+    );
+
+    return { buys, durable, limit: n };
+  } catch (e) {
+    console.warn("[recentBuys] admin list failed", e instanceof Error ? e.message : e);
+    return { buys: [], durable, limit: n };
+  }
+}

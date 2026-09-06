@@ -6,7 +6,7 @@
  *
  * GET /api/presale/orders?buyer=0x… — recent orders for buyer (optional helper)
  *
- * Storage: in-memory + /tmp MVP (see presaleOrders.ts). Use Redis in prod.
+ * Storage: Upstash Redis with TTL (see presaleOrders.ts). Memory is cache only.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -106,7 +106,7 @@ export async function GET(req: NextRequest) {
       { status: 400 },
     );
   }
-  const orders = listOrdersForBuyer(buyer, 15).map((o) => ({
+  const orders = (await listOrdersForBuyer(buyer, 15)).map((o) => ({
     orderId: o.orderId,
     payAsset: o.payAsset,
     payAmount: o.payAmount,

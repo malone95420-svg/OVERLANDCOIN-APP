@@ -442,70 +442,89 @@ function PresaleBuyInner() {
                 { silent: true },
               );
             } else {
-              // No open card: deliver/confirm-deposit from purchase fields (not order store)
+              // No open card: prefer deliver when we have a payment hash hint; else scan
               const payChain = payChainForAsset(p.payAsset || "ETH");
               const payAmt = Number(String(p.payAmount || "").replace(/,/g, ""));
-              const endpoint = "/api/presale/confirm-deposit";
-              await fetch(endpoint, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  buyer: address,
-                  payAsset: p.payAsset,
-                  payAmount: payAmt > 0 ? payAmt : undefined,
-                  chain: payChain,
-                  olcAmount: p.olcAmount,
-                }),
-              }).then(async (res) => {
-                let data = (await res.json().catch(() => ({}))) as {
-                  status?: string;
-                  creditTxHash?: string;
-                  olcAmount?: number;
-                  paymentTxHash?: string;
-                  error?: string;
-                };
-                if (
-                  res.status === 404 ||
-                  !(isDeliverOk(data.status) && data.creditTxHash)
-                ) {
-                  const orderRes = await fetch(
-                    `/api/presale/orders/${encodeURIComponent(orderId)}/confirm`,
-                    {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({}),
-                    },
-                  );
-                  const orderData = (await orderRes.json().catch(() => ({}))) as typeof data;
-                  if (isDeliverOk(orderData.status) && orderData.creditTxHash) {
-                    data = orderData;
-                  }
+              const hint =
+                (typeof (p as { paymentTxHint?: string }).paymentTxHint === "string"
+                  ? (p as { paymentTxHint?: string }).paymentTxHint
+                  : undefined) ||
+                (p.txHash && !p.txHash.startsWith("order:") ? p.txHash : undefined);
+              let res: Response;
+              if (hint && hint.length >= 10) {
+                res = await fetch("/api/presale/deliver", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    buyer: address,
+                    paymentTxHash: hint,
+                    payAsset: p.payAsset,
+                    payAmount: payAmt > 0 ? String(payAmt) : undefined,
+                    payChain,
+                    olcAmount: p.olcAmount,
+                  }),
+                });
+              } else {
+                res = await fetch("/api/presale/confirm-deposit", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    buyer: address,
+                    payAsset: p.payAsset,
+                    payAmount: payAmt > 0 ? payAmt : undefined,
+                    chain: payChain,
+                    olcAmount: p.olcAmount,
+                  }),
+                });
+              }
+              let data = (await res.json().catch(() => ({}))) as {
+                status?: string;
+                creditTxHash?: string;
+                olcAmount?: number;
+                paymentTxHash?: string;
+                error?: string;
+              };
+              if (
+                res.status === 404 ||
+                !(isDeliverOk(data.status) && data.creditTxHash)
+              ) {
+                const orderRes = await fetch(
+                  `/api/presale/orders/${encodeURIComponent(orderId)}/confirm`,
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(hint ? { paymentTxHash: hint } : {}),
+                  },
+                );
+                const orderData = (await orderRes.json().catch(() => ({}))) as typeof data;
+                if (isDeliverOk(orderData.status) && orderData.creditTxHash) {
+                  data = orderData;
                 }
-                if (isDeliverOk(data.status) && data.creditTxHash) {
-                  clearOpenPayOrder(orderId);
-                  setPurchases(
-                    updatePurchase(p.txHash, {
-                      status: "locked",
-                      creditTxHash: data.creditTxHash,
-                      olcAmount:
-                        typeof data.olcAmount === "number"
-                          ? data.olcAmount
-                          : p.olcAmount,
-                      deliveryNote: undefined,
-                    }),
-                  );
-                  setPendingLockRetryTx(null);
-                  setSuccessNote(
-                    `${formatNum(
+              }
+              if (isDeliverOk(data.status) && data.creditTxHash) {
+                clearOpenPayOrder(orderId);
+                setPurchases(
+                  updatePurchase(p.txHash, {
+                    status: "locked",
+                    creditTxHash: data.creditTxHash,
+                    olcAmount:
                       typeof data.olcAmount === "number"
                         ? data.olcAmount
-                        : p.olcAmount ?? 0,
-                      4,
-                    )} OLC sent to your BlockDAG wallet.`,
-                  );
-                            void walletBal.refetch();
-                }
-              });
+                        : p.olcAmount,
+                    deliveryNote: undefined,
+                  }),
+                );
+                setPendingLockRetryTx(null);
+                setSuccessNote(
+                  `${formatNum(
+                    typeof data.olcAmount === "number"
+                      ? data.olcAmount
+                      : p.olcAmount ?? 0,
+                    4,
+                  )} OLC sent to your BlockDAG wallet.`,
+                );
+                void walletBal.refetch();
+              }
             }
           } else if (p.status === "locked_pending_chain") {
             await retryLockCredit(p.txHash);
@@ -674,22 +693,22 @@ function PresaleBuyInner() {
 
       setProgress("locking_olc");
       let { res, data } = await attempt();
-      // Always one follow-up; keep going longer when RPC/indexing lags or credit is pending.
+      // Retry when RPC/indexing lags (409) — wallet-approve credit must not die on first lag.
       if (!(isDeliverOk(data.status) && data.creditTxHash) && opts?.retryOnce !== false) {
         const isLag = () =>
           data.status === "pending_confirmation" ||
           data.retryable === true ||
           res.status === 409 ||
           data.status === "locked_pending_chain" ||
-          /indexing lag|not confirmed yet|not found/i.test(
+          /indexing lag|not confirmed yet|not found|pending/i.test(
             `${data.error || ""} ${data.message || ""}`,
           );
-        const maxAttempts = isLag() ? 4 : 2;
+        const maxAttempts = isLag() ? 6 : 3;
         for (let i = 1; i < maxAttempts; i++) {
-          await new Promise((r) => setTimeout(r, 1500 * i));
+          await new Promise((r) => setTimeout(r, Math.min(8_000, 1500 * i)));
           ({ res, data } = await attempt());
           if (isDeliverOk(data.status) && data.creditTxHash) break;
-          if (!isLag() && data.status === "unverified") break;
+          if (!isLag() && data.status === "unverified" && res.status !== 409) break;
         }
       }
 
@@ -1390,22 +1409,43 @@ function PresaleBuyInner() {
       let data: CreditData;
 
       if (pasted) {
-        // Primary credit path (same as BDAG): deliver by payment tx — no order store.
+        // Primary credit path (same as BDAG): deliver by payment tx — never depend on order store.
+        const deliverBody = {
+          buyer: order.buyer,
+          paymentTxHash: pasted,
+          payChain,
+          payAsset: order.payAsset,
+          olcAmount: order.olcAmount,
+          payAmount: String(order.payAmount),
+        };
         res = await fetch("/api/presale/deliver", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            buyer: order.buyer,
-            paymentTxHash: pasted,
-            payChain,
-            payAsset: order.payAsset,
-            olcAmount: order.olcAmount,
-            payAmount: String(order.payAmount),
-          }),
+          body: JSON.stringify(deliverBody),
         });
-        data = (await res.json().catch(() => ({}))) as CreditData;
+        data = (await res.json().catch(() => ({}))) as CreditData & {
+          retryable?: boolean;
+        };
 
-        // Optional: if deliver failed oddly, try legacy order confirm then fall through again
+        // Poll/retry deliver on indexing lag (409)
+        for (let i = 0; i < 5; i++) {
+          const lag =
+            res.status === 409 ||
+            data.status === "pending_confirmation" ||
+            (data as { retryable?: boolean }).retryable === true;
+          if (isDeliverOk(data.status) && data.creditTxHash) break;
+          if (data.verified && data.status === "locked_pending_chain") break;
+          if (!lag && res.status !== 409) break;
+          await new Promise((r) => setTimeout(r, Math.min(8_000, 1500 * (i + 1))));
+          res = await fetch("/api/presale/deliver", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(deliverBody),
+          });
+          data = (await res.json().catch(() => ({}))) as CreditData;
+        }
+
+        // Optional Redis order status update — 404 must not fail the buy
         if (
           !(isDeliverOk(data.status) && data.creditTxHash) &&
           !(data.verified && data.status === "locked_pending_chain") &&
@@ -1427,7 +1467,7 @@ function PresaleBuyInner() {
             res = orderRes;
             data = orderData;
           } else if (orderRes.status === 404 || /order not found/i.test(orderData.error || "")) {
-            // Expected on Vercel ephemeral /tmp order store — keep deliver result
+            // Order missing on this instance is OK — deliver is the credit path
           }
         }
       } else {
@@ -1595,7 +1635,9 @@ function PresaleBuyInner() {
 
       if (!txHash) throw new Error("Wallet did not return a transaction hash.");
       setDepositTxHash(txHash);
-      setProgress("confirming_payment");
+      // Credit path = deliver by tx hash (do NOT depend on ephemeral order confirm)
+      setProgress("locking_olc");
+      setSuccessNote("Delivering OLC…");
 
       try {
         updateOpenPayOrderHint(order.orderId, txHash);
@@ -1604,33 +1646,36 @@ function PresaleBuyInner() {
       }
       setAutoLooking(true);
 
-      // Deliver-first confirm (same /api/presale/deliver path as BDAG) with indexing retries
-      let confirmed = false;
-      let lastConfirmError: string | null = null;
-      for (let attempt = 0; attempt < 10; attempt++) {
-        if (attempt > 0) {
-          await new Promise((r) => setTimeout(r, Math.min(8_000, 2_000 + 1_500 * attempt)));
-        } else {
-          await new Promise((r) => setTimeout(r, 2500));
-        }
-        setError(null);
-        // First attempt shows locking UX; later attempts stay quiet while indexing catches up
-        confirmed = await confirmOrder(order, txHash, {
-          silent: attempt > 0,
-        });
-        if (confirmed) break;
-        lastConfirmError =
-          "Payment submitted — still confirming. We’ll keep looking automatically.";
+      // Brief pause so explorers/indexers can see the tx, then deliver with 409 retries
+      await new Promise((r) => setTimeout(r, 2000));
+      const delivered = await deliverLocked(txHash, {
+        olc: order.olcAmount,
+        usd: order.usdPaid ?? derived.usd,
+        payAmount: order.payAmount,
+        payAsset: order.payAsset,
+        retryOnce: true,
+      });
+
+      // Best-effort: update Redis order status if the order is still findable
+      void fetch(`/api/presale/orders/${encodeURIComponent(order.orderId)}/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentTxHash: txHash }),
+      }).catch(() => {});
+
+      if (delivered) {
+        clearOpenPayOrder(order.orderId);
+        setActiveOrder(null);
+        setAutoLooking(false);
+        return "paid";
       }
-      if (!confirmed) {
-        setAutoLooking(true);
-        setError(
-          lastConfirmError ||
-            "Wallet payment sent. Auto-checking continues — or tap I’ve paid to accelerate.",
-        );
-        return "manual";
-      }
-      return "paid";
+
+      // Deliver pending (indexing lag) — keep hash + auto-poll; credit still via deliver
+      setAutoLooking(true);
+      setError(
+        "Payment submitted — still delivering OLC. We’ll keep retrying automatically.",
+      );
+      return "manual";
     } catch (e) {
       if (isUserRejection(e)) {
         setError("Payment rejected in wallet.");
@@ -1665,7 +1710,9 @@ function PresaleBuyInner() {
         solAmount: order.payAmount,
       });
       setDepositTxHash(signature);
-      setProgress("confirming_payment");
+      // Credit path = deliver by signature (do NOT depend on order confirm)
+      setProgress("locking_olc");
+      setSuccessNote("Delivering OLC…");
 
       try {
         updateOpenPayOrderHint(order.orderId, signature);
@@ -1674,32 +1721,33 @@ function PresaleBuyInner() {
       }
       setAutoLooking(true);
 
-      // Deliver-first confirm (Solana signature → /api/presale/deliver) with indexing retries
-      let confirmed = false;
-      let lastConfirmError: string | null = null;
-      for (let attempt = 0; attempt < 10; attempt++) {
-        if (attempt > 0) {
-          await new Promise((r) => setTimeout(r, Math.min(8_000, 2_000 + 1_500 * attempt)));
-        } else {
-          await new Promise((r) => setTimeout(r, 2500));
-        }
-        setError(null);
-        confirmed = await confirmOrder(order, signature, {
-          silent: attempt > 0,
-        });
-        if (confirmed) break;
-        lastConfirmError =
-          "Payment submitted — still confirming. We’ll keep looking automatically.";
+      await new Promise((r) => setTimeout(r, 2000));
+      const delivered = await deliverLocked(signature, {
+        olc: order.olcAmount,
+        usd: order.usdPaid ?? derived.usd,
+        payAmount: order.payAmount,
+        payAsset: order.payAsset,
+        retryOnce: true,
+      });
+
+      void fetch(`/api/presale/orders/${encodeURIComponent(order.orderId)}/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentTxHash: signature }),
+      }).catch(() => {});
+
+      if (delivered) {
+        clearOpenPayOrder(order.orderId);
+        setActiveOrder(null);
+        setAutoLooking(false);
+        return "paid";
       }
-      if (!confirmed) {
-        setAutoLooking(true);
-        setError(
-          lastConfirmError ||
-            "Wallet payment sent. Auto-checking continues — or tap I’ve paid to accelerate.",
-        );
-        return "manual";
-      }
-      return "paid";
+
+      setAutoLooking(true);
+      setError(
+        "Payment submitted — still delivering OLC. We’ll keep retrying automatically.",
+      );
+      return "manual";
     } catch (e) {
       if (isUserRejection(e)) {
         setError("Payment rejected in wallet.");

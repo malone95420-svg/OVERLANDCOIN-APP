@@ -1,7 +1,9 @@
 /**
  * POST /api/presale/orders/:id/confirm
  *
- * Verify payment for a Pay Order and credit PresaleLock to order.buyer.
+ * Verify payment for a Pay Order and credit OLC to order.buyer.
+ * Prefer /api/presale/deliver when the client already has paymentTxHash —
+ * this route updates Redis order status when the order is found.
  *
  * Body (optional): { paymentTxHash? } — bare hash or explorer URL.
  * If omitted, server scans recent deposits to the order deposit address for
@@ -69,9 +71,16 @@ export async function POST(req: NextRequest, ctx: Ctx) {
     return NextResponse.json({ error: "Invalid order id" }, { status: 400 });
   }
 
-  const order = getOrder(orderId);
+  const order = await getOrder(orderId);
   if (!order) {
-    return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    return NextResponse.json(
+      {
+        error: "Order not found",
+        hint: "Orders are stored in Redis briefly. If you already have a payment tx hash, call POST /api/presale/deliver instead — credit does not require the order.",
+        preferDeliver: true,
+      },
+      { status: 404 },
+    );
   }
 
   if (order.status === "credited" && order.creditTxHash && order.paymentTxHash) {
@@ -132,7 +141,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
   // Idempotent short-circuit
   const existing = getDeliveredByPayment(paymentTxHash);
   if (existing) {
-    markOrderCredited(order.orderId, {
+    await markOrderCredited(order.orderId, {
       paymentTxHash,
       creditTxHash: existing.creditTxHash,
       olcAmount: existing.olcAmount,
@@ -192,7 +201,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
     olcAmount: Math.min(verified.quote.olcAmount, order.olcAmount),
   };
 
-  markOrderPaid(order.orderId, verified.payment.paymentTxHash);
+  await markOrderPaid(order.orderId, verified.payment.paymentTxHash);
 
   const result = await creditVerifiedPurchase({
     buyer: order.buyer,
@@ -221,7 +230,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
     );
   }
 
-  markOrderCredited(order.orderId, {
+  await markOrderCredited(order.orderId, {
     paymentTxHash: result.payment.paymentTxHash,
     creditTxHash: result.creditTxHash,
     olcAmount: result.olcAmount,

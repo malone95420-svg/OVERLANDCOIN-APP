@@ -1,20 +1,23 @@
 /**
  * Presale Pay Orders (external deposits: SOL / ETH / USDT / USDC / BTC).
- * In-memory + /tmp JSON MVP — NOT durable on Vercel serverless (ephemeral FS /
- * different instances). Credit must use /api/presale/deliver (or confirm-deposit
- * scan) with buyer + paymentTxHash / amount hints — do not rely on getOrder().
+ *
+ * Durable on Upstash Redis (UPSTASH_REDIS_REST_URL + TOKEN) with TTL ~60 min.
+ * In-memory is a same-instance cache only — do not rely on it across Vercel
+ * serverless instances. Credit should prefer /api/presale/deliver with
+ * buyer + paymentTxHash; order confirm updates Redis status when the order
+ * is found.
  *
  * Flow: create order (quote UX) → user pays → deliver by tx hash (BDAG-style).
  */
 
-import fs from "fs";
-import path from "path";
+import { Redis } from "@upstash/redis";
 import { getAddress, isAddress } from "viem";
 import {
   DEFAULT_BTC_DEPOSIT_ADDRESS,
   DEFAULT_EVM_DEPOSIT_ADDRESS,
   DEFAULT_SOL_DEPOSIT_ADDRESS,
 } from "@/lib/acceptedPayAssets";
+import { hasUpstashRedis } from "@/lib/auth/userStore";
 import { calcOlcFromPay, calcPayFromOlc, fetchAllLivePrices } from "@/lib/livePrices";
 import { PRESALE_BATCHES, SITE } from "@/lib/site";
 import type { PayAssetId, PayChain } from "@/lib/verifyPayment";
@@ -48,12 +51,31 @@ export type PayOrder = {
   rateSource?: string;
 };
 
+/** Client-facing order TTL (pending window). */
 const ORDER_TTL_MS = 45 * 60 * 1000; // 45 minutes
-const STORE_PATH =
-  process.env.PRESALE_ORDERS_PATH?.trim() ||
-  path.join("/tmp", "overlandcoin-presale-orders.json");
+/** Redis key TTL — slightly longer so confirm can still load near-expiry orders. */
+const REDIS_TTL_SEC = 60 * 60; // 60 minutes
+const ORDER_KEY_PREFIX = "olc:presale:order:";
+const BUYER_ORDERS_PREFIX = "olc:presale:buyer-orders:";
 
+/** Same-instance cache only — never the source of truth on Vercel. */
 const memory = new Map<string, PayOrder>();
+
+function redisClient(): Redis | null {
+  if (!hasUpstashRedis()) return null;
+  return new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL!,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  });
+}
+
+function orderKey(orderId: string): string {
+  return ORDER_KEY_PREFIX + orderId;
+}
+
+function buyerOrdersKey(buyer: string): string {
+  return BUYER_ORDERS_PREFIX + buyer.toLowerCase();
+}
 
 function liveBatchPrice(): number {
   const live = PRESALE_BATCHES.find((b) => b.status === "LIVE") ?? PRESALE_BATCHES[0];
@@ -114,43 +136,31 @@ function depositForAsset(asset: PayAssetId): {
   }
 }
 
-function loadDisk(): void {
-  try {
-    if (!fs.existsSync(STORE_PATH)) return;
-    const raw = fs.readFileSync(STORE_PATH, "utf8");
-    const rows = JSON.parse(raw) as PayOrder[];
-    if (!Array.isArray(rows)) return;
-    for (const row of rows) {
-      if (row?.orderId) memory.set(row.orderId, row);
-    }
-  } catch {
-    /* ignore corrupt MVP store */
-  }
-}
-
-let diskLoaded = false;
-function ensureLoaded() {
-  if (!diskLoaded) {
-    loadDisk();
-    diskLoaded = true;
-  }
-}
-
-function persistDisk() {
-  try {
-    const dir = path.dirname(STORE_PATH);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    const rows = [...memory.values()].sort((a, b) => b.createdAt - a.createdAt);
-    // Cap file size — keep last 500
-    fs.writeFileSync(STORE_PATH, JSON.stringify(rows.slice(0, 500), null, 2), "utf8");
-  } catch {
-    /* /tmp may be unavailable in some runtimes — memory still works */
-  }
-}
-
 function newOrderId(): string {
   const rand = Math.random().toString(36).slice(2, 10);
   return `ord_${Date.now().toString(36)}_${rand}`;
+}
+
+function normalizeOrder(raw: unknown): PayOrder | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as PayOrder;
+  if (!o.orderId || typeof o.orderId !== "string") return null;
+  if (!o.buyer || typeof o.buyer !== "string") return null;
+  return o;
+}
+
+function maybeExpire(order: PayOrder): PayOrder {
+  if (order.status === "pending" && Date.now() > order.expiresAt) {
+    return { ...order, status: "expired" };
+  }
+  return order;
+}
+
+function redisTtlSec(order: PayOrder): number {
+  const remainingMs = Math.max(0, order.expiresAt - Date.now());
+  // Keep at least a short window after expiry so confirm can return 410 expired.
+  const sec = Math.ceil(remainingMs / 1000) + 15 * 60;
+  return Math.min(REDIS_TTL_SEC, Math.max(60, sec));
 }
 
 /** Round pay amount for display / matching (asset-aware). */
@@ -196,32 +206,102 @@ export function amountsMatch(
   return Math.abs(actual - expected) <= amountTolerance(asset, expected);
 }
 
-export function getOrder(orderId: string): PayOrder | null {
-  ensureLoaded();
-  const o = memory.get(orderId);
-  if (!o) return null;
-  if (o.status === "pending" && Date.now() > o.expiresAt) {
-    o.status = "expired";
-    memory.set(orderId, o);
-    persistDisk();
+export async function getOrder(orderId: string): Promise<PayOrder | null> {
+  if (!orderId || orderId.length < 8) return null;
+
+  const cached = memory.get(orderId);
+  if (cached) {
+    const expired = maybeExpire(cached);
+    if (expired !== cached) {
+      memory.set(orderId, expired);
+      void saveOrder(expired);
+    }
+    return expired;
   }
-  return o;
+
+  const r = redisClient();
+  if (r) {
+    try {
+      const raw = await r.get<PayOrder | string>(orderKey(orderId));
+      const parsed =
+        typeof raw === "string"
+          ? normalizeOrder(JSON.parse(raw) as unknown)
+          : normalizeOrder(raw);
+      if (!parsed) return null;
+      const expired = maybeExpire(parsed);
+      memory.set(orderId, expired);
+      if (expired.status !== parsed.status) {
+        await saveOrder(expired);
+      }
+      return expired;
+    } catch (e) {
+      console.warn(
+        "[presaleOrders] getOrder Redis failed",
+        e instanceof Error ? e.message : e,
+      );
+      return null;
+    }
+  }
+
+  return null;
 }
 
-export function saveOrder(order: PayOrder): PayOrder {
-  ensureLoaded();
+export async function saveOrder(order: PayOrder): Promise<PayOrder> {
   memory.set(order.orderId, order);
-  persistDisk();
+
+  const r = redisClient();
+  if (r) {
+    try {
+      const ttl = redisTtlSec(order);
+      await r.set(orderKey(order.orderId), order, { ex: ttl });
+      const bKey = buyerOrdersKey(order.buyer);
+      await r.sadd(bKey, order.orderId);
+      await r.expire(bKey, REDIS_TTL_SEC);
+    } catch (e) {
+      console.warn(
+        "[presaleOrders] saveOrder Redis failed",
+        e instanceof Error ? e.message : e,
+      );
+    }
+  } else if (process.env.NODE_ENV === "production") {
+    console.warn(
+      "[presaleOrders] no Upstash Redis — order saved in memory only (will 404 on other instances). Set UPSTASH_REDIS_REST_*.",
+    );
+  }
+
   return order;
 }
 
-export function listOrdersForBuyer(buyer: string, limit = 20): PayOrder[] {
-  ensureLoaded();
+export async function listOrdersForBuyer(
+  buyer: string,
+  limit = 20,
+): Promise<PayOrder[]> {
   const b = buyer.toLowerCase();
+  const n = Math.min(Math.max(1, Math.floor(limit) || 20), 50);
+  const r = redisClient();
+
+  if (r) {
+    try {
+      const ids = (await r.smembers(buyerOrdersKey(b))) as string[];
+      const rows: PayOrder[] = [];
+      for (const id of ids.slice(0, 80)) {
+        if (typeof id !== "string") continue;
+        const o = await getOrder(id);
+        if (o && o.buyer.toLowerCase() === b) rows.push(o);
+      }
+      return rows.sort((a, b2) => b2.createdAt - a.createdAt).slice(0, n);
+    } catch (e) {
+      console.warn(
+        "[presaleOrders] listOrdersForBuyer Redis failed",
+        e instanceof Error ? e.message : e,
+      );
+    }
+  }
+
   return [...memory.values()]
     .filter((o) => o.buyer.toLowerCase() === b)
     .sort((a, b2) => b2.createdAt - a.createdAt)
-    .slice(0, limit);
+    .slice(0, n);
 }
 
 export type CreateOrderInput = {
@@ -240,8 +320,6 @@ const EXTERNAL_ASSETS: PayAssetId[] = ["SOL", "ETH", "USDT", "USDC", "BTC"];
 export async function createPayOrder(
   input: CreateOrderInput,
 ): Promise<CreateOrderResult> {
-  ensureLoaded();
-
   const buyerRaw = input.buyer?.trim() ?? "";
   if (!buyerRaw || !isAddress(buyerRaw)) {
     return {
@@ -269,6 +347,12 @@ export async function createPayOrder(
   const chain = inferChainFromAsset(asset);
   if (!chain) {
     return { ok: false, error: "Unsupported payAsset", status: 400 };
+  }
+
+  if (!hasUpstashRedis() && process.env.NODE_ENV === "production") {
+    console.warn(
+      "[presaleOrders] creating order without Redis — confirm may 404 on another instance; deliver-by-tx remains the credit path",
+    );
   }
 
   const prices = await fetchAllLivePrices();
@@ -368,16 +452,16 @@ export async function createPayOrder(
               : prices.sources?.usdc ?? "peg",
   };
 
-  saveOrder(order);
+  await saveOrder(order);
   return { ok: true, order };
 }
 
 /** Mark order paid/credited after verification. Idempotent. */
-export function markOrderCredited(
+export async function markOrderCredited(
   orderId: string,
   opts: { paymentTxHash: string; creditTxHash: string; olcAmount?: number },
-): PayOrder | null {
-  const order = getOrder(orderId);
+): Promise<PayOrder | null> {
+  const order = await getOrder(orderId);
   if (!order) return null;
   order.status = "credited";
   order.paymentTxHash = opts.paymentTxHash;
@@ -388,8 +472,11 @@ export function markOrderCredited(
   return saveOrder(order);
 }
 
-export function markOrderPaid(orderId: string, paymentTxHash: string): PayOrder | null {
-  const order = getOrder(orderId);
+export async function markOrderPaid(
+  orderId: string,
+  paymentTxHash: string,
+): Promise<PayOrder | null> {
+  const order = await getOrder(orderId);
   if (!order) return null;
   if (order.status === "credited") return order;
   order.status = "paid";

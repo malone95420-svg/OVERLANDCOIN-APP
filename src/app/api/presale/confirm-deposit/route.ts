@@ -7,6 +7,7 @@
  *
  * Body: { chain, paymentTxHash?, buyer, payAsset, olcAmount?, payAmount? }
  * When paymentTxHash omitted: require buyer + payAsset + payAmount + chain and scan.
+ * Prefer /api/presale/deliver when the client already has paymentTxHash (wallet approve path).
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -184,9 +185,12 @@ export async function POST(req: NextRequest) {
     if (!found) {
       return NextResponse.json(
         {
-          error: "No matching payment found yet — wait a minute and try again.",
+          error:
+            "No matching deposit found yet for that amount. If you already have a payment tx hash / signature, POST /api/presale/deliver with { buyer, paymentTxHash, payAsset } instead — do not wait on order confirm.",
           verified: false,
           status: "unverified" as const,
+          preferDeliver: true,
+          retryable: true,
         },
         { status: 404 },
       );

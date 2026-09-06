@@ -10,6 +10,15 @@ type Eip1193 = {
   request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
 };
 
+export type EnsureBlockdagOptions = {
+  /**
+   * Always call wallet_addEthereumChain with send-capable RPCs (east → west),
+   * even when already on chain 1404. Fixes wallets stuck on engineering/bdagscan
+   * (read-ok, no eth_sendRawTransaction).
+   */
+  forceRpcRefresh?: boolean;
+};
+
 function resolveProvider(
   provider?: Eip1193 | null,
 ): Eip1193 | undefined {
@@ -20,14 +29,57 @@ function resolveProvider(
   );
 }
 
-/** Switch/add BlockDAG 1404 using send-capable RPCs only (west/east). */
+async function addBlockdagWithSendRpcs(eth: Eip1193): Promise<void> {
+  await eth.request({
+    method: "wallet_addEthereumChain",
+    params: [blockdagAddChainParams()],
+  });
+}
+
+/** Switch/add BlockDAG 1404 using send-capable RPCs only (east → west). */
 export async function ensureBlockdagNetwork(
   provider?: Eip1193 | null,
+  opts?: EnsureBlockdagOptions,
 ): Promise<void> {
   const eth = resolveProvider(provider);
   if (!eth?.request) {
     throw new Error("No injected wallet found (MetaMask / OKX / Trust / etc.).");
   }
+
+  if (opts?.forceRpcRefresh) {
+    try {
+      await addBlockdagWithSendRpcs(eth);
+      return;
+    } catch (addErr) {
+      if (walletErrorCode(addErr) === 4001) {
+        throw new Error("Update BlockDAG network was rejected in wallet.");
+      }
+      // Some wallets reject re-add when chain exists — try switch, then add once more.
+      try {
+        await eth.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: BLOCKDAG_HEX }],
+        });
+      } catch {
+        /* continue to retry add */
+      }
+      try {
+        await addBlockdagWithSendRpcs(eth);
+        return;
+      } catch (retryAdd) {
+        if (walletErrorCode(retryAdd) === 4001) {
+          throw new Error("Update BlockDAG network was rejected in wallet.");
+        }
+        throw new Error(
+          formatWalletError(
+            retryAdd,
+            `Could not update BlockDAG RPC to a send-capable endpoint (chainId ${TOKEN.chainId}).`,
+          ),
+        );
+      }
+    }
+  }
+
   try {
     const current = (await eth.request({ method: "eth_chainId" })) as string;
     if (current?.toLowerCase() === BLOCKDAG_HEX.toLowerCase()) return;
@@ -50,10 +102,7 @@ export async function ensureBlockdagNetwork(
       /unrecognized chain|chain .*not.*added/i.test(formatWalletError(switchErr, ""))
     ) {
       try {
-        await eth.request({
-          method: "wallet_addEthereumChain",
-          params: [blockdagAddChainParams()],
-        });
+        await addBlockdagWithSendRpcs(eth);
         return;
       } catch (addErr) {
         if (walletErrorCode(addErr) === 4001) {
@@ -69,10 +118,7 @@ export async function ensureBlockdagNetwork(
     }
     // Try add anyway (some wallets don't return 4902)
     try {
-      await eth.request({
-        method: "wallet_addEthereumChain",
-        params: [blockdagAddChainParams()],
-      });
+      await addBlockdagWithSendRpcs(eth);
       return;
     } catch {
       /* fall through */

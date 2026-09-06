@@ -9,7 +9,7 @@ import {
   useSwitchChain,
   type Connector,
 } from "wagmi";
-import { blockdag, blockdagAddChainParams } from "@/lib/chain";
+import { blockdag } from "@/lib/chain";
 import {
   connectorDisplayName,
   detectedInjectedWalletIds,
@@ -17,6 +17,7 @@ import {
   type Eip1193Provider,
   type InjectedWalletId,
 } from "@/lib/injectedWallets";
+import { ensureBlockdagNetwork } from "@/components/presale/ensureNetworks";
 import { TOKEN } from "@/lib/token";
 import { walletConnectEnabled } from "@/lib/wagmi";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
@@ -45,14 +46,8 @@ async function providerFromConnector(connector?: Connector | null): Promise<Eip1
 }
 
 async function addBlockdagNetwork(provider?: Eip1193Provider | null): Promise<void> {
-  const eth = provider ?? getAnyInjectedProvider();
-  if (!eth?.request) {
-    throw new Error("No wallet provider found. Install a BlockDAG-compatible wallet (OKX, Trust, MetaMask, …).");
-  }
-  await eth.request({
-    method: "wallet_addEthereumChain",
-    params: [blockdagAddChainParams()],
-  });
+  // Always re-add with send-capable RPCs (east → west), even if already on 1404.
+  await ensureBlockdagNetwork(provider, { forceRpcRefresh: true });
 }
 
 const INSTALL_MSG =

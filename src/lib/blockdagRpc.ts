@@ -88,20 +88,28 @@ export function blockdagHttpRpcUrls(): string[] {
 }
 
 /**
- * Send-capable RPCs only (west + east + env that aren't known no-send / no-receipt-bad).
+ * Send-capable RPCs only (east + west + env that aren't known no-send / no-receipt-bad).
  * Use for wallet_addEthereumChain and any eth_sendRawTransaction / walletClient path.
- * Prefer west then east; never include engineering or bdagscan.
+ * Prefer east then west; never include engineering or bdagscan.
  */
 export function blockdagWalletRpcUrls(): string[] {
   const envPrimary = process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim();
   const envFallback = process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim();
-  // Prefer east then west for broadcasts (west often 502; never bdagscan).
-  const candidates = [envPrimary, envFallback, EAST_RPC, WEST_RPC, TOKEN.rpcFallback, TOKEN.rpcUrl];
+  // Prefer east then west for broadcasts (west often 502; never bdagscan/engineering).
+  const candidates = [envPrimary, envFallback, EAST_RPC, WEST_RPC, TOKEN.rpcUrl, TOKEN.rpcFallback];
   const list = candidates.filter(
     (u): u is string => typeof u === "string" && u.length > 0 && isSendCapableBlockdagRpc(u),
   );
   const deduped = dedupe(list);
-  if (deduped.length > 0) return deduped;
+  // Stable order: east before west for known hosts; other send-capable URLs keep relative order.
+  const east = deduped.filter((u) => hostOf(u) === "rpc.east.bdag-us.org");
+  const west = deduped.filter((u) => hostOf(u) === "rpc.west.bdag-us.org");
+  const other = deduped.filter((u) => {
+    const h = hostOf(u);
+    return h !== "rpc.east.bdag-us.org" && h !== "rpc.west.bdag-us.org";
+  });
+  const ordered = [...other, ...east, ...west];
+  if (ordered.length > 0) return ordered;
   return [EAST_RPC, WEST_RPC];
 }
 

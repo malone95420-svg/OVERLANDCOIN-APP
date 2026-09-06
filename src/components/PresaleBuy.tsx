@@ -193,7 +193,7 @@ function PresaleBuyInner() {
   const assets = useMemo(() => getCheckoutPayAssets(), []);
   const prices = useLivePrices();
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, connector } = useAccount();
   const chainId = useChainId();
   const onCorrectChain = isConnected && chainId === TOKEN.chainId;
   const { switchChainAsync } = useSwitchChain();
@@ -880,12 +880,40 @@ function PresaleBuyInner() {
     }
   }
 
-  async function ensureOnBlockdag() {
+  async function resolveBuyProvider() {
+    if (connector) {
+      try {
+        const p = (await connector.getProvider()) as { request?: unknown } | undefined;
+        if (p && typeof p.request === "function") {
+          return p as { request: (args: { method: string; params?: unknown[] }) => Promise<unknown> };
+        }
+      } catch {
+        /* fall through to injected */
+      }
+    }
+    return (
+      (getEthereumPaymentProvider() as
+        | { request: (args: { method: string; params?: unknown[] }) => Promise<unknown> }
+        | undefined) ??
+      (getAnyInjectedProvider() as
+        | { request: (args: { method: string; params?: unknown[] }) => Promise<unknown> }
+        | undefined) ??
+      null
+    );
+  }
+
+  async function ensureOnBlockdag(opts?: { forceRpcRefresh?: boolean }) {
     setProgress("switching_network");
+    const provider = await resolveBuyProvider();
+    const force = opts?.forceRpcRefresh ?? true;
     try {
-      await ensureBlockdagNetwork();
-    } catch {
-      /* fall through to wagmi switch */
+      await ensureBlockdagNetwork(provider, { forceRpcRefresh: force });
+    } catch (e) {
+      // User rejected the RPC/network update — don't proceed to a doomed send.
+      if (isUserRejection(e) || /rejected|canceled|cancelled/i.test(formatWalletError(e, ""))) {
+        throw e instanceof Error ? e : new Error(formatWalletError(e, "Network update canceled."));
+      }
+      /* fall through to wagmi switch; buy path will force+retry on no-send errors */
     }
     try {
       if (chainId !== TOKEN.chainId) {
@@ -902,6 +930,34 @@ function PresaleBuyInner() {
         ),
       );
     }
+  }
+
+  async function sendOnChainPayment(): Promise<Hash> {
+    const treasury = SITE.treasuryAddress as Address;
+    const payStr =
+      selected!.onChain!.kind === "native"
+        ? Number(derived.payAmount).toFixed(18).replace(/\.?0+$/, "") || "0"
+        : Number(derived.payAmount).toFixed(Math.min(decimals, 18));
+
+    if (selected!.onChain!.kind === "native") {
+      return await sendTransactionAsync({
+        to: treasury,
+        value: parseEther(payStr),
+        chainId: TOKEN.chainId,
+      });
+    }
+    return await writeContractAsync({
+      address: selected!.onChain!.address,
+      abi: erc20Abi,
+      functionName: "transfer",
+      args: [treasury, parseUnits(payStr, decimals)],
+      chainId: TOKEN.chainId,
+    });
+  }
+
+  function isNoSendRpcError(err: unknown): boolean {
+    const raw = formatWalletError(err, "");
+    return /sendRawTransaction|method not found|does not exist\/is not available/i.test(raw);
   }
 
   async function onBuyOnChain() {
@@ -933,29 +989,29 @@ function PresaleBuyInner() {
     setPendingLockRetryTx(null);
     let hash: Hash | undefined;
     try {
-      await ensureOnBlockdag();
+      // Always push send-capable east/west RPCs into the wallet before buy —
+      // even when already on chain 1404 (stuck engineering/bdagscan RPCs).
+      await ensureOnBlockdag({ forceRpcRefresh: true });
       setProgress("confirm_wallet");
 
-      const treasury = SITE.treasuryAddress as Address;
-      const payStr =
-        selected.onChain.kind === "native"
-          ? Number(derived.payAmount).toFixed(18).replace(/\.?0+$/, "") || "0"
-          : Number(derived.payAmount).toFixed(Math.min(decimals, 18));
-
-      if (selected.onChain.kind === "native") {
-        hash = await sendTransactionAsync({
-          to: treasury,
-          value: parseEther(payStr),
-          chainId: TOKEN.chainId,
-        });
-      } else {
-        hash = await writeContractAsync({
-          address: selected.onChain.address,
-          abi: erc20Abi,
-          functionName: "transfer",
-          args: [treasury, parseUnits(payStr, decimals)],
-          chainId: TOKEN.chainId,
-        });
+      try {
+        hash = await sendOnChainPayment();
+      } catch (sendErr) {
+        if (isUserRejection(sendErr)) throw sendErr;
+        if (!isNoSendRpcError(sendErr)) throw sendErr;
+        // Wallet still on a no-send RPC — force update once, then retry send once.
+        setProgress("switching_network");
+        const provider = await resolveBuyProvider();
+        await ensureBlockdagNetwork(provider, { forceRpcRefresh: true });
+        try {
+          if (chainId !== TOKEN.chainId) {
+            await switchChainAsync({ chainId: blockdag.id });
+          }
+        } catch {
+          /* RPC refresh is the important step */
+        }
+        setProgress("confirm_wallet");
+        hash = await sendOnChainPayment();
       }
 
       setPendingHash(hash);
@@ -998,15 +1054,12 @@ function PresaleBuyInner() {
     } catch (e) {
       if (isUserRejection(e)) {
         setError("Transaction canceled in wallet.");
+      } else if (isNoSendRpcError(e)) {
+        setError(
+          "Still couldn’t broadcast after updating BlockDAG RPC. Approve the network update to rpc.east.bdag-us.org / rpc.west.bdag-us.org in your wallet, then tap Buy again.",
+        );
       } else {
-        const raw = formatWalletError(e, "Transaction failed");
-        if (/sendRawTransaction|method not found/i.test(raw)) {
-          setError(
-            "Your wallet’s BlockDAG RPC can’t send txs. Tap Connect → Switch/Add BlockDAG (uses rpc.west / rpc.east) or set RPC to https://rpc.west.bdag-us.org/ or https://rpc.east.bdag-us.org/",
-          );
-        } else {
-          setError(raw);
-        }
+        setError(formatWalletError(e, "Transaction failed"));
       }
       if (hash) setPendingLockRetryTx(hash);
     } finally {

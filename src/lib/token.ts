@@ -5,8 +5,8 @@
  *
  * RPC note:
  * - Do NOT use https://rpc.bdagscan.com/ — divergent/stale tip (never for clients/receipts).
- * - https://rpc.west.bdag-us.org/ — send-capable; prefer for MetaMask / wallet_addEthereumChain.
- * - https://rpc.east.bdag-us.org/ — send-capable fallback when west is down; good tip for reads.
+ * - https://rpc.east.bdag-us.org/ — send-capable; prefer first for MetaMask / wallet_addEthereumChain.
+ * - https://rpc.west.bdag-us.org/ — send-capable fallback (west can be 502-flaky).
  * - https://rpc.blockdag.engineering/ — read-only / no-send (good tip for receipts; NO eth_sendRawTransaction).
  * Explorer https://bdagscan.com is still OK.
  */

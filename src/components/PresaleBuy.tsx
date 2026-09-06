@@ -67,6 +67,7 @@ import {
   walletErrorCode,
 } from "@/components/presale/walletErrors";
 import { useLockedOlcBalance } from "@/components/presale/useLockedOlcBalance";
+import { useWalletBalances } from "@/hooks/useWalletBalances";
 
 function isDeliverOk(status?: string): boolean {
   return status === "delivered" || status === "locked";
@@ -197,6 +198,7 @@ function PresaleBuyInner() {
   const onCorrectChain = isConnected && chainId === TOKEN.chainId;
   const { switchChainAsync } = useSwitchChain();
   const lockedBal = useLockedOlcBalance(address);
+  const walletBal = useWalletBalances({ includeOlc: true });
 
   const [assetId, setAssetId] = useState<AcceptedPayAsset["id"]>(
     () => assets[0]?.id ?? "BDAG",
@@ -495,6 +497,7 @@ function PresaleBuyInner() {
                     )} OLC sent to your BlockDAG wallet.`,
                   );
                   void lockedBal.refresh();
+                  void walletBal.refetch();
                 }
               });
             }
@@ -700,6 +703,7 @@ function PresaleBuyInner() {
           `${olcLabel} OLC sent to your BlockDAG wallet. Tap Add OLC if it does not show in MetaMask.`,
         );
         void lockedBal.refresh();
+        void walletBal.refetch();
         return true;
       }
 
@@ -723,6 +727,7 @@ function PresaleBuyInner() {
         }`,
       );
       void lockedBal.refresh();
+      void walletBal.refetch();
       return false;
     },
     [
@@ -735,6 +740,7 @@ function PresaleBuyInner() {
       usdPerPayUnit,
       selected?.symbol,
       lockedBal,
+      walletBal.refetch,
     ],
   );
 
@@ -851,6 +857,7 @@ function PresaleBuyInner() {
         );
         setSuccessExplorer(explorerTxUrl(data.creditTxHash));
         void lockedBal.refresh();
+        void walletBal.refetch();
       } else {
         setPurchases(
           updatePurchase(paymentTxHash, {
@@ -1212,6 +1219,7 @@ function PresaleBuyInner() {
           : explorerTxUrl(data.creditTxHash!),
       );
       void lockedBal.refresh();
+      void walletBal.refetch();
     };
 
     const applyPendingChain = (data: CreditData, paymentKey: string) => {
@@ -1252,6 +1260,7 @@ function PresaleBuyInner() {
         `Payment verified. ${formatNum(olc, 4)} OLC pending wallet delivery. ${data.error || data.message || ""}`,
       );
       void lockedBal.refresh();
+      void walletBal.refetch();
     };
 
     try {
@@ -1661,7 +1670,7 @@ function PresaleBuyInner() {
         <ConnectWallet />
       </div>
 
-      {/* Connected wallet + locked balance */}
+      {/* Connected wallet + native BDAG / locked balance */}
       <div className="mt-4 flex min-w-0 flex-wrap items-center gap-3 rounded-xl border border-border bg-bg-panel/60 px-3 py-2.5">
         {isConnected && address ? (
           <>
@@ -1669,6 +1678,31 @@ function PresaleBuyInner() {
               <p className="text-[10px] uppercase tracking-wide text-slate-500">Lock to</p>
               <p className="font-mono text-sm text-cyan-100">{shortAddr(address)}</p>
             </div>
+            {onCorrectChain ? (
+              <div className="min-w-0 border-l border-border pl-3">
+                <p className="text-[10px] uppercase tracking-wide text-slate-500">Wallet</p>
+                <p className="font-mono text-sm text-slate-200">
+                  <span className="font-semibold text-gold-bright tabular-nums">
+                    {walletBal.bdagFormatted ?? (walletBal.bdagLoading ? "…" : "—")}
+                  </span>{" "}
+                  <span className="text-slate-500">BDAG</span>
+                  {walletBal.olcFormatted != null && (
+                    <>
+                      <span className="mx-1 text-slate-600">·</span>
+                      <span className="font-semibold text-cyan-100/90 tabular-nums">
+                        {walletBal.olcFormatted}
+                      </span>{" "}
+                      <span className="text-slate-500">OLC</span>
+                    </>
+                  )}
+                </p>
+              </div>
+            ) : (
+              <div className="min-w-0 border-l border-border pl-3">
+                <p className="text-[10px] uppercase tracking-wide text-slate-500">Wallet</p>
+                <p className="text-xs text-amber-200/90">Switch to BlockDAG for BDAG balance</p>
+              </div>
+            )}
             <div className="min-w-0 border-l border-border pl-3">
               <p className="text-[10px] uppercase tracking-wide text-slate-500">Locked OLC</p>
               <p className="font-semibold text-gold-bright">
@@ -1687,7 +1721,7 @@ function PresaleBuyInner() {
           </>
         ) : (
           <p className="text-sm text-slate-400">
-            Connect a BlockDAG wallet — purchased OLC locks to that address.
+            Connect a BlockDAG wallet — purchased OLC locks to that address. Native BDAG balance shows when connected.
           </p>
         )}
       </div>

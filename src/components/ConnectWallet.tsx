@@ -20,6 +20,7 @@ import {
 import { TOKEN } from "@/lib/token";
 import { walletConnectEnabled } from "@/lib/wagmi";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
+import { WalletBalanceChip } from "@/components/WalletBalanceChip";
 
 function shortAddr(addr: string) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
@@ -314,6 +315,9 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
   if (isConnected && address) {
     return (
       <div className="relative flex min-w-0 items-center gap-1 sm:gap-2">
+        {!wrongNetwork && (
+          <WalletBalanceChip compact={compact} showOlc className="max-w-[9.5rem] sm:max-w-none" />
+        )}
         <div
           className={`flex-wrap items-center gap-1.5 ${
             compact ? "hidden sm:flex" : "flex"

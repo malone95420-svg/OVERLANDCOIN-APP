@@ -1,4 +1,5 @@
 import { blockdagAddChainParams, blockdagChainIdHex } from "@/lib/chain";
+import { EAST_RPC, WEST_RPC } from "@/lib/blockdagRpc";
 import { getAnyInjectedProvider, getEthereumPaymentProvider } from "@/lib/injectedWallets";
 import { TOKEN } from "@/lib/token";
 import { formatWalletError, walletErrorCode } from "./walletErrors";
@@ -24,6 +25,12 @@ export type EnsureBlockdagOptions = {
    * (read-ok, no eth_sendRawTransaction).
    */
   forceRpcRefresh?: boolean;
+  /**
+   * WalletConnect / remote sessions often cannot switch away from 1404 or update
+   * rpcUrls. Skip the MetaMask-style "leave 1404 → re-add" dance and surface a
+   * clear manual-RPC / deposit fallback instead of a doomed send.
+   */
+  isWalletConnect?: boolean;
 };
 
 function resolveProvider(
@@ -43,6 +50,15 @@ async function addBlockdagWithSendRpcs(eth: Eip1193): Promise<void> {
   });
 }
 
+/** Plain-English guidance when the wallet cannot update BlockDAG RPC. */
+export function blockdagRpcManualFixMessage(isWalletConnect = false): string {
+  const base = `Set BlockDAG Mainnet RPC to ${EAST_RPC} (fallback ${WEST_RPC}). Do not use rpc.bdagscan.com or rpc.blockdag.engineering for sends.`;
+  if (isWalletConnect) {
+    return `WalletConnect can’t update the RPC for you. In your wallet app → Networks → BlockDAG Mainnet → ${base} Or pay with ETH/USDT/USDC/SOL/BTC deposit instead.`;
+  }
+  return `Couldn’t update BlockDAG RPC automatically. In your wallet: Settings → Networks → BlockDAG Mainnet → ${base}`;
+}
+
 /** Switch/add BlockDAG 1404 using send-capable RPCs only (east → west). */
 export async function ensureBlockdagNetwork(
   provider?: Eip1193 | null,
@@ -50,37 +66,56 @@ export async function ensureBlockdagNetwork(
 ): Promise<void> {
   const eth = resolveProvider(provider);
   if (!eth?.request) {
-    throw new Error("No injected wallet found (MetaMask / OKX / Trust / etc.).");
+    throw new Error("No wallet provider found. Connect with WalletConnect or an in-app browser (MetaMask / OKX / Trust).");
   }
+
+  const isWc = Boolean(opts?.isWalletConnect);
 
   if (opts?.forceRpcRefresh) {
     // MetaMask often IGNORES rpcUrls on wallet_addEthereumChain when chain 1404
     // already exists. Switch away (Ethereum) then re-add so send-capable east/west stick.
-    try {
-      const current = String(
-        (await eth.request({ method: "eth_chainId" }).catch(() => "")) || "",
-      ).toLowerCase();
-      if (sameChainId(current, BLOCKDAG_HEX)) {
-        try {
-          await eth.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: ETHEREUM_MAINNET_HEX }],
-          });
-        } catch (switchAwayErr) {
-          if (walletErrorCode(switchAwayErr) === 4001) {
-            throw new Error("Update BlockDAG network was rejected in wallet.");
+    // WalletConnect: skip switch-away — it often fails or bricks the session.
+    if (!isWc) {
+      try {
+        const current = String(
+          (await eth.request({ method: "eth_chainId" }).catch(() => "")) || "",
+        ).toLowerCase();
+        if (sameChainId(current, BLOCKDAG_HEX)) {
+          try {
+            await eth.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: ETHEREUM_MAINNET_HEX }],
+            });
+          } catch (switchAwayErr) {
+            if (walletErrorCode(switchAwayErr) === 4001) {
+              throw new Error("Update BlockDAG network was rejected in wallet.");
+            }
+            /* continue — some wallets cannot leave 1404 */
           }
-          /* continue — some WC sessions cannot leave 1404 */
         }
-      }
-    } catch (e) {
-      if (walletErrorCode(e) === 4001 || /rejected/i.test(formatWalletError(e, ""))) {
-        throw e instanceof Error ? e : new Error("Update BlockDAG network was rejected in wallet.");
+      } catch (e) {
+        if (walletErrorCode(e) === 4001 || /rejected/i.test(formatWalletError(e, ""))) {
+          throw e instanceof Error ? e : new Error("Update BlockDAG network was rejected in wallet.");
+        }
       }
     }
 
     try {
       await addBlockdagWithSendRpcs(eth);
+      // Ensure we're on 1404 after add (WC / after switch-away).
+      try {
+        const after = String(
+          (await eth.request({ method: "eth_chainId" }).catch(() => "")) || "",
+        ).toLowerCase();
+        if (!sameChainId(after, BLOCKDAG_HEX)) {
+          await eth.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: BLOCKDAG_HEX }],
+          });
+        }
+      } catch {
+        /* add succeeded; switch may prompt separately */
+      }
       return;
     } catch (addErr) {
       if (walletErrorCode(addErr) === 4001) {
@@ -102,10 +137,13 @@ export async function ensureBlockdagNetwork(
         if (walletErrorCode(retryAdd) === 4001) {
           throw new Error("Update BlockDAG network was rejected in wallet.");
         }
+        if (isWc) {
+          throw new Error(blockdagRpcManualFixMessage(true));
+        }
         throw new Error(
           formatWalletError(
             retryAdd,
-            `Could not update BlockDAG RPC to a send-capable endpoint (chainId ${TOKEN.chainId}).`,
+            blockdagRpcManualFixMessage(false),
           ),
         );
       }
@@ -143,7 +181,7 @@ export async function ensureBlockdagNetwork(
         throw new Error(
           formatWalletError(
             addErr,
-            `Could not add BlockDAG Mainnet (chainId ${TOKEN.chainId}). Switch manually, then retry.`,
+            `Could not add BlockDAG Mainnet (chainId ${TOKEN.chainId}). ${blockdagRpcManualFixMessage(isWc)}`,
           ),
         );
       }
@@ -158,7 +196,7 @@ export async function ensureBlockdagNetwork(
     throw new Error(
       formatWalletError(
         switchErr,
-        `Could not switch wallet to BlockDAG Mainnet (chainId ${TOKEN.chainId}). Switch manually, then retry.`,
+        `Could not switch wallet to BlockDAG Mainnet (chainId ${TOKEN.chainId}). ${blockdagRpcManualFixMessage(isWc)}`,
       ),
     );
   }
@@ -169,7 +207,7 @@ export async function ensureEthereumMainnet(
 ): Promise<void> {
   const eth = resolveProvider(provider);
   if (!eth?.request) {
-    throw new Error("No injected wallet found (MetaMask / OKX / Trust / etc.).");
+    throw new Error("No Ethereum wallet found (MetaMask / OKX / Trust / WalletConnect).");
   }
   try {
     const current = (await eth.request({ method: "eth_chainId" })) as string;
@@ -232,4 +270,4 @@ export function noInjectedProviderMessage(payAsset: string, payAmount: number): 
   return `No Ethereum wallet detected in this browser. Open this page in MetaMask / OKX / Trust in-app browser, or copy the address and send${amountBit} ${payAsset} on Ethereum manually.`;
 }
 
-export { ETHEREUM_MAINNET_HEX };
+export { ETHEREUM_MAINNET_HEX, EAST_RPC, WEST_RPC };

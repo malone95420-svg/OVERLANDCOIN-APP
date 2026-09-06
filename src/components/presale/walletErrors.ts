@@ -61,3 +61,22 @@ export function isUserRejection(e: unknown): boolean {
   const msg = formatWalletError(e, "");
   return /user rejected|denied|rejected by user|canceled|cancelled/i.test(msg);
 }
+
+
+/** Map noisy wallet/RPC errors to a short plain-English line. */
+export function plainEnglishWalletError(e: unknown, fallback = "Something went wrong with the wallet."): string {
+  const raw = formatWalletError(e, "");
+  if (!raw) return fallback;
+  if (isUserRejection(e)) return "Canceled in wallet.";
+  if (/insufficient funds|exceeds balance/i.test(raw)) return "Not enough balance for this payment plus gas.";
+  if (/nonce|replacement transaction/i.test(raw)) return "Wallet has a stuck or conflicting transaction — clear it and retry.";
+  if (/network changed|chain mismatch/i.test(raw)) return "Wallet switched networks mid-request. Switch back to the right chain and retry.";
+  if (/sendRawTransaction|method not found|-32601/i.test(raw)) {
+    return "Wallet RPC can’t send transactions. Set BlockDAG RPC to https://rpc.east.bdag-us.org/ and retry.";
+  }
+  if (/failed to fetch|network error|http request failed|timeout/i.test(raw)) {
+    return "Network request failed. Check connection, switch RPC to https://rpc.east.bdag-us.org/, and retry.";
+  }
+  if (raw.length > 200) return `${raw.slice(0, 180).trim()}…`;
+  return raw;
+}

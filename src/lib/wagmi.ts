@@ -1,8 +1,8 @@
 /**
  * Wagmi config — multi-injected wallets for BlockDAG 1404 (OKX, Trust, Rabby,
  * Coinbase, Bitget, generic Browser/MetaMask). Avoid metaMask() SDK (iOS Safari crash).
- * Optional WalletConnect only when NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is set
- * (deep-import walletConnect — never barrel @wagmi/connectors, which pulls broken Coinbase SDK).
+ * WalletConnect when NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is set (deep-import
+ * walletConnect — never barrel @wagmi/connectors, which pulls broken Coinbase SDK).
  *
  * Transports: known-good read RPCs (east + west + engineering; never bdagscan).
  * Wallet broadcasts use the wallet's own RPC via wallet_addEthereumChain
@@ -29,27 +29,36 @@ const namedInjected = INJECTED_WALLET_DEFS.filter((d) => d.id !== "injected").ma
 
 const browserInjected = injected({ shimDisconnect: true });
 
-const wcProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID?.trim();
+/** Public Reown/WalletConnect Cloud project id (safe in client bundle). */
+const WC_PROJECT_ID_FALLBACK = "eed8183bc65e42f185adef0150ca73a8";
 
-const wcConnector = wcProjectId
-  ? walletConnect({
-      projectId: wcProjectId,
-      showQrModal: true,
-      metadata: {
-        name: "OVERLANDCOIN",
-        description: "OVERLANDCOIN on BlockDAG — Move. Explore. Earn.",
-        url: "https://www.overlandcoin.tech",
-        icons: ["https://www.overlandcoin.tech/logo.png"],
-      },
-    })
-  : null;
+const wcProjectId =
+  process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID?.trim() || WC_PROJECT_ID_FALLBACK;
 
-/** WalletConnect first when configured so mobile Safari/Chrome can connect without an in-app browser. */
-const connectors = [
-  ...(wcConnector ? [wcConnector] : []),
-  ...namedInjected,
-  browserInjected,
-];
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") || "https://www.overlandcoin.tech";
+
+const wcConnector = walletConnect({
+  projectId: wcProjectId,
+  showQrModal: true,
+  metadata: {
+    name: "OVERLANDCOIN",
+    description: "OVERLANDCOIN on BlockDAG — Move. Explore. Earn.",
+    url: siteUrl,
+    icons: [`${siteUrl}/logo.png`],
+  },
+  qrModalOptions: {
+    themeMode: "dark",
+    // Encourage wallet apps to deep-link back to the dapp on mobile.
+    enableExplorer: true,
+  },
+});
+
+/**
+ * Injected first so MetaMask/OKX/Trust in-app browsers connect without a WC detour.
+ * WalletConnect still available for Safari / Telegram / desktop QR.
+ */
+const connectors = [...namedInjected, browserInjected, wcConnector];
 
 export const wagmiConfig = createConfig({
   chains: [blockdag],
@@ -58,6 +67,8 @@ export const wagmiConfig = createConfig({
     [blockdag.id]: fallback(rpcUrls.map((url) => http(url, { batch: true }))),
   },
   ssr: true,
+  multiInjectedProviderDiscovery: true,
 });
 
 export const walletConnectEnabled = Boolean(wcProjectId);
+export const walletConnectProjectId = wcProjectId;

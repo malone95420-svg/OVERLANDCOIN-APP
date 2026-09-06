@@ -57,9 +57,11 @@ import {
   sendNativeSolTransfer,
 } from "@/lib/solanaNativeTransfer";
 import {
+  blockdagRpcManualFixMessage,
   ensureBlockdagNetwork,
   ensureEthereumMainnet,
   noInjectedProviderMessage,
+  EAST_RPC,
 } from "@/components/presale/ensureNetworks";
 import {
   formatWalletError,
@@ -123,7 +125,7 @@ function isMobileSafariNoWallet(): boolean {
 function progressLabel(p: Progress): string | null {
   switch (p) {
     case "switching_network":
-      return "Updating BlockDAG RPC…";
+      return "Switching network…";
     case "creating_order":
       return "Creating order…";
     case "confirm_wallet":
@@ -219,6 +221,8 @@ function PresaleBuyInner() {
   const [activeOrder, setActiveOrder] = useState<ActivePayOrder | null>(null);
   /** Silent background poll looking for deposit without tx hash */
   const [autoLooking, setAutoLooking] = useState(false);
+  /** True when BDAG on-chain send is blocked by wallet RPC (WC / stale RPC) — offer deposit path. */
+  const [bdagRpcBlocked, setBdagRpcBlocked] = useState(false);
   const confirmInFlight = useRef(false);
   const activeOrderRef = useRef<ActivePayOrder | null>(null);
   const depositTxHashRef = useRef("");
@@ -227,6 +231,10 @@ function PresaleBuyInner() {
 
   const selected = assets.find((a) => a.id === assetId) ?? assets[0];
   const onChain = selected ? isOnChainAsset(selected) : false;
+
+  useEffect(() => {
+    setBdagRpcBlocked(false);
+  }, [assetId]);
 
   const usdPerPayUnit = selected ? liveUsdForAsset(selected, prices) : null;
   const rateSource = selected ? sourceLabelForAsset(selected, prices) : "—";
@@ -896,18 +904,30 @@ function PresaleBuyInner() {
     );
   }
 
+  function isWalletConnectSession(): boolean {
+    return connector?.id === "walletConnect";
+  }
+
   async function ensureOnBlockdag(opts?: { forceRpcRefresh?: boolean }) {
     setProgress("switching_network");
     const provider = await resolveBuyProvider();
     const force = opts?.forceRpcRefresh ?? true;
+    const wc = isWalletConnectSession();
     try {
-      await ensureBlockdagNetwork(provider, { forceRpcRefresh: force });
+      await ensureBlockdagNetwork(provider, {
+        forceRpcRefresh: force,
+        isWalletConnect: wc,
+      });
     } catch (e) {
       // User rejected the RPC/network update — don't proceed to a doomed send.
       if (isUserRejection(e) || /rejected|canceled|cancelled/i.test(formatWalletError(e, ""))) {
         throw e instanceof Error ? e : new Error(formatWalletError(e, "Network update canceled."));
       }
-      /* fall through to wagmi switch; buy path will force+retry on no-send errors */
+      // WalletConnect often cannot update RPC — surface clear next step (don't pretend send will work).
+      if (wc && force) {
+        throw e instanceof Error ? e : new Error(blockdagRpcManualFixMessage(true));
+      }
+      /* injected: fall through to wagmi switch; buy path will force+retry on no-send errors */
     }
     try {
       if (chainId !== TOKEN.chainId) {
@@ -1027,6 +1047,7 @@ function PresaleBuyInner() {
     setSuccessNote(null);
     setSuccessExplorer(null);
     setPendingLockRetryTx(null);
+    setBdagRpcBlocked(false);
     let hash: Hash | undefined;
     try {
       // Always push send-capable east/west RPCs into the wallet before buy —
@@ -1042,7 +1063,10 @@ function PresaleBuyInner() {
         // Wallet still on a no-send RPC — force update once, then retry send once.
         setProgress("switching_network");
         const provider = await resolveBuyProvider();
-        await ensureBlockdagNetwork(provider, { forceRpcRefresh: true });
+        await ensureBlockdagNetwork(provider, {
+          forceRpcRefresh: true,
+          isWalletConnect: isWalletConnectSession(),
+        });
         try {
           if (chainId !== TOKEN.chainId) {
             await switchChainAsync({ chainId: blockdag.id });
@@ -1094,10 +1118,12 @@ function PresaleBuyInner() {
     } catch (e) {
       if (isUserRejection(e)) {
         setError("Transaction canceled in wallet.");
-      } else if (isNoSendRpcError(e)) {
+      } else if (isNoSendRpcError(e) || /WalletConnect can’t update|Set BlockDAG Mainnet RPC/i.test(formatWalletError(e, ""))) {
+        const wc = isWalletConnectSession();
         setError(
-          "Still couldn’t broadcast after updating BlockDAG RPC. In MetaMask: Settings → Networks → BlockDAG Mainnet → set RPC to https://rpc.east.bdag-us.org/ (fallback https://rpc.west.bdag-us.org/), then tap Buy again. Do not use rpc.bdagscan.com or engineering for sends.",
+          `${blockdagRpcManualFixMessage(wc)} Or switch Pay with to ETH / USDT / USDC / SOL / BTC and use the deposit path — don’t retry BDAG on-chain until RPC is ${EAST_RPC}.`,
         );
+        setBdagRpcBlocked(true);
       } else {
         setError(formatWalletError(e, "Transaction failed"));
       }
@@ -1772,7 +1798,7 @@ function PresaleBuyInner() {
                 className="ml-auto rounded-lg border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-100"
                 onClick={() => void ensureOnBlockdag().catch((e) => setError(formatWalletError(e)))}
               >
-                Switch to BlockDAG
+                Switch / Fix BlockDAG
               </button>
             )}
           </>
@@ -1962,6 +1988,34 @@ function PresaleBuyInner() {
         >
           {primaryLabel}
         </button>
+        {bdagRpcBlocked && selected?.id === "BDAG" && (
+          <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-100 space-y-2">
+            <p className="font-semibold text-amber-50">BDAG on-chain send blocked by wallet RPC</p>
+            <p>
+              One step: in your wallet set BlockDAG RPC to{" "}
+              <span className="font-mono text-[11px] text-white">{EAST_RPC}</span>, then tap Buy again.
+            </p>
+            <p className="text-amber-100/80">
+              Or pay another way without pretending BDAG on-chain works:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {(["ETH", "USDT", "USDC", "SOL", "BTC"] as const).map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  className="rounded-full border border-amber-400/50 bg-bg-deep/60 px-3 py-1.5 text-[11px] font-semibold text-amber-50"
+                  onClick={() => {
+                    setBdagRpcBlocked(false);
+                    setError(null);
+                    setAssetId(id);
+                  }}
+                >
+                  Pay with {id}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         <button
           type="button"
           className="text-xs text-slate-400 underline-offset-2 hover:underline"

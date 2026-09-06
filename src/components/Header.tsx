@@ -123,7 +123,7 @@ export function Header() {
             )}
             <div className="flex flex-wrap items-center gap-2 px-3 py-2">
               <AddOlcButton compact />
-              <ConnectWallet />
+              {/* Connect stays in the top bar only — avoid duplicate chips in the drawer */}
             </div>
             <p className="px-3 pt-2 text-xs text-slate-500">{SITE.tagline}</p>
           </nav>

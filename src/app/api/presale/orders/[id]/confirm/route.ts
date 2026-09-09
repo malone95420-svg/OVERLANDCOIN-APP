@@ -139,7 +139,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
   }
 
   // Idempotent short-circuit
-  const existing = getDeliveredByPayment(paymentTxHash);
+  const existing = await getDeliveredByPayment(paymentTxHash);
   if (existing) {
     await markOrderCredited(order.orderId, {
       paymentTxHash,

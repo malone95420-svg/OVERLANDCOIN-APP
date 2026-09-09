@@ -13,6 +13,8 @@
 
 import { promises as fs } from "fs";
 import path from "path";
+import { Redis } from "@upstash/redis";
+import { hasUpstashRedis } from "@/lib/auth/userStore";
 
 export type ClaimLedgerEntry = {
   completionId: string;
@@ -31,6 +33,17 @@ const deviceQuestIndex = new Map<string, string>();
 
 const TMP_LEDGER = "/tmp/overlandcoin-claims-ledger.json";
 const DATA_LEDGER = path.join(process.cwd(), "data", "claims-ledger.json");
+
+const CLAIM_REDIS_PREFIX = "olc:claim:";
+const CLAIM_REDIS_TTL = 30 * 24 * 60 * 60; // 30 days
+
+function claimsRedis(): Redis | null {
+  if (!hasUpstashRedis()) return null;
+  return new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL!,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  });
+}
 
 let hydrated = false;
 
@@ -92,7 +105,16 @@ async function persist(): Promise<void> {
 
 export async function isCompletionClaimed(completionId: string): Promise<boolean> {
   await hydrate();
-  return memory.has(completionId);
+  if (memory.has(completionId)) return true;
+  const r = claimsRedis();
+  if (r) {
+    try {
+      return Boolean(await r.get(`${CLAIM_REDIS_PREFIX}${completionId}`));
+    } catch {
+      /* ignore — fall back to in-memory */
+    }
+  }
+  return false;
 }
 
 export async function getClaim(completionId: string): Promise<ClaimLedgerEntry | undefined> {
@@ -121,9 +143,10 @@ export async function findClaimByDeviceQuest(
 
 export type ClaimConflict =
   | { reason: "completion"; entry: ClaimLedgerEntry }
-  | { reason: "wallet_quest"; entry: ClaimLedgerEntry };
+  | { reason: "wallet_quest"; entry: ClaimLedgerEntry }
+  | { reason: "device_quest"; entry: ClaimLedgerEntry };
 
-/** Block duplicate completionId and wallet+questId. Device is audit-only (per-wallet claims). */
+/** Block duplicate completionId, wallet+questId, and deviceId+questId. */
 export async function findClaimConflict(input: {
   completionId: string;
   questId: string;
@@ -137,11 +160,80 @@ export async function findClaimConflict(input: {
   const byWallet = await findClaimByWalletQuest(input.wallet, input.questId);
   if (byWallet) return { reason: "wallet_quest", entry: byWallet };
 
-  // deviceId is still recorded on claim entries for soft fraud review, but does not
-  // block a different wallet from claiming the same quest on this device.
-  void input.deviceId;
+  if (input.deviceId) {
+    const byDevice = await findClaimByDeviceQuest(input.deviceId, input.questId);
+    if (byDevice) return { reason: "device_quest", entry: byDevice };
+  }
+
+  // Durable cross-instance check (Upstash Redis when configured).
+  const r = claimsRedis();
+  if (r) {
+    try {
+      const byCompletionD = await r.get<ClaimLedgerEntry>(
+        `${CLAIM_REDIS_PREFIX}${input.completionId}`,
+      );
+      if (byCompletionD?.completionId) {
+        return { reason: "completion", entry: byCompletionD };
+      }
+      const byWalletD = await r.get<ClaimLedgerEntry>(
+        `${CLAIM_REDIS_PREFIX}${walletQuestKey(input.wallet, input.questId)}`,
+      );
+      if (byWalletD?.completionId) {
+        return { reason: "wallet_quest", entry: byWalletD };
+      }
+      if (input.deviceId) {
+        const byDeviceD = await r.get<ClaimLedgerEntry>(
+          `${CLAIM_REDIS_PREFIX}${deviceQuestKey(input.deviceId, input.questId)}`,
+        );
+        if (byDeviceD?.completionId) {
+          return { reason: "device_quest", entry: byDeviceD };
+        }
+      }
+    } catch {
+      /* Redis read failed — rely on in-memory */
+    }
+  }
 
   return null;
+}
+
+/**
+ * In-process reservation so two concurrent requests on the same instance cannot both
+ * pass findClaimConflict before either is recorded. Cross-instance durability still
+ * requires Redis/DB (see README) — this only closes the same-instance race.
+ */
+const inFlightKeys = new Set<string>();
+
+function claimConflictKeys(input: {
+  completionId: string;
+  questId: string;
+  wallet: string;
+  deviceId?: string;
+}): string[] {
+  const keys = [input.completionId, walletQuestKey(input.wallet, input.questId)];
+  if (input.deviceId) keys.push(deviceQuestKey(input.deviceId, input.questId));
+  return keys;
+}
+
+export function tryReserveClaim(input: {
+  completionId: string;
+  questId: string;
+  wallet: string;
+  deviceId?: string;
+}): boolean {
+  const keys = claimConflictKeys(input);
+  if (keys.some((k) => inFlightKeys.has(k))) return false;
+  keys.forEach((k) => inFlightKeys.add(k));
+  return true;
+}
+
+export function releaseClaimReservation(input: {
+  completionId: string;
+  questId: string;
+  wallet: string;
+  deviceId?: string;
+}): void {
+  for (const k of claimConflictKeys(input)) inFlightKeys.delete(k);
 }
 
 export async function recordClaim(entry: ClaimLedgerEntry): Promise<void> {
@@ -149,4 +241,20 @@ export async function recordClaim(entry: ClaimLedgerEntry): Promise<void> {
   memory.set(entry.completionId, entry);
   indexEntry(entry);
   await persist();
+
+  // Durable cross-instance record (Upstash Redis when configured).
+  const r = claimsRedis();
+  if (r) {
+    const body = JSON.stringify(entry);
+    const opts = { ex: CLAIM_REDIS_TTL };
+    void r.set(`${CLAIM_REDIS_PREFIX}${entry.completionId}`, body, opts).catch(() => {});
+    void r
+      .set(`${CLAIM_REDIS_PREFIX}${walletQuestKey(entry.wallet, entry.questId)}`, body, opts)
+      .catch(() => {});
+    if (entry.deviceId) {
+      void r
+        .set(`${CLAIM_REDIS_PREFIX}${deviceQuestKey(entry.deviceId, entry.questId)}`, body, opts)
+        .catch(() => {});
+    }
+  }
 }

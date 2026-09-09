@@ -196,7 +196,7 @@ async function runScan() {
         buyer: tx.from,
         payAsset: "BDAG",
       });
-      if (!out.skipped && out.result.status === "locked") {
+      if (!out.skipped && (out.result.status === "delivered" || out.result.status === "locked")) {
         credited.push({
           chain: "blockdag",
           hash: tx.hash,
@@ -231,7 +231,7 @@ async function runScan() {
         buyer: tx.from,
         payAsset: "ETH",
       });
-      if (!out.skipped && out.result.status === "locked") {
+      if (!out.skipped && (out.result.status === "delivered" || out.result.status === "locked")) {
         credited.push({
           chain: "ethereum",
           hash: tx.hash,

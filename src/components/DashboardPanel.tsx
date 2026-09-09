@@ -20,7 +20,7 @@ import {
   shortWallet,
 } from "@/lib/explorerProfile";
 import { getQuestById } from "@/lib/quests";
-import { loadPurchases } from "@/lib/purchases";
+import { loadPurchasesForWallet } from "@/lib/purchases";
 
 const SHORTCUTS = [
   { href: "/map", label: "Quest Map", hint: "Find & check in" },
@@ -63,7 +63,7 @@ function DashboardPanelInner() {
     setQuestsDone(completions.length);
     setPending(totalPendingOlC(completions));
     setClaimed(totalClaimedOlC(completions));
-    const buys = loadPurchases();
+    const buys = loadPurchasesForWallet(wallet);
     setPosts(loadPosts().slice(0, 5));
     setPurchaseCount(buys.length);
     setPurchasedOlc(
@@ -79,7 +79,7 @@ function DashboardPanelInner() {
     setRecentCompletions(loadCompletions().slice(0, 5));
     const profile = loadExplorerProfile();
     setDisplayName(profile.displayName);
-  }, []);
+  }, [wallet]);
 
   useEffect(() => {
     refresh();

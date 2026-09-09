@@ -30,6 +30,8 @@ import {
 import {
   listPendingLockCredits,
   loadPurchases,
+  loadPurchasesForWallet,
+  removePurchase,
   savePurchase,
   updatePurchase,
   type LocalPurchase,
@@ -267,7 +269,7 @@ function PresaleBuyInner() {
         : decimalsHint;
 
   useEffect(() => {
-    setPurchases(loadPurchases());
+    setPurchases(loadPurchasesForWallet(address));
     // Hang affiliate ?ref= off real checkout URL (local only until backend exists)
     try {
       const ref = new URLSearchParams(window.location.search).get("ref");
@@ -277,16 +279,16 @@ function PresaleBuyInner() {
     } catch {
       /* ignore */
     }
-    const pending = listPendingLockCredits();
+    const pending = listPendingLockCredits(address);
     if (pending.length > 0) {
       setPendingLockRetryTx(pending[0].txHash);
       setSuccessNote(
         `You have ${pending.length} purchase(s) with payment confirmed but OLC wallet delivery still pending. Use Retry deliver to recover.`,
       );
     }
-    const t = setInterval(() => setPurchases(loadPurchases()), 8000);
+    const t = setInterval(() => setPurchases(loadPurchasesForWallet(address)), 8000);
     return () => clearInterval(t);
-  }, []);
+  }, [address]);
 
   useEffect(() => {
     function refresh() {
@@ -897,7 +899,7 @@ function PresaleBuyInner() {
       setError(e instanceof Error ? e.message : "Retry failed");
     } finally {
       setRetryBusy(false);
-      setPurchases(loadPurchases());
+      setPurchases(loadPurchasesForWallet(address));
     }
   }
 
@@ -1326,6 +1328,8 @@ function PresaleBuyInner() {
         deliveryNote: undefined,
       };
       if (paymentKey !== localKey) {
+        // Drop the `order:<id>` reminder stub now that we know the real payment hash.
+        removePurchase(localKey);
         setPurchases(
           savePurchase({
             ...existingPending,
@@ -1367,6 +1371,10 @@ function PresaleBuyInner() {
     const applyPendingChain = (data: CreditData, paymentKey: string) => {
       const olc =
         typeof data.olcAmount === "number" ? data.olcAmount : order.olcAmount;
+      if (paymentKey !== localKey) {
+        // Drop the `order:<id>` reminder stub now that we know the real payment hash.
+        removePurchase(localKey);
+      }
       setPurchases(
         savePurchase({
           ...buildRecord({
@@ -1576,7 +1584,7 @@ function PresaleBuyInner() {
       confirmInFlight.current = false;
       if (!silent) {
         setConfirmBusy(false);
-        setPurchases(loadPurchases());
+        setPurchases(loadPurchasesForWallet(address));
       }
     }
   }
@@ -2033,7 +2041,7 @@ function PresaleBuyInner() {
         <button
           type="button"
           className="btn-primary w-full py-3 text-base"
-          disabled={buyDisabled && isConnected}
+          disabled={buyDisabled}
           onClick={() => {
             if (!isConnected) return;
             void onBuy();

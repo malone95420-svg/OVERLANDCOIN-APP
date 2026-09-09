@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Idempotent short-circuit before RPC work
-  const existing = getDeliveredByPayment(paymentTxHash);
+  const existing = await getDeliveredByPayment(paymentTxHash);
   if (existing) {
     return NextResponse.json({
       status: "delivered" as const,

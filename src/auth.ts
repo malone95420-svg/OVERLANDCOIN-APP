@@ -17,8 +17,18 @@ const googleSecret =
 function authSecret(): string {
   const s = process.env.AUTH_SECRET?.trim();
   if (s) return s;
-  // Build / local fallback — set AUTH_SECRET in production (Vercel).
-  return "olc-dev-insecure-auth-secret-change-me";
+  if (process.env.NODE_ENV === "production") {
+    console.error(
+      "[auth] AUTH_SECRET is not set. Sessions are signed with a per-process random secret, so logins will not survive deploys/cold starts. Set AUTH_SECRET in Vercel (openssl rand -base64 32).",
+    );
+  }
+  // Random per-process fallback: never sign session JWTs with a known, forgeable constant.
+  try {
+    if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+  } catch {
+    /* fall through */
+  }
+  return `olc-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({

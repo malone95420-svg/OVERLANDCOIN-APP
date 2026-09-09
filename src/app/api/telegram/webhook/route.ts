@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 function verifySecret(req: NextRequest): boolean {
   const expected = telegramWebhookSecret();
-  if (!expected) return true;
+  if (!expected) return false;
   const got = req.headers.get("x-telegram-bot-api-secret-token") ?? "";
   return got === expected;
 }
@@ -34,8 +34,12 @@ export async function POST(req: NextRequest) {
   try {
     await handleTelegramUpdate(update);
   } catch (err) {
-    const name = err instanceof Error ? err.name : "Error";
-    console.error("telegram_webhook_error", name);
+    console.error(
+      "telegram_webhook_error",
+      err instanceof Error ? err.name : "Error",
+      err instanceof Error ? err.message : String(err),
+      err instanceof Error ? err.stack : undefined,
+    );
     // Always 200-shaped ok so Telegram does not retry-storm; handler also swallows.
     return NextResponse.json({ ok: true, handled: false });
   }

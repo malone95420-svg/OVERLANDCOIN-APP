@@ -8,7 +8,7 @@ export const SITE = {
   homeHook: "Explore. Discover. Earn.",
   description:
     "OVERLANDCOIN (OLC) is adventure/overlanding crypto built on BlockDAG — Move. Explore. Earn. Fuel for the Journey. Proof-of-adventure with maps and location rewards.",
-  url: (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://overlandcoin-app-kohl.vercel.app"),
+  url: (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://www.overlandcoin.tech"),
   supportEmail: "overlanders.official@gmail.com",
   keywords: [
     "OVERLANDCOIN",

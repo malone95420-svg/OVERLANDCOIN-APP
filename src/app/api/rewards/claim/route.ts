@@ -11,7 +11,12 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { blockdag } from "@/lib/chain";
-import { findClaimConflict, recordClaim } from "@/lib/claimsLedger";
+import {
+  findClaimConflict,
+  recordClaim,
+  releaseClaimReservation,
+  tryReserveClaim,
+} from "@/lib/claimsLedger";
 import { getQuestById } from "@/lib/quests";
 import { TOKEN } from "@/lib/token";
 import {
@@ -149,6 +154,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "wallet must be a valid checksum address" }, { status: 400 });
   }
 
+  // Per-wallet rate limit (the IP header is spoofable, so don't rely on it alone).
+  if (!checkRateLimit(`wallet:${wallet.toLowerCase()}`)) {
+    return NextResponse.json(
+      { error: "Too many claim attempts for this wallet. Wait a minute and try again." },
+      { status: 429 },
+    );
+  }
+
   const deviceIdRaw = typeof body.deviceId === "string" ? body.deviceId.trim() : "";
   const deviceId =
     deviceIdRaw && deviceIdRaw.length >= 8 && deviceIdRaw.length <= 80 ? deviceIdRaw : undefined;
@@ -179,18 +192,25 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Basic completion payload sanity (client-attested MVP; production needs signed server attestations).
-  if (body.lat != null && body.lng != null) {
-    if (!Number.isFinite(body.lat) || !Number.isFinite(body.lng)) {
-      return NextResponse.json({ error: "Invalid lat/lng" }, { status: 400 });
-    }
-    const dist = typeof body.distanceM === "number" ? body.distanceM : NaN;
-    if (Number.isFinite(dist) && dist > quest.radiusMeters * 3) {
-      return NextResponse.json(
-        { error: "distanceM far outside quest radius — refusing claim" },
-        { status: 400 },
-      );
-    }
+  // Completion must include a GPS position within a loose radius of the quest.
+  // (Client-attested MVP — a full proof-of-visit needs a server-signed attestation.)
+  if (
+    body.lat == null ||
+    body.lng == null ||
+    !Number.isFinite(body.lat) ||
+    !Number.isFinite(body.lng)
+  ) {
+    return NextResponse.json(
+      { error: "lat/lng are required to claim — complete the quest check-in first" },
+      { status: 400 },
+    );
+  }
+  const dist = typeof body.distanceM === "number" ? body.distanceM : NaN;
+  if (Number.isFinite(dist) && dist > quest.radiusMeters * 3) {
+    return NextResponse.json(
+      { error: "distanceM far outside quest radius — refusing claim" },
+      { status: 400 },
+    );
   }
 
   // MVP: in-memory (+ /tmp) ledger — not shared across serverless instances.
@@ -206,7 +226,9 @@ export async function POST(req: NextRequest) {
     const error =
       conflict.reason === "wallet_quest"
         ? "Already claimed for this wallet and quest"
-        : "Already claimed";
+        : conflict.reason === "device_quest"
+          ? "Already claimed on this device"
+          : "Already claimed";
     return NextResponse.json(
       {
         error,
@@ -219,6 +241,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Serialize concurrent claims of the same completionId / wallet+questId / device+questId
+  // within this instance (cross-instance durability still needs Redis/DB).
+  if (!tryReserveClaim({ completionId, questId, wallet, deviceId })) {
+    return NextResponse.json(
+      { error: "Claim already in progress", status: "claimed" },
+      { status: 409 },
+    );
+  }
+
+  try {
   const pkRaw = process.env.REWARD_PRIVATE_KEY?.trim();
   if (!pkRaw) {
     return NextResponse.json(
@@ -325,4 +357,7 @@ export async function POST(req: NextRequest) {
     completionId,
     photoHash: typeof body.photoHash === "string" ? body.photoHash.slice(0, 128) : undefined,
   });
+  } finally {
+    releaseClaimReservation({ completionId, questId, wallet, deviceId });
+  }
 }

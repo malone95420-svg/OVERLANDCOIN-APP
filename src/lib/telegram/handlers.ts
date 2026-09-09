@@ -197,7 +197,11 @@ export async function handleTelegramUpdate(update: TelegramUpdate): Promise<void
       await handleMessage(update.message);
     }
   } catch (err) {
-    const name = err instanceof Error ? err.name : "Error";
-    console.error("telegram_update_error", name);
+    console.error(
+      "telegram_update_error",
+      err instanceof Error ? err.name : "Error",
+      err instanceof Error ? err.message : String(err),
+      err instanceof Error ? err.stack : undefined,
+    );
   }
 }

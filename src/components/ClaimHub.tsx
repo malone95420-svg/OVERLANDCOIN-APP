@@ -20,7 +20,7 @@ import {
 import { getQuestById } from "@/lib/quests";
 import {
   listPendingLockCredits,
-  loadPurchases,
+  loadPurchasesForWallet,
   updatePurchase,
   type LocalPurchase,
 } from "@/lib/purchases";
@@ -149,7 +149,7 @@ function ClaimHubInner() {
     setCompletionsWallet(address ?? null);
     const list = loadCompletions();
     setCompletions(list);
-    setPurchases(loadPurchases());
+    setPurchases(loadPurchasesForWallet(address));
   }, [address]);
 
   useEffect(() => {

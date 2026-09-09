@@ -20,7 +20,7 @@ import {
   shortWallet,
 } from "@/lib/explorerProfile";
 import { getQuestById } from "@/lib/quests";
-import { loadPurchases, type LocalPurchase } from "@/lib/purchases";
+import { loadPurchasesForWallet, type LocalPurchase } from "@/lib/purchases";
 
 function purchaseOlc(p: LocalPurchase): number {
   if (typeof p.olcAmount === "number" && Number.isFinite(p.olcAmount)) return p.olcAmount;
@@ -56,8 +56,8 @@ function ProfilePanelInner() {
     setDisplayName(profile.displayName);
     setBio(profile.bio);
     setCompletions(loadCompletions());
-    setPurchases(loadPurchases());
-  }, []);
+    setPurchases(loadPurchasesForWallet(wallet));
+  }, [wallet]);
 
   useEffect(() => {
     refresh();

@@ -24,44 +24,52 @@ function olcImageUrl(): string {
 
 async function ensureBlockdag(eth: EthereumProvider): Promise<void> {
   const chainHex = `0x${TOKEN.chainId.toString(16).padStart(4, "0")}`;
-  try {
-    const current = (await eth.request({ method: "eth_chainId" })) as string;
-    if (current?.toLowerCase() === chainHex.toLowerCase()) return;
-  } catch {
-    // proceed to switch/add
-  }
+
+  const onBlockdag = async (): Promise<boolean> => {
+    try {
+      const current = (await eth.request({ method: "eth_chainId" })) as string;
+      return current?.toLowerCase() === chainHex.toLowerCase();
+    } catch {
+      return false;
+    }
+  };
+
+  if (await onBlockdag()) return;
 
   try {
     await eth.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: chainHex }],
     });
-    return;
   } catch (switchErr) {
     const code =
       switchErr && typeof switchErr === "object" && "code" in switchErr
         ? Number((switchErr as { code: unknown }).code)
         : undefined;
-    // 4902 = unrecognized chain — add then switch
-    if (code === 4902 || code === -32603) {
-      await eth.request({
-        method: "wallet_addEthereumChain",
-        params: [blockdagAddChainParams()],
-      });
+    if (code === 4001) {
+      throw new Error("Switch to BlockDAG Mainnet (chain 1404) was rejected.");
+    }
+    // 4902 = chain not recognized by the wallet — add it, then try to switch.
+    if (code === 4902) {
       try {
+        await eth.request({
+          method: "wallet_addEthereumChain",
+          params: [blockdagAddChainParams()],
+        });
         await eth.request({
           method: "wallet_switchEthereumChain",
           params: [{ chainId: chainHex }],
         });
       } catch {
-        // Chain added; watchAsset may still work if wallet is on 1404
+        // fall through to verification below
       }
-      return;
     }
-    // User rejected or other — still attempt watchAsset (wallet may already be correct)
-    if (code === 4001) {
-      throw new Error("Switch to BlockDAG Mainnet (chain 1404) was rejected.");
-    }
+    // Any other error code (e.g. -32002 pending, -32603) — fall through to verification.
+  }
+
+  // Never proceed to watchAsset on the wrong network.
+  if (!(await onBlockdag())) {
+    throw new Error("Could not switch to BlockDAG Mainnet (chain 1404).");
   }
 }
 

@@ -106,6 +106,18 @@ export function loadPurchases(): LocalPurchase[] {
   }
 }
 
+/**
+ * Purchases scoped to a connected wallet. Records with a `from` that belongs to a
+ * different wallet are hidden so one wallet never sees another wallet's history.
+ * Records without `from` (legacy) are kept.
+ */
+export function loadPurchasesForWallet(address?: string | null): LocalPurchase[] {
+  const list = loadPurchases();
+  const a = address?.trim().toLowerCase();
+  if (!a) return list;
+  return list.filter((p) => !p.from || p.from.trim().toLowerCase() === a);
+}
+
 export function savePurchase(purchase: LocalPurchase): LocalPurchase[] {
   const prev = loadPurchases();
   const existing = prev.find((p) => p.txHash === purchase.txHash);
@@ -124,6 +136,13 @@ export function savePurchase(purchase: LocalPurchase): LocalPurchase[] {
     },
   );
   const next = [final, ...prev.filter((p) => p.txHash !== final.txHash)].slice(0, 50);
+  localStorage.setItem(scopedStorageKey(PURCHASES_STORAGE_KEY), JSON.stringify(next));
+  return next;
+}
+
+export function removePurchase(txHash: string): LocalPurchase[] {
+  const prev = loadPurchases();
+  const next = prev.filter((p) => p.txHash !== txHash);
   localStorage.setItem(scopedStorageKey(PURCHASES_STORAGE_KEY), JSON.stringify(next));
   return next;
 }

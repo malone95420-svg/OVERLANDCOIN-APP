@@ -27,6 +27,8 @@ import { calcOlcFromPay, fetchAllLivePrices, type LivePricesResponse } from "@/l
 import { BDUSD_ADDRESS } from "@/lib/payTokens";
 import { presaleReadRpcUrls } from "@/lib/presaleLock";
 import { PRESALE_BATCHES, SITE } from "@/lib/site";
+import { Redis } from "@upstash/redis";
+import { hasUpstashRedis } from "@/lib/auth/userStore";
 
 export type PayChain = "blockdag" | "ethereum" | "bitcoin" | "solana";
 
@@ -456,10 +458,11 @@ async function verifyEthereumPayment(opts: {
         }
         const payAmount = Number(formatUnits(tx.value, 18));
         if (opts.buyer && isAddress(opts.buyer) && !addrEq(tx.from, opts.buyer)) {
-          // Buyer for lock credit is BlockDAG wallet; ETH payer may differ.
-          // Require buyer to be provided as credit target — allow if different
-          // only when explicitly intended: we require buyer wallet separately.
-          // Soft: allow different from; credit still goes to buyer param.
+          return {
+            ok: false,
+            error:
+              "ETH payer does not match buyer — the buyer wallet must be the same EVM address that sent the payment",
+          };
         }
         return {
           ok: true,
@@ -486,6 +489,12 @@ async function verifyEthereumPayment(opts: {
       const payAmount = Number(formatUnits(transfer.value, decimals));
       if (!(payAmount > 0)) {
         return { ok: false, error: `${opts.payAsset} transfer amount is zero` };
+      }
+      if (opts.buyer && isAddress(opts.buyer) && !addrEq(transfer.from, opts.buyer)) {
+        return {
+          ok: false,
+          error: `${opts.payAsset} payer does not match buyer — the buyer wallet must be the same EVM address that sent the payment`,
+        };
       }
       return {
         ok: true,
@@ -805,33 +814,117 @@ export function normalizePayChain(raw?: string): PayChain | null {
   return null;
 }
 
-/** Shared in-memory idempotency store (MVP). Document Redis for prod. */
+/** Shared idempotency store: in-memory fast path + durable Upstash Redis when configured. */
 const deliveredByPayment = new Map<
   string,
   { creditTxHash: string; buyer: string; olcAmount: number; at: string; payAsset?: string }
 >();
 
-export function getDeliveredByPayment(paymentTxHash: string) {
-  return deliveredByPayment.get(paymentTxHash.toLowerCase());
+const DELIVERED_REDIS_PREFIX = "olc:delivered:";
+const DELIVERED_TTL_SECONDS = 30 * 24 * 60 * 60; // 30 days
+
+function deliveryRedis(): Redis | null {
+  if (!hasUpstashRedis()) return null;
+  return new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL!,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  });
+}
+
+export type DeliveredPaymentRow = {
+  creditTxHash: string;
+  buyer: string;
+  olcAmount: number;
+  at?: string;
+  payAsset?: string;
+};
+
+export async function getDeliveredByPayment(
+  paymentTxHash: string,
+): Promise<DeliveredPaymentRow | undefined> {
+  const key = paymentTxHash.toLowerCase();
+  const local = deliveredByPayment.get(key);
+  if (local) return local;
+  const r = deliveryRedis();
+  if (r) {
+    try {
+      const raw = await r.get<string>(`${DELIVERED_REDIS_PREFIX}${key}`);
+      if (raw) {
+        const row = JSON.parse(raw) as DeliveredPaymentRow;
+        if (row && row.creditTxHash) {
+          const entry = { ...row, at: row.at ?? new Date().toISOString() };
+          deliveredByPayment.set(key, entry);
+          return entry;
+        }
+      }
+    } catch {
+      /* Redis read failed — fall back to in-memory */
+    }
+  }
+  return undefined;
 }
 
 export function setDeliveredByPayment(
   paymentTxHash: string,
   row: { creditTxHash: string; buyer: string; olcAmount: number; payAsset?: string },
 ) {
-  deliveredByPayment.set(paymentTxHash.toLowerCase(), {
-    ...row,
-    at: new Date().toISOString(),
-  });
+  const key = paymentTxHash.toLowerCase();
+  const full = { ...row, at: new Date().toISOString() };
+  deliveredByPayment.set(key, full);
+  const r = deliveryRedis();
+  if (r) {
+    void r
+      .set(`${DELIVERED_REDIS_PREFIX}${key}`, JSON.stringify(full), { ex: DELIVERED_TTL_SECONDS })
+      .catch(() => {});
+  }
 }
 
 export function paymentIdempotencyKey(paymentTxHash: string): string {
   return paymentTxHash.trim().toLowerCase();
 }
 
-/** Exported for cron: list known hashes (in-memory only). */
+/** Exported for cron/scan: list known hashes (in-memory fast path). */
 export function hasDeliveredPayment(paymentTxHash: string): boolean {
   return deliveredByPayment.has(paymentTxHash.toLowerCase());
+}
+
+/**
+ * Reserve a payment hash before delivering so two instances cannot both credit it.
+ * In-process lock + durable Redis SETNX (NX = atomic cross-instance claim).
+ */
+const deliveryInFlight = new Set<string>();
+
+export async function reservePaymentDelivery(paymentTxHash: string): Promise<boolean> {
+  const key = paymentTxHash.trim().toLowerCase();
+  if (deliveredByPayment.has(key) || deliveryInFlight.has(key)) return false;
+  const r = deliveryRedis();
+  if (r) {
+    try {
+      const claimed = await r.set(
+        `${DELIVERED_REDIS_PREFIX}${key}`,
+        JSON.stringify({ reservedAt: Date.now() }),
+        { nx: true, ex: DELIVERED_TTL_SECONDS },
+      );
+      if (!claimed) return false; // already delivered/reserved on another instance
+    } catch {
+      /* Redis unavailable — fall back to in-process reservation */
+    }
+  }
+  deliveryInFlight.add(key);
+  return true;
+}
+
+export async function releasePaymentDelivery(paymentTxHash: string): Promise<void> {
+  const key = paymentTxHash.trim().toLowerCase();
+  deliveryInFlight.delete(key);
+  const r = deliveryRedis();
+  if (r) {
+    try {
+      await r.del(`${DELIVERED_REDIS_PREFIX}${key}`);
+    } catch {
+      /* ignore */
+    }
+  }
 }
 
 export type { Hex };

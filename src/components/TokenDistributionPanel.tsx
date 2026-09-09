@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
-import { loadPurchases, type LocalPurchase } from "@/lib/purchases";
+import { loadPurchasesForWallet, type LocalPurchase } from "@/lib/purchases";
 import { PRESALE_BATCHES, PRESALE_META } from "@/lib/site";
 
 function formatOlc(n: number): string {
@@ -30,13 +30,14 @@ export function TokenDistributionPanel() {
 
 function TokenDistributionInner() {
   const { data: session, status } = useSession();
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
+  const wallet = address || session?.user?.address || undefined;
   const [purchases, setPurchases] = useState<LocalPurchase[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   const refresh = useCallback(() => {
-    setPurchases(loadPurchases());
-  }, []);
+    setPurchases(loadPurchasesForWallet(wallet));
+  }, [wallet]);
 
   useEffect(() => {
     refresh();

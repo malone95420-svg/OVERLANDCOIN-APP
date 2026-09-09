@@ -118,9 +118,16 @@ function normalizeQuest(raw: Partial<Quest> & Pick<Quest, "id" | "title" | "lat"
   };
 }
 
-export const QUESTS: Quest[] = (seed as Partial<Quest>[]).map((q) =>
-  normalizeQuest(q as Partial<Quest> & Pick<Quest, "id" | "title" | "lat" | "lng">),
-);
+/** Exclude dev/test seed quests (id prefix `q-test-`) from the production catalog. */
+function isTestQuest(q: Quest): boolean {
+  return q.id.startsWith("q-test-");
+}
+
+export const QUESTS: Quest[] = (seed as Partial<Quest>[])
+  .map((q) =>
+    normalizeQuest(q as Partial<Quest> & Pick<Quest, "id" | "title" | "lat" | "lng">),
+  )
+  .filter((q) => !isTestQuest(q));
 
 export const QUEST_COUNT = QUESTS.length;
 

@@ -28,6 +28,8 @@ import {
 } from "@/lib/presaleLock";
 import {
   getDeliveredByPayment,
+  releasePaymentDelivery,
+  reservePaymentDelivery,
   setDeliveredByPayment,
   type OlcQuote,
   type VerifiedPayment,
@@ -77,7 +79,7 @@ export type CreditResult = CreditSuccess | CreditPending;
 
 function amountToWei(olcAmount: number): bigint {
   return parseUnits(
-    Number(olcAmount).toFixed(8).replace(/\.?0+$/, "") || "0",
+    Number(olcAmount).toFixed(TOKEN.decimals).replace(/\.?0+$/, "") || "0",
     TOKEN.decimals,
   );
 }
@@ -98,7 +100,7 @@ export async function creditVerifiedPurchase(opts: {
   const lockAddress =
     getPresaleLockAddress() ?? (DEPLOYED_PRESALE_LOCK_ADDRESS as `0x${string}`);
 
-  const existing = getDeliveredByPayment(paymentKey);
+  const existing = await getDeliveredByPayment(paymentKey);
   if (existing) {
     return {
       status: "delivered",
@@ -113,6 +115,22 @@ export async function creditVerifiedPurchase(opts: {
     };
   }
 
+  if (!(await reservePaymentDelivery(paymentKey))) {
+    return {
+      status: "locked_pending_chain",
+      error: "Payment delivery already in progress",
+      message:
+        "This payment is already being delivered. Tap Retry deliver in a moment.",
+      buyer,
+      olcAmount,
+      payment,
+      quote,
+      httpStatus: 409,
+    };
+  }
+
+  let delivered = false;
+  try {
   const pkRaw =
     process.env.PRESALE_DELIVER_PRIVATE_KEY?.trim() ||
     process.env.REWARD_PRIVATE_KEY?.trim();
@@ -173,6 +191,7 @@ export async function creditVerifiedPurchase(opts: {
 
   // Inventory check once (clear ops signal when empty — do not silent-fail).
   let walletBal = 0n;
+  let balanceReadFailed = false;
   try {
     walletBal = await pc.readContract({
       address: TOKEN.contractAddress,
@@ -182,6 +201,21 @@ export async function creditVerifiedPurchase(opts: {
     });
   } catch (e) {
     lastErr = e;
+    balanceReadFailed = true;
+  }
+
+  if (balanceReadFailed) {
+    return {
+      status: "locked_pending_chain",
+      error: "Could not read deliver wallet balance",
+      message: `RPC balance read failed for ${account.address}. Payment was verified and nothing was transferred — retry deliver shortly.`,
+      buyer,
+      olcAmount,
+      payment,
+      quote,
+      deliverWallet: account.address,
+      httpStatus: 502,
+    };
   }
 
   if (walletBal < amountWei) {
@@ -272,6 +306,7 @@ export async function creditVerifiedPurchase(opts: {
     olcAmount,
     payAsset: payment.payAsset,
   });
+  delivered = true;
 
   // Public recent-buys feed (best-effort; never block delivery)
   void appendPublicRecentBuy({
@@ -293,4 +328,9 @@ export async function creditVerifiedPurchase(opts: {
     lockAddress,
     deliverWallet: account.address,
   };
+  } finally {
+    if (!delivered) {
+      await releasePaymentDelivery(paymentKey);
+    }
+  }
 }

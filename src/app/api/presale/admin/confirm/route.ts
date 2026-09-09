@@ -174,7 +174,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const existing = getDeliveredByPayment(paymentTxHash);
+  const existing = await getDeliveredByPayment(paymentTxHash);
   if (existing) {
     return NextResponse.json({
       status: "delivered" as const,

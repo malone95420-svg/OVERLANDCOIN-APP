@@ -208,7 +208,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const existing = getDeliveredByPayment(paymentTxHash);
+  const existing = await getDeliveredByPayment(paymentTxHash);
   if (existing) {
     return NextResponse.json({
       status: "delivered" as const,
@@ -226,7 +226,7 @@ export async function POST(req: NextRequest) {
     chain,
     paymentTxHash,
     payAsset,
-    buyer: chain === "blockdag" ? buyerRaw : undefined,
+    buyer: buyerRaw,
     clientOlcAmount: clientOlc,
   });
 

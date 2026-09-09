@@ -73,6 +73,7 @@ export const HOW_IT_WORKS = [
   { step: "Find", body: "Browse quests on the map and pick your next waypoint." },
   { step: "Visit", body: "Get out there — overland to the location." },
   { step: "Earn", body: "Check in with GPS + photo proof, then claim OLC to your wallet." },
+  { step: "Stake & Grow", body: "Hold and stake OLC to grow your bag as the ecosystem expands." },
 ] as const;
 
 export const NAV_LINKS = [

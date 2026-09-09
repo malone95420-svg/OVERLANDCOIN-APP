@@ -876,7 +876,37 @@ export function setDeliveredByPayment(
     void r
       .set(`${DELIVERED_REDIS_PREFIX}${key}`, JSON.stringify(full), { ex: DELIVERED_TTL_SECONDS })
       .catch(() => {});
+    // Durable running total of OLC sold (best-effort counter for the admin overview).
+    void r.incrbyfloat("olc:stats:delivered-total", row.olcAmount).catch(() => {});
   }
+}
+
+/** Sum of OLC delivered in this instance (in-memory fallback for the overview). */
+export function getInMemoryDeliveredOlc(): number {
+  let sum = 0;
+  for (const row of deliveredByPayment.values()) {
+    if (typeof row.olcAmount === "number" && Number.isFinite(row.olcAmount)) {
+      sum += row.olcAmount;
+    }
+  }
+  return sum;
+}
+
+/** Total OLC sold to presale buyers (durable Redis counter when available). */
+export async function getTotalDeliveredOlc(): Promise<number> {
+  const r = deliveryRedis();
+  if (r) {
+    try {
+      const v = await r.get<string>("olc:stats:delivered-total");
+      if (v != null) {
+        const n = Number(v);
+        if (Number.isFinite(n)) return n;
+      }
+    } catch {
+      /* fall back to in-memory */
+    }
+  }
+  return getInMemoryDeliveredOlc();
 }
 
 export function paymentIdempotencyKey(paymentTxHash: string): string {

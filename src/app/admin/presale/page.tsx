@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { AdminPresaleConfirm } from "@/components/admin/AdminPresaleConfirm";
 
 export const metadata: Metadata = {
@@ -21,6 +22,13 @@ export default function AdminPresalePage() {
       <div className="mt-8 max-w-3xl">
         <AdminPresaleConfirm />
       </div>
+      <p className="mt-6 text-sm text-slate-500">
+        See wallet balances and totals sold / claimed on the{" "}
+        <Link href="/admin/overview" className="link-accent">
+          admin overview
+        </Link>
+        .
+      </p>
     </div>
   );
 }

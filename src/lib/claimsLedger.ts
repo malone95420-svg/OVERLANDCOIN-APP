@@ -256,5 +256,35 @@ export async function recordClaim(entry: ClaimLedgerEntry): Promise<void> {
         .set(`${CLAIM_REDIS_PREFIX}${deviceQuestKey(entry.deviceId, entry.questId)}`, body, opts)
         .catch(() => {});
     }
+    // Durable running total of OLC claimed (best-effort counter for the admin overview).
+    void r.incrbyfloat("olc:stats:claimed-total", entry.amount).catch(() => {});
   }
+}
+
+/** Sum of OLC claimed in this instance (in-memory fallback for the overview). */
+export function getInMemoryClaimedOlc(): number {
+  let sum = 0;
+  for (const e of memory.values()) {
+    if (typeof e.amount === "number" && Number.isFinite(e.amount)) {
+      sum += e.amount;
+    }
+  }
+  return sum;
+}
+
+/** Total OLC paid out in quest claims (durable Redis counter when available). */
+export async function getTotalClaimedOlc(): Promise<number> {
+  const r = claimsRedis();
+  if (r) {
+    try {
+      const v = await r.get<string>("olc:stats:claimed-total");
+      if (v != null) {
+        const n = Number(v);
+        if (Number.isFinite(n)) return n;
+      }
+    } catch {
+      /* fall back to in-memory */
+    }
+  }
+  return getInMemoryClaimedOlc();
 }

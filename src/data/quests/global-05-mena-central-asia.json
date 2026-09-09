@@ -1,0 +1,2020 @@
+[
+  {
+    "id": "q-g-wadi-mujib-siq-trail",
+    "title": "Wadi Mujib Siq Trail",
+    "description": "A wade-and-scramble route through a narrow gorge that empties into the Dead Sea, requiring life jackets for the deeper sections and a climb up a small waterfall near the end. The reserve closes the trail without notice when rain upstream raises flash flood risk. It's one of the few canyoning routes in Jordan that combines real current with a fixed rope section near the finish.",
+    "lat": 31.465,
+    "lng": 35.575,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "canyon trail, Wadi Mujib Reserve, Dead Sea shore",
+    "minTier": 3,
+    "terrainTags": [
+      "canyon"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-wadi-rum-visitor-center",
+    "title": "Wadi Rum Visitor Center",
+    "description": "The valley opens up red and enormous the second you clear the checkpoint. Most visitors hire a Bedouin 4x4 here rather than self-drive, since the soft sand swallows tires fast. Good water and a keffiyeh before you go; the sun does not negotiate.",
+    "lat": 29.576,
+    "lng": 35.4206,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Wadi Rum village gate, managed by Wadi Rum Protected Area Authority",
+    "minTier": 1,
+    "terrainTags": [
+      "sand"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-jebel-um-fruth-rock-bridge",
+    "title": "Jebel Um Fruth Rock Bridge",
+    "description": "A natural stone bridge you climb rather than admire from below. The scramble up is exposed but short, and the payoff is a rim-top view over the whole valley floor. Bring shoes with grip; the sandstone polishes smooth where everyone steps.",
+    "lat": 29.6167,
+    "lng": 35.45,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "rock arch, central Wadi Rum, Wadi Rum Protected Area",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-lawrence-s-spring-ain-shallaleh",
+    "title": "Lawrence's Spring (Ain Shallaleh)",
+    "description": "A trickle of water down dark rock that T.E. Lawrence supposedly bathed in during the Arab Revolt. The climb to the actual spring is a quick scramble, but the view over the desert floor from partway up is reason enough to stop. Shade is scarce, so time it for morning.",
+    "lat": 29.635,
+    "lng": 35.44,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "spring below Jebel Rum, Wadi Rum Protected Area",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-khazali-canyon",
+    "title": "Khazali Canyon",
+    "description": "A tight crack in the rock lined with Thamudic and Nabataean inscriptions scratched into the walls centuries apart. The canyon narrows enough that you'll turn sideways in places, and pools of standing water linger in the shadowed sections. Ten minutes in feels like a different desert entirely.",
+    "lat": 29.59,
+    "lng": 35.43,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "narrow slot canyon, Wadi Rum Protected Area",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "canyon",
+      "rock",
+      "mud"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-um-sabatah-red-dunes",
+    "title": "Um Sabatah Red Dunes",
+    "description": "The dunes here run rust-red against black volcanic rock, a color contrast that photographs better than it sounds. Climbing to the ridge is a slog in soft sand but takes only a few minutes. Sunset turns the whole slope the color of a struck match.",
+    "lat": 29.55,
+    "lng": 35.41,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "red sand dune field, Wadi Rum Protected Area",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "dunes",
+      "volcanic",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-petra-treasury-al-khazneh",
+    "title": "Petra – Treasury (Al-Khazneh)",
+    "description": "The Siq itself is the real approach ritual, a narrow rose-colored canyon that keeps the facade hidden until the last possible second. Walking it at dawn beats the midday crowd crush by a wide margin. The carved facade is smaller in person than every photo suggests, and somehow better for it.",
+    "lat": 30.3285,
+    "lng": 35.4419,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "end of the Siq, Petra Archaeological Park",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-petra-monastery-ad-deir",
+    "title": "Petra – Monastery (Ad Deir)",
+    "description": "Roughly 800 uneven steps carved into the mountain separate you from the largest monument in Petra. It's a genuine climb in full sun with almost no shade for the last stretch. Fewer tourists make it this far, so the plateau at the top usually feels earned and quiet.",
+    "lat": 30.3389,
+    "lng": 35.4436,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "upper Petra, above the Treasury, Petra Archaeological Park",
+    "minTier": 3,
+    "terrainTags": [
+      "plateau",
+      "mountain"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-dana-biosphere-reserve",
+    "title": "Dana Biosphere Reserve",
+    "description": "The village clings to the rim of a canyon that drops nearly a thousand meters to the desert floor below. Trails run from farmland at the top down through juniper forest into full desert at the bottom, four ecosystems in one hike. Guesthouses in the old stone village make a good overnight base.",
+    "lat": 30.6717,
+    "lng": 35.6142,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Dana village rim trail, Jordan's largest nature reserve",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "forest",
+      "canyon"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-dead-sea-public-beach-amman-beach",
+    "title": "Dead Sea Public Beach (Amman Beach)",
+    "description": "You don't swim so much as bob, and the mineral crust on the rocks is real, not staged for photos. Bring water shoes; the salt crystals underfoot are sharp. Rinse off promptly after — the salt concentration finds every small cut you didn't know you had.",
+    "lat": 31.66,
+    "lng": 35.56,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "public resort strip, Dead Sea eastern shore",
+    "minTier": 1,
+    "terrainTags": [
+      "beach",
+      "saltflat",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-little-petra-siq-al-barid",
+    "title": "Little Petra (Siq al-Barid)",
+    "description": "A miniature echo of Petra without the ticket line or the crowds, carved into a similar narrow canyon. Look up inside the biclinium chamber for faded painted ceilings that survived two thousand years better than most frescoes indoors. Twenty minutes covers it, but it's an easy add-on before or after the main site.",
+    "lat": 30.366,
+    "lng": 35.439,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Nabataean site north of Wadi Musa",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "canyon"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-wadi-shab",
+    "title": "Wadi Shab",
+    "description": "A boat ferries you across the wadi mouth, then it's a rock-hopping hike upstream past turquoise pools to a hidden cave you reach by swimming through a narrow gap. The final swim requires leaving dry bags behind, so plan gear accordingly. Flash flood risk is real after rain upstream — check conditions before committing.",
+    "lat": 22.7986,
+    "lng": 59.2419,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "canyon near Tiwi, Ash Sharqiyah North Governorate",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-wadi-bani-khalid",
+    "title": "Wadi Bani Khalid",
+    "description": "Unlike most wadis in Oman, this one holds water year-round in a series of turquoise pools surrounded by date palms. The main pool near the parking area gets crowded on weekends, but a short walk upstream thins the crowd fast. Bring a swimsuit that's not too revealing — modest dress is expected even in the water.",
+    "lat": 22.7333,
+    "lng": 59.0333,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "perennial wadi, Wilayat of Wadi Bani Khalid",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-jebel-shams-rim-walk",
+    "title": "Jebel Shams Rim Walk",
+    "description": "Nicknamed the Grand Canyon of Arabia for good reason, the rim trail traces a sheer thousand-meter drop with almost no guardrail. The Balcony Walk section leads to an abandoned stone village clinging to the cliff face. Wind gusts here are no joke; this isn't a trail for a bad-weather day.",
+    "lat": 23.2333,
+    "lng": 57.2667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Oman's highest accessible peak region, Al Hamra vicinity",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "cliff",
+      "canyon"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-jebel-akhdar-saiq-plateau",
+    "title": "Jebel Akhdar – Saiq Plateau",
+    "description": "Rose and pomegranate terraces cling to slopes cool enough to need a jacket, a strange contrast an hour's drive from desert heat below. The checkpoint at the base only lets through four-wheel-drive vehicles, so plan your rental accordingly. October rose harvest is the busiest and most fragrant time to visit.",
+    "lat": 23.07,
+    "lng": 57.66,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "terraced highland plateau, Al Jabal al Akhdar",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "plateau"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-wahiba-sands-sharqiya-sands",
+    "title": "Wahiba Sands (Sharqiya Sands)",
+    "description": "An orange dune sea stretching further than the eye resolves, still home to Bedouin families who'll wave you toward their camp for tea if you look lost. Overnighting under a sky with zero light pollution is the whole point of the detour. Deflate your tires before entering the sand or you will be digging by lunchtime.",
+    "lat": 22.0,
+    "lng": 58.5,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "dune sea between coast and interior Oman",
+    "minTier": 5,
+    "terrainTags": [
+      "sand",
+      "dunes",
+      "coast"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-bimmah-sinkhole",
+    "title": "Bimmah Sinkhole",
+    "description": "A collapsed limestone sinkhole filled with brackish blue-green water, ringed by a small park and stone stairs down. It's popular but rarely overrun, and the water stays cool even in peak summer heat. A quick stop between Muscat and the wadis further south.",
+    "lat": 22.953,
+    "lng": 59.167,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Hawiyat Najm Park, near Dibab",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-wadi-tiwi",
+    "title": "Wadi Tiwi",
+    "description": "The lower pools near the village are easy enough, but pushing further up the canyon means scrambling over boulders and swimming through narrow rock chutes with no easy exit. Villages of stacked stone houses cling to the canyon walls the whole way up. Go with someone who knows the route — the upper sections are unmarked and easy to misjudge.",
+    "lat": 22.83,
+    "lng": 59.25,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "terraced canyon village, Tiwi coast",
+    "minTier": 3,
+    "terrainTags": [
+      "canyon",
+      "coast",
+      "rock"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-nizwa-fort",
+    "title": "Nizwa Fort",
+    "description": "The circular tower dominates the old town skyline and doubles as a lookout over the souq and date groves below. Friday morning's livestock market next door is worth timing your visit around. It's a straightforward stop, but a good anchor point before heading up into Jebel Akhdar.",
+    "lat": 22.9333,
+    "lng": 57.5333,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Nizwa old town, historic Omani capital",
+    "minTier": 1,
+    "terrainTags": [
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-wadi-ghul-rim-grand-canyon-of-arabia",
+    "title": "Wadi Ghul Rim (Grand Canyon of Arabia)",
+    "description": "Looking across at Jebel Shams from this side gives a different, arguably more dramatic angle on the same enormous gorge. There's no fencing anywhere along the rim, so footing and wind both need respect. Few tour groups make it to this side, which mostly means you'll have the silence to yourself.",
+    "lat": 23.25,
+    "lng": 57.1833,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "canyon rim opposite Jebel Shams, Al Hamra",
+    "minTier": 3,
+    "terrainTags": [
+      "canyon"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-ras-al-jinz-turtle-reserve",
+    "title": "Ras al Jinz Turtle Reserve",
+    "description": "Green turtles nest on this stretch of coast most nights of the year, but seeing one means a guided night walk timed around their schedule, not yours. The reserve enforces strict no-flash, no-wander rules to protect the nesting cycle. It's a genuinely remote drive down the coast, and the payoff depends entirely on the night you get.",
+    "lat": 22.4167,
+    "lng": 59.8167,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "eastern coastal reserve, Sur region",
+    "minTier": 3,
+    "terrainTags": [
+      "coast",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-liwa-oasis-moreeb-dune",
+    "title": "Liwa Oasis – Moreeb Dune",
+    "description": "One of the tallest dunes in the Empty Quarter, steep enough that an annual dune-bash festival happens here. Outside festival dates it's quiet, just endless orange ridges rolling toward Saudi Arabia. Climbing the dune on foot at sunset is free and arguably the better experience than driving it.",
+    "lat": 23.1167,
+    "lng": 53.75,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Empty Quarter edge, Al Dhafra region",
+    "minTier": 2,
+    "terrainTags": [
+      "dunes"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-hatta-pools",
+    "title": "Hatta Pools",
+    "description": "Turquoise pools cut into rust-colored rock in the Hajar foothills, a cool surprise a couple hours from Dubai's skyline. Swimming is technically discouraged near the dam intake but tolerated in the lower pools. Combine it with Hatta Heritage Village for an easy half-day loop.",
+    "lat": 24.7975,
+    "lng": 56.13,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Hajar Mountains, Hatta enclave",
+    "minTier": 1,
+    "terrainTags": [
+      "mountain",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-jebel-jais",
+    "title": "Jebel Jais",
+    "description": "The drive up switchbacks through genuinely alpine-feeling terrain that has nothing in common with the desert floor below. The via ferrata route and the world's longest zipline both operate from the summit area if you want more than a viewpoint. Even without the adrenaline extras, the temperature drop alone justifies the detour in summer.",
+    "lat": 25.69,
+    "lng": 56.13,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "UAE's highest peak, Ras Al Khaimah",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "alpine"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-al-qudra-lakes",
+    "title": "Al Qudra Lakes",
+    "description": "A string of artificial lakes stocked with birdlife sits improbably in the middle of open desert, popular with cyclists and photographers alike at dawn. Flamingos show up seasonally depending on water levels. It's an easy, flat outing that pairs well with a sunrise start before the heat builds.",
+    "lat": 24.8167,
+    "lng": 55.3333,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "man-made desert lakes, Dubai Desert Conservation Reserve edge",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-fossil-rock-al-ain-road",
+    "title": "Fossil Rock (Al Ain Road)",
+    "description": "A weathered limestone ridge studded with visible marine fossils, evidence this desert was seabed millions of years ago. Local off-roaders use the surrounding dunes for practice runs, so expect company on weekends. A short scramble to the ridge top gives a wide view over the dune field beyond.",
+    "lat": 25.05,
+    "lng": 55.7833,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "limestone outcrop, Sharjah-Al Ain desert corridor",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "dunes",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-dubai-desert-conservation-reserve",
+    "title": "Dubai Desert Conservation Reserve",
+    "description": "One of the region's oldest protected desert areas, home to reintroduced Arabian oryx and sand gazelle roaming semi-wild. Access requires a licensed tour operator rather than a self-drive, which keeps traffic and disturbance low. Dawn game drives here beat anything you'll see from a dune-bashing tour outside the reserve.",
+    "lat": 24.85,
+    "lng": 55.55,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "protected desert, southeast of Dubai",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "dunes"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-g-reme-open-air-museum",
+    "title": "Göreme Open Air Museum",
+    "description": "Byzantine monks carved entire churches into the soft volcanic tuff here, frescoes and all, and a surprising number survived a thousand years of weather and looting. The site is compact enough to walk in an hour but rewards a slower pace through each chapel. Come early — tour buses arrive in force by mid-morning.",
+    "lat": 38.6428,
+    "lng": 34.8289,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "rock-cut monastery complex, Göreme, Cappadocia",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "volcanic",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-u-hisar-castle",
+    "title": "Uçhisar Castle",
+    "description": "A natural rock outcrop honeycombed with carved rooms and tunnels, functioning as a fortress and refuge for centuries. The climb to the top is short but the wind at the summit can be sharp. From up there the whole valley system of fairy chimneys spreads out at once.",
+    "lat": 38.6328,
+    "lng": 34.8106,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "highest point in Cappadocia, Uçhisar town",
+    "minTier": 1,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-love-valley-viewpoint",
+    "title": "Love Valley Viewpoint",
+    "description": "Tall, oddly-shaped volcanic pinnacles give the valley its cheeky name, and the view from the ridge above needs no explanation once you see it. It's a popular sunrise balloon-watching spot, so arrive before dawn if that's the goal. Trails down into the valley itself are unmarked but well-trodden.",
+    "lat": 38.665,
+    "lng": 34.83,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "fairy chimney valley near Göreme",
+    "minTier": 1,
+    "terrainTags": [
+      "volcanic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-pigeon-valley",
+    "title": "Pigeon Valley",
+    "description": "Named for the hundreds of pigeon houses carved into the cliff faces, once used to collect droppings for fertilizer. The walking path connects Uçhisar to Göreme directly through the valley floor, a pleasant alternative to the road. Give it an hour and a half at an easy pace.",
+    "lat": 38.64,
+    "lng": 34.85,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "between Uçhisar and Göreme",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-derinkuyu-underground-city",
+    "title": "Derinkuyu Underground City",
+    "description": "An entire city carved downward through eight accessible levels, complete with ventilation shafts, wine cellars, and a rolling stone door still in place. The tunnels are narrow and low in sections, not ideal if you're claustrophobic. It once sheltered thousands of people underground for weeks at a time.",
+    "lat": 38.3769,
+    "lng": 34.7347,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "multi-level underground city, Derinkuyu town",
+    "minTier": 2,
+    "terrainTags": [
+      "sand"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-ka-kar-mountains-ayder-plateau",
+    "title": "Kaçkar Mountains – Ayder Plateau",
+    "description": "Mist rolls through wooden highland houses here on a near-daily basis, a green, wet contrast to the dry plateau most of Turkey conjures. It's the standard jumping-off point for treks deeper into the Kaçkar range. The thermal baths make a good reward after a day on the trails.",
+    "lat": 40.95,
+    "lng": 41.1167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "highland plateau, Rize Province",
+    "minTier": 2,
+    "terrainTags": [
+      "plateau",
+      "mountain"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-ka-kar-summit-approach",
+    "title": "Kaçkar Summit Approach",
+    "description": "The approach to Turkey's Kaçkar high country runs through alpine lakes and glacier-carved cirques well above the treeline. Weather changes fast at altitude, and the trail is unmarked past the yayla settlements. Most parties camp at least one night before attempting the final summit push.",
+    "lat": 40.8667,
+    "lng": 41.15,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "high route toward Kaçkar Dağı, Kaçkar Mountains National Park",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-lycian-way-butterfly-valley",
+    "title": "Lycian Way – Butterfly Valley",
+    "description": "A sheer-walled canyon opening onto its own private beach, reachable by boat from Ölüdeniz or by a genuinely steep goat trail down the cliff. The valley hosts migrating tiger moths and butterflies it's named for, best seen in early summer. Bring cash — there's no ATM once you're down there.",
+    "lat": 36.2333,
+    "lng": 29.4167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "cliff-enclosed cove near Ölüdeniz",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff",
+      "canyon",
+      "beach"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-lycian-way-olympos",
+    "title": "Lycian Way – Olympos",
+    "description": "Ruined Lycian tombs and a Byzantine church sit half-swallowed by forest right up to the tree line above a quiet pebble beach. It's a classic overnight stop on the Lycian Way long-distance trail. The treehouse guesthouses nearby have been a backpacker fixture for decades.",
+    "lat": 36.4022,
+    "lng": 30.4783,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "ancient ruins and beach, Olympos, Antalya Province",
+    "minTier": 1,
+    "terrainTags": [
+      "forest",
+      "beach",
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-chimera-flames-yanarta",
+    "title": "Chimera Flames (Yanartaş)",
+    "description": "Methane seeping through cracks in the rock has been burning continuously here for millennia, likely the source of the ancient Chimera myth. The walk up takes about twenty minutes over uneven rock. Evening is the right time to visit, when the flames actually show against the dark.",
+    "lat": 36.455,
+    "lng": 30.487,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "eternal flame vents, above Olympos",
+    "minTier": 1,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-mount-nemrut-summit",
+    "title": "Mount Nemrut Summit",
+    "description": "Giant stone heads of gods and kings, toppled from their bodies by centuries of earthquakes, sit scattered on a windswept 2,100-meter summit. The final stretch to the terraces is a genuine climb, best timed for sunrise or sunset when the light rakes across the carved faces. Winter snow can close the road entirely.",
+    "lat": 37.9812,
+    "lng": 38.7414,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "ancient royal tomb sanctuary, Adıyaman Province",
+    "minTier": 3,
+    "terrainTags": [
+      "snow"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-pamukkale-travertines",
+    "title": "Pamukkale Travertines",
+    "description": "Calcium-rich water has built white, terraced pools down the hillside over thousands of years, warm enough to wade in most of the year. Shoes come off before stepping onto the terraces to protect the mineral surface. The ruins of ancient Hierapolis sit right at the top of the hill for a two-in-one stop.",
+    "lat": 37.92,
+    "lng": 29.12,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "mineral terraces, Denizli Province",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-ihlara-valley",
+    "title": "Ihlara Valley",
+    "description": "A green river gorge slices through the volcanic plateau, its walls riddled with hidden Byzantine churches and frescoes. The full valley walk runs several kilometers along the river, a shaded contrast to the exposed rock formations elsewhere in Cappadocia. Bring good shoes — the path crosses the river a few times on stepping stones.",
+    "lat": 38.26,
+    "lng": 34.3,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "river gorge with rock-cut churches, Aksaray Province",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "plateau",
+      "rock",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-selime-monastery",
+    "title": "Selime Monastery",
+    "description": "The largest rock-cut monastery in Cappadocia, with a cathedral-sized chamber carved straight into the cliff. It reportedly inspired some of the cave-city scenes in a well-known space film, which locals mention often. Climbing through the different levels involves some scrambling but nothing technical.",
+    "lat": 38.2833,
+    "lng": 34.2833,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "cliffside monastery complex, Ihlara Valley north end",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-mount-ararat-base-camp-trail",
+    "title": "Mount Ararat Base Camp Trail",
+    "description": "Turkey's highest and most storied mountain requires a military permit and a registered guide before you set foot on the trail, a legacy of its position near a sensitive border. The base camp trek alone crosses high pasture used by Kurdish shepherds for centuries. Summit attempts run two to three days beyond base camp with real glacier travel involved.",
+    "lat": 39.7019,
+    "lng": 44.2983,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "approach route to Turkey's highest peak, Ağrı Province",
+    "minTier": 5,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-stepantsminda-gergeti-trinity-church",
+    "title": "Stepantsminda / Gergeti Trinity Church",
+    "description": "The church sits alone on a green hill with Kazbek's glacier looming directly behind it, one of the most photographed views in the Caucasus for good reason. Walking up takes about an hour on a rough but clear track; a 4x4 taxi covers it faster for a fee. Clouds swallow the peak more often than not, so patience pays off here.",
+    "lat": 42.6625,
+    "lng": 44.6191,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "hilltop church below Mount Kazbek, Kazbegi",
+    "minTier": 2,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-kazbek-base-camp",
+    "title": "Kazbek Base Camp",
+    "description": "Reaching the Betlemi hut means a full day of steady climbing above the treeline with the Gergeti glacier in constant view. Weather on Kazbek shifts fast even in summer, and the last stretch crosses moraine that's slick after rain. Most trekkers stop at the hut rather than push for the summit, which requires technical glacier gear.",
+    "lat": 42.6975,
+    "lng": 44.5133,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Betlemi hut approach, Kazbegi region",
+    "minTier": 3,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-truso-valley",
+    "title": "Truso Valley",
+    "description": "A valley of mineral springs and abandoned stone villages running right up toward the closed Russian border, checked by a permit post partway in. The travertine formations along the river run rust-orange from iron-rich springs, unlike anything else in the region. Few visitors make it this far in, which keeps the valley close to silent.",
+    "lat": 42.5833,
+    "lng": 44.5,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "border valley near Kazbegi, abandoned Ossetian villages",
+    "minTier": 5,
+    "terrainTags": [
+      "river"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-juta-village-trailhead",
+    "title": "Juta Village Trailhead",
+    "description": "A tiny highland settlement that serves as the launch point for treks into the jagged Chaukhi range, sometimes called Georgia's Dolomites. The dirt road in is rough enough to need clearance, though shared jeeps run from Kazbegi in summer. Guesthouses here are basic but the mountain views from the porch make up for it.",
+    "lat": 42.6167,
+    "lng": 44.75,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "trekking gateway toward Chaukhi massif",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "dirt"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-ushguli-svaneti",
+    "title": "Ushguli (Svaneti)",
+    "description": "Medieval defensive towers rise from a village that's been continuously inhabited above 2,000 meters for centuries, with Mount Shkhara's glaciers visible from the edge of town. The road in from Mestia is unpaved and slow, closed entirely by snow much of the winter. It's remote enough that the towers still function as the tallest structures for miles.",
+    "lat": 42.9139,
+    "lng": 43.0086,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "highest permanently inhabited settlement in Europe, Upper Svaneti",
+    "minTier": 3,
+    "terrainTags": [
+      "snow",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-mestia-town",
+    "title": "Mestia Town",
+    "description": "The main town of Svaneti, still ringed by its own stone defensive towers even as it's modernized with a ski lift and museum. It's the sensible base for trekking further into the range, with reliable guesthouses and transport onward. The Svaneti Museum of History and Ethnography is worth an hour before heading uphill.",
+    "lat": 43.045,
+    "lng": 42.725,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Svaneti regional hub, Upper Svaneti",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-koruldi-lakes",
+    "title": "Koruldi Lakes",
+    "description": "A punishing climb above Mestia rewards you with a pair of small lakes reflecting the Svaneti range in still weather. The trail gains altitude fast enough to notice, and afternoon clouds roll in reliably by early afternoon. A jeep track offers a faster if bumpier alternative to the full hike.",
+    "lat": 42.98,
+    "lng": 42.68,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "alpine lakes above Mestia",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-vardzia-cave-monastery",
+    "title": "Vardzia Cave Monastery",
+    "description": "A cliff face honeycombed with hundreds of rooms carved for what was once a self-sufficient monastic city of thousands. A hidden tunnel connects the complex to the river below, originally built as an escape route during sieges. The frescoed church near the top is still in active, if limited, use.",
+    "lat": 41.4358,
+    "lng": 43.2778,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "12th-century cave city, Samtskhe-Javakheti",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "cliff",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-uplistsikhe-cave-town",
+    "title": "Uplistsikhe Cave Town",
+    "description": "One of the oldest rock-hewn settlements in the Caucasus, predating Georgia's conversion to Christianity by centuries. Wheel ruts worn into the stone streets are still visible from millennia of cart traffic. It's compact enough to see in an hour and pairs easily with a stop in nearby Gori.",
+    "lat": 41.9922,
+    "lng": 44.2131,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "pre-Christian rock-cut city near Gori",
+    "minTier": 1,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-martvili-canyon",
+    "title": "Martvili Canyon",
+    "description": "A short boat paddle through a narrow, jungle-green canyon carved by the Abasha River, with waterfalls feeding turquoise pools along the way. It's touristy but efficiently run, and the ride itself takes only twenty minutes. Swimming in the pools above the canyon is allowed and considerably less crowded.",
+    "lat": 42.4083,
+    "lng": 42.3833,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "river canyon, Samegrelo region",
+    "minTier": 1,
+    "terrainTags": [
+      "canyon",
+      "jungle",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-tatev-monastery-wings-of-tatev",
+    "title": "Tatev Monastery / Wings of Tatev",
+    "description": "One of the world's longest reversible aerial tramways carries you over the Vorotan gorge to a fortified monastery perched on the canyon edge. The monastery itself has survived earthquakes and invasions across eleven centuries. The cable car ride alone is worth the visit even before you reach the gate.",
+    "lat": 39.3781,
+    "lng": 46.2494,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "9th-century monastery, Syunik Province",
+    "minTier": 1,
+    "terrainTags": [
+      "canyon"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-khor-virap-monastery",
+    "title": "Khor Virap Monastery",
+    "description": "Mount Ararat rises directly behind this monastery across the closed Turkish border, one of the most iconic frames in the country. A narrow pit beneath the chapel marks where Armenia's patron saint was reportedly imprisoned for over a decade. Clear mornings give the best chance of Ararat showing without cloud.",
+    "lat": 39.8783,
+    "lng": 44.715,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "monastery on the Turkish border, Ararat Province",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-lake-sevan-shoreline",
+    "title": "Lake Sevan Shoreline",
+    "description": "A vast alpine lake sitting nearly 2,000 meters up, with two small 9th-century churches perched on a peninsula overlooking the water. Summer brings crowds to the beaches on the western shore, but the monastery end stays quieter. Water's cold even in August, so expectations should be tempered accordingly.",
+    "lat": 40.4167,
+    "lng": 45.1833,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "high-altitude lake, Gegharkunik Province",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "beach",
+      "lake",
+      "high-altitude"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-garni-gorge-symphony-of-stones",
+    "title": "Garni Gorge – Symphony of Stones",
+    "description": "Hexagonal basalt columns rise in tight, organ-pipe formations along the gorge walls, cooled and cracked by ancient lava flows. The walk down from the pagan temple above is steep but short, and the temperature in the gorge stays noticeably cooler. Combine it with the Garni Temple visit for a solid half-day loop.",
+    "lat": 40.1094,
+    "lng": 44.7306,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "basalt column canyon near Garni Temple",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon",
+      "saltflat"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-noravank-monastery",
+    "title": "Noravank Monastery",
+    "description": "Red cliffs frame a two-story church with an exterior staircase so narrow and steep it barely counts as a staircase. The gorge road in passes through some of Armenia's most dramatic rock scenery along the way. It's a compact site but the setting does most of the heavy lifting.",
+    "lat": 39.69,
+    "lng": 45.23,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "cliffside monastery, Vayots Dzor Province",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-dilijan-national-park",
+    "title": "Dilijan National Park",
+    "description": "Dense forest and mineral springs give Dilijan a reputation as Armenia's Switzerland, a fair if slightly generous comparison. Trails loop past old monasteries hidden in the trees, including Haghartsin and Goshavank nearby. It's a good multi-day base for slower hiking than the high Caucasus offers elsewhere.",
+    "lat": 40.7333,
+    "lng": 44.8667,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "forested highland park, Tavush Province",
+    "minTier": 2,
+    "terrainTags": [
+      "forest"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-amberd-fortress-mount-aragats",
+    "title": "Amberd Fortress (Mount Aragats)",
+    "description": "A ruined fortress and church cling to a narrow ridge between two ravines on the flank of Armenia's highest mountain. Snow lingers on the surrounding peaks well into early summer, a striking backdrop to the dark basalt walls. It's also the standard staging point for climbs higher up Aragats.",
+    "lat": 40.43,
+    "lng": 44.21,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "7th-century fortress on Aragats' slopes",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "saltflat",
+      "historic",
+      "snow"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-aragats-summit-approach",
+    "title": "Aragats Summit Approach",
+    "description": "Kari Lake sits at the base of Aragats' four summits, a starting point for a climb that's non-technical but genuinely strenuous at altitude. The southern peak is the easiest of the four and the usual goal for day hikers. Weather can turn from clear to whiteout within an hour, so an early start matters.",
+    "lat": 40.5333,
+    "lng": 44.1917,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Armenia's highest peak, four-peaked massif",
+    "minTier": 3,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-charyn-canyon",
+    "title": "Charyn Canyon",
+    "description": "Red sandstone spires and canyon walls here have earned the inevitable comparison to Arizona, and it holds up. The Valley of Castles trail winds through eroded formations shaped over twelve million years down to the Charyn River. It's a genuine multi-hour drive from Almaty each way, which keeps the site from feeling overrun.",
+    "lat": 43.35,
+    "lng": 79.0667,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Valley of Castles, Charyn National Park",
+    "minTier": 5,
+    "terrainTags": [
+      "sand",
+      "canyon",
+      "river"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-kolsai-lakes",
+    "title": "Kolsai Lakes",
+    "description": "Three lakes step upward through pine forest toward the Kyrgyz border, each higher one quieter and harder-won than the last. The first lake is an easy walk; the third demands a full day round trip on foot or horseback. Fishing permits are available if you want to try for trout at the lower lake.",
+    "lat": 42.9167,
+    "lng": 78.3167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "three alpine lakes, Kolsai Lakes National Park",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "alpine",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-kaindy-lake-sunken-forest",
+    "title": "Kaindy Lake (Sunken Forest)",
+    "description": "An 1911 earthquake triggered a landslide that dammed the valley and drowned a spruce forest still standing, trunks now rising ghostlike from the cold blue water. Divers occasionally explore the submerged trees below the surface. The access road is rough enough to need real clearance, not just a rental sedan.",
+    "lat": 42.9833,
+    "lng": 78.4667,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "submerged spruce forest lake, near Kolsai",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-big-almaty-lake",
+    "title": "Big Almaty Lake",
+    "description": "A striking turquoise reservoir sitting at nearly 2,500 meters, less than an hour's drive from downtown Almaty. A border-zone permit checkpoint controls access since the lake sits near the Kyrgyz frontier, but it's routinely granted on the spot. The astrophysical observatory further up the road makes a good add-on stop.",
+    "lat": 43.0508,
+    "lng": 76.9853,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "alpine reservoir above Almaty",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-altyn-emel-singing-dune",
+    "title": "Altyn-Emel Singing Dune",
+    "description": "Climbing this dune is a genuine slog in loose sand, and the payoff — a low, resonant hum the dune produces under the right wind and dryness — doesn't happen every visit. The park itself sprawls across steppe and desert far from any town, making the drive in half the commitment. Petroglyphs and wild kulan (Asian wild ass) roam the surrounding plains.",
+    "lat": 44.19,
+    "lng": 78.6,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "150m singing sand dune, Altyn-Emel National Park",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "dunes",
+      "steppe"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-shymbulak-medeu-area",
+    "title": "Shymbulak / Medeu Area",
+    "description": "The Medeu speed-skating rink sits at the base of a dam built to hold back mudslides, with Shymbulak's ski slopes rising just above. A gondola carries you up for mountain views without any hiking required. It's the easiest high-altitude taste of the Tian Shan you'll get without leaving city transit.",
+    "lat": 43.1547,
+    "lng": 77.0658,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "mountain resort gateway above Almaty",
+    "minTier": 1,
+    "terrainTags": [
+      "mountain",
+      "mud",
+      "high-altitude"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-song-kul-lake-yurt-camps",
+    "title": "Song-Kul Lake Yurt Camps",
+    "description": "At over 3,000 meters, this lake is ringed by nothing but open pasture and nomadic yurt camps that appear each summer and vanish each winter. Getting there means crossing one of two high passes that close with the first serious snow. Staying a night in a working yurt camp, sharing fermented mare's milk with the family running it, is as close as overland travel gets to living the season alongside herders rather than just visiting it.",
+    "lat": 41.8333,
+    "lng": 75.1333,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "high-altitude alpine lake, Naryn Region",
+    "minTier": 5,
+    "terrainTags": [
+      "alpine",
+      "lake",
+      "snow",
+      "high-altitude"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-tuz-ashuu-pass-song-kul-approach",
+    "title": "Tuz Ashuu Pass (Song-Kul approach)",
+    "description": "One of the roughest approaches to Song-Kul, climbing switchbacks well above 3,000 meters with no guardrails and long drop-offs. The pass is only reliably open a few months a year, and even then afternoon weather can close in fast. It's a genuine test for a vehicle and a driver both.",
+    "lat": 41.6833,
+    "lng": 75.2667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "high mountain pass south of Song-Kul",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "river"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-ala-kul-lake-trek",
+    "title": "Ala-Kul Lake Trek",
+    "description": "A three-day loop out of Karakol climbs to a lake so intensely blue it looks color-corrected, framed by a pass crossing nearly 4,000 meters. The final push to the pass is steep scree that turns slick fast in wet weather. Most trekkers camp at the lake itself before descending toward the Altyn-Arashan hot springs the next day.",
+    "lat": 42.4167,
+    "lng": 78.2333,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "turquoise glacial lake, Terskey Alatau range",
+    "minTier": 3,
+    "terrainTags": [
+      "lake",
+      "geothermal"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-altyn-arashan-valley",
+    "title": "Altyn-Arashan Valley",
+    "description": "A remote valley of natural hot springs fed by glacial meltwater streams, reachable by a rough jeep track or as the tail end of the Ala-Kul trek. Soaking in the outdoor pools after a day of trekking is the local reward system working exactly as intended. Basic guesthouses run through the summer season only.",
+    "lat": 42.3333,
+    "lng": 78.3333,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "hot spring valley, Terskey Alatau foothills",
+    "minTier": 2,
+    "terrainTags": [
+      "geothermal",
+      "remote"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-karakol-town-gateway",
+    "title": "Karakol Town Gateway",
+    "description": "The main staging town for treks into the Terskey Alatau, with a wooden Russian Orthodox church and a Dungan mosque built without a single nail as easy in-town stops. Guides, gear rental, and marshrutka transport all originate from here. It's worth a day before heading into the mountains proper.",
+    "lat": 42.4907,
+    "lng": 78.3936,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "trekking hub, Issyk-Kul region",
+    "minTier": 1,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-tash-rabat-caravanserai",
+    "title": "Tash Rabat Caravanserai",
+    "description": "A domed stone caravanserai from the 15th century sits alone in a high valley, once a shelter for Silk Road traders crossing toward Kashgar. The building's interior is a warren of small stone chambers, cool and dim even in summer heat. The valley around it is used for yurt camping and horse trekking in the warmer months.",
+    "lat": 40.9833,
+    "lng": 75.2333,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "stone Silk Road inn, At-Bashy district",
+    "minTier": 2,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-issyk-kul-lakeshore-cholpon-ata",
+    "title": "Issyk-Kul Lakeshore (Cholpon-Ata)",
+    "description": "One of the largest alpine lakes on earth, warm enough (and slightly saline) to swim through most of summer despite the surrounding snow-capped peaks. An open-air petroglyph field on the edge of town holds thousands of Bronze Age carvings scattered across boulders. It's the easiest, most developed stretch of Issyk-Kul's shoreline.",
+    "lat": 42.65,
+    "lng": 77.0833,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "resort town on Issyk-Kul's north shore",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "alpine",
+      "lake",
+      "snow"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-barskoon-waterfall",
+    "title": "Barskoon Waterfall",
+    "description": "The valley road up to the falls climbs steadily past a monument to Yuri Gagarin, who reportedly recuperated here after his flight. The waterfall itself sits well up the gorge, past a stretch of track that turns to mud fast after rain. It's a longer, rougher approach than most Issyk-Kul stops, which keeps visitor numbers low.",
+    "lat": 42.1333,
+    "lng": 77.95,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "remote canyon waterfall, southern Issyk-Kul shore",
+    "minTier": 3,
+    "terrainTags": [
+      "canyon",
+      "mud",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-skazka-fairy-tale-canyon",
+    "title": "Skazka (Fairy Tale) Canyon",
+    "description": "Wind and rain have carved this canyon's red sandstone into shapes locals have nicknamed after castles, dragons, and a sleeping camel. The whole loop takes under an hour on foot, easy enough for any fitness level. Late afternoon light saturates the red rock into something close to glowing.",
+    "lat": 42.4,
+    "lng": 78.1,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "eroded red rock canyon, south Issyk-Kul shore",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "canyon",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-jyrgalan-valley-trailhead",
+    "title": "Jyrgalan Valley Trailhead",
+    "description": "A former coal-mining village turned quiet trekking base, with routes into high alpine terrain that see a fraction of the foot traffic Ala-Kul does. A community tourism cooperative runs guesthouses and guiding here, keeping money local. It's a good pick for travelers wanting Karakol's scenery without Karakol's crowds.",
+    "lat": 42.5333,
+    "lng": 78.5833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "emerging trekking hub east of Karakol",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-registan-square-samarkand",
+    "title": "Registan Square, Samarkand",
+    "description": "Three tiled madrasahs face each other across a single square, built over two centuries but somehow reading as one unified composition. The tilework's blue dominates from a distance but resolves into intricate geometric and floral detail up close. Evening light shows brings out the color best if timing allows.",
+    "lat": 39.6542,
+    "lng": 66.975,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "three-madrasah ensemble, historic Samarkand",
+    "minTier": 1,
+    "terrainTags": [
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-bibi-khanym-mosque",
+    "title": "Bibi-Khanym Mosque",
+    "description": "Once one of the largest mosques in the Islamic world, built at Timur's order and reportedly using elephants to haul stone from as far as India. Extensive Soviet-era restoration means not everything is original, but the scale still impresses. The bazaar just across the street makes a natural next stop.",
+    "lat": 39.6644,
+    "lng": 66.9767,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Timurid-era mosque, Samarkand",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-shah-i-zinda-necropolis",
+    "title": "Shah-i-Zinda Necropolis",
+    "description": "A narrow street of turquoise-tiled mausoleums built up over centuries, each one competing subtly with its neighbors in tile pattern and color. The site is named for a legend that a cousin of the Prophet still lives on within it. It's compact but dense enough to spend a slow hour working through the tombs one by one.",
+    "lat": 39.6647,
+    "lng": 66.9856,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "avenue of mausoleums, Samarkand",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-poi-kalyan-complex-bukhara",
+    "title": "Poi Kalyan Complex, Bukhara",
+    "description": "The Kalyan Minaret standing here reportedly impressed Genghis Khan enough that he spared it while leveling the rest of the city. At nearly 47 meters it was long the tallest structure in Central Asia and served as both a call-to-prayer tower and, less happily, an execution site. The mosque courtyard beside it holds a quiet, shaded calm rare in the old city's busier streets.",
+    "lat": 39.7761,
+    "lng": 64.4133,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "mosque and minaret ensemble, old Bukhara",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-ark-of-bukhara",
+    "title": "Ark of Bukhara",
+    "description": "A fortress occupied continuously from roughly the 5th century until the Soviet bombardment of 1920, home to generations of Bukhara's emirs. Much of the interior is now museum space, though the walls and gate towers remain largely original. It's a good starting orientation point before working through the rest of the old city.",
+    "lat": 39.7825,
+    "lng": 64.4111,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "royal fortress, old Bukhara",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-itchan-kala-khiva",
+    "title": "Itchan Kala, Khiva",
+    "description": "An entire walled old city preserved essentially intact, dense with minarets, madrasahs, and mud-brick walls that glow gold at sunset. It's compact enough to wander without a map and still find something new around each corner. The unfinished Kalta Minor minaret, squat and heavily tiled, is the city's most recognizable landmark.",
+    "lat": 41.3783,
+    "lng": 60.3625,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "walled inner city, Khiva",
+    "minTier": 1,
+    "terrainTags": [
+      "mud"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-kyzylkum-desert-aydarkul-lake",
+    "title": "Kyzylkum Desert – Aydarkul Lake",
+    "description": "An accidental lake formed by Soviet-era irrigation overflow, now a standard overnight stop for desert yurt camps and camel rides into the surrounding dunes. The stars here rival anywhere in Central Asia once the generator lights go off. It's a genuine desert experience wedged conveniently between the two big Silk Road cities.",
+    "lat": 41.1667,
+    "lng": 65.9167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "yurt camp desert lake, between Bukhara and Samarkand",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "dunes",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-nurata-petroglyphs-nur-mountains",
+    "title": "Nurata Petroglyphs / Nur Mountains",
+    "description": "Rock carvings scattered across the Nurata foothills date back thousands of years, depicting hunting scenes and animals in a dry, barely-visited range. The site sits near a sacred spring reputedly linked to Alexander the Great's passage through the region. It's a low-key stop that rewards a slower, curious pace over a checklist visit.",
+    "lat": 40.5667,
+    "lng": 65.6833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "ancient rock art site, Nurata range",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "mountain",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-chimgan-mountains",
+    "title": "Chimgan Mountains",
+    "description": "A quick escape from Tashkent's heat into genuine alpine terrain, with a chairlift running up toward Big Chimgan peak for those who'd rather ride than hike. Trails from the lift continue further for those wanting more elevation gain. Winter turns it into the country's main ski area.",
+    "lat": 41.5333,
+    "lng": 69.9333,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Tian Shan foothills near Tashkent",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "mountain"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-aral-sea-ship-graveyard-moynaq",
+    "title": "Aral Sea Ship Graveyard, Moynaq",
+    "description": "Rusted fishing boats sit stranded on what used to be lakebed, now dry sand a hundred kilometers or more from the retreating shoreline. Moynaq was once a thriving Aral Sea fishing port before Soviet irrigation projects drained the sea to a fraction of its former size. It's a genuinely long, remote drive to get here, and what you find is less a tourist site than a monument to an ongoing environmental disaster.",
+    "lat": 43.7667,
+    "lng": 59.0167,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "former fishing port, Karakalpakstan",
+    "minTier": 5,
+    "terrainTags": [
+      "sand",
+      "lake",
+      "remote"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-pamir-highway-khorog-town",
+    "title": "Pamir Highway – Khorog Town",
+    "description": "The unofficial capital of the Pamirs, a green river-valley town that feels startlingly lush after the high, dry passes leading in. A GBAO permit is required for the whole autonomous region and is easiest arranged in Dushanbe beforehand. The Saturday market and the botanical garden are both worth a stop before heading further up the highway.",
+    "lat": 37.4913,
+    "lng": 71.5539,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "regional capital, Gorno-Badakhshan",
+    "minTier": 2,
+    "terrainTags": [
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-bartang-valley-entry",
+    "title": "Bartang Valley Entry",
+    "description": "One of the roughest, most isolated valleys accessible off the main Pamir Highway, with a track that fords rivers and clings to cliff edges for long stretches. Villages here still rely heavily on subsistence farming, largely cut off from the outside world in winter. It's not a route to attempt without a capable vehicle and a real contingency plan.",
+    "lat": 37.9333,
+    "lng": 71.8333,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "remote side valley off the Pamir Highway",
+    "minTier": 3,
+    "terrainTags": [
+      "cliff",
+      "river",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-karakul-lake-pamir",
+    "title": "Karakul Lake (Pamir)",
+    "description": "A vast, still lake sitting above 3,900 meters on the eastern Pamir plateau, formed by a meteorite impact millions of years ago. The surrounding landscape is stark high-desert steppe, closer in feel to the Tibetan plateau than anywhere else on the highway. Altitude sickness is a real risk here, and nights get brutally cold regardless of season.",
+    "lat": 39.0167,
+    "lng": 73.4667,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "high-altitude lake, eastern Pamir plateau",
+    "minTier": 5,
+    "terrainTags": [
+      "desert",
+      "steppe",
+      "plateau",
+      "lake"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-wakhan-corridor-yamchun-fort",
+    "title": "Wakhan Corridor – Yamchun Fort",
+    "description": "A crumbling Silk Road fortress perched above the river that marks the border with Afghanistan, with hot springs just below and unobstructed views of the Hindu Kush across the valley. The Wakhan Corridor's isolation has preserved a slower pace of village life along its length. It's about as far from anywhere as an overland route in this region gets while still being reachable by road.",
+    "lat": 37.2833,
+    "lng": 72.6167,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "ancient fortress overlooking the Panj River, Wakhan Valley",
+    "minTier": 5,
+    "terrainTags": [
+      "geothermal",
+      "river"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-ak-baital-pass",
+    "title": "Ak-Baital Pass",
+    "description": "The highest point on the entire Pamir Highway, high enough that altitude affects most travelers even just stepping out for photos. The pass marks a clear shift into the barren, wind-scoured eastern Pamir plateau. Snow can close it even in warmer months, so a flexible timeline matters more than a fixed itinerary here.",
+    "lat": 38.4333,
+    "lng": 73.6833,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "highest point on the Pamir Highway",
+    "minTier": 5,
+    "terrainTags": [
+      "plateau",
+      "snow"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-iskanderkul-lake",
+    "title": "Iskanderkul Lake",
+    "description": "A deep blue glacial lake named for Alexander the Great, according to local legend, tucked into the Fann Mountains between Dushanbe and Samarkand. A waterfall a short hike from the lakeshore adds a second easy stop nearby. It's a manageable detour off the main highway rather than a full expedition.",
+    "lat": 39.0833,
+    "lng": 68.3667,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "alpine lake, Fann Mountains",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-seven-lakes-haft-kul",
+    "title": "Seven Lakes (Haft Kul)",
+    "description": "Seven lakes stair-step up a single valley, each a slightly different shade of blue or green depending on mineral content and depth. A rough road connects the lower lakes to villages where homestays are common and easy to arrange. The upper lakes require more walking but reward it with real quiet.",
+    "lat": 39.1,
+    "lng": 67.95,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "chain of colored lakes, Fann Mountains",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-fann-mountains-trailhead-artuch",
+    "title": "Fann Mountains Trailhead (Artuch)",
+    "description": "A basic alpine camp that serves as the launch point for multi-day treks deeper into the granite peaks of the Fann range. Trails from here climb toward high passes and glacial lakes with minimal signage, making a guide worthwhile. It's a serious trekking base rather than a day-trip destination.",
+    "lat": 39.2167,
+    "lng": 68.0,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "trekking base camp, Fann Mountains",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-khustain-nuruu-national-park",
+    "title": "Khustain Nuruu National Park",
+    "description": "The last truly wild horse species on earth, once extinct in the wild, was reintroduced to this steppe reserve starting in the early 1990s. Sightings aren't guaranteed and require patient, quiet driving across open grassland with no marked trails. It's a genuinely remote park with almost no infrastructure beyond a small ranger station.",
+    "lat": 47.7333,
+    "lng": 105.95,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "reintroduction reserve for Przewalski's horse",
+    "minTier": 3,
+    "terrainTags": [
+      "steppe",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-terelj-national-park-turtle-rock",
+    "title": "Terelj National Park – Turtle Rock",
+    "description": "A granite boulder eroded into an unmistakable turtle shape sits just off the main road through the park, an easy photo stop for anyone passing through. The surrounding valley is dotted with ger camps offering horseback rides deeper into the hills. It's the standard first taste of Mongolian steppe scenery for visitors coming from Ulaanbaatar.",
+    "lat": 47.9764,
+    "lng": 107.4306,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "granite rock formation, Gorkhi-Terelj National Park",
+    "minTier": 1,
+    "terrainTags": [
+      "steppe",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-aryabal-meditation-temple",
+    "title": "Aryabal Meditation Temple",
+    "description": "A small Buddhist temple complex reached by a winding wooden staircase up a forested ridge, with prayer flags strung along the whole climb. The view from the top opens over the surrounding Terelj valley and rock formations. It's a manageable climb for most fitness levels, maybe thirty minutes each way.",
+    "lat": 47.98,
+    "lng": 107.45,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "hilltop temple complex, Gorkhi-Terelj National Park",
+    "minTier": 1,
+    "terrainTags": [
+      "forest",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-genghis-khan-equestrian-statue",
+    "title": "Genghis Khan Equestrian Statue",
+    "description": "A 40-meter stainless steel statue of Genghis Khan on horseback dominates the steppe, visible from a considerable distance across flat grassland. An elevator inside the horse's body carries visitors up to a viewing deck at the horse's head. A museum complex at the base covers Mongol imperial history in more depth.",
+    "lat": 47.8272,
+    "lng": 106.9411,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "40-meter steel monument, Tsonjin Boldog",
+    "minTier": 1,
+    "terrainTags": [
+      "steppe"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-kharkhorin-erdene-zuu-monastery",
+    "title": "Kharkhorin / Erdene Zuu Monastery",
+    "description": "Built partly from the stones of Karakorum, the ruined capital of the Mongol Empire, this walled monastery complex was Mongolia's first Buddhist center and survived Stalinist-era purges only partially intact. The 108 stupas ringing the outer wall are a distinctive, easy landmark. It's a full day's drive each way from Ulaanbaatar, so most visitors combine it with an overnight in the area.",
+    "lat": 47.1997,
+    "lng": 102.8425,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "first Buddhist monastery in Mongolia, near ancient Karakorum",
+    "minTier": 2,
+    "terrainTags": [
+      "historic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-orkhon-waterfall-ulaan-tsutgalan",
+    "title": "Orkhon Waterfall (Ulaan Tsutgalan)",
+    "description": "A waterfall carved through basalt from an ancient lava flow, dropping into a canyon that's a stark green contrast to the surrounding open steppe. The approach track is unpaved and can be rough after rain, standard for this part of the country. Ger camps nearby make an easy overnight stop before continuing on toward Kharkhorin.",
+    "lat": 46.7833,
+    "lng": 101.9167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "volcanic waterfall, Orkhon Valley",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon",
+      "steppe",
+      "volcanic",
+      "saltflat"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-white-lake-terkhiin-tsagaan-nuur",
+    "title": "White Lake (Terkhiin Tsagaan Nuur)",
+    "description": "A lake formed by an ancient lava dam, ringed by extinct volcanic cones and used heavily by local herding families for grazing land. Khorgo volcano's crater sits an easy climb above the lake's edge for a wider view. It's remote enough that the drive itself is a significant part of the commitment.",
+    "lat": 48.15,
+    "lng": 99.7,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "volcanic crater lake, Arkhangai Province",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "lake",
+      "remote"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-khovsgol-lake-shoreline",
+    "title": "Khovsgol Lake Shoreline",
+    "description": "Often called the Blue Pearl of Mongolia, this lake holds roughly two percent of the world's fresh water and stays cold enough to be uncomfortable for swimming most of the year. Reindeer-herding Tsaatan communities live in the taiga forests further north, reachable only by horse or on foot. It's a genuine expedition to reach, whether by multi-day drive or a domestic flight followed by a rough road.",
+    "lat": 51.0,
+    "lng": 100.5,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Mongolia's largest freshwater lake, near Russian border",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-yolyn-am-vulture-gorge",
+    "title": "Yolyn Am (Vulture Gorge)",
+    "description": "A narrow gorge in the middle of the Gobi Desert that holds ice year-round in its deepest, shaded sections, a genuine surprise given the surrounding heat. Lammergeier vultures nest in the cliffs, giving the gorge its name. The walk in is easy at first but gets rockier as the canyon narrows.",
+    "lat": 43.5333,
+    "lng": 100.05,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "ice-filled canyon, Gobi Gurvansaikhan National Park",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "cliff",
+      "canyon",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-khongoryn-els-singing-dunes",
+    "title": "Khongoryn Els Singing Dunes",
+    "description": "These dunes rise nearly 300 meters above the surrounding gravel plain and, on windy days, produce an audible hum that gave them their name. Climbing to the ridge is a slow, calf-burning slog in loose sand under full Gobi sun. Camel treks are the more common way to approach, saving the climb itself for those who want it.",
+    "lat": 43.7333,
+    "lng": 102.1667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "300m dune range, Gobi Gurvansaikhan National Park",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "dunes",
+      "gravel"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-flaming-cliffs-bayanzag",
+    "title": "Flaming Cliffs (Bayanzag)",
+    "description": "Roy Chapman Andrews' 1920s expedition found the first confirmed dinosaur eggs here, and fossil hunting still turns up material in the eroding red sandstone. The cliffs burn a deep orange-red at sunset, the source of the name. It's a broad, easy walk along the rim rather than a technical hike.",
+    "lat": 44.1333,
+    "lng": 103.7167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "red sandstone badlands, Gobi Desert",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "cliff"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-gobi-gurvansaikhan-national-park-hq",
+    "title": "Gobi Gurvansaikhan National Park HQ",
+    "description": "The park anchors most Gobi itineraries, its three parallel mountain ranges giving it its name and its enormous size making a single day's visit essentially impossible. Ger camps scattered through the park handle most logistics for onward trips to the dunes and cliffs. Distances between sites are considerable, so plan driving time generously.",
+    "lat": 43.5,
+    "lng": 103.5,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Mongolia's largest national park, South Gobi Province",
+    "minTier": 2,
+    "terrainTags": [
+      "dunes",
+      "cliff",
+      "mountain"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-gorkhi-terelj-rock-formations",
+    "title": "Gorkhi-Terelj Rock Formations",
+    "description": "Scattered granite boulders eroded into odd shapes dot the hills throughout the park, a short walk or drive from Turtle Rock. It's an easy, low-commitment way to spend an afternoon between longer excursions. Horseback trips through the same terrain are widely available from nearby ger camps.",
+    "lat": 47.9,
+    "lng": 107.45,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "granite boulder fields, Gorkhi-Terelj National Park",
+    "minTier": 1,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-naiman-nuur-eight-lakes",
+    "title": "Naiman Nuur (Eight Lakes)",
+    "description": "Eight small lakes scattered across a volcanic plateau, none of them reachable by a direct road, meaning the trip in is as much the point as the destination. Horseback is the traditional way locals cover the terrain between lakes, and it remains the most practical option for visitors too. It's a genuinely remote, slow trip that rewards travelers with time rather than a tight schedule.",
+    "lat": 46.6167,
+    "lng": 101.5,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "volcanic lake chain, Orkhon-Khangai region",
+    "minTier": 3,
+    "terrainTags": [
+      "volcanic",
+      "plateau",
+      "lake",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-amarbayasgalant-monastery",
+    "title": "Amarbayasgalant Monastery",
+    "description": "One of Mongolia's three great monasteries and one of the few to survive Stalinist-era destruction largely intact, its yellow and red halls set against open northern steppe. It sees far fewer visitors than the sites closer to Ulaanbaatar, which keeps the grounds unusually quiet. The drive north is long but passes through classic rolling steppe scenery the whole way.",
+    "lat": 49.4833,
+    "lng": 105.0667,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "18th-century Buddhist monastery, Selenge Province",
+    "minTier": 2,
+    "terrainTags": [
+      "steppe"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-olkhon-island-khuzhir-village",
+    "title": "Olkhon Island – Khuzhir Village",
+    "description": "The main village on Baikal's largest island, and the standard base for exploring the island's shamanic sites and rocky northern coast. A ferry crossing from the mainland is required, and can back up badly in peak summer. Guesthouses here run on wood stoves and generator power more often than not.",
+    "lat": 53.1953,
+    "lng": 107.3439,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "largest island on Lake Baikal",
+    "minTier": 1,
+    "terrainTags": [
+      "coast",
+      "lake",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-shaman-rock-cape-burkhan",
+    "title": "Shaman Rock (Cape Burkhan)",
+    "description": "A twin-peaked rock jutting into Baikal considered one of the most sacred sites in Buryat shamanism, marked by rows of colorful ritual posts nearby. The walk from Khuzhir village takes only a few minutes. Sunset over the lake from the rock's base is the reason most visitors time their walk for evening.",
+    "lat": 53.1875,
+    "lng": 107.3358,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "sacred rock outcrop, Olkhon Island",
+    "minTier": 1,
+    "terrainTags": [
+      "lake",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cape-khoboy",
+    "title": "Cape Khoboy",
+    "description": "The northernmost point of Olkhon Island, reached by a genuinely rough dirt track that chews up standard vehicles, making a UAZ van or serious 4x4 the practical choice. The cliffs here drop straight into some of the deepest, clearest water on the lake. It's a long day out from Khuzhir and back, with almost no services along the way.",
+    "lat": 53.4667,
+    "lng": 107.7833,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "northern tip of Olkhon Island",
+    "minTier": 3,
+    "terrainTags": [
+      "cliff",
+      "lake",
+      "dirt"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-listvyanka-village-lakeshore",
+    "title": "Listvyanka Village Lakeshore",
+    "description": "The easiest access point to Lake Baikal, an hour's drive from Irkutsk with a working fish market, boat trips, and a chairlift up a nearby ridge for lake views. It's touristy compared to Olkhon but genuinely convenient for a shorter trip. Smoked omul from the market stalls is the local thing to eat here.",
+    "lat": 51.8578,
+    "lng": 104.8592,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "gateway village on Baikal's southern shore",
+    "minTier": 1,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-baikal-museum-listvyanka",
+    "title": "Baikal Museum, Listvyanka",
+    "description": "A compact museum covering Baikal's ecology, depth records, and endemic species, including live nerpa seals — the world's only freshwater seal species — in an aquarium tank. It's a useful primer before heading further out onto or around the lake. The building itself sits right on the shoreline with good views from the terrace.",
+    "lat": 51.8608,
+    "lng": 104.8664,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "lake ecology museum, Listvyanka",
+    "minTier": 1,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-circum-baikal-railway-trailhead",
+    "title": "Circum-Baikal Railway Trailhead",
+    "description": "A disused stretch of Trans-Siberian-era railway hugging the lakeshore through dozens of tunnels and bridges, now walked more than ridden. The full walk covers considerable distance, so most visitors do a section rather than the whole line. Old rail infrastructure, some over a century old, remains visible the entire way.",
+    "lat": 51.6667,
+    "lng": 103.6833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "historic rail line, southwestern Baikal shore",
+    "minTier": 2,
+    "terrainTags": [
+      "lake",
+      "historic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-barguzin-valley",
+    "title": "Barguzin Valley",
+    "description": "A wide, sparsely populated valley on Baikal's eastern side, home to Buryat communities and considerably less visited than the western shore or Olkhon. The drive in is long and largely unpaved, with limited fuel and services along the way. It's a genuine off-the-circuit destination for travelers wanting Baikal without the crowds.",
+    "lat": 53.6167,
+    "lng": 109.6167,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "remote valley east of Lake Baikal",
+    "minTier": 3,
+    "terrainTags": [
+      "lake",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-ushkany-islands-seal-haulout",
+    "title": "Ushkany Islands Seal Haulout",
+    "description": "A cluster of small islands near the middle of Baikal where the lake's endemic nerpa seals haul out in visible numbers, protected within the Zabaikalsky National Park boundary. Reaching them requires both a permit and a boat charter, since there's no regular ferry service. It's one of the harder-to-reach wildlife sightings in the region, which is precisely why it holds weight.",
+    "lat": 53.85,
+    "lng": 108.6,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "protected islands, central Lake Baikal",
+    "minTier": 5,
+    "terrainTags": [
+      "lake",
+      "wildlife"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-sandy-bay-peschanaya",
+    "title": "Sandy Bay (Peschanaya)",
+    "description": "A sandy cove backed by pine trees growing on stilt-like exposed roots, a quirk caused by decades of soil erosion. There's no road in, so access is by boat from Listvyanka or a longer hike along the shore trail. It's one of the few genuine sand beaches on a lake mostly ringed by rock and pebble.",
+    "lat": 51.6833,
+    "lng": 105.1833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "beach cove, western Baikal shore",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "beach",
+      "lake",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-arshan-resort-town-tunkinsky",
+    "title": "Arshan Resort Town (Tunkinsky)",
+    "description": "A small spa town built around mineral springs, with the Sayan Mountains rising directly behind it offering genuine day-hike terrain. It's popular with Russian visitors for the springs but sees relatively few foreign travelers. Trails from town climb quickly into alpine terrain for those wanting more than a soak.",
+    "lat": 51.9167,
+    "lng": 102.4167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "mineral spring spa town, Tunkinsky National Park",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "mountain"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-persepolis",
+    "title": "Persepolis",
+    "description": "The ceremonial heart of the Achaemenid Persian Empire, burned by Alexander's forces but still standing enough to convey real scale two and a half thousand years later. The Gate of All Nations and the Apadana staircase reliefs are the standout sections, both remarkably legible after millennia of exposure. Early morning avoids both the heat and the tour bus crowds.",
+    "lat": 29.9354,
+    "lng": 52.8916,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "ceremonial capital of the Achaemenid Empire, Fars Province",
+    "minTier": 1,
+    "terrainTags": [
+      "sand"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-naqsh-e-rustam",
+    "title": "Naqsh-e Rustam",
+    "description": "Four Achaemenid kings are entombed in facades cut high into a cliff face, alongside later Sassanian reliefs carved into the rock below. It sits a short drive from Persepolis and pairs naturally with it on the same day. The scale of the cliff carvings is easy to underestimate from photos alone.",
+    "lat": 29.9889,
+    "lng": 52.8681,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "royal rock tombs near Persepolis",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-yazd-old-city",
+    "title": "Yazd Old City",
+    "description": "A mudbrick old city built for the desert, with wind-catcher towers designed centuries before mechanical air conditioning existed to pull cool air down into the houses below. Zoroastrian fire temples and Towers of Silence sit on the city's edges, remnants of Iran's pre-Islamic religious history. The rooftop views over the old city at sunset are worth seeking out.",
+    "lat": 31.8974,
+    "lng": 54.3569,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "historic desert city, Yazd Province",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "historic",
+      "mud"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-alamut-valley-fortress",
+    "title": "Alamut Valley Fortress",
+    "description": "The valley once held the fortresses of the medieval Ismaili sect, the historical source of the word \"assassin\" through centuries of Crusader-era rumor and exaggeration. Reaching the main ruin at Hasan-i Sabbah's stronghold requires a genuine mountain drive followed by a steep climb up loose rock. Little of the fortress remains structurally intact, but the position alone explains why it was considered unassailable for so long.",
+    "lat": 36.4547,
+    "lng": 50.5936,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "ruined mountain stronghold, Qazvin Province",
+    "minTier": 5,
+    "terrainTags": [
+      "mountain",
+      "historic",
+      "rock"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-badab-e-surt-terraces",
+    "title": "Badab-e Surt Terraces",
+    "description": "Mineral-rich springs have built layered, stair-stepped travertine pools here in shades of orange and red, distinct from the more famous white terraces elsewhere in the world. Two separate springs feed different sections with different mineral compositions and colors. The site sits well off the main tourist circuit, which keeps it genuinely quiet.",
+    "lat": 36.0833,
+    "lng": 53.2667,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "stepped travertine terraces, Mazandaran Province",
+    "minTier": 2,
+    "terrainTags": [
+      "steppe"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-damavand-summit-approach",
+    "title": "Damavand Summit Approach",
+    "description": "A dormant volcano and Iran's highest point, visible from Tehran on a clear day and a serious non-technical but high-altitude climb for anyone attempting the summit. Sulfur vents near the crater rim are a reminder the mountain isn't fully asleep. Most climbers base at one of the mountain huts and push for the summit before dawn to beat both altitude fatigue and afternoon weather.",
+    "lat": 35.9548,
+    "lng": 52.1093,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Iran's highest peak, dormant volcano, Alborz range",
+    "minTier": 5,
+    "terrainTags": [
+      "volcanic",
+      "mountain",
+      "high-altitude"
+    ],
+    "radiusMeters": 300
+  }
+]

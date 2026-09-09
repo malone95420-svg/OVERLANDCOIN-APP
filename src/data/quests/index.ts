@@ -1,5 +1,6 @@
 /**
- * Quest catalog — curated corridors plus GeoNames / Overpass NA + SA expansion.
+ * Quest catalog — curated corridors plus GeoNames / Overpass NA + SA expansion,
+ * plus a global hunt pack (`global-*.json`) covering every continent.
  * Spatially thinned (~25 km min spacing) via `node scripts/spread-quests.mjs`.
  * Base generators: `scripts/generate-quests.mjs`, `scripts/append-quests-us-sa.mjs`,
  * `scripts/append-poi-history-quests.mjs` (US/Canada/Hawaii history POIs).
@@ -7,6 +8,14 @@
 import type { CapabilityTier } from "@/lib/vehicle";
 import { rewardForDifficulty } from "@/lib/questRewards";
 import seed from "./seed.json";
+import globalNorthAmerica from "./global-01-north-america.json";
+import globalLatinAmerica from "./global-02-latin-america.json";
+import globalEurope from "./global-03-europe.json";
+import globalAfrica from "./global-04-africa.json";
+import globalMenaCentralAsia from "./global-05-mena-central-asia.json";
+import globalAsia from "./global-06-asia.json";
+import globalOceaniaPolar from "./global-07-oceania-polar.json";
+import globalWorldGaps from "./global-08-world-gaps.json";
 
 export type QuestDifficulty = "Easy" | "Moderate" | "Hard" | "Legendary";
 
@@ -123,11 +132,21 @@ function isTestQuest(q: Quest): boolean {
   return q.id.startsWith("q-test-");
 }
 
-export const QUESTS: Quest[] = (seed as Partial<Quest>[])
-  .map((q) =>
-    normalizeQuest(q as Partial<Quest> & Pick<Quest, "id" | "title" | "lat" | "lng">),
-  )
-  .filter((q) => !isTestQuest(q));
+const RAW_QUESTS: Partial<Quest>[] = [
+  ...(seed as Partial<Quest>[]),
+  ...(globalNorthAmerica as Partial<Quest>[]),
+  ...(globalLatinAmerica as Partial<Quest>[]),
+  ...(globalEurope as Partial<Quest>[]),
+  ...(globalAfrica as Partial<Quest>[]),
+  ...(globalMenaCentralAsia as Partial<Quest>[]),
+  ...(globalAsia as Partial<Quest>[]),
+  ...(globalOceaniaPolar as Partial<Quest>[]),
+  ...(globalWorldGaps as Partial<Quest>[]),
+];
+
+export const QUESTS: Quest[] = RAW_QUESTS.map((q) =>
+  normalizeQuest(q as Partial<Quest> & Pick<Quest, "id" | "title" | "lat" | "lng">),
+).filter((q) => !isTestQuest(q));
 
 export const QUEST_COUNT = QUESTS.length;
 

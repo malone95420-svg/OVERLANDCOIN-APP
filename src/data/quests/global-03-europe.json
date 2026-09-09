@@ -1,0 +1,1984 @@
+[
+  {
+    "id": "q-g-gullfoss-overlook",
+    "title": "Gullfoss Overlook",
+    "description": "The Hvítá River folds over two stepped drops into a canyon that looks bottomless from the upper platform. A short paved path gets you to the lip; the lower path (seasonal, ice-dependent) puts you in the spray. Bring a windproof layer even in July.",
+    "lat": 64.3271,
+    "lng": -20.1199,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Gullfoss waterfall, Golden Circle, Iceland (Vatnajökull NP admin)",
+    "minTier": 1,
+    "terrainTags": [
+      "canyon",
+      "steppe",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-strokkur-steam-gate",
+    "title": "Strokkur Steam Gate",
+    "description": "Strokkur erupts every 6-10 minutes, a reliable clock most geysers can't keep. Stay behind the rope; the ground is genuinely hot and the runoff channels scald. Ten minutes here and you'll understand why this valley loaned its name to every geyser on Earth.",
+    "lat": 64.3111,
+    "lng": -20.3024,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Geysir geothermal field, Haukadalur, Iceland",
+    "minTier": 1,
+    "terrainTags": [
+      "geothermal"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-almannagj-rift-walk",
+    "title": "Almannagjá Rift Walk",
+    "description": "You're walking the actual seam between the North American and Eurasian plates, and it's an easy flat gorge trail to prove it. Iceland's original parliament met here in 930 AD, in the gorge itself. Ten minutes from the visitor center, no gear required.",
+    "lat": 64.2559,
+    "lng": -21.1295,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Þingvellir National Park, Iceland (UNESCO site)",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-seljalandsfoss-loop",
+    "title": "Seljalandsfoss Loop",
+    "description": "One of the few waterfalls anywhere you can walk fully behind, on a rock ledge tucked into the cliff. The path is short but slick with spray year-round; a rain shell beats an umbrella here. Pair it with Gljúfrabúi hidden falls a five-minute walk north.",
+    "lat": 63.6156,
+    "lng": -19.9886,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Seljalandsfoss waterfall, South Iceland, Ring Road",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-sk-gafoss-stair-climb",
+    "title": "Skógafoss Stair Climb",
+    "description": "A single 60-meter drop off an old sea cliff, and a staircase bolted up its side that ends at the start of the Fimmvörðuháls trek. Climb it for the view down the Skógá river valley toward the coast. Rainbows show up most sunny afternoons.",
+    "lat": 63.5321,
+    "lng": -19.5116,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Skógafoss waterfall, South Iceland",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff",
+      "coast",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-reynisfjara-black-sand",
+    "title": "Reynisfjara Black Sand",
+    "description": "Basalt columns stack up like organ pipes against a beach of black volcanic sand, with the Reynisdrangar sea stacks offshore. Sneaker waves here have killed people who turned their backs on the surf, so watch the water, not just the rocks. It's still one of the most photographed shorelines in the North Atlantic.",
+    "lat": 63.4052,
+    "lng": -19.0447,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Reynisfjara beach, near Vík, South Iceland",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "beach",
+      "volcanic",
+      "saltflat"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-j-kuls-rl-n-ice-watch",
+    "title": "Jökulsárlón Ice Watch",
+    "description": "Icebergs calve off Breiðamerkurjökull and drift the lagoon for years before reaching the sea, then wash up glittering on the black sand across the road. It's a five-minute walk from the parking area to prime iceberg-watching benches. Seals haul out on the floes most mornings.",
+    "lat": 64.0784,
+    "lng": -16.2298,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Jökulsárlón glacial lagoon, Southeast Iceland",
+    "minTier": 1,
+    "terrainTags": [
+      "sand"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-dettifoss-west-rim",
+    "title": "Dettifoss West Rim",
+    "description": "Europe's most powerful waterfall by volume, a grey-brown wall of glacial meltwater dropping 44 meters into Jökulsárgljúfur canyon. The west-side road is paved and open longer into the season than the rougher east side. Stand back from the unfenced rim; the spray alone can knock you off balance.",
+    "lat": 65.8145,
+    "lng": -16.3841,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Dettifoss waterfall, Vatnajökull National Park, Iceland",
+    "minTier": 1,
+    "terrainTags": [
+      "canyon"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-sv-nafellsj-kull-glacier-tongue",
+    "title": "Svínafellsjökull Glacier Tongue",
+    "description": "A short flat walk from the parking area puts you at the toe of a glacier tongue streaked black with volcanic ash, the same ice tongue used as a filming location for a certain frozen fantasy kingdom. Don't step onto the ice unroped and unguided — hidden crevasses are real here. The moraine ridges around it tell the story of how far it's retreated.",
+    "lat": 63.9691,
+    "lng": -16.8756,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Svínafellsjökull outlet glacier, Skaftafell, Vatnajökull NP, Iceland",
+    "minTier": 1,
+    "terrainTags": [
+      "volcanic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-saksun-fjord-village",
+    "title": "Saksun Fjord Village",
+    "description": "A turf-roofed church and a scatter of farmhouses sit above a tidal lagoon that was cut off from the sea by a landslide centuries ago. The walk down to the black-sand tidal flat takes twenty minutes and feels like arriving at the edge of the map. Low tide is the only time to cross the flat itself.",
+    "lat": 62.2833,
+    "lng": -7.2167,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Saksun, Streymoy, Faroe Islands",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "fjord"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-storseisundet-bridge",
+    "title": "Storseisundet Bridge",
+    "description": "A curling bridge that looks like it's launching cars into the North Atlantic, strung across skerries between small islands. Storms here throw waves over the roadway, which is exactly why photographers chase it in bad weather. On a calm day it's just a gorgeous, slightly absurd stretch of tarmac.",
+    "lat": 63.0206,
+    "lng": 7.4181,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Atlantic Ocean Road, Averøy–Eide, Norway",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-dalsnibba-viewpoint",
+    "title": "Dalsnibba Viewpoint",
+    "description": "A toll road switchbacks up to 1,500 meters for the highest fjord viewpoint in Europe, looking straight down onto Geirangerfjord's green water. The final overlook has a glass platform if you want the vertigo. Snow can linger into July at the top even when the fjord below is green.",
+    "lat": 62.0578,
+    "lng": 7.2033,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Dalsnibba, above Geirangerfjord, Norway",
+    "minTier": 1,
+    "terrainTags": [
+      "fjord",
+      "snow"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-stegastein-viewpoint",
+    "title": "Stegastein Viewpoint",
+    "description": "A wooden platform cantilevers 30 meters out over a 650-meter drop above Aurlandsfjord, no railing beyond glass at the tip. The Snow Road itself crosses a high plateau that stays snow-streaked well into summer. It's a five-minute detour off the valley road that delivers one of Norway's signature views.",
+    "lat": 60.9214,
+    "lng": 7.1892,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Aurlandsfjellet Snow Road, near Aurland, Norway",
+    "minTier": 1,
+    "terrainTags": [
+      "fjord",
+      "plateau",
+      "snow"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-reine-village-overlook",
+    "title": "Reine Village Overlook",
+    "description": "Red rorbu fishing cabins on stilts over turquoise water, ringed by knife-edge peaks that shouldn't exist this far north. You don't need to hike anything to get the classic postcard — the road into town does the work. It's the warm-up before the Reinebringen climb looming right behind it.",
+    "lat": 67.9364,
+    "lng": 13.0906,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Reine, Moskenesøya, Lofoten, Norway",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-abisko-kungsleden-trailhead",
+    "title": "Abisko Kungsleden Trailhead",
+    "description": "This is mile zero of the Kungsleden, Sweden's 440-kilometer King's Trail, and you only need to walk the first easy kilometer along Torneträsk lake to feel the scale of the place. Abisko's dry microclimate makes it one of the better spots in Europe to chase the northern lights. The canyon trail to Abiskojåkka gorge is a flat afternoon add-on.",
+    "lat": 68.3556,
+    "lng": 18.7783,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Abisko National Park, Swedish Lapland",
+    "minTier": 1,
+    "terrainTags": [
+      "canyon",
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-nuorgam-north-point",
+    "title": "Nuorgam North Point",
+    "description": "A modest signpost marks the northernmost inhabited point in Finland, on the Norwegian border above the Arctic Circle. There's no drama to the spot itself — that's the point, a quiet full stop at the top of the map. Midsummer here means a sun that never fully sets.",
+    "lat": 70.0783,
+    "lng": 27.9633,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Nuorgam, northernmost village of Finland",
+    "minTier": 1,
+    "terrainTags": [
+      "arctic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-m-ns-klint-chalk-cliffs",
+    "title": "Møns Klint Chalk Cliffs",
+    "description": "White chalk cliffs drop 128 meters to the Baltic, a startling contrast against Denmark's usual flat coastline. A steep staircase (about 500 steps) gets you down to the beach to hunt for fossils and belemnites in the surf-washed shingle. Erosion is active here, so stay on marked paths near the edge.",
+    "lat": 54.9578,
+    "lng": 12.5378,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Møns Klint, Møn island, Denmark",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff",
+      "beach",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-duncansby-head",
+    "title": "Duncansby Head",
+    "description": "The real northeastern tip of mainland Britain, past the tourist-trap signpost at John o'Groats, with sea stacks called the Duncansby Stacks jutting out of the water below. A twenty-minute clifftop walk from the lighthouse car park gets the best angle on the stacks. Puffins nest on the cliffs from May to August.",
+    "lat": 58.6483,
+    "lng": -3.0292,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Duncansby Head, near John o'Groats, NC500, Scotland",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-buachaille-etive-m-r-viewpoint",
+    "title": "Buachaille Etive Mòr Viewpoint",
+    "description": "The pyramid-shaped face of Buachaille Etive Mòr guards the entrance to Glen Etive like a gatekeeper, and the classic shot is a two-minute walk from the A82 layby. This is the glen that stood in for several Highland backdrops on screen, but it doesn't need the résumé. Come at golden hour if you can manage it.",
+    "lat": 56.6394,
+    "lng": -4.9036,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Glen Coe, Highlands, Scotland",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-fairy-pools",
+    "title": "Fairy Pools",
+    "description": "A chain of clear turquoise pools and small waterfalls tumbles off the Black Cuillin, cold enough to make even a summer dip a genuine dare. The walk in is flat and well-trodden, about 45 minutes round trip to the main pools. Come early — the car park fills fast and overflow parking means a longer walk.",
+    "lat": 57.2078,
+    "lng": -6.2589,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Glen Brittle, Isle of Skye, Scotland",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-slea-head-drive",
+    "title": "Slea Head Drive",
+    "description": "The westernmost stretch of Ireland's Wild Atlantic Way, with the Blasket Islands sitting offshore like the last stepping stones before America. Beehive huts and famine-era stone cottages dot the roadside, older than they look. Drive it counter-clockwise to keep your car on the cliff side.",
+    "lat": 52.1281,
+    "lng": -10.4708,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Slea Head, Dingle Peninsula, Ireland",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-ladies-view",
+    "title": "Ladies View",
+    "description": "Queen Victoria's ladies-in-waiting supposedly stopped here and admired the view enough to give it the name, looking down over the Upper Lake and the MacGillycuddy's Reeks. It's a five-minute pullout, no walking required, but it earns its reputation as the best single view on the Ring of Kerry. Clouds move fast here — wait ten minutes if the light isn't right.",
+    "lat": 51.9536,
+    "lng": -9.4467,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Ring of Kerry, Killarney National Park, Ireland",
+    "minTier": 1,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-hoge-veluwe-dune-trail",
+    "title": "Hoge Veluwe Dune Trail",
+    "description": "Inland sand dunes and heather moorland in the middle of the Netherlands, connected by trails you're free to explore on the park's iconic white loaner bicycles. Red deer and wild boar move through the woods bordering the dunes. It's an odd, quietly wild landscape for a country famous for being flat and tamed.",
+    "lat": 52.0889,
+    "lng": 5.8306,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Hoge Veluwe National Park, Netherlands",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "dunes"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-zugspitze-eibsee-trailhead",
+    "title": "Zugspitze Eibsee Trailhead",
+    "description": "An emerald lake at the foot of Germany's highest mountain, with a flat forested loop trail around the shoreline and a cable car station if you want the summit without the climb. The Zugspitze massif straddles the German-Austrian border at the top. Swimming is allowed and popular in summer despite the glacial chill.",
+    "lat": 47.4703,
+    "lng": 10.9908,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Eibsee lake, base of Zugspitze, Bavaria, Germany",
+    "minTier": 1,
+    "terrainTags": [
+      "forest",
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-k-nigssee-boat-landing",
+    "title": "Königssee Boat Landing",
+    "description": "An electric boat glides silently across a fjord-like alpine lake so the captain can play a trumpet and let the echo bounce off the cliffs — genuinely worth the ticket. The shoreline trail near the dock is flat and open to walk without the boat. St. Bartholomä chapel, reachable only by boat or a long trail, sits at the halfway point.",
+    "lat": 47.5906,
+    "lng": 12.9789,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Königssee, Berchtesgaden National Park, Germany",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "cliff",
+      "fjord",
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-partnachklamm-gorge",
+    "title": "Partnachklamm Gorge",
+    "description": "A path blasted and bolted into the gorge wall follows the Partnach River through a 700-meter limestone slot, waterfalls firing off both sides. Ice climbers work the frozen sections in winter when parts of the gorge close. It's a twenty-minute walk from the Olympic ski stadium parking.",
+    "lat": 47.4894,
+    "lng": 11.0908,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Partnachklamm gorge, Garmisch-Partenkirchen, Germany",
+    "minTier": 1,
+    "terrainTags": [
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-furka-pass",
+    "title": "Furka Pass",
+    "description": "A Bond-film hairpin pass (the 1964 Goldfinger chase was filmed on these bends) that connects the Rhône Glacier to the Furka reservoir. The summit hotel has sat abandoned and photogenic above the road for decades. The glacier itself is visibly retreating year to year — the ice grotto moves higher up the slope each season.",
+    "lat": 46.5747,
+    "lng": 8.4106,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Furkapass, between Uri and Valais, Switzerland",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-grimsel-pass",
+    "title": "Grimsel Pass",
+    "description": "A stark, lunar high pass between granite walls and reservoir lakes, connecting the Bernese Oberland to the Valais. The Handeck Falls plunge just off the roadside partway up. It pairs naturally with Furka and Susten for a three-pass day if you've got the fuel and the daylight.",
+    "lat": 46.5722,
+    "lng": 8.3556,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Grimselpass, Bernese Alps, Switzerland",
+    "minTier": 1,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-susten-pass",
+    "title": "Susten Pass",
+    "description": "The least crowded of the three-pass Alpine circuit, with the Steingletscher glacier visible from a roadside overlook near the summit. The road was engineered in the 1940s as a public-works project and it shows in the elegant, generous curves. Stop at the Steingletscher hotel for the glacier view even if you don't hike further.",
+    "lat": 46.7306,
+    "lng": 8.4444,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Sustenpass, between Uri and Bern cantons, Switzerland",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-alpe-di-siusi-meadow-walk",
+    "title": "Alpe di Siusi Meadow Walk",
+    "description": "Europe's largest high-alpine meadow, a rolling green plateau below the jagged Sciliar/Schlern peaks, with flat gravel paths that need nothing more than good shoes. Cars are restricted in peak season — take the cable car from Ortisei or Siusi instead. Cows with bells graze right up to the trail edges.",
+    "lat": 46.55,
+    "lng": 11.6167,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Alpe di Siusi (Seiser Alm), Dolomites, Italy",
+    "minTier": 1,
+    "terrainTags": [
+      "alpine",
+      "plateau",
+      "gravel"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-mount-etna-rifugio-sapienza",
+    "title": "Mount Etna – Rifugio Sapienza",
+    "description": "Europe's most active volcano, with a black lava-rock base area you can walk freely and a cable car up toward the summit craters when conditions allow. The 2002 lava flow is still visible frozen mid-tumble near the refuge. Etna erupts often enough that access to the true summit shifts season to season — check current status before committing to more than the base.",
+    "lat": 37.7,
+    "lng": 15.0,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Rifugio Sapienza, south side of Mount Etna, Sicily, Italy",
+    "minTier": 1,
+    "terrainTags": [
+      "volcanic",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-vesuvius-crater-trail",
+    "title": "Vesuvius Crater Trail",
+    "description": "A switchbacking gravel path climbs the last stretch to the rim of the volcano that buried Pompeii in AD 79, with steam still occasionally visible from vents inside. The crater view opens onto the Bay of Naples on a clear day. It's steep enough to earn the view but graded enough for regular sneakers.",
+    "lat": 40.8214,
+    "lng": 14.4261,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Mount Vesuvius National Park, near Naples, Italy",
+    "minTier": 1,
+    "terrainTags": [
+      "volcanic",
+      "gravel"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-hallstatt-skywalk",
+    "title": "Hallstatt Skywalk",
+    "description": "A cantilevered platform juts out from the mountainside above Hallstatt, one of the most photographed lakeside villages in Europe, with the town and lake laid out directly below. The salt mine tour and prehistoric charnel house are both a short walk from the cable car station. Arrive early — tour buses discover this view by mid-morning.",
+    "lat": 47.5644,
+    "lng": 13.6483,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Hallstatt Skywalk, Salzkammergut, Austria",
+    "minTier": 1,
+    "terrainTags": [
+      "mountain",
+      "lake",
+      "saltflat",
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-o-cebreiro-camino-pass",
+    "title": "O Cebreiro Camino Pass",
+    "description": "A stone hamlet of thatched pallozas marks the point where the Camino Francés crosses from León into Galicia, at 1,300 meters with sweeping views back the way you came. Pilgrims have stopped here for centuries — the church holds a relic tied to a medieval eucharistic miracle. It's a genuine slice of the Camino even if you're only walking the last approach.",
+    "lat": 42.7086,
+    "lng": -7.0517,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "O Cebreiro, Camino de Santiago Francés route, Galicia, Spain",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-teide-national-park",
+    "title": "Teide National Park",
+    "description": "Spain's highest peak rises out of a lunar caldera of red and ochre rock, so alien-looking that Mars rover prototypes have been tested here. The visitor-center trails around the base need no permit; the summit crater itself requires a free permit booked in advance. Stargazing tours here rank among the best in Europe thanks to the altitude and clear skies.",
+    "lat": 28.2726,
+    "lng": -16.6423,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Teide National Park, Tenerife, Canary Islands, Spain",
+    "minTier": 1,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-serra-da-estrela-torre",
+    "title": "Serra da Estrela – Torre",
+    "description": "Mainland Portugal's highest point, a windswept plateau you can drive most of the way up, with a small summit obelisk and a market stall selling Serra cheese most weekends. Snow sticks here longer than anywhere else in the country, and it's one of the only places in Portugal with a ski slope. The granite boulder fields nearby are worth a short scramble off the road.",
+    "lat": 40.3311,
+    "lng": -7.61,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Torre, Serra da Estrela Natural Park, Portugal",
+    "minTier": 1,
+    "terrainTags": [
+      "plateau",
+      "snow"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-rota-vicentina-fishermen-s-trail",
+    "title": "Rota Vicentina Fishermen's Trail",
+    "description": "A clifftop path traces the wild Atlantic coast of the Alentejo, storks nesting on sea stacks just offshore in a habitat found almost nowhere else in Europe. The Zambujeira stretch is flat, sandy, and easy to sample in a couple of hours. Sunset over the ocean from these cliffs is the whole reason to time your walk for the evening.",
+    "lat": 37.5306,
+    "lng": -8.8,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Zambujeira do Mar, Rota Vicentina, Alentejo coast, Portugal",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "cliff",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-meteora-monastery-trail",
+    "title": "Meteora Monastery Trail",
+    "description": "Byzantine monasteries perched on top of sheer sandstone pillars, built by monks who once hauled supplies up by rope and net. Paved roads and stairs now connect most of the six active monasteries, making the whole complex walkable in a day. Shoulders and knees need to be covered to enter — wraps are sold at the gate if you forget.",
+    "lat": 39.7217,
+    "lng": 21.6306,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Meteora rock monasteries, near Kalabaka, Thessaly, Greece",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-plitvice-lakes-boardwalks",
+    "title": "Plitvice Lakes Boardwalks",
+    "description": "Sixteen terraced lakes cascade into each other over travertine barriers, connected by wooden boardwalks that put you right at water level. The color of the lakes shifts with mineral content and light, from turquoise to deep green. Go early or late in the day to dodge the tour-bus crowds that build fast at midday.",
+    "lat": 44.8654,
+    "lng": 15.582,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Plitvice Lakes National Park, Croatia",
+    "minTier": 1,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-morskie-oko-trailhead",
+    "title": "Morskie Oko Trailhead",
+    "description": "A wide paved trail — closed to private cars — leads roughly 9km to the largest and most famous lake in the Polish Tatras, ringed by granite peaks. Horse carts and bikes are options if you want to skip the walk in. The lake's name means \"Eye of the Sea,\" from an old legend that it connects underground to the Adriatic.",
+    "lat": 49.1994,
+    "lng": 20.08,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Morskie Oko lake, Tatra National Park, Poland",
+    "minTier": 1,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-curonian-spit-parnidis-dune",
+    "title": "Curonian Spit – Parnidis Dune",
+    "description": "A UNESCO-listed sand spit separates the Baltic Sea from the Curonian Lagoon, and Parnidis Dune is its highest point, a bare sand ridge you reach via boardwalk to protect the fragile ecosystem below. A sundial monument marks the summit. The view stretches across both bodies of water and into Russia's Kaliningrad exclave on a clear day.",
+    "lat": 55.5167,
+    "lng": 21.0167,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Parnidis Dune, Nida, Curonian Spit National Park, Lithuania",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "dunes"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-soomaa-bog-trail",
+    "title": "Soomaa Bog Trail",
+    "description": "Raised bogs and floodplain forest make up Estonia's \"land of bogs,\" with a boardwalk trail keeping you above the sphagnum moss and bog pools. Spring floods here are so dramatic locals call it the \"fifth season,\" and canoeing replaces walking for weeks at a time. Bring insect repellent — the standing water breeds mosquitoes with real enthusiasm.",
+    "lat": 58.4167,
+    "lng": 25.1167,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Soomaa National Park, Estonia",
+    "minTier": 1,
+    "terrainTags": [
+      "forest"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-gauja-national-park-sigulda",
+    "title": "Gauja National Park – Sigulda",
+    "description": "Sandstone cliffs and medieval castle ruins line the Gauja river valley, sometimes called the \"Switzerland of Latvia\" with a bit of local pride. Turaida Castle and its museum reserve sit on one side of the valley, Sigulda's own ruins on the other, connected by a cable car over the gorge. Bobsleigh and luge tracks built for the old Soviet team are still active nearby.",
+    "lat": 57.1536,
+    "lng": 24.8608,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Sigulda, Gauja National Park, Latvia",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "cliff",
+      "historic",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-blue-lagoon-lava-trail",
+    "title": "Blue Lagoon Lava Trail",
+    "description": "A stark black lava field surrounds Iceland's most famous geothermal spa, and a walking path through the rough pahoehoe rock gives you the landscape without the entry fee. The Reykjanes peninsula has been volcanically active in recent years, with new fissure eruptions opening periodically nearby. Check current eruption advisories before you go — this is one of Iceland's most geologically live corners.",
+    "lat": 63.8804,
+    "lng": -22.4495,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Reykjanes Peninsula lava field, near the Blue Lagoon, Iceland",
+    "minTier": 1,
+    "terrainTags": [
+      "volcanic",
+      "geothermal",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-stanage-edge",
+    "title": "Stanage Edge",
+    "description": "A four-mile gritstone escarpment above the Hope Valley, one of the most popular outdoor climbing crags in England, with a flat walking path along the top for anyone not roping up. Kinder Scout, site of the 1932 Mass Trespass that helped win Britain its right-to-roam laws, is visible across the valley. Sunset turns the gritstone a deep orange that climbers and walkers both linger for.",
+    "lat": 53.34,
+    "lng": -1.63,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Stanage Edge, Peak District National Park, England",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-kj-lur-route-north-gate",
+    "title": "Kjölur Route North Gate",
+    "description": "A geothermal rest stop in the middle of Iceland's central highlands, marking the point where the Kjölur route crosses between Langjökull and Hofsjökull glaciers. Steaming vents and small hot pools sit right next to the parking area — a soak is included in the visit. The road itself is graded gravel, manageable in most 4x4s in summer conditions.",
+    "lat": 64.8667,
+    "lng": -19.55,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Hveravellir, Kjölur highland route (F35), Iceland",
+    "minTier": 1,
+    "terrainTags": [
+      "geothermal",
+      "gravel"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-bucegi-plateau-babele",
+    "title": "Bucegi Plateau – Babele",
+    "description": "Wind-eroded sandstone formations called \"the old women\" sit on a high plateau reached easily by cable car from Bușteni, with the Sphinx rock formation a short walk further along. Legends about the site's supposed mystical properties draw a steady crowd of the curious. On clear days the plateau view stretches over most of the southern Carpathians.",
+    "lat": 45.4167,
+    "lng": 25.45,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Babele rock formations, Bucegi Natural Park, near Bran, Romania",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "plateau",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-aletsch-glacier-viewpoint",
+    "title": "Aletsch Glacier Viewpoint",
+    "description": "A short walk from the car-free village of Bettmeralp opens onto the Aletsch Glacier, the longest ice stream in the Alps at over 20 kilometers, a UNESCO World Heritage site. The glacier has retreated visibly even within the last decade, with markers showing where the ice used to reach. Cable cars replace cars entirely in the village, so the whole approach is on foot or by lift.",
+    "lat": 46.4056,
+    "lng": 8.0667,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Bettmeralp, above the Aletsch Glacier, Valais, Switzerland",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-rondane-national-park-gate",
+    "title": "Rondane National Park Gate",
+    "description": "Norway's oldest national park, a range of rounded, weathered mountains that inspired Henrik Ibsen's Peer Gynt and the trolls of Norwegian folklore. The visitor center at Mysusæter has flat, well-marked trails for an easy first taste before the park's higher routes get serious. Wild reindeer still roam these mountains, one of the last strongholds in Europe.",
+    "lat": 61.6333,
+    "lng": 9.7833,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Mysusæter entrance, Rondane National Park, Norway",
+    "minTier": 1,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-hardangervidda-dyranut",
+    "title": "Hardangervidda – Dyranut",
+    "description": "Europe's largest mountain plateau opens up around this roadside stop, a bare expanse of tundra, lakes, and reindeer moss above the treeline. Rv7 crosses the plateau itself, making the high country accessible without leaving the car if the weather turns. Reindeer herds move across this ground on ancient migration routes still tracked by researchers.",
+    "lat": 60.4667,
+    "lng": 7.6167,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Dyranut, Hardangervidda National Park, Norway",
+    "minTier": 1,
+    "terrainTags": [
+      "plateau",
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-landmannalaugar-hot-river-trail",
+    "title": "Landmannalaugar Hot River Trail",
+    "description": "Rhyolite mountains streaked red, green, and gold surround a natural hot river where you can soak after the drive in on the rough F-road. It's the start point of the multi-day Laugavegur trek to Þórsmörk, but a day visit gets you the mountains and the hot spring both. River crossings on the approach road demand a real 4x4 and some judgment.",
+    "lat": 63.9928,
+    "lng": -19.0578,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Landmannalaugar, Fjallabak Nature Reserve, Iceland",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "geothermal",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-rsm-rk-h-sadalur-valley",
+    "title": "Þórsmörk – Húsadalur Valley",
+    "description": "A green valley wedged between three glaciers — Eyjafjallajökull, Mýrdalsjökull, and Tindfjallajökull — reachable only by fording the glacial Krossá river on the F249. Most visitors leave their own car and take the highland bus rather than risk the crossings solo. Short trails fan out from Húsadalur into birch forest that feels startlingly lush for Iceland's interior.",
+    "lat": 63.6814,
+    "lng": -19.5122,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Þórsmörk Nature Reserve, South Iceland",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-kallur-lighthouse-trail",
+    "title": "Kallur Lighthouse Trail",
+    "description": "A narrow ridge trail climbs to a lighthouse at the northern tip of Kalsoy, the sea dropping away on both sides in a view that's become the most-photographed shot in the Faroes. Wind on the ridge can be severe with no warning, so check forecasts before committing. The island itself is reached by a short car ferry, and the drive up includes a one-lane tunnel through the mountain.",
+    "lat": 62.3283,
+    "lng": -6.7017,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Kallur Lighthouse, Kalsoy island, Faroe Islands",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-trollstigen-viewpoint",
+    "title": "Trollstigen Viewpoint",
+    "description": "Eleven hairpin bends climb the Trollstigen wall past the Stigfossen waterfall, with a cantilevered visitor platform at the top staring straight down the switchbacks you just drove. The road is genuinely narrow — buses and camper vans squeeze past each other by inches on the bends. Trolltindene peaks loom overhead, giving the pass its name.",
+    "lat": 62.4569,
+    "lng": 7.6822,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Trollstigen mountain road, Romsdalen, Norway",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-sognefjellet-road-summit",
+    "title": "Sognefjellet Road Summit",
+    "description": "The highest mountain road in northern Europe, cresting at nearly 1,440 meters between glaciated peaks with snowbanks lining the tarmac well into summer. It connects the Jotunheimen and Breheimen ranges, both national parks visible from the road. Pull-outs give access to short glacier-viewing walks without any technical gear.",
+    "lat": 61.5333,
+    "lng": 8.0,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Sognefjellsvegen, between Lom and Skjolden, Norway",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "snow"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-urho-kekkonen-national-park-gate",
+    "title": "Urho Kekkonen National Park Gate",
+    "description": "Finland's second-largest national park, a roadless wilderness of fells and river valleys stretching to the Russian border, with the Saariselkä entrance as the main jumping-off point. Wilderness huts along the trail network are open to anyone on a first-come basis. Reindeer herding still happens across much of the park under traditional Sámi rights.",
+    "lat": 68.4167,
+    "lng": 27.4167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Saariselkä entrance, Urho Kekkonen National Park, Finland",
+    "minTier": 2,
+    "terrainTags": [
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-old-man-of-storr-trail",
+    "title": "Old Man of Storr Trail",
+    "description": "A jagged basalt pinnacle stands sentinel over a landslip landscape below the Trotternish Ridge, the whole formation the result of an ancient collapse of the volcanic plateau above. The trail up is short but steep and can be genuinely miserable in Skye's frequent horizontal rain. Once you're up among the pinnacles the view down to Raasay and the mainland opens wide.",
+    "lat": 57.5122,
+    "lng": -6.1817,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Trotternish Ridge, Isle of Skye, Scotland",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "plateau",
+      "saltflat"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-quiraing-trail",
+    "title": "Quiraing Trail",
+    "description": "Still actively sliding today, the Quiraing is a landscape of table-top plateaus, hidden green shelves, and jagged towers formed by the largest active landslip in Britain. The full loop trail is exposed and can be slick in wet weather, which on Skye means most days. The Prison and the Needle rock formations along the way are the trail's two signature landmarks.",
+    "lat": 57.6394,
+    "lng": -6.2661,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Trotternish Ridge, Isle of Skye, Scotland",
+    "minTier": 2,
+    "terrainTags": [
+      "plateau",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-lairig-ghru-trailhead",
+    "title": "Lairig Ghru Trailhead",
+    "description": "A glacier-carved pass cuts straight through the heart of the Cairngorm massif, one of Scotland's great wilderness walking routes between Aviemore and Braemar. You don't need to complete the full traverse to get the payoff — a few hours in gets you deep into genuinely remote high country. Snow can linger in the pass into early summer, and weather here changes with no warning.",
+    "lat": 57.0742,
+    "lng": -3.6667,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Cairngorms National Park, near Aviemore, Scotland",
+    "minTier": 2,
+    "terrainTags": [
+      "snow",
+      "remote"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-snowdon-pyg-track",
+    "title": "Snowdon – Pyg Track",
+    "description": "The Pyg Track is the fastest, most direct line up Wales's highest peak, threading between Crib Goch's ridge and the Snowdon horseshoe with sweeping views the whole way. Pen-y-Pass parking fills before 8am on any decent-weather weekend — arrive early or take the Sherpa bus. A summit café at the top serves tea year-round if the weather cooperates.",
+    "lat": 53.0885,
+    "lng": -4.0761,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Pyg Track, Snowdon (Yr Wyddfa), Eryri National Park, Wales",
+    "minTier": 2,
+    "terrainTags": [
+      "snow"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-conor-pass",
+    "title": "Conor Pass",
+    "description": "Ireland's highest mountain pass squeezes a road barely wide enough for one car between corrie lakes and sheer rock walls. The summit car park looks straight down over Dingle town and the harbor on a clear day, and straight into cloud on most others. Cyclists tackle it as one of Ireland's classic climbs, sharing the narrow tarmac with tour buses that shouldn't really be there.",
+    "lat": 52.1258,
+    "lng": -9.8006,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Conor Pass, Dingle Peninsula, Ireland",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "lake",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-slieve-league-cliffs",
+    "title": "Slieve League Cliffs",
+    "description": "Sea cliffs nearly three times the height of the Cliffs of Moher, rising almost 600 meters straight out of the Atlantic, with a fraction of the crowds. The path along One Man's Pass narrows to a genuine knife-edge with drops on both sides — not for anyone with real vertigo. Donegal's weather turns fast, so a clear forecast is worth waiting for.",
+    "lat": 54.6467,
+    "lng": -8.6975,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Slieve League, County Donegal, Ireland",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-kinder-scout-trailhead",
+    "title": "Kinder Scout Trailhead",
+    "description": "The site of the 1932 Mass Trespass, a mass act of civil disobedience that helped establish Britain's right-to-roam access laws, and still the classic first stage of the Pennine Way. The plateau on top is boggy peat moorland that swallows boots in wet weather, which is most of the year. Kinder Downfall, a waterfall that sometimes blows upward in strong wind, is the signature landmark on the loop.",
+    "lat": 53.3667,
+    "lng": -1.85,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Edale, Kinder Scout, Peak District National Park, England",
+    "minTier": 2,
+    "terrainTags": [
+      "plateau"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-klausen-pass",
+    "title": "Klausen Pass",
+    "description": "A historic vintage-car rally route with tight hairpins and alpine meadow scenery, quieter than the big-name passes nearby despite being just as scenic. The road connects two very different valleys, with limestone peaks on the Glarus side giving way to greener pasture toward Uri. Cows with heavy bells graze right up to the road edge in summer.",
+    "lat": 46.8797,
+    "lng": 8.8994,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Klausenpass, between Uri and Glarus cantons, Switzerland",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "historic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-jungfraujoch-kleine-scheidegg",
+    "title": "Jungfraujoch – Kleine Scheidegg",
+    "description": "The saddle at Kleine Scheidegg sits directly below the Eiger's infamous North Face, a wall that's claimed more climbers' lives than almost any in the Alps. You can hike up from Grindelwald or Wengen for free and only pay for the cogwheel train if you push on to the Jungfraujoch, the \"Top of Europe\" station. The Eiger Trail below the face traces the base of the wall for anyone who wants proximity without the climb.",
+    "lat": 46.585,
+    "lng": 7.9636,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Kleine Scheidegg, below the Eiger North Face, Switzerland",
+    "minTier": 2,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-col-du-galibier",
+    "title": "Col du Galibier",
+    "description": "One of the Tour de France's most storied climbs, cresting at over 2,600 meters with 360-degree views of the surrounding Alps. A short walk from the summit car park up to the small monument marker rewards you with the full panorama. Snow poles line the road for a reason — this pass can stay closed well into June in a heavy year.",
+    "lat": 45.0642,
+    "lng": 6.4078,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Col du Galibier, French Alps, between Savoie and Hautes-Alpes",
+    "minTier": 2,
+    "terrainTags": [
+      "snow"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-col-de-l-iseran",
+    "title": "Col de l'Iseran",
+    "description": "The highest paved pass in the Alps, at 2,764 meters, cutting through the edge of Vanoise National Park with ibex and marmots visible from the roadside. It's a Tour de France legend and a serious cycling pilgrimage even for people who'd never race it. The chapel at the summit was built for shepherds who used to cross this ground on foot with their herds.",
+    "lat": 45.4167,
+    "lng": 7.0333,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Col de l'Iseran, French Alps, Vanoise National Park",
+    "minTier": 2,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-cirque-de-gavarnie-trailhead",
+    "title": "Cirque de Gavarnie Trailhead",
+    "description": "A natural amphitheater of limestone cliffs ringed by waterfalls, including the Grande Cascade, one of the highest in Europe, at the head of a valley used by pilgrims and shepherds for centuries. The walk in from the village is flat and well-graded, about two hours round trip. Victor Hugo called it \"Nature's Colosseum,\" and it's hard to argue once you're standing in it.",
+    "lat": 42.7333,
+    "lng": -0.0083,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Gavarnie village, Pyrénées National Park, France",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-pic-du-midi-col-d-aspin",
+    "title": "Pic du Midi – Col d'Aspin",
+    "description": "A gentler, pastoral Pyrenean pass with cows grazing right up to the roadside and views toward the jagged Pic du Midi observatory in the distance. It's a regular Tour de France stage climb, less punishing than its neighbors but no less scenic. The summit has a small stone marker and picnic tables if you want to linger.",
+    "lat": 42.9497,
+    "lng": 0.3325,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Col d'Aspin, Pyrénées, near Arreau, France",
+    "minTier": 2,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-passo-sella",
+    "title": "Passo Sella",
+    "description": "A pass ringed by four distinct mountain groups — Sella, Sassolungo, Marmolada, and Puez-Odle — visible in a single 360-degree turn from the summit. It's part of the classic Sella Ronda circuit that draws cyclists and drivers from across Europe. Cable cars from the pass reach even higher viewpoints if you want more altitude without more pedaling.",
+    "lat": 46.5219,
+    "lng": 11.755,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Passo Sella, Dolomites, between Val Gardena and Val di Fassa, Italy",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-passo-giau",
+    "title": "Passo Giau",
+    "description": "Around 29 hairpins climb toward Monte Cristallo and the Nuvolau group, one of the most photographed Dolomite passes for good reason. A small rifugio at the summit serves espresso and canederli to riders and drivers alike. The Nuvolau rifugio, visible on a peak above the pass, is reachable by a short additional hike for an even higher view.",
+    "lat": 46.4842,
+    "lng": 12.0492,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Passo Giau, Dolomites, near Cortina d'Ampezzo, Italy",
+    "minTier": 2,
+    "terrainTags": [
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-gran-sasso-campo-imperatore",
+    "title": "Gran Sasso – Campo Imperatore",
+    "description": "A high plateau nicknamed \"Little Tibet\" for its stark, treeless expanse below the Corno Grande, the highest peak in the Apennines. Mussolini was briefly imprisoned at a hotel here in 1943 before a daring glider rescue by German commandos. Wild horses and Abruzzo shepherd dogs still work the grazing land that stretches across the plateau.",
+    "lat": 42.45,
+    "lng": 13.55,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Campo Imperatore, Gran Sasso e Monti della Laga National Park, Italy",
+    "minTier": 2,
+    "terrainTags": [
+      "plateau"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-cinque-terre-sentiero-azzurro",
+    "title": "Cinque Terre – Sentiero Azzurro",
+    "description": "The Blue Trail links five cliffside villages along Liguria's coast, vineyards terraced into slopes so steep they need cable-car style monorails just to move the grapes. Sections wash out in storms and stay closed for repair, so check current trail status before setting out. The full traverse between all five villages takes most of a day at an unhurried pace.",
+    "lat": 44.0994,
+    "lng": 9.7378,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Riomaggiore to Manarola, Cinque Terre National Park, Italy",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff",
+      "coast"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-amalfi-coast-path-of-the-gods",
+    "title": "Amalfi Coast – Path of the Gods",
+    "description": "A cliffside path traces the upper Amalfi Coast far above the crowded coastal road, lemon groves clinging to terraces below and Capri visible offshore on a clear day. The trail earns its name honestly — this is the view that convinced people gods must have walked here first. Buses to the Bomerano trailhead beat trying to park anywhere near the coast in summer.",
+    "lat": 40.6217,
+    "lng": 14.5306,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Bomerano to Nocelle, Amalfi Coast, Italy",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff",
+      "coast"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-picos-de-europa-fuente-d",
+    "title": "Picos de Europa – Fuente Dé",
+    "description": "A cable car climbs nearly 800 meters in under four minutes from the valley floor to a high plateau ringed by limestone peaks, one of the steepest single-span lifts in Europe. From the top station, trails fan out toward the Aliva refuge and deeper into the Picos massif. Chamois and vultures are common sights on the cliffs surrounding the upper station.",
+    "lat": 43.1478,
+    "lng": -4.8153,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Fuente Dé cable car base, Picos de Europa National Park, Spain",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff",
+      "plateau"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-ordesa-national-park-entrance",
+    "title": "Ordesa National Park Entrance",
+    "description": "A glacial canyon often compared to a Pyrenean Grand Canyon, with the Arazas River cutting through limestone walls below Monte Perdido. In high season a mandatory shuttle bus replaces private cars at the entrance to manage traffic. The Cola de Caballo waterfall at the canyon's head is the classic day-hike destination from the valley floor.",
+    "lat": 42.6389,
+    "lng": -0.045,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Ordesa y Monte Perdido National Park, Aragón Pyrenees, Spain",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-aig-estortes-national-park-entrance",
+    "title": "Aigüestortes National Park Entrance",
+    "description": "Catalonia's only national park, a glacial landscape of over 200 lakes scattered among granite peaks, with private vehicles restricted beyond the entrance in favor of licensed 4x4 taxis. The name means \"twisted waters,\" for the meandering streams that lace through the high meadows. Izard (Pyrenean chamois) and golden eagles are regular sightings for anyone patient enough to sit still.",
+    "lat": 42.5833,
+    "lng": 0.95,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Espot entrance, Aigüestortes i Estany de Sant Maurici National Park, Catalonia, ",
+    "minTier": 2,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-triglav-national-park-vr-i-pass",
+    "title": "Triglav National Park – Vršič Pass",
+    "description": "Slovenia's highest mountain pass, with 50 numbered hairpins built partly by Russian POWs during World War I, a small Russian Chapel near the summit memorializing those who died in an avalanche during construction. The pass connects the Soča Valley to the rest of Slovenia through the heart of the Julian Alps. Triglav peak itself is visible from several pullouts on the descent toward Kranjska Gora.",
+    "lat": 46.4331,
+    "lng": 13.7378,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Vršič Pass, Triglav National Park, Julian Alps, Slovenia",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-durmitor-national-park-black-lake",
+    "title": "Durmitor National Park – Black Lake",
+    "description": "A glacial lake beneath Durmitor's limestone peaks, ringed by an easy walking trail through pine forest with the mountains reflected on still mornings. The park sits above the Tara River Canyon, the deepest gorge in Europe, cut by a river still rafted commercially downstream. Wolves and brown bears still roam this range, rarely seen but part of why Durmitor feels genuinely wild.",
+    "lat": 43.15,
+    "lng": 19.05,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Crno Jezero (Black Lake), Durmitor National Park, Montenegro",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "canyon",
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-kotor-bay-serpentine-viewpoint",
+    "title": "Kotor Bay Serpentine Viewpoint",
+    "description": "Twenty-five hairpins climb almost straight up from Kotor's old town, and each switchback reveals a slightly wider view of the fjord-like bay below. The road eventually leads to Lovćen National Park and the mausoleum of Montenegro's poet-prince Njegoš. No guardrails on many bends make this one for confident drivers, not sightseeing on the fly.",
+    "lat": 42.4931,
+    "lng": 18.79,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Kotor–Lovćen serpentine road, Bay of Kotor, Montenegro",
+    "minTier": 2,
+    "terrainTags": [
+      "fjord",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-tara-canyon-viewpoint",
+    "title": "Tara Canyon Viewpoint",
+    "description": "A 1940s arch bridge spans Europe's deepest canyon, the Tara River cutting nearly 1,300 meters below the surrounding peaks at its most dramatic point. A small viewing platform under the bridge lets you look straight down the gorge. The bridge itself was partially demolished during World War II by its own engineer to block Axis advance, then rebuilt after the war.",
+    "lat": 43.1594,
+    "lng": 19.2967,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Đurđevića Tara Bridge, Tara River Canyon, Montenegro",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-rila-seven-rila-lakes-trailhead",
+    "title": "Rila – Seven Rila Lakes Trailhead",
+    "description": "Seven glacial lakes stair-step down a granite cirque in Bulgaria's highest mountain range, each with its own folk name — Tears, Kidney, Twin, the Eye. A chairlift from Panichishte cuts most of the elevation gain, leaving a rolling ridge walk between lakes. Rila Monastery, one of Bulgaria's most significant religious sites, sits in the foothills below.",
+    "lat": 42.2167,
+    "lng": 23.3,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Seven Rila Lakes, Rila National Park, Bulgaria",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-bicaz-gorge",
+    "title": "Bicaz Gorge",
+    "description": "A limestone gorge road squeezes between sheer walls that nearly close overhead in places, following the Bicaz River toward Lake Roșu, a lake famously formed by a landslide that drowned a forest. Dead tree trunks still poke up through the lake's surface decades later. The road is narrow and prone to rockfall, so this is a drive to take slow and alert.",
+    "lat": 46.7833,
+    "lng": 25.85,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Cheile Bicazului, Eastern Carpathians, Romania",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "lake",
+      "rock",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-kj-lur-fjallabak-eldgj-trail",
+    "title": "Kjölur–Fjallabak Eldgjá Trail",
+    "description": "One of the largest volcanic canyons on Earth, a 40-kilometer fissure with a hidden waterfall, Ófærufoss, tucked partway along its length. The approach roads are unbridged F-roads with real river crossings, so a proper highland-rated 4x4 is non-negotiable. The canyon rim trail is otherwise an easy walk once you've actually arrived.",
+    "lat": 63.9667,
+    "lng": -18.7167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Eldgjá canyon, Fjallabak Nature Reserve, Iceland",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon",
+      "volcanic",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-goatfell-trail-isle-of-arran",
+    "title": "Goatfell Trail, Isle of Arran",
+    "description": "The highest peak on Arran, a granite summit reachable by a well-built path from Brodick Castle, with views across the Firth of Clyde to the mainland and, on a clear day, Northern Ireland. Arran's compact size means the climb feels bigger than its modest 874 meters. Red deer are common on the lower slopes near the castle grounds.",
+    "lat": 55.6333,
+    "lng": -5.1833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Goatfell, Isle of Arran, Scotland",
+    "minTier": 2,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-north-cape-knivskjellodden-trail",
+    "title": "North Cape – Knivskjellodden Trail",
+    "description": "The true northernmost point of mainland Europe, further north than the more famous Nordkapp plateau across the bay, reached by an 18-kilometer round-trip trail across open tundra. Almost nobody makes this walk compared to the busloads at Nordkapp itself, which is exactly the appeal. There's no facility here, just a small cairn and the Barents Sea in every direction.",
+    "lat": 71.0833,
+    "lng": 25.6667,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Knivskjellodden, near Nordkapp, Norway",
+    "minTier": 2,
+    "terrainTags": [
+      "plateau"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-corsica-gr20-vizzavona-section",
+    "title": "Corsica – GR20, Vizzavona Section",
+    "description": "The Vizzavona stretch is the most accessible bite of Europe's toughest long-distance trail, reachable directly by train and offering waterfalls and pools along the Gravona river without committing to the GR20's brutal northern ridge sections. It's still real Corsican mountain terrain — rocky, exposed in places, and unforgiving of bad weather calls. The full GR20 has a reputation as one of the hardest hikes in Europe; this section is the sampler.",
+    "lat": 42.1361,
+    "lng": 9.1408,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Vizzavona, GR20 trail, Corsica, France",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "rock",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-sardinia-selvaggio-blu-approach",
+    "title": "Sardinia – Selvaggio Blu Approach",
+    "description": "Sardinia's wildest coastal trail traces limestone cliffs above the Tyrrhenian Sea, with the full multi-day route requiring rope work in places, but the approach sections from Baunei give a real taste without the technical commitment. Ancient shepherd trails and Nuragic ruins dot the route, evidence of a coastline that's been used and avoided in equal measure for millennia. Water is scarce along the whole route — carry more than you think you need.",
+    "lat": 40.2333,
+    "lng": 9.6667,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Selvaggio Blu trail approach, Golfo di Orosei, Sardinia, Italy",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff",
+      "coast",
+      "historic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-bealach-na-b",
+    "title": "Bealach na Bà",
+    "description": "The steepest sustained road climb in Britain, hairpinning up from sea level to over 600 meters with gradients hitting 20% and passing places the only thing standing between you and an oncoming camper van. Signs at the base warn off learner drivers and long vehicles, and they mean it. The summit view over to Skye and the Cuillin makes every white-knuckle bend worth it.",
+    "lat": 57.4192,
+    "lng": -5.6706,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Bealach na Bà, Applecross Peninsula, Scotland",
+    "minTier": 3,
+    "terrainTags": [
+      "river"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-ben-nevis-via-glen-nevis",
+    "title": "Ben Nevis via Glen Nevis",
+    "description": "Britain's highest peak, climbed via the well-worn Mountain Track (still often called the \"Pony Track\") that gains over 1,300 meters from the glen floor. Weather at the summit plateau can be genuinely arctic even in July — snow and whiteout conditions have caught underprepared walkers badly. The old observatory ruins at the top are a reminder this summit has never been a casual stroll.",
+    "lat": 56.8172,
+    "lng": -5.0028,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Glen Nevis trailhead, Ben Nevis, Scotland",
+    "minTier": 3,
+    "terrainTags": [
+      "arctic",
+      "plateau",
+      "mountain",
+      "historic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-crib-goch-ridge",
+    "title": "Crib Goch Ridge",
+    "description": "A genuine scrambling ridge with drops on both sides, the classic and most exposed line onto Snowdon's summit and not a route for anyone uneasy with heights or hands-on-rock terrain. Wet or windy conditions turn this from an adventurous scramble into a real hazard, and rescues here aren't rare. The reward is one of the finest ridge walks in Britain, with the whole Snowdon Horseshoe laid out below.",
+    "lat": 53.0836,
+    "lng": -4.0472,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Crib Goch, Snowdon Horseshoe, Eryri National Park, Wales",
+    "minTier": 3,
+    "terrainTags": [
+      "rock",
+      "snow"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-hardknott-pass",
+    "title": "Hardknott Pass",
+    "description": "England's steepest road, with sections reportedly hitting a 33% gradient, hairpinning past the ruins of a Roman fort that once guarded this same pass two thousand years ago. Manual transmissions and confident clutch control are basically mandatory — automatics have been known to struggle on the steepest pitches. It's a short pass in distance but a genuine test in execution.",
+    "lat": 54.4022,
+    "lng": -3.2136,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Hardknott Pass, Lake District National Park, England",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "lake",
+      "historic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-col-de-la-bonette",
+    "title": "Col de la Bonette",
+    "description": "A loop road around the Cime de la Bonette pushes the route above 2,800 meters, long marketed as the highest paved road in Europe (a claim the neighboring Col de l'Iseran contests, depending how you measure). The barren, moon-like summit loop feels utterly removed from the green valleys below. Thin air and long exposed stretches make this a serious undertaking on a bike, less so but still demanding by car.",
+    "lat": 44.3236,
+    "lng": 6.8072,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Col de la Bonette, Alpes-Maritimes, France",
+    "minTier": 3,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-col-du-tourmalet",
+    "title": "Col du Tourmalet",
+    "description": "The most-visited climb in Tour de France history, a brutal grind averaging over 7% for more than 17 kilometers from Luz-Saint-Sauveur, with a giant sculpture of a cyclist marking the summit. Weather on the pass can shift from sunshine to sleet within an hour even in midsummer. The view down into the Cirque de Gavarnie from near the top is one of the best payoffs in the entire range.",
+    "lat": 42.9106,
+    "lng": 0.1444,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Col du Tourmalet, Hautes-Pyrénées, France",
+    "minTier": 3,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-gorges-du-verdon-sentier-blanc-martel",
+    "title": "Gorges du Verdon – Sentier Blanc-Martel",
+    "description": "Europe's deepest canyon carved by turquoise water, and this trail runs the full length of the gorge floor through a series of unlit tunnels blasted for a 1920s hydro survey. A headlamp is non-negotiable — some tunnels run over a hundred meters in total darkness. It's roughly 15 kilometers one-way with serious elevation change at both ends, best planned as a full-day, well-supplied trek.",
+    "lat": 43.7708,
+    "lng": 6.3878,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Sentier Blanc-Martel, Gorges du Verdon, Provence, France",
+    "minTier": 3,
+    "terrainTags": [
+      "canyon"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-passo-gavia",
+    "title": "Passo Gavia",
+    "description": "A narrow, partly unguarded road climbs past Lago Nero to one of the most feared Giro d'Italia summits, infamous for the 1988 stage that finished in a snowstorm and nearly ended in tragedy. Sections are single-lane with no barrier between the tarmac and a long drop. The stark, glacier-scarred landscape near the top looks almost lunar against the green valley below.",
+    "lat": 46.3403,
+    "lng": 10.4931,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Passo Gavia, Lombardy Alps, Italy",
+    "minTier": 3,
+    "terrainTags": [
+      "snow"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-tre-cime-di-lavaredo-loop",
+    "title": "Tre Cime di Lavaredo Loop",
+    "description": "Three sheer limestone towers rise straight out of alpine meadow, among the most recognizable peaks in the Dolomites and a full day's circuit trail around their base. World War I trenches and via ferrata remnants are still visible along parts of the route, a reminder this was a mountain front line. The toll road up to Rifugio Auronzo shortens the approach but the loop itself is a real day's effort with weather exposure throughout.",
+    "lat": 46.6178,
+    "lng": 12.3006,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Tre Cime di Lavaredo, Sesto Dolomites, Italy",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "mountain"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-timmelsjoch-high-alpine-road",
+    "title": "Timmelsjoch High Alpine Road",
+    "description": "A toll road crosses the Austria-Italy border at over 2,500 meters, with a modern museum built directly into the pass structure telling the history of a route used by smugglers and traders since Roman times. Long tunnel sections and tight hairpins make this a genuine driving test, not a scenic cruise. The border itself sits almost exactly at the high point, marked by a stark concrete monument.",
+    "lat": 46.9167,
+    "lng": 11.1,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Timmelsjoch, Ötztal Alps, Austria–Italy border",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-naranjo-de-bulnes-trail",
+    "title": "Naranjo de Bulnes Trail",
+    "description": "A limestone spire considered the birthplace of Spanish rock climbing, reachable via a demanding approach trail from Sotres or Poncebos that gains serious elevation over rough terrain. Most people overnight at the Vega de Urriellu refuge to split the effort across two days. The tower itself has been climbed since 1904 and still draws serious alpinists for its sheer vertical faces.",
+    "lat": 43.19,
+    "lng": -4.8478,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Naranjo de Bulnes (Picu Urriellu), Picos de Europa, Spain",
+    "minTier": 3,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-caminito-del-rey",
+    "title": "Caminito del Rey",
+    "description": "A boardwalk bolted to a sheer gorge wall over 100 meters above the Guadalhorce River, rebuilt in 2015 after decades of dangerous disrepair earned it the nickname \"world's most dangerous walkway.\" It's fully secured now with railings and mandatory helmets, but the exposure is still real and the drop is still there. Booking ahead is essential — daily visitor numbers are capped.",
+    "lat": 36.935,
+    "lng": -4.7639,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Caminito del Rey, El Chorro Gorge, Málaga province, Spain",
+    "minTier": 3,
+    "terrainTags": [
+      "river"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-sierra-nevada-veleta-road",
+    "title": "Sierra Nevada – Veleta Road",
+    "description": "Once billed as the highest paved road in Europe, the upper stretch toward Veleta's 3,398-meter summit is now closed to private cars to protect the fragile alpine ecosystem, leaving the final kilometers to hikers and mountain bikers. The road still climbs to a genuinely high altitude before the closure point, with thin air and strong UV to account for. Views stretch to the Mediterranean and, on the clearest days, across the strait toward Africa.",
+    "lat": 37.0553,
+    "lng": -3.3736,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Pico Veleta approach road, Sierra Nevada National Park, Spain",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "mountain"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-sutjeska-national-park-magli-summit-trai",
+    "title": "Sutjeska National Park – Maglić Summit Trail",
+    "description": "Bosnia's highest peak sits right on the Montenegro border above the Perućica old-growth forest, one of the last primeval forests left in Europe. The trail is remote and unmarked in sections, with no facilities and long stretches between any sign of other people. Perućica itself, at the mountain's base, has trees over a hundred meters old that have never been logged.",
+    "lat": 43.2333,
+    "lng": 18.7167,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Maglić, Sutjeska National Park, Bosnia and Herzegovina",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "mountain",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-theth-valbona-pass-trail",
+    "title": "Theth–Valbona Pass Trail",
+    "description": "A full-day crossing over the Valbona Pass through the aptly-named Accursed Mountains, connecting two remote valleys that were only linked by proper trail infrastructure in the last couple of decades. Guesthouses in both villages are run by families who've fed hikers making this crossing for generations. No cell signal and genuinely remote terrain mean this isn't a route to start without checking weather and daylight carefully.",
+    "lat": 42.3833,
+    "lng": 19.7667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Theth to Valbona trail, Accursed Mountains (Prokletije), Albania",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-prokletije-national-park-maja-jezerc-app",
+    "title": "Prokletije National Park – Maja Jezercë Approach",
+    "description": "The highest peak in the Albanian Alps, its approach trail winding through some of the least-visited high country in Europe, unmarked and unmaintained in stretches that see only a handful of hikers a season. A local guide isn't legally required but is strongly advised — navigation errors here have real consequences given how remote the terrain is. The Accursed Mountains earned their name from exactly this kind of unforgiving, beautiful terrain.",
+    "lat": 42.4667,
+    "lng": 19.8,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Maja Jezercë approach, Valbona Valley, Prokletije National Park, Albania",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-kebnekaise-trailhead",
+    "title": "Kebnekaise Trailhead",
+    "description": "The approach to Sweden's highest peak starts at a small settlement reachable by road, but the summit routes cross glacier terrain that's claimed the mountain's own southern peak entirely — it melted enough to lose its title as the higher of Kebnekaise's twin summits. Independent trekkers commonly stop at the mountain station and do day routes; the summit push itself typically needs a guide for the glacier sections. Reindeer herding trails cross this route, a living reminder of Sámi use of this land.",
+    "lat": 67.8567,
+    "lng": 18.8267,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Nikkaluokta, base of Kebnekaise, Swedish Lapland",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-besseggen-ridge-trail",
+    "title": "Besseggen Ridge Trail",
+    "description": "One of Norway's most iconic day hikes, a narrow ridge with the milky-turquoise Gjende lake on one side and the darker Bessvatnet on the other, the color difference caused by glacial silt. Most hikers take the morning boat to Memurubu and walk back to Gjendesheim, turning it into a one-way ridge traverse rather than an out-and-back. Exposed scrambling sections and unpredictable mountain weather mean this is a serious undertaking, not a casual stroll despite the crowds it draws.",
+    "lat": 61.4842,
+    "lng": 8.8756,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Besseggen, Jotunheimen National Park, near Gjendesheim, Norway",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-lysebotn-road",
+    "title": "Lysebotn Road",
+    "description": "Twenty-seven hairpin bends and a spiraling tunnel drop the road down to fjord level at Lysebotn, at the base of the cliffs below both Preikestolen and Kjeragbolten. It's one of the most engineered stretches of road in Norway, built partly to serve a hydroelectric plant before tourism took over as its main traffic. The descent alone, done properly, takes real concentration on the tighter bends.",
+    "lat": 59.0167,
+    "lng": 6.75,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Lysebotn, Lysefjord, Norway",
+    "minTier": 3,
+    "terrainTags": [
+      "cliff",
+      "fjord"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-plat-berget-trail",
+    "title": "Platåberget Trail",
+    "description": "A ridge trail climbs directly above Longyearbyen, the world's northernmost permanent settlement, with views over the fjord and the surrounding polar desert. Polar bear risk is not theoretical here — travel beyond the marked safe zone around town legally requires an armed guide or your own firearm and the training to use it. Even within town limits, weather and permafrost terrain demand real respect.",
+    "lat": 78.2153,
+    "lng": 15.6039,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Platåberget, above Longyearbyen, Svalbard, Norway",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "fjord"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-skaftafell-krist-nartindar-trail",
+    "title": "Skaftafell – Kristínartindar Trail",
+    "description": "A demanding day hike climbs between two glacier arms to a summit view taking in Vatnajökull's ice cap on one side and the black-sand outwash plain on the other. The trail gains serious elevation with loose scree sections near the top. Weather in Skaftafell can shift fast even when the coast nearby stays clear, so a solid forecast check matters before committing to the full route.",
+    "lat": 64.0161,
+    "lng": -16.975,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Kristínartindar, Skaftafell, Vatnajökull National Park, Iceland",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "coast"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-fjallabak-f225-river-crossing",
+    "title": "Fjallabak F225 River Crossing",
+    "description": "An unbridged highland route through Iceland's interior where the road simply enters and exits glacial rivers, depth and current changing week to week with the melt. This isn't a route for rental sedans or inexperienced drivers — stalled vehicles get swept in these crossings most seasons. The payoff is genuine backcountry solitude in a landscape of rhyolite and black sand most visitors never see.",
+    "lat": 63.945,
+    "lng": -19.12,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Fjallabak Nature Reserve, F225 route, Iceland highlands",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "river"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-transalpina-summit",
+    "title": "Transalpina Summit",
+    "description": "Romania's other great high-altitude road, older and higher in places than the more famous Transfagarasan but far less crowded, cresting near 2,145 meters through the Parâng range. Long stretches run above the treeline with sheer drop-offs and minimal barriers. Built originally under Nazi-German direction during World War II, the road has a more complicated history than its scenic reputation usually gets credit for.",
+    "lat": 45.3667,
+    "lng": 23.6667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Transalpina (DN67C), Parâng Mountains, Romania",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "high-altitude"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-rysy-summit-trail",
+    "title": "Rysy Summit Trail",
+    "description": "The highest peak reachable from Poland tops out right on the Slovak border, with chain-assisted scrambling on the final approach and a genuinely long day from the Morskie Oko trailhead. Lenin reportedly climbed it in 1913 during a stay in the region, a historical footnote locals still mention. Afternoon thunderstorms build fast over the Tatras in summer — an early start is close to mandatory.",
+    "lat": 49.1794,
+    "lng": 20.0881,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Rysy, High Tatras, border of Poland and Slovakia",
+    "minTier": 3,
+    "terrainTags": [
+      "historic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-vatnaj-kull-ice-cave-approach",
+    "title": "Vatnajökull Ice Cave Approach",
+    "description": "Crystal-blue ice caves form seasonally beneath the glacier's edge and collapse or shift shape every year as the ice moves, meaning no map or old photo tells you what you'll actually find. Access without a certified glacier guide is genuinely dangerous — collapses and hidden crevasses have caused real injuries. The deep blue color comes from densely compressed, bubble-free ice hundreds of years old.",
+    "lat": 64.0455,
+    "lng": -16.4478,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Breiðamerkurjökull ice caves, near Jökulsárlón, Vatnajökull National Park, Icela",
+    "minTier": 3,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-stelvio-pass",
+    "title": "Stelvio Pass",
+    "description": "Forty-eight numbered hairpins on the Prato side alone, once famously voted \"the greatest driving road in the world\" by a British car show and never really dethroned since. It's also one of the highest paved passes in the Alps, sitting near the border of three regions with a WWI fort still visible partway up. Cyclists share the road with cars, motorcycles, and the occasional cow that's wandered through an open gate.",
+    "lat": 46.5283,
+    "lng": 10.4544,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Passo dello Stelvio, Stelvio National Park, Italy",
+    "minTier": 5,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-grossglockner-high-alpine-road",
+    "title": "Grossglockner High Alpine Road",
+    "description": "A toll road engineered in the 1930s climbs to over 2,500 meters below Austria's highest peak, with a spur to the Kaiser-Franz-Josefs-Höhe overlook staring straight across at the Pasterze Glacier — Austria's largest, and visibly shrinking year over year. Marmots, ibex, and golden eagles are common sightings from the roadside pullouts. It's one of the most complete high-alpine drives in Europe, part engineering marvel and part open-air wildlife park.",
+    "lat": 47.0742,
+    "lng": 12.8306,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Grossglockner Hochalpenstrasse, Hohe Tauern National Park, Austria",
+    "minTier": 5,
+    "terrainTags": [
+      "alpine",
+      "wildlife"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-transfagarasan-b-lea-lake",
+    "title": "Transfagarasan – Bâlea Lake",
+    "description": "Built under Ceaușescu partly as a military route in case of a Soviet invasion that never came, this road tunnels through granite and switchbacks up to Bâlea Lake at the roof of the Făgăraș range. It gained global fame after a well-known car show called it the best road in the world, and the traffic since has never really let up. A cable car keeps Bâlea Lake reachable even in winter when the pass itself closes to cars.",
+    "lat": 45.6042,
+    "lng": 24.6172,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Transfagarasan Highway, Făgăraș Mountains, Romania",
+    "minTier": 5,
+    "terrainTags": [
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-sprengisandur-route-n-idalur",
+    "title": "Sprengisandur Route – Nýidalur",
+    "description": "Iceland's longest and most storied highland crossing runs straight through the black desert interior between Hofsjökull and Vatnajökull, a route old sagas describe outlaws using to vanish from society entirely. Nýidalur hut sits roughly at the midpoint, the only real shelter for dozens of kilometers in any direction. This is a full-day, serious 4x4 undertaking with genuine consequences for mechanical failure or misjudged river depth.",
+    "lat": 64.7333,
+    "lng": -18.0667,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Nýidalur, Sprengisandur highland route (F26), Iceland",
+    "minTier": 5,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "river"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-nordkapp-plateau",
+    "title": "Nordkapp Plateau",
+    "description": "A 307-meter cliff plunging into the Barents Sea, marketed for over a century as the northernmost point of mainland Europe (a claim Knivskjellodden nearby technically beats, but Nordkapp got there first in the public imagination). Midnight sun here runs from mid-May to late July, with the opposite polar night taking over by winter. The globe monument at the cliff edge has become one of the most photographed markers in Scandinavia.",
+    "lat": 71.1693,
+    "lng": 25.785,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "North Cape (Nordkapp), Magerøya island, Norway",
+    "minTier": 5,
+    "terrainTags": [
+      "cliff",
+      "plateau"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-reinebringen-viewpoint-trail",
+    "title": "Reinebringen Viewpoint Trail",
+    "description": "A punishing staircase of over 1,900 stone steps, built by Nepalese Sherpa trail crews, climbs straight up to arguably the single most photographed view in Norway — the village of Reine laid out below among impossibly sharp peaks and turquoise water. The old trail was a scramble through scree before the staircase project tamed (slightly) the ascent. Give yourself a full clear-weather window; cloud swallows the summit view often in Lofoten.",
+    "lat": 67.935,
+    "lng": 13.0872,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Reinebringen, above Reine, Lofoten Islands, Norway",
+    "minTier": 5,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-preikestolen",
+    "title": "Preikestolen",
+    "description": "A flat-topped cliff plunging 604 meters straight down into Lysefjord, with no railing at the edge — just a natural rock platform and your own judgment about how close to stand. The hike in is roughly 8 kilometers round trip on a well-built trail, popular enough that summer mornings mean sharing the summit with a genuine crowd. It's become one of Norway's defining images, equal parts spectacular and slightly vertigo-inducing even for people who don't usually mind heights.",
+    "lat": 58.9866,
+    "lng": 6.19,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Preikestolen (Pulpit Rock), Lysefjord, Ryfylke, Norway",
+    "minTier": 5,
+    "terrainTags": [
+      "cliff",
+      "fjord",
+      "rock"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-matterhorn-gornergrat",
+    "title": "Matterhorn – Gornergrat",
+    "description": "A cogwheel railway built in 1898 climbs to a ridge with an unobstructed, jaw-dropping view of the Matterhorn's pyramid face, one of the most instantly recognizable mountains on Earth. Zermatt itself bans combustion-engine cars, running entirely on electric shuttles and the historic train. Hiking trails from the upper station wind further into glacier terrain for those who want more than the view from the platform.",
+    "lat": 45.9839,
+    "lng": 7.7864,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Gornergrat, above Zermatt, Valais, Switzerland",
+    "minTier": 5,
+    "terrainTags": [
+      "mountain",
+      "historic"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-mont-blanc-aiguille-du-midi",
+    "title": "Mont Blanc – Aiguille du Midi",
+    "description": "A cable car climbs nearly 2,800 vertical meters in under 20 minutes to a needle of rock at 3,842 meters, opening onto Mont Blanc's summit dome and a 360-degree wall of glaciated peaks. A glass \"Step into the Void\" platform lets you stand over a genuine abyss with nothing but reinforced glass underfoot. The altitude gain is fast enough that even fit visitors sometimes feel it — take the ascent in stages if you can.",
+    "lat": 45.8786,
+    "lng": 6.8878,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Aiguille du Midi, above Chamonix, French Alps",
+    "minTier": 5,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-vikos-gorge",
+    "title": "Vikos Gorge",
+    "description": "Listed by Guinness as the deepest gorge on Earth relative to its width, a limestone canyon slicing through the Pindus range between the stone villages of Monodendri and Vikos. The full traverse is a serious full-day undertaking with real elevation change and limited water sources along the way. Zagori's stone-arch bridges and cobbled paths, centuries old, thread through the villages bookending the gorge.",
+    "lat": 39.9667,
+    "lng": 20.7667,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Vikos Gorge, Zagori, Pindus Mountains, Greece",
+    "minTier": 5,
+    "terrainTags": [
+      "canyon",
+      "mountain"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-samaria-gorge",
+    "title": "Samaria Gorge",
+    "description": "One of the longest gorges in Europe, a 16-kilometer descent from a high alpine plateau down through the Sideroportes (\"Iron Gates\"), a passage narrowing to just a few meters wide between towering rock walls. The route is one-way and closes entirely outside the dry season due to flash-flood risk. Kri-kri, Crete's wild mountain goat found almost nowhere else, are a common sight on the upper slopes.",
+    "lat": 35.3167,
+    "lng": 23.95,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Samaria Gorge National Park, Crete, Greece",
+    "minTier": 5,
+    "terrainTags": [
+      "alpine",
+      "plateau",
+      "mountain",
+      "rock"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-askja-v-ti-crater",
+    "title": "Askja – Víti Crater",
+    "description": "A vast volcanic caldera in the dead center of Iceland, reachable only by a long highland drive across ash desert, with a geothermal crater lake, Víti, warm enough to swim in right beside the ice-cold Öskjuvatn caldera lake. NASA sent Apollo astronauts here in the 1960s to train on terrain thought to resemble the lunar surface. The approach roads are unbridged, remote, and genuinely serious — this is deep-interior Iceland, not a roadside stop.",
+    "lat": 65.0333,
+    "lng": -16.75,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Askja caldera, Vatnajökull National Park, Iceland highlands",
+    "minTier": 5,
+    "terrainTags": [
+      "desert",
+      "volcanic",
+      "lake",
+      "geothermal"
+    ],
+    "radiusMeters": 300
+  }
+]

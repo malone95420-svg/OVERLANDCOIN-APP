@@ -1,0 +1,1989 @@
+[
+  {
+    "id": "q-g-chichen-itza",
+    "title": "Chichen Itza",
+    "description": "The stepped pyramid throws a hard-edged shadow across the plaza by mid-afternoon, and the stone underfoot is already warm by nine. Vendors set up under the tree line at the entrance path, and the acoustics at the ball court still carry a whisper across a hundred meters. Come at opening to beat both the heat and the tour buses.",
+    "lat": 20.6843,
+    "lng": -88.5678,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "El Castillo pyramid, near Piste, Yucatan — INAH managed",
+    "minTier": 1,
+    "terrainTags": [
+      "steppe"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-tulum-ruins",
+    "title": "Tulum Ruins",
+    "description": "The only Maya site built right on the Caribbean, with turquoise water breaking against limestone cliffs below the watchtower. Iguanas sun themselves on the low walls, unbothered by the crowds. Bring sandals you don't mind getting sandy — the beach access stairs dump you straight onto a small cove.",
+    "lat": 20.2145,
+    "lng": -87.429,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "El Castillo cliff temple, Tulum, Quintana Roo — INAH managed",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "cliff",
+      "beach",
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cenote-ik-kil",
+    "title": "Cenote Ik Kil",
+    "description": "A vertical drop of jungle vines curtains the walls of this open cenote, with a stone stairway spiraling forty feet down to the water. Small catfish nibble at your ankles while swimmers drift near the waterfall trickling from the rim. Go early morning before the tour groups arrive with pool noodles in tow.",
+    "lat": 20.6666,
+    "lng": -88.5567,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Ik Kil eco-park cenote, near Chichen Itza, Yucatan",
+    "minTier": 1,
+    "terrainTags": [
+      "jungle"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-gran-cenote",
+    "title": "Gran Cenote",
+    "description": "Clear enough to read a gauge at thirty feet, this cenote splits into a cave section where stalactites hang low over the water. Turtles surface near the wooden dock most mornings. Snorkel gear rental is on-site, but the cave sections reward anyone who brought their own mask.",
+    "lat": 20.2427,
+    "lng": -87.4472,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Gran Cenote cave system, Tulum, Quintana Roo",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cenote-dos-ojos",
+    "title": "Cenote Dos Ojos",
+    "description": "Two connected sinkholes give this cenote its name, and the cavern passage between them is long enough that a dive light matters. Divers doing the full cave traverse need a certified guide, but the open swim sections are accessible to anyone comfortable in dark water. Fish hang motionless in the halocline layer where fresh and salt water meet.",
+    "lat": 20.3238,
+    "lng": -87.3897,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Dos Ojos cenote and cave system, near Tulum",
+    "minTier": 2,
+    "terrainTags": [
+      "saltflat"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-cenote-suytun",
+    "title": "Cenote Suytun",
+    "description": "A single shaft of light drops through the cave ceiling onto a narrow stone platform, and photographers line up before ten to catch it centered. The rest of the cavern stays in cool shadow, water black as tar until a flashlight finds it. Midday sun through the hole is the whole show.",
+    "lat": 20.6961,
+    "lng": -88.1636,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Suytun cenote near Valladolid, Yucatan",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-ek-balam",
+    "title": "Ek Balam",
+    "description": "Fewer crowds than Chichen Itza and you're allowed to climb the main structure, where a stucco frieze of a jaguar-mouth doorway survives near the top. The view from the summit runs flat jungle canopy to the horizon in every direction. The heat collects fast on the exposed stairs, so morning is the move.",
+    "lat": 20.9106,
+    "lng": -88.1408,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Ek Balam archaeological site, near Valladolid, Yucatan",
+    "minTier": 1,
+    "terrainTags": [
+      "jungle"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-isla-holbox",
+    "title": "Isla Holbox",
+    "description": "Sand streets instead of pavement and golf carts instead of taxis, this barrier island sits where the Gulf meets the Caribbean in a visible color line. Whale sharks pass offshore from June through September for anyone booking a boat out. Bioluminescent plankton light up the shallows on moonless nights.",
+    "lat": 21.5245,
+    "lng": -87.3789,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Isla Holbox, Quintana Roo — reached by ferry from Chiquila",
+    "minTier": 1,
+    "terrainTags": [
+      "sand"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-isla-mujeres",
+    "title": "Isla Mujeres",
+    "description": "A twenty-minute ferry ride puts you on a five-mile island with a golf-cart pace of life. Playa Norte's sandbar shallows stretch out far enough to wade a hundred meters before the water hits your waist. The southern point holds a small Maya shrine to Ixchel, goddess of the moon, worn down to its foundation.",
+    "lat": 21.2311,
+    "lng": -86.7314,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Isla Mujeres, off Cancun, Quintana Roo — ferry from Puerto Juarez",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "playa"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-xcaret-eco-park",
+    "title": "Xcaret Eco Park",
+    "description": "An underground river system lets you float through limestone tunnels that open occasionally to jungle sky. The park mixes natural cenotes with built attractions, so pick your section and skip the rest. Bring water shoes — the river current pulls you over rock in a few shallow stretches.",
+    "lat": 20.5814,
+    "lng": -87.1177,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Xcaret ecological park, Playa del Carmen, Quintana Roo",
+    "minTier": 1,
+    "terrainTags": [
+      "jungle",
+      "playa",
+      "rock",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-uxmal",
+    "title": "Uxmal",
+    "description": "The Pyramid of the Magician rises at an unusual oval-based angle that photographs oddly flat until you're standing under it. Quieter than Chichen Itza on most days, with iguanas outnumbering tourists along the Nunnery Quadrangle's carved facades. The site's sound-and-light show runs most evenings if you want a second visit.",
+    "lat": 20.3597,
+    "lng": -89.7706,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Uxmal archaeological site, Yucatan — INAH managed",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-palenque",
+    "title": "Palenque",
+    "description": "Howler monkeys announce themselves from the canopy well before you see them, their calls rolling across the ruins like distant machinery. The Temple of Inscriptions holds Pakal's tomb, and unexcavated mounds still poke through jungle beyond the cleared zone. Humidity here runs thick enough to soak a shirt by 10am.",
+    "lat": 17.4841,
+    "lng": -92.0457,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Palenque archaeological site, Chiapas, jungle-edge ruins — INAH managed",
+    "minTier": 2,
+    "terrainTags": [
+      "jungle",
+      "historic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-calakmul",
+    "title": "Calakmul",
+    "description": "A two-hour drive down a single-lane jungle road gets you to a site so remote the pyramids still poke above unbroken forest canopy for miles. Spider monkeys and toucans are more common here than other visitors. Bring extra fuel and water — there's no services between the highway turnoff and the ruins.",
+    "lat": 18.1058,
+    "lng": -89.81,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Calakmul Biosphere Reserve ruins, Campeche, deep jungle site",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "jungle",
+      "historic",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-bonampak",
+    "title": "Bonampak",
+    "description": "A shuttle van run by the local Lacandon Maya community is the only way in on the final stretch of road. Inside a small temple, full-color murals of a Maya royal court survive in startling detail behind protective glass. The jungle heat and mosquito pressure here are relentless enough to plan around.",
+    "lat": 16.7028,
+    "lng": -91.0642,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Bonampak murals site, Lacandon jungle, Chiapas",
+    "minTier": 3,
+    "terrainTags": [
+      "jungle"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-sumidero-canyon",
+    "title": "Sumidero Canyon",
+    "description": "Boat tours run beneath thousand-meter limestone walls where crocodiles bask on rock ledges just above the waterline. Spray from a small waterfall known as the Christmas Tree hits the boat if the pilot swings close. The canyon narrows enough in places that the noise of the outboard motor bounces back off the rock.",
+    "lat": 16.8833,
+    "lng": -93.1,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Cañón del Sumidero National Park, near Tuxtla Gutierrez, Chiapas",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "canyon",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-hierve-el-agua",
+    "title": "Hierve el Agua",
+    "description": "Mineral-heavy springs have calcified over centuries into cliffs that look like frozen waterfalls, with infinity pools carved along the rim above a valley drop. The water tastes faintly of stone and stays cool even at midday. The final approach road is rough dirt, so a car with clearance helps.",
+    "lat": 16.8608,
+    "lng": -96.2758,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Hierve el Agua petrified waterfalls, Oaxaca",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff",
+      "dirt"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-monte-alban",
+    "title": "Monte Alban",
+    "description": "A Zapotec capital leveled onto a mountaintop with a 360-degree view over three converging valleys. The ballcourt and observatory building sit at odd angles to each other, aligned to celestial events rather than a tidy grid. Wind picks up hard by early afternoon, so morning visits are calmer.",
+    "lat": 17.0448,
+    "lng": -96.7679,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Monte Alban archaeological site, hilltop above Oaxaca city",
+    "minTier": 1,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-teotihuacan",
+    "title": "Teotihuacan",
+    "description": "The Avenue of the Dead runs arrow-straight for over a mile between two of the largest pyramids in the Americas, and climbing the Sun's 248 steps leaves most visitors winded at altitude. Hot air balloons drift over the site at sunrise for anyone booking ahead. The stone here has stood since long before the Aztecs found the ruins and named them.",
+    "lat": 19.6925,
+    "lng": -98.8438,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Pyramid of the Sun and Avenue of the Dead, near Mexico City",
+    "minTier": 1,
+    "terrainTags": [
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cascadas-de-agua-azul",
+    "title": "Cascadas de Agua Azul",
+    "description": "A series of turquoise limestone terraces cascade downstream for over a mile, each pool bluer than the last from dissolved calcium carbonate. Swimming is allowed in the calmer upper pools, though current warnings are posted for good reason near the drops. Food stalls line the walkway selling grilled corn and fresh juice.",
+    "lat": 17.2536,
+    "lng": -92.1147,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Agua Azul waterfalls, Chiapas, near Palenque",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-el-arco-cabo-san-lucas",
+    "title": "El Arco Cabo San Lucas",
+    "description": "Where the Sea of Cortez meets the Pacific, a water-carved granite arch marks the literal tip of the Baja peninsula. Sea lions haul out on the rocks at Lover's Beach just beside it, indifferent to the passing pangas. Water taxis from the marina run constantly and the round trip takes under an hour.",
+    "lat": 22.8698,
+    "lng": -109.9084,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Land's End rock arch, Cabo San Lucas, Baja California Sur",
+    "minTier": 1,
+    "terrainTags": [
+      "beach",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-bahia-de-los-angeles",
+    "title": "Bahia de los Angeles",
+    "description": "Whale sharks gather in this bay seasonally, and the surrounding desert coastline is dotted with abandoned mining relics from a century-old boom. The drive in off the peninsula highway is paved but long and empty, with no fuel for stretches. Pelicans work the shallows in formation most mornings.",
+    "lat": 28.9578,
+    "lng": -113.5578,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Bay of L.A., Sea of Cortez, Baja California",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "coast"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-catavina-boulder-field",
+    "title": "Catavina Boulder Field",
+    "description": "House-sized granite boulders scattered across desert scrub create a landscape that looks staged, and ancient cave paintings survive in a few of the rock shelters nearby. Cardon cacti here grow taller than anywhere else on the peninsula. There's no cell signal for long stretches on either side.",
+    "lat": 29.7333,
+    "lng": -114.7167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Catavina granite boulder field, Baja California, along Mexico 1",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-guerrero-negro-whale-watching",
+    "title": "Guerrero Negro Whale Watching",
+    "description": "Gray whales migrate here from the Bering Sea to calve in the lagoon's shallow warm water, and mothers sometimes bring calves right up to small skiffs to be touched. The salt flats surrounding the lagoon are among the largest on the planet. Winter mornings on the water are cold enough that gloves are worth packing.",
+    "lat": 27.9769,
+    "lng": -114.0611,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Ojo de Liebre Lagoon, Guerrero Negro, Baja California Sur",
+    "minTier": 2,
+    "terrainTags": [
+      "saltflat"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-loreto",
+    "title": "Loreto",
+    "description": "A mission town facing a chain of desert islands protected as a marine park, with water clear enough to see rays gliding over sand ten feet down. Isla Coronado's beach is a short panga ride from the malecon. The old Jesuit mission church downtown dates to 1697 and still holds services.",
+    "lat": 26.0111,
+    "lng": -111.3475,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Loreto Bay National Park, Baja California Sur",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "beach"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-copper-canyon-divisadero",
+    "title": "Copper Canyon Divisadero",
+    "description": "A canyon system deeper and larger than the Grand Canyon opens up at this rail stop, where the zip line park lets you cross the gorge at speed for anyone who wants the view moving. Tarahumara vendors sell woven baskets along the rim trail. The El Chepe train pauses here just long enough for photos.",
+    "lat": 27.5333,
+    "lng": -107.6167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Divisadero viewpoint, Barrancas del Cobre, Chihuahua",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-batopilas",
+    "title": "Batopilas",
+    "description": "A three-hour switchback descent from the canyon rim drops nearly seven thousand feet to this former silver-mining town on a river floor. The old Hacienda San Miguel ruins sit crumbling just outside town, vines pulling the walls apart. The road back up is slow enough that leaving before dark matters.",
+    "lat": 27.0333,
+    "lng": -107.7333,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Batopilas, silver mining town at the canyon floor, Chihuahua",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "canyon",
+      "historic",
+      "river"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-basaseachi-falls",
+    "title": "Basaseachi Falls",
+    "description": "Mexico's tallest waterfall drops over 800 feet in a single plunge, framed by pine forest more reminiscent of the Rockies than typical Mexican terrain. The overlook trail is short, but a longer descent to the base rewards anyone willing to scramble. Spray from the falls carries a fine mist across the viewpoint on windy days.",
+    "lat": 28.1919,
+    "lng": -108.2131,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Basaseachi National Park, Chihuahua",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-real-de-catorce",
+    "title": "Real de Catorce",
+    "description": "The only way into town is through a mile-long hand-dug tunnel just wide enough for one car at a time, with traffic managed by radio. Cobblestone streets climb steeply between half-abandoned silver-boom buildings. The desert beyond town is peyote country, sacred to the Wixarika pilgrimage route.",
+    "lat": 23.6883,
+    "lng": -100.885,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Real de Catorce ghost mining town, San Luis Potosi",
+    "minTier": 2,
+    "terrainTags": [
+      "desert"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-pico-de-orizaba-base-camp",
+    "title": "Pico de Orizaba Base Camp",
+    "description": "Mexico's highest peak and the third-highest in North America starts its technical climb from this stone refuge at 14,000 feet. The Jamapa Glacier above requires crampons, an ice axe, and an alpine start well before dawn to beat afternoon whiteout conditions. Altitude sickness claims more attempts here than the technical terrain does.",
+    "lat": 19.0303,
+    "lng": -97.2686,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Piedra Grande hut, Pico de Orizaba, Puebla/Veracruz border",
+    "minTier": 5,
+    "terrainTags": [
+      "alpine"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-popocatepetl-paso-de-cortes",
+    "title": "Popocatepetl Paso de Cortes",
+    "description": "This mountain pass between two volcanoes was the route Cortes used marching on Tenochtitlan, and the view still runs both peaks at once on a clear day. Popocatepetl itself vents steam regularly and its summit stays closed to climbers. The thin air here sits above 12,000 feet even before you've hiked anywhere.",
+    "lat": 19.0778,
+    "lng": -98.6153,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Paso de Cortes saddle between Popocatepetl and Iztaccihuatl, Puebla",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "mountain"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-grutas-de-loltun",
+    "title": "Grutas de Loltun",
+    "description": "The largest cave system on the peninsula holds evidence of continuous human use stretching back thousands of years, including handprint paintings and carved reliefs near the entrance chambers. Guides point out bat colonies roosting in the darker galleries. A skylight opening partway through lets jungle light spill onto a natural amphitheater.",
+    "lat": 20.1214,
+    "lng": -89.4372,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Loltun Caves, Yucatan",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "jungle"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-tikal",
+    "title": "Tikal",
+    "description": "Temple IV rises over 200 feet through the jungle canopy, and climbing its wooden stairway at dawn puts you above a sea of mist with howler monkeys roaring somewhere below. Toucans and spider monkeys move through the ruins as casually as pigeons elsewhere. The site is large enough that a full day barely covers the main plazas.",
+    "lat": 17.222,
+    "lng": -88.6237,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Tikal National Park, Peten jungle, Guatemala",
+    "minTier": 2,
+    "terrainTags": [
+      "jungle",
+      "historic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-semuc-champey",
+    "title": "Semuc Champey",
+    "description": "A limestone bridge carries a turquoise river over a series of stepped pools, while the Cahabon River itself roars underneath the whole formation unseen. Local guides lead a scramble up a steep viewpoint trail for the postcard shot over all the pools at once. Getting there means a bone-rattling ride down an unpaved mountain road.",
+    "lat": 15.5333,
+    "lng": -89.95,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Semuc Champey natural pools, Alta Verapaz, Guatemala",
+    "minTier": 2,
+    "terrainTags": [
+      "steppe",
+      "mountain",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-lake-atitlan-san-pedro",
+    "title": "Lake Atitlan San Pedro",
+    "description": "A cone volcano rises directly from the lakeshore, and the summit trail switchbacks through coffee plantations before breaking into cloud forest near the top. The crater rim view takes in the lake's full ring of volcanoes at once. Aldous Huxley once called this the most beautiful lake in the world, and locals still bring it up unprompted.",
+    "lat": 14.6349,
+    "lng": -91.2654,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "San Pedro La Laguna volcano and village, Lake Atitlan, Guatemala",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "volcanic",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-acatenango-volcano",
+    "title": "Acatenango Volcano",
+    "description": "An overnight trek to base camp puts you within sight of neighboring Fuego erupting through the dark, close enough to feel the concussion in your chest. The final push to Acatenango's own summit before dawn crosses loose volcanic scree in bitter cold. Most groups camp at 12,000 feet and summit at first light.",
+    "lat": 14.5006,
+    "lng": -90.8757,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Acatenango summit, overlooking Fuego, Guatemala",
+    "minTier": 3,
+    "terrainTags": [
+      "volcanic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-fuego-volcano-viewpoint",
+    "title": "Fuego Volcano Viewpoint",
+    "description": "One of Central America's most consistently active volcanoes, Fuego throws incandescent rock hundreds of feet into the air on a near-nightly basis. The safest viewing is from the shoulder of neighboring Acatenango, far enough to watch without becoming part of the statistics. The ground rumbles audibly during larger pulses.",
+    "lat": 14.4747,
+    "lng": -90.8802,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Fuego Volcano, active cone near Antigua, Guatemala",
+    "minTier": 3,
+    "terrainTags": [
+      "volcanic",
+      "rock",
+      "andes"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-antigua-guatemala",
+    "title": "Antigua Guatemala",
+    "description": "Cobblestone streets run between pastel colonial facades and ruined baroque churches still standing half-collapsed since an 18th-century earthquake. Three volcanoes ring the valley, with Fuego occasionally puffing smoke visible from the central park. Coffee here is grown on the surrounding slopes and roasted within walking distance of where you'll drink it.",
+    "lat": 14.5586,
+    "lng": -90.7295,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Antigua Guatemala colonial city, UNESCO site",
+    "minTier": 1,
+    "terrainTags": [
+      "volcanic",
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-xunantunich",
+    "title": "Xunantunich",
+    "description": "A small hand-cranked ferry hauls cars and visitors across the Mopan River, the only way to reach this ridge-top Maya site. El Castillo remains the second-tallest structure in Belize, and the summit view runs clear into Guatemala on a good day. The ferry operator works entirely by muscle and a steel cable strung bank to bank.",
+    "lat": 17.0897,
+    "lng": -89.1417,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Xunantunich ruins, near San Ignacio, Belize",
+    "minTier": 2,
+    "terrainTags": [
+      "historic",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-copan-ruinas",
+    "title": "Copan Ruinas",
+    "description": "The hieroglyphic stairway here carries the longest known Maya text, over 2,000 glyphs climbing a single staircase toward a ruined temple. Scarlet macaws, reintroduced to the site, screech from the surrounding trees in flashes of red and blue. The small town just outside the gates has kept its colonial character better than most border towns.",
+    "lat": 14.8384,
+    "lng": -89.1428,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Copan archaeological site, western Honduras",
+    "minTier": 1,
+    "terrainTags": [
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-roatan-west-bay",
+    "title": "Roatan West Bay",
+    "description": "Part of the second-largest barrier reef system in the world sits just offshore, close enough to snorkel from the beach without a boat. The sand here stays powder-fine along nearly two miles of shoreline. Whale sharks and dolphins turn up on dive trips out of the surrounding shops with some regularity.",
+    "lat": 16.2969,
+    "lng": -86.6042,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "West Bay Beach, Roatan, Bay Islands, Honduras",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "beach"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cerro-negro-volcano-boarding",
+    "title": "Cerro Negro Volcano Boarding",
+    "description": "Central America's youngest volcano is a nearly pure black cinder cone, and the descent by wooden board reaches speeds that shred clothing if you catch an edge. The hour-long climb up loose volcanic gravel in the heat is its own workout before the ninety-second ride down. Goggles and a jumpsuit are non-negotiable gear here.",
+    "lat": 12.5064,
+    "lng": -86.7031,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Cerro Negro cinder cone, near Leon, Nicaragua",
+    "minTier": 3,
+    "terrainTags": [
+      "volcanic",
+      "gravel"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-concepcion-volcano-ometepe",
+    "title": "Concepcion Volcano Ometepe",
+    "description": "A near-perfect volcanic cone rises from an island in the middle of Lake Nicaragua, and the summit trail turns into a hands-and-knees scramble through cloud forest before breaking onto bare volcanic ash. Howler monkeys track hikers from the canopy for the lower stretches. Clouds usually roll in by mid-morning, so an early start matters for any summit view.",
+    "lat": 11.5322,
+    "lng": -85.6027,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Concepcion Volcano, Ometepe Island, Lake Nicaragua",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "volcanic",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-mombacho-volcano",
+    "title": "Mombacho Volcano",
+    "description": "Cloud forest wraps the upper slopes of this dormant volcano, thick enough with moss and orchids that the crater trail feels like a different climate than Granada below. Fumaroles still vent warm sulfur air from cracks along the trail. The truck ride up the steep access road is part of the ride, engine straining the whole way.",
+    "lat": 11.8331,
+    "lng": -85.9722,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Mombacho Volcano Nature Reserve, near Granada, Nicaragua",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "volcanic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-corcovado-national-park",
+    "title": "Corcovado National Park",
+    "description": "Called one of the most biologically intense places on earth by National Geographic, this park holds tapirs, all four Costa Rican monkey species, and jaguars that guides sometimes track by fresh print. Trails run along beach and jungle both, with river crossings that occasionally involve waiting out a crocodile. A licensed guide is mandatory for entry, and for good reason.",
+    "lat": 8.5333,
+    "lng": -83.5833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Corcovado National Park, Osa Peninsula, Costa Rica",
+    "minTier": 2,
+    "terrainTags": [
+      "beach",
+      "jungle",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-arenal-volcano",
+    "title": "Arenal Volcano",
+    "description": "A near-symmetrical cone volcano dominates the skyline above La Fortuna, dormant since 2010 but still steaming faintly from vents near the summit. Old lava fields from the 1968 eruption are now overgrown with ferns along a marked interpretive trail. Hot springs fed by the volcano's geothermal heat sit a short drive from the park entrance.",
+    "lat": 10.463,
+    "lng": -84.7033,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Arenal Volcano National Park, La Fortuna, Costa Rica",
+    "minTier": 1,
+    "terrainTags": [
+      "volcanic",
+      "geothermal"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-monteverde-cloud-forest",
+    "title": "Monteverde Cloud Forest",
+    "description": "Mist hangs permanently in this forest canopy, thick enough that visibility drops to a few dozen feet on the ridge trails. Hanging bridges carry visitors above the canopy where quetzals occasionally flash iridescent green and red. Over 2,500 plant species grow in a reserve you can fully hike in an afternoon.",
+    "lat": 10.301,
+    "lng": -84.7934,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Monteverde Cloud Forest Reserve, Costa Rica",
+    "minTier": 1,
+    "terrainTags": [
+      "forest"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-manuel-antonio-national-park",
+    "title": "Manuel Antonio National Park",
+    "description": "White-faced capuchins and sloths move through trees directly over the trail, close enough that guides warn against leaving food unattended for even a minute. The park's beaches rank among the most photographed in the country, framed by jungle running right down to the sand. A daily visitor cap keeps the trails from ever feeling overrun.",
+    "lat": 9.3925,
+    "lng": -84.1489,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Manuel Antonio National Park, Pacific coast, Costa Rica",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "beach",
+      "coast",
+      "jungle"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-chirripo-summit",
+    "title": "Chirripo Summit",
+    "description": "Costa Rica's tallest mountain requires an overnight stay at a mountain hut and a pre-dawn final push to catch the rare clear-sky view of both the Pacific and Caribbean at once from the same summit. The trail gains over 7,000 feet from trailhead to peak, moving through five distinct ecosystems along the way. Permits sell out months ahead during dry season.",
+    "lat": 9.4836,
+    "lng": -83.4892,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Cerro Chirripo, Costa Rica's highest peak",
+    "minTier": 5,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-volcan-baru-boquete",
+    "title": "Volcan Baru Boquete",
+    "description": "Panama's highest point and only volcano offers a summit view that, on a rare clear morning, shows both the Pacific and Caribbean simultaneously. Most hikers start at midnight to reach the top by sunrise, climbing a rough jeep road on foot in the dark. Temperatures at the summit drop close to freezing, a shock after the tropical trailhead.",
+    "lat": 8.8078,
+    "lng": -82.5425,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Volcan Baru National Park, near Boquete, Panama",
+    "minTier": 3,
+    "terrainTags": [
+      "volcanic",
+      "tropical"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-panama-canal-miraflores-locks",
+    "title": "Panama Canal Miraflores Locks",
+    "description": "Container ships the length of four football fields squeeze through the lock chamber with feet to spare on either side, water draining and rising in a controlled roar. The visitor center's observation deck puts you close enough to read the ship names as they pass. Transits are scheduled and posted, so timing a visit around a lockage is worth the effort.",
+    "lat": 8.9936,
+    "lng": -79.5989,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Miraflores Locks visitor center, Panama Canal",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-bocas-del-toro",
+    "title": "Bocas del Toro",
+    "description": "A scattered archipelago of mangrove islands and coral reef connects by water taxi rather than road, with Red Frog Beach and Starfish Beach both a short boat ride from the main town. Bright red poison dart frogs turn up on jungle trails with surprising frequency. The pace of the place runs on Caribbean time, boats included.",
+    "lat": 9.34,
+    "lng": -82.2419,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Bocas del Toro archipelago, Caribbean coast, Panama",
+    "minTier": 1,
+    "terrainTags": [
+      "beach",
+      "coast",
+      "jungle"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-tazumal-ruins",
+    "title": "Tazumal Ruins",
+    "description": "A Maya pyramid complex sits almost incongruously in the middle of a small Salvadoran town, with modern houses backing right up to the ancient plaza wall. The site museum holds a rare jade collection and a Toltec-style ballgame yoke found on-site. Fewer tour buses reach here than the bigger Guatemalan sites, so it's often just you and the caretaker.",
+    "lat": 13.8422,
+    "lng": -89.6753,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Tazumal archaeological site, Chalchuapa, El Salvador",
+    "minTier": 1,
+    "terrainTags": [
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-el-yunque",
+    "title": "El Yunque",
+    "description": "The only tropical rainforest in the US National Forest system gets over 200 inches of rain a year, keeping the trail to La Mina Falls slick and the coqui frogs loud even at midday. Yokahu Tower offers a canopy-level view over the forest to the Atlantic beyond. Rain gear here is less optional than everywhere else on the island.",
+    "lat": 18.2953,
+    "lng": -65.7827,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "El Yunque National Forest, Puerto Rico",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "tropical"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-boiling-lake-dominica",
+    "title": "Boiling Lake Dominica",
+    "description": "A flooded fumarole keeps this lake at a constant near-boil, its gray water churning under a curtain of sulfur steam. The six-hour round trip crosses the aptly named Valley of Desolation, a barren stretch of hissing vents and boiling streams. The trail is unmarked in several places, which is why almost nobody attempts it without a local guide.",
+    "lat": 15.3167,
+    "lng": -61.2833,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Boiling Lake, Morne Trois Pitons National Park, Dominica",
+    "minTier": 3,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-pitons-st-lucia",
+    "title": "Pitons St Lucia",
+    "description": "Twin volcanic spires rise straight from the Caribbean Sea, and the Gros Piton trail switchbacks up nearly 2,600 feet of jungle-covered slope to a summit view over the whole southwest coast. Guides from the local Gros Piton community are mandatory and worth every cent for the plant and history commentary alone. The descent is harder on the knees than the climb is on the lungs.",
+    "lat": 13.8079,
+    "lng": -61.0658,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Gros Piton hiking trail, Soufriere, Saint Lucia",
+    "minTier": 2,
+    "terrainTags": [
+      "coast",
+      "volcanic",
+      "jungle"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-blue-mountain-peak-jamaica",
+    "title": "Blue Mountain Peak Jamaica",
+    "description": "Coffee farms give way to cloud forest and eventually bare scrub as the trail climbs toward Jamaica's highest point, and most hikers start at 2am to catch the sunrise from the summit before clouds roll in. On a clear morning Cuba is visible on the horizon, over 130 miles away. The final stretch above the tree line gets cold enough to need a real jacket, a strange feeling this close to the equator.",
+    "lat": 18.05,
+    "lng": -76.5764,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Blue Mountain Peak, Jamaica's highest point",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "mountain"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-dunn-s-river-falls",
+    "title": "Dunn's River Falls",
+    "description": "A living waterfall you climb rather than just view, guides link visitors hand to hand up 600 feet of terraced limestone with the current pushing back the whole way. The falls empty directly onto a public beach at the bottom. Water shoes are provided but a firm grip matters more than footwear here.",
+    "lat": 18.4144,
+    "lng": -77.135,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Dunn's River Falls, Ocho Rios, Jamaica",
+    "minTier": 1,
+    "terrainTags": [
+      "beach",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-vinales-valley",
+    "title": "Vinales Valley",
+    "description": "Limestone mogotes rise abruptly from flat tobacco fields in a valley that looks assembled from two different landscapes. Farmers still work the red soil by ox and plow, growing the leaf that ends up rolled in Havana. A short hike between mogotes passes drying barns where you can watch cigars rolled by hand for a few pesos.",
+    "lat": 22.6167,
+    "lng": -83.7,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Vinales Valley, Pinar del Rio, Cuba",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-trinidad-cuba",
+    "title": "Trinidad Cuba",
+    "description": "Cobblestones worn smooth by centuries of ox carts run between pastel colonial mansions built on sugar and slave-trade fortunes now converted to casas particulares. The Valle de los Ingenios beyond town holds the ruins of old sugar mills and a watchtower once used to monitor enslaved workers in the fields. Live son music spills out of Casa de la Musica most evenings.",
+    "lat": 21.8039,
+    "lng": -79.9847,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Trinidad colonial old town, Cuba, UNESCO site",
+    "minTier": 1,
+    "terrainTags": [
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-saona-island",
+    "title": "Saona Island",
+    "description": "A national park island reached by catamaran, with a natural sandbar pool shallow enough to stand chest-deep a half-mile from shore. Starfish scatter across the sandy bottom in numbers that make it hard not to step on one. The boat ride out crosses open water that can run choppy depending on the season.",
+    "lat": 18.1167,
+    "lng": -68.7,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Saona Island, Parque Nacional del Este, Dominican Republic",
+    "minTier": 1,
+    "terrainTags": [
+      "sand"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-pico-duarte",
+    "title": "Pico Duarte",
+    "description": "The highest point in the entire Caribbean requires a two- to three-day trek through pine forest and river valleys, usually supported by mules carrying gear from the Armando Bermudez trailhead. Nighttime temperatures near the summit drop below freezing, unusual for an island this far into the tropics. The final ridge walk to the peak rewards with a view over a green ocean of mountains in every direction.",
+    "lat": 19.0247,
+    "lng": -71.0122,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Pico Duarte, highest peak in the Caribbean, Dominican Republic",
+    "minTier": 5,
+    "terrainTags": [
+      "forest",
+      "tropical",
+      "mountain",
+      "mud"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-angel-falls-canaima",
+    "title": "Angel Falls Canaima",
+    "description": "The world's tallest uninterrupted waterfall drops over 3,200 feet off the edge of Auyantepui, and reaching the base means flying into Canaima then taking a dugout canoe up the Carrao and Churun rivers for hours. Mist from the fall dissipates into cloud before it even hits the pool below during dry season. Getting there is most of the expedition — the falls themselves are the payoff at the end of a genuinely remote trip.",
+    "lat": 5.9701,
+    "lng": -62.5359,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Angel Falls, Canaima National Park, Venezuela",
+    "minTier": 5,
+    "terrainTags": [
+      "river",
+      "remote"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-roraima-tepui",
+    "title": "Roraima Tepui",
+    "description": "A flat-topped tabletop mountain that inspired Conan Doyle's Lost World, its summit plateau is a surreal landscape of black quartzite formations, endemic plants found nowhere else, and near-constant mist. The six-day round trip crosses savanna, river, and a near-vertical ramp called the Stairway that's the only walkable route to the top. Camping on the plateau itself under a rock overhang is one of the trip's stranger nights.",
+    "lat": 5.1433,
+    "lng": -60.7625,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Mount Roraima, Gran Sabana, Venezuela",
+    "minTier": 5,
+    "terrainTags": [
+      "savanna",
+      "plateau",
+      "mountain",
+      "rock"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-ciudad-perdida-lost-city-trek",
+    "title": "Ciudad Perdida Lost City Trek",
+    "description": "Twelve hundred stone steps, mostly moss-slick and steep, lead up to a terraced Tayrona city older than Machu Picchu and rediscovered by looters in the 1970s. The four-day trek in crosses several river fords and climbs through humid jungle the whole way. Indigenous Kogi communities still consider the surrounding mountains sacred, and guides explain the etiquette before you arrive.",
+    "lat": 11.0394,
+    "lng": -73.9231,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Ciudad Perdida, Sierra Nevada de Santa Marta, Colombia",
+    "minTier": 3,
+    "terrainTags": [
+      "jungle",
+      "mountain",
+      "river"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-tayrona-national-park",
+    "title": "Tayrona National Park",
+    "description": "Jungle runs right down to white-sand coves here, with boulder-strewn beaches like Cabo San Juan framed by palm trees leaning out over the water. The park closes several weeks a year at the request of the indigenous communities who consider it sacred ground. Trails between beaches cross tree roots and rock scrambles that take longer than the map distance suggests.",
+    "lat": 11.3122,
+    "lng": -74.0439,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Tayrona National Natural Park, Caribbean coast, Colombia",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "beach",
+      "coast",
+      "jungle"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-cocora-valley-salento",
+    "title": "Cocora Valley Salento",
+    "description": "Wax palms — Colombia's national tree and the tallest palm species on earth — rise over 200 feet from green pasture, wrapped in cloud most mornings before the sun burns it off. Willys jeeps ferry visitors from Salento's main square out to the trailhead, engines straining up the dirt track. Hummingbirds swarm feeders at a small hummingbird sanctuary partway along the loop trail.",
+    "lat": 4.6417,
+    "lng": -75.4867,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Cocora Valley, near Salento, Quindio, Colombia",
+    "minTier": 1,
+    "terrainTags": [
+      "dirt"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cano-cristales",
+    "title": "Cano Cristales",
+    "description": "Known as the River of Five Colors, algae blooms turn this riverbed shocking red, yellow, and green for a few months each year between the wet and dry seasons. Reaching it requires a flight to a small jungle airstrip followed by a boat and hike, with swimming restricted to protect the fragile plant life. The colors only show properly in that narrow seasonal window, so timing the trip matters.",
+    "lat": 2.1667,
+    "lng": -73.7833,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Caño Cristales, Sierra de la Macarena National Park, Colombia",
+    "minTier": 3,
+    "terrainTags": [
+      "jungle",
+      "river"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-cartagena-old-city",
+    "title": "Cartagena Old City",
+    "description": "Spanish colonial walls built to keep out pirates now enclose streets of bougainvillea-draped balconies and plazas that heat up fast under the Caribbean sun. The old fort of San Felipe de Barajas looms over the city, its tunnels engineered to carry sound so defenders could hear approaching enemies. Emerald vendors and street food carts work the shade of the arcades well into the evening.",
+    "lat": 10.4236,
+    "lng": -75.5518,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Walled city of Cartagena, Colombia, UNESCO site",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-guatape-el-penol",
+    "title": "Guatape El Penol",
+    "description": "A granite monolith rises straight out of a reservoir, and a staircase bolted into a crack up its face climbs 649 steps to a summit platform overlooking a lake dotted with green peninsula fingers. The nearby town of Guatape paints its buildings with colorful relief tiles depicting local trades. Legs feel the descent more than the climb by the time you're back at the bottom.",
+    "lat": 6.2333,
+    "lng": -75.1667,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "El Peñol rock, near Guatape, Antioquia, Colombia",
+    "minTier": 1,
+    "terrainTags": [
+      "lake",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-nevado-del-cocuy",
+    "title": "Nevado del Cocuy",
+    "description": "A chain of glaciated peaks in the Colombian Andes offers technical alpine routes alongside high-altitude lakes so blue they look artificially tinted. The park sits on U'wa indigenous territory, and access fees and permits go directly through the community. Weather here shifts from clear to whiteout in under an hour, and altitude above 15,000 feet makes every step deliberate.",
+    "lat": 6.4667,
+    "lng": -72.3,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "El Cocuy National Park, Boyaca, Colombia",
+    "minTier": 5,
+    "terrainTags": [
+      "alpine",
+      "lake",
+      "high-altitude",
+      "andes"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-cotopaxi-national-park",
+    "title": "Cotopaxi National Park",
+    "description": "One of the world's highest active volcanoes rises in a near-perfect snow-capped cone above the paramo grassland. Wild horses graze the high plains near Limpiopungo Lagoon while condors occasionally circle overhead. The hike to the José Rivas refuge at nearly 16,000 feet leaves most visitors gasping for air within the first few switchbacks.",
+    "lat": -0.6837,
+    "lng": -78.4373,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Cotopaxi National Park, Ecuadorian Andes",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "snow",
+      "andes"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-quilotoa-crater-lake",
+    "title": "Quilotoa Crater Lake",
+    "description": "A collapsed volcanic crater holds a turquoise lake so still it mirrors the crater walls on windless mornings. The full rim loop takes most of a day at altitude above 12,000 feet, while a steeper trail drops straight to the shore for anyone willing to hike back up. Mules are available at the bottom for the return climb, and most people take them.",
+    "lat": -0.8553,
+    "lng": -78.8994,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Quilotoa Crater, Cotopaxi province, Ecuador",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-galapagos-post-office-bay",
+    "title": "Galapagos Post Office Bay",
+    "description": "An 18th-century whaler's barrel still serves as an unofficial post office, where visitors leave postcards for strangers to hand-deliver on their way home rather than mailing them. Sea lions loll on the beach just past the barrel, entirely unbothered by the tradition. The tradition has run continuously for over two centuries with no postal service involved at all.",
+    "lat": -1.2667,
+    "lng": -90.4667,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Post Office Bay, Floreana Island, Galapagos, Ecuador",
+    "minTier": 1,
+    "terrainTags": [
+      "beach"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-sierra-negra-volcano-isabela",
+    "title": "Sierra Negra Volcano Isabela",
+    "description": "One of the largest volcanic calderas on earth stretches over six miles across, its floor a black expanse of recent lava flows still steaming from active fumaroles. The hike to the rim crosses farmland before breaking into scrubby highland vegetation. Giant tortoises graze unconcerned in the pastures along the lower trail.",
+    "lat": -0.83,
+    "lng": -91.1667,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Sierra Negra Volcano, Isabela Island, Galapagos",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-ba-os-de-agua-santa",
+    "title": "Baños de Agua Santa",
+    "description": "Waterfalls line the Ruta de las Cascadas just outside town, with a cable car and a viewing platform bolted to a cliff edge letting visitors swing out over the canyon on a giant swing. Tungurahua volcano looms above, still occasionally active. Thermal baths fed by volcanic springs give the town its name and its main after-hike ritual.",
+    "lat": -1.3928,
+    "lng": -78.4267,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Baños de Agua Santa, gateway to the Amazon basin, Ecuador",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff",
+      "canyon",
+      "volcanic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cajas-national-park",
+    "title": "Cajas National Park",
+    "description": "Over 200 glacial lakes are scattered across this high-altitude paramo landscape, with twisted polylepis trees — among the highest-altitude forests on earth — clinging to the ridgelines. Weather here changes fast enough that fog can swallow a trail marker fifty feet away. The park sits close enough to Cuenca for a half-day trip, though the altitude makes the trails feel longer than their distance.",
+    "lat": -2.85,
+    "lng": -79.2333,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Cajas National Park, near Cuenca, Ecuador",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "lake",
+      "high-altitude"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-machu-picchu",
+    "title": "Machu Picchu",
+    "description": "The Inca citadel sits on a ridge between two peaks, terraced fields still holding their shape five centuries after the site was abandoned and forgotten by outsiders. Clouds drift through the ruins most mornings, parting occasionally to frame Huayna Picchu behind the stonework. Tickets sell out weeks ahead in high season, and the entry system now runs on staggered timed circuits to manage the crowds.",
+    "lat": -13.1631,
+    "lng": -72.545,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Machu Picchu, Cusco region, Peru — UNESCO and Inca citadel",
+    "minTier": 5,
+    "terrainTags": [
+      "historic"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-rainbow-mountain-vinicunca",
+    "title": "Rainbow Mountain Vinicunca",
+    "description": "Mineral striping across this mountainside creates bands of red, gold, and turquoise rock, but the payoff comes after a punishing hike that starts near 14,000 feet and climbs higher still. Altitude hits harder here than the distance suggests, and horses are available partway for anyone struggling. Arriving before 8am matters — both for the light and for beating the tour buses that fill the ridge by mid-morning.",
+    "lat": -13.8833,
+    "lng": -71.3,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Vinicunca Rainbow Mountain, Cusco region, Peru",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "rock"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-colca-canyon-cruz-del-condor",
+    "title": "Colca Canyon Cruz del Condor",
+    "description": "One of the deepest canyons on earth, Colca is famous for Andean condors that ride the morning thermals close enough to see individual feathers from the viewpoint railing. The canyon floor below holds terraced fields still farmed using pre-Inca irrigation systems. A multi-day trek to the canyon floor and back is available for anyone who wants more than the overlook.",
+    "lat": -15.6167,
+    "lng": -71.85,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Cruz del Condor viewpoint, Colca Canyon, Peru",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-huacachina-oasis",
+    "title": "Huacachina Oasis",
+    "description": "A natural lagoon surrounded by towering sand dunes sits improbably in the middle of coastal desert, ringed by palm trees and a scatter of hostels. Dune buggies run out onto the surrounding sand for sandboarding trips timed to catch sunset over the dune crests. The whole oasis is small enough to walk around in twenty minutes, dunes included.",
+    "lat": -14.0872,
+    "lng": -75.7625,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Huacachina oasis, near Ica, Peru",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "dunes",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-nazca-lines-viewpoint-tower",
+    "title": "Nazca Lines Viewpoint Tower",
+    "description": "A metal observation tower gives a partial ground-level view of two of the giant geoglyphs, the hands and the lizard, etched into the desert floor centuries before anyone could see them properly from above. Most of the roughly 300 figures are only fully legible from a small plane. The desert pavement here is so fragile that footprints from decades ago are still visible off the marked paths.",
+    "lat": -14.7269,
+    "lng": -75.1319,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Mirador Nazca, viewing tower over the Nazca Lines, Peru",
+    "minTier": 1,
+    "terrainTags": [
+      "desert"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-salkantay-pass",
+    "title": "Salkantay Pass",
+    "description": "This five-day alternative to the classic Inca Trail crosses a pass above 15,000 feet under the shadow of Nevado Salkantay's glaciated peak, no permit quota required unlike the more famous route. Nights on the trek run near freezing even as the days sweat through cloud forest lower down. The trail eventually descends into coffee-growing country before connecting toward Machu Picchu.",
+    "lat": -13.3667,
+    "lng": -72.5667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Salkantay Pass, alternative Inca Trail route, Peru",
+    "minTier": 3,
+    "terrainTags": [
+      "forest"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-lake-titicaca-uros-islands",
+    "title": "Lake Titicaca Uros Islands",
+    "description": "Entire islands here are built and continually rebuilt from layered totora reeds, home to communities who have lived on the floating platforms for generations. The ground gives slightly underfoot, spongy in a way that takes a minute to trust. Lake Titicaca itself sits at nearly 12,500 feet, the highest navigable lake in the world.",
+    "lat": -15.8167,
+    "lng": -69.6667,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Uros floating islands, Lake Titicaca, Peru",
+    "minTier": 1,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-huascaran-national-park",
+    "title": "Huascaran National Park",
+    "description": "Peru's highest peak anchors a range of glaciated summits that draw serious mountaineers and trekkers alike, with the Santa Cruz trek crossing a 15,600-foot pass beneath jagged granite spires. Turquoise glacial lakes like Laguna 69 sit at the end of steep, thin-air approach trails. Weather in the Cordillera Blanca shifts quickly, and afternoon hail is common even in dry season.",
+    "lat": -9.1225,
+    "lng": -77.6042,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Huascaran National Park, Cordillera Blanca, Peru",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-kuelap-fortress",
+    "title": "Kuelap Fortress",
+    "description": "A pre-Inca stone fortress built by the Chachapoya, the Cloud Warriors, sits on a ridge accessed today by a cable car strung across a deep valley. Massive stone walls up to sixty feet tall enclose hundreds of round house foundations, far less visited than the Cusco-region sites. Mist rolls through the ruins most afternoons, living up to the culture's name.",
+    "lat": -6.4183,
+    "lng": -77.9231,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Kuelap fortress, Chachapoyas region, northern Peru",
+    "minTier": 2,
+    "terrainTags": [
+      "historic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-salar-de-uyuni",
+    "title": "Salar de Uyuni",
+    "description": "Over 4,000 square miles of blinding white salt crust stretch to a horizon so flat it plays tricks with scale in every photograph. During the brief wet season a thin sheet of water turns the entire flat into a mirror reflecting the sky perfectly underfoot. Multi-day tours push on to red and green lagoons stained by algae and mineral deposits further south, deep into some of the most remote terrain on the continent.",
+    "lat": -20.1338,
+    "lng": -67.4891,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Salar de Uyuni, largest salt flat on earth, Bolivia",
+    "minTier": 5,
+    "terrainTags": [
+      "saltflat",
+      "remote"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-death-road-yungas",
+    "title": "Death Road Yungas",
+    "description": "A narrow gravel track clings to sheer cliff edges for over thirty miles, dropping from nearly 15,000 feet down into humid jungle valley, once ranked among the world's most dangerous roads before a bypass took most vehicle traffic off it. Mountain bike descents now follow the same route, crosses and memorials marking the drop-offs along the way. Fog rolls in fast enough on some stretches to cut visibility to a few feet.",
+    "lat": -16.2833,
+    "lng": -67.85,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "North Yungas Road, La Paz to Coroico, Bolivia",
+    "minTier": 3,
+    "terrainTags": [
+      "cliff",
+      "jungle",
+      "mountain",
+      "gravel"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-isla-del-sol",
+    "title": "Isla del Sol",
+    "description": "Considered the mythical birthplace of the sun in Inca cosmology, this island's ridge trail runs past Inca terracing and ruins with views across the deep blue expanse of Titicaca in every direction. No motor vehicles operate on the island, so everything moves on foot or by donkey. The altitude makes the ridge walk between north and south villages longer in feel than in distance.",
+    "lat": -16.0,
+    "lng": -69.2,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Isla del Sol, Lake Titicaca, Bolivia",
+    "minTier": 2,
+    "terrainTags": [
+      "lake",
+      "historic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-laguna-colorada",
+    "title": "Laguna Colorada",
+    "description": "Red algae and sediment stain this high-altitude lake a deep rust color, with flamingos wading through the shallows in numbers that look photoshopped against the reflection. The reserve sits above 14,000 feet near the Chilean border, cold enough overnight to freeze water bottles solid. Getting here means days of rough dirt track deep in the Bolivian altiplano.",
+    "lat": -22.2,
+    "lng": -67.7833,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Laguna Colorada, Eduardo Avaroa Reserve, Bolivia",
+    "minTier": 3,
+    "terrainTags": [
+      "lake",
+      "dirt",
+      "high-altitude"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-tiwanaku",
+    "title": "Tiwanaku",
+    "description": "Pre-Inca stone monoliths and the carved Gateway of the Sun mark the ceremonial center of a civilization that predates the Inca by centuries, its precise stonework still puzzling archaeologists over how it was cut and moved. The altiplano wind here is constant and sharp, even under full sun. A small museum on site holds monolithic statues too fragile to leave exposed to the weather any longer.",
+    "lat": -16.5544,
+    "lng": -68.6733,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Tiwanaku archaeological site, near La Paz, Bolivia",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-valle-de-la-luna-atacama",
+    "title": "Valle de la Luna Atacama",
+    "description": "Wind-carved salt formations and dune ridges give this valley its moon-like name, and sunset here turns the whole landscape shades of pink and orange as shadows stretch across the salt crust. The Atacama is the driest non-polar desert on earth, and the air feels it — dry enough to crack lips within a day. Stargazing tours run from town after dark, taking advantage of some of the clearest night skies anywhere.",
+    "lat": -22.9147,
+    "lng": -68.3181,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Valle de la Luna, Atacama Desert, near San Pedro de Atacama, Chile",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "dunes",
+      "saltflat"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-tatio-geysers",
+    "title": "Tatio Geysers",
+    "description": "One of the highest-altitude geyser fields on earth sits above 14,000 feet, and the steam columns are tallest and most dramatic at sunrise when the cold morning air makes them visible from a distance. Getting there means leaving San Pedro around 4am for the two-hour drive. Walking paths are marked carefully — the crust around some vents is thin enough to be genuinely dangerous.",
+    "lat": -22.3372,
+    "lng": -68.0122,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "El Tatio Geyser Field, Atacama Desert, Chile",
+    "minTier": 2,
+    "terrainTags": [
+      "desert"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-torres-del-paine-base-towers",
+    "title": "Torres del Paine Base Towers",
+    "description": "Three granite towers rise vertically over a thousand meters above a glacial lake at the end of a grueling day hike that finishes with a steep boulder scramble up moraine. Patagonian wind here is strong enough to knock hikers off balance on the exposed upper section. Clear views of the towers are never guaranteed — cloud cover swallows the peaks on a good number of attempts, which is part of why reaching them feels earned.",
+    "lat": -50.9423,
+    "lng": -73.0022,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Base de las Torres, Torres del Paine National Park, Chilean Patagonia",
+    "minTier": 5,
+    "terrainTags": [
+      "sand",
+      "patagonia",
+      "lake"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-easter-island-ahu-tongariki",
+    "title": "Easter Island Ahu Tongariki",
+    "description": "Fifteen restored moai stand shoulder to shoulder on the largest ceremonial platform on the island, backs to the ocean facing inland as tradition dictated. Sunrise here is one of the most photographed moments on Rapa Nui, silhouetting the statues against the Pacific horizon. Reaching the island itself means a five-hour flight from the nearest mainland airport, one of the most remote inhabited places on earth.",
+    "lat": -27.1252,
+    "lng": -109.2769,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Ahu Tongariki, largest moai platform, Rapa Nui, Chile",
+    "minTier": 5,
+    "terrainTags": [
+      "remote"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-rano-raraku-easter-island",
+    "title": "Rano Raraku Easter Island",
+    "description": "Nearly 400 moai sit half-buried on the slopes of the volcanic quarry where almost every statue on the island was carved, some abandoned mid-production still attached to the bedrock. The scale only registers once you're standing next to one buried to the neck in volcanic soil. A crater lake fills the volcano's interior, ringed with totora reeds like a smaller echo of Titicaca.",
+    "lat": -27.1225,
+    "lng": -109.2886,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Rano Raraku quarry, Rapa Nui, Chile",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "lake",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-marble-caves-general-carrera",
+    "title": "Marble Caves General Carrera",
+    "description": "Centuries of wave action have carved swirling blue-and-white marble caverns into a peninsula jutting into one of the most vividly turquoise lakes in South America. Small boats duck into the caves at water level, the light bouncing off marble and lake in equal measure. Water levels and lake color shift seasonally with glacial melt, changing the intensity of blue month to month.",
+    "lat": -46.6167,
+    "lng": -72.6833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Capillas de Marmol, General Carrera Lake, Chilean Patagonia",
+    "minTier": 2,
+    "terrainTags": [
+      "patagonia",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-villarrica-volcano-summit",
+    "title": "Villarrica Volcano Summit",
+    "description": "One of the few volcanoes in the world with a permanently active lava lake, and the guided summit climb rewards a five-hour slog up snow and ice with a look down into a genuinely molten crater. Crampons and an ice axe are mandatory gear even in summer given the glacier crossing. The descent doubles as a slide on plastic sheets down the same snowfield that took hours to climb.",
+    "lat": -39.42,
+    "lng": -71.9394,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Villarrica Volcano, Pucon, Chile",
+    "minTier": 3,
+    "terrainTags": [
+      "volcanic",
+      "lake",
+      "snow"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-cerro-castillo-trek",
+    "title": "Cerro Castillo Trek",
+    "description": "A jagged, castle-like granite massif anchors this park along the Carretera Austral, with a multi-day trek crossing a high pass beneath the peak before dropping to a turquoise glacial lake. Fewer crowds than Torres del Paine make this feel like a private version of the same landscape. Weather changes fast enough here that packing for four seasons in one day is standard advice.",
+    "lat": -46.1167,
+    "lng": -72.15,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Cerro Castillo National Park, Aysen region, Chile",
+    "minTier": 3,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-perito-moreno-glacier",
+    "title": "Perito Moreno Glacier",
+    "description": "One of the few glaciers in the world still advancing, its face calves house-sized chunks of ice into Lake Argentino with a crack that echoes across the water like distant thunder. A series of steel walkways puts visitors at multiple elevations directly across from the ice wall. Ice trekking tours on the glacier's surface are available for anyone who wants more than the platform view.",
+    "lat": -50.4967,
+    "lng": -73.1367,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Perito Moreno Glacier, Los Glaciares National Park, Argentina",
+    "minTier": 1,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-fitz-roy-laguna-de-los-tres",
+    "title": "Fitz Roy Laguna de los Tres",
+    "description": "A steep final kilometer of loose scree switchbacks up to a viewpoint over a glacial lake directly beneath Fitz Roy's spire, one of the most recognizable granite peaks in the world. The full round trip from El Chalten runs close to twenty kilometers, entirely on foot with no shuttle shortcuts. Patagonian wind picks up hard on the exposed final approach, strong enough to make the last stretch feel like a different hike.",
+    "lat": -49.2711,
+    "lng": -73.0403,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Laguna de los Tres viewpoint, Mount Fitz Roy, El Chalten, Argentina",
+    "minTier": 3,
+    "terrainTags": [
+      "patagonia",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-aconcagua-base-camp",
+    "title": "Aconcagua Base Camp",
+    "description": "The highest peak in the Western and Southern Hemispheres looms over this base camp at nearly 14,000 feet, reached by a multi-day trek up a dry, wind-scoured valley with no technical climbing required to get this far. Summit attempts above camp require real mountaineering experience and acclimatization days that most trip itineraries budget a full week for. Even the trek to base camp alone is a serious high-altitude undertaking.",
+    "lat": -32.9536,
+    "lng": -70.0125,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Plaza de Mulas base camp, Aconcagua, Mendoza province, Argentina",
+    "minTier": 5,
+    "terrainTags": [
+      "mountain",
+      "high-altitude"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-ischigualasto-valle-de-la-luna",
+    "title": "Ischigualasto Valle de la Luna",
+    "description": "Wind-eroded rock formations shaped like mushrooms and spheres scatter across a desert basin that has yielded some of the earliest dinosaur fossils ever found. Visitors move through the park in a guided vehicle caravan, stopping at marked formations along a fixed route. Full moon nights bring special night tours when the pale rock glows almost silver.",
+    "lat": -30.1522,
+    "lng": -68.0075,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Ischigualasto Provincial Park, San Juan province, Argentina",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-iguazu-falls-argentina-side",
+    "title": "Iguazu Falls Argentina Side",
+    "description": "A network of catwalks leads directly over the Devil's Throat, where more than half the falls' total volume funnels through a single horseshoe drop loud enough to drown out conversation at close range. Spray from the falls soaks anyone who lingers on the platform for more than a minute. Coatis wander the park paths looking for unattended snacks, bold enough to approach picnic tables directly.",
+    "lat": -25.6953,
+    "lng": -54.4367,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Iguazu National Park, Argentina side, Devil's Throat walkway",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-ruta-40-cafayate",
+    "title": "Ruta 40 Cafayate",
+    "description": "Red sandstone canyons line this stretch of the famous Ruta 40, with formations nicknamed the Devil's Throat and the Amphitheater carved into cliff faces by wind and flash floods. Vineyards at the valley's southern end grow torrontes grapes at altitudes over 5,000 feet, some of the highest wine country in the world. The road itself is paved but empty enough that fuel stops require planning ahead.",
+    "lat": -26.0725,
+    "lng": -65.9689,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Quebrada de las Conchas, Ruta 40 near Cafayate, Salta province, Argentina",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "cliff",
+      "canyon",
+      "saltflat"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-salinas-grandes-jujuy",
+    "title": "Salinas Grandes Jujuy",
+    "description": "A smaller cousin to Bolivia's Salar de Uyuni, this salt flat sits over 11,000 feet up and stretches flat and white to a ring of distant mountains. Local cooperatives harvest salt by hand from shallow pools cut into the crust nearby. The altitude here catches people off guard more than the walking distance does, and sunburn comes fast off the reflective white surface.",
+    "lat": -23.5461,
+    "lng": -66.8567,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Salinas Grandes salt flat, Jujuy province, Argentina",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "saltflat",
+      "andes"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-chapada-diamantina-po-o-encantado",
+    "title": "Chapada Diamantina Poço Encantado",
+    "description": "A collapsed cave chamber holds a pool so clear that sunlight beams down through a hole in the ceiling and illuminates a sunken tree trunk over eighty feet below, visible as if suspended in glass. The light effect only appears properly for a few hours around midday during the dry season. Reaching the cave means a rough drive into remote highland terrain well off the coastal tourist track.",
+    "lat": -12.6167,
+    "lng": -41.4667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Poço Encantado enchanted well cave, Chapada Diamantina, Bahia, Brazil",
+    "minTier": 3,
+    "terrainTags": [
+      "coast",
+      "remote"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-chapada-dos-veadeiros-vale-da-lua",
+    "title": "Chapada dos Veadeiros Vale da Lua",
+    "description": "The Sao Miguel River has carved smooth, moon-like rock channels and potholes through this valley, deep enough in places to jump into from the surrounding ledges. Quartz crystal deposits across the plateau are said locally to give the area unusual energy, a claim that draws its own subset of visitors. The high savanna terrain here, called cerrado, is one of the most biodiverse and least protected ecosystems in Brazil.",
+    "lat": -14.15,
+    "lng": -47.6167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Vale da Lua, Chapada dos Veadeiros National Park, Goias, Brazil",
+    "minTier": 2,
+    "terrainTags": [
+      "savanna",
+      "plateau",
+      "rock",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-iguazu-falls-brazil-side",
+    "title": "Iguazu Falls Brazil Side",
+    "description": "The Brazilian side trades the Argentine side's up-close walkways for a wide panoramic view of nearly the entire falls system at once, better for scale than spray. A short elevator and catwalk lead to a platform practically inside the mist zone near the Devil's Throat's Brazilian edge. Rainbows form reliably in the spray on sunny afternoons, arcing across almost the full width of the falls.",
+    "lat": -25.6416,
+    "lng": -54.4392,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Iguacu National Park, Brazil side, panoramic walkway",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-pantanal-transpantaneira-road",
+    "title": "Pantanal Transpantaneira Road",
+    "description": "A single dirt road runs deep into the world's largest tropical wetland, crossing more than a hundred rickety wooden bridges over caiman-filled channels. Jaguars, giant otters, and hyacinth macaws are more reliably spotted here than almost anywhere else in South America. The road floods seasonally, and driving it in the wet season requires real clearance and good judgment.",
+    "lat": -16.7,
+    "lng": -56.7333,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Transpantaneira Road, northern Pantanal wetlands, Mato Grosso, Brazil",
+    "minTier": 2,
+    "terrainTags": [
+      "tropical",
+      "dirt"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-lencois-maranhenses",
+    "title": "Lencois Maranhenses",
+    "description": "Rolling white sand dunes stretch to the horizon, and between June and September rainwater collects in the dune valleys forming turquoise lagoons that look painted onto the desert landscape. There's no vegetation and almost no shade across the whole park, making timing and water critical. Reaching the interior lagoons means a guided 4x4 crossing or a long trek on foot across soft sand.",
+    "lat": -2.5,
+    "lng": -43.0,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Lencois Maranhenses National Park, Maranhao, Brazil",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "dunes"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-sugarloaf-mountain-rio",
+    "title": "Sugarloaf Mountain Rio",
+    "description": "Two cable car legs carry visitors up a granite dome rising straight from Guanabara Bay, the second stage swinging out over open water before landing on the summit. The 360-degree view takes in Copacabana, Christ the Redeemer, and the bay's scattered islands all at once. Sunset here draws a reliable crowd, so timing a visit for late afternoon means competing for railing space.",
+    "lat": -22.9492,
+    "lng": -43.1545,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Pao de Acucar, Rio de Janeiro, Brazil",
+    "minTier": 1,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-christ-the-redeemer-corcovado",
+    "title": "Christ the Redeemer Corcovado",
+    "description": "A cog railway climbs through Tijuca rainforest to the base of the 98-foot Art Deco statue overlooking the entire city and bay below. Clouds occasionally roll through at statue level, cutting visibility to almost nothing before clearing again minutes later. The forest surrounding the train line is the largest urban rainforest in the world, dense enough to feel remote despite the crowds at the top.",
+    "lat": -22.9519,
+    "lng": -43.2105,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Corcovado Mountain, Christ the Redeemer statue, Rio de Janeiro",
+    "minTier": 1,
+    "terrainTags": [
+      "forest",
+      "mountain",
+      "remote"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-fernando-de-noronha",
+    "title": "Fernando de Noronha",
+    "description": "A volcanic archipelago with some of the clearest water in the Atlantic, home to a resident population of spinner dolphins that gather in a bay each morning in numbers in the hundreds. An environmental fee that increases daily encourages shorter visits and funds the island's conservation program. Access is by small plane only, keeping visitor numbers naturally capped.",
+    "lat": -3.8536,
+    "lng": -32.4297,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Fernando de Noronha archipelago, off Brazil's northeast coast",
+    "minTier": 2,
+    "terrainTags": [
+      "coast",
+      "volcanic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-serra-da-canastra",
+    "title": "Serra da Canastra",
+    "description": "The Sao Francisco River, one of Brazil's great waterways, begins here as a spring bubbling out of high grassland before dropping over Casca D'Anta, a waterfall visible from a long ridge trail. Giant anteaters and maned wolves move through the surrounding cerrado grassland at dawn and dusk. The park's high plateau setting keeps temperatures noticeably cooler than the lowlands beyond its borders.",
+    "lat": -20.2833,
+    "lng": -46.6167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Serra da Canastra National Park, Minas Gerais, Brazil",
+    "minTier": 2,
+    "terrainTags": [
+      "plateau",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-jesuit-ruins-trinidad-paraguay",
+    "title": "Jesuit Ruins Trinidad Paraguay",
+    "description": "Red sandstone ruins of a 17th-century Jesuit mission stand roofless but largely intact, carved details of angels and saints still visible on crumbling doorways. The mission was part of a network built to protect Guarani communities, and the scale of the church foundation hints at a congregation of thousands. Fewer visitors reach here than the more famous Argentine and Brazilian mission ruins nearby.",
+    "lat": -27.0333,
+    "lng": -55.7167,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Jesus and Trinidad Jesuit mission ruins, Itapua, Paraguay",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "historic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cabo-polonio",
+    "title": "Cabo Polonio",
+    "description": "A village with no paved roads and no connection to the national power grid sits among coastal dunes reached only by specialized trucks crossing soft sand. A large sea lion colony hauls out near the lighthouse point in numbers loud enough to hear before you see them. Candlelight and solar power run most of the guesthouses after dark, keeping the whole place unusually quiet at night.",
+    "lat": -34.3931,
+    "lng": -53.7853,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Cabo Polonio, Rocha department, Uruguay",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "dunes",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-kaieteur-falls",
+    "title": "Kaieteur Falls",
+    "description": "A single uninterrupted drop nearly five times the height of Niagara Falls, reached only by small charter plane into a jungle airstrip since no road connects to the park. The falls carry more water than any other single-drop waterfall on earth despite the near-total absence of infrastructure around it. Golden frogs found only in the giant tank bromeliads nearby are found nowhere else in the world.",
+    "lat": 5.1706,
+    "lng": -59.4864,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Kaieteur Falls, Kaieteur National Park, Guyana",
+    "minTier": 5,
+    "terrainTags": [
+      "jungle"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-sacsayhuaman",
+    "title": "Sacsayhuaman",
+    "description": "Zigzagging stone walls made of boulders weighing well over a hundred tons each fit together without mortar, gaps too fine to slide a knife blade through even after centuries of earthquakes. The site overlooks Cusco from a ridge above the city, and the Inti Raymi winter solstice festival is still staged here every June. Locals still debate exactly how stones this large were quarried and moved into place.",
+    "lat": -13.5085,
+    "lng": -71.9822,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Sacsayhuaman fortress complex, above Cusco, Peru",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-ollantaytambo",
+    "title": "Ollantaytambo",
+    "description": "Terraced stone steps climb steeply to an unfinished temple complex above a town whose narrow streets and water channels still follow their original Inca layout, lived in continuously since it was built. The stone terraces here rank among the finest surviving examples of Inca masonry outside Machu Picchu itself. Quarry marks on giant stones partway up the hillside show where the builders abandoned work mid-project.",
+    "lat": -13.2589,
+    "lng": -72.2633,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Ollantaytambo fortress and living Inca town, Sacred Valley, Peru",
+    "minTier": 2,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-cerro-rico-potosi",
+    "title": "Cerro Rico Potosi",
+    "description": "Once the richest silver deposit in the world and the reason Potosi became one of the largest cities on earth in colonial times, the mountain is still actively mined today under conditions largely unchanged for centuries. Guided tours take visitors underground alongside working miners chewing coca leaves against the altitude and dust. The air inside is thick enough with mineral dust that a respirator mask is standard gear, not an option.",
+    "lat": -19.6144,
+    "lng": -65.7503,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Cerro Rico silver mine tours, Potosi, Bolivia",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-barichara",
+    "title": "Barichara",
+    "description": "Whitewashed colonial buildings with terracotta roofs line stone streets in what's often called Colombia's most beautiful town, perched on a sandstone ridge above the Suarez River canyon. A stone Camino Real trail connects Barichara to the neighboring village of Guane, a two-hour walk through dry tropical forest built by indigenous labor before the Spanish arrived. The quiet here is deliberate — no traffic noise, no chain stores, just stone and heat.",
+    "lat": 6.6333,
+    "lng": -73.1667,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Barichara colonial town, Santander, Colombia",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "forest",
+      "canyon",
+      "tropical"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-nevado-de-toluca",
+    "title": "Nevado de Toluca",
+    "description": "A dormant volcano crater holds two glacial lakes, the Sun and the Moon, cupped inside a rim reached by a rough dirt road that climbs above 13,000 feet. The final stretch to the lakeshore is a short but breathless walk at that altitude. Snow dusts the crater rim most winters, unusual for a peak this far south.",
+    "lat": 19.1067,
+    "lng": -99.7581,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Nevado de Toluca crater lakes, Estado de Mexico",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic",
+      "lake",
+      "dirt",
+      "snow"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-ausangate-trek",
+    "title": "Ausangate Trek",
+    "description": "A multi-day circuit rings a glaciated 20,000-foot peak sacred in Andean cosmology, crossing passes above 16,000 feet past turquoise and red mineral lakes. Alpaca herds and stone shepherd huts are the only signs of human presence for most of the route. Nights on the trek regularly drop well below freezing even in dry season.",
+    "lat": -13.7667,
+    "lng": -71.2167,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Nevado Ausangate circuit, Cusco region, Peru",
+    "minTier": 3,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-illiniza-norte",
+    "title": "Illiniza Norte",
+    "description": "The non-glaciated twin of the Illinizas peaks still demands a scramble over loose, exposed rock near the summit ridge where a slip would matter. A mountain refuge partway up lets climbers split the ascent into two days and acclimatize before the final push. On clear mornings Cotopaxi is visible smoking gently across the valley.",
+    "lat": -0.6589,
+    "lng": -78.7144,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Illiniza Norte summit, Illinizas Ecological Reserve, Ecuador",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "rock"
+    ],
+    "radiusMeters": 250
+  }
+]

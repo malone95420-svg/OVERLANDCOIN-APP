@@ -1,0 +1,1965 @@
+[
+  {
+    "id": "q-g-uluru-base-walk",
+    "title": "Uluru Base Walk",
+    "description": "A flat 10.6km loop around the base of the rock, close enough to read the sandstone folds and waterholes up close. Anangu ask visitors skip the climb; sacred sites are clearly signed. Bring water — there's next to no shade for hours at a stretch.",
+    "lat": -25.3444,
+    "lng": 131.0369,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Uluru base track, Yulara, Uluru-Kata Tjuta NP (Parks Australia / Anangu)",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-kata-tjuta-valley-of-the-winds",
+    "title": "Kata Tjuta Valley of the Winds",
+    "description": "A rocky 7.4km loop threading between the domes of Kata Tjuta, with two lookouts that frame the whole formation from inside. The middle section climbs over loose scree. Heat closures are common in summer, so mornings are the move.",
+    "lat": -25.3005,
+    "lng": 130.7407,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Valley of the Winds loop, Kata Tjuta, Uluru-Kata Tjuta NP",
+    "minTier": 2,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-kings-canyon-rim-walk",
+    "title": "Kings Canyon Rim Walk",
+    "description": "The opening climb sorts out who's serious, then the track settles into a 6km loop along a sandstone rim with the Garden of Eden waterhole tucked below. The domes look lunar at sunrise. Carry more water than feels necessary.",
+    "lat": -24.2542,
+    "lng": 131.5658,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Rim Walk, Watarrka NP, Northern Territory",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "canyon"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-ormiston-gorge",
+    "title": "Ormiston Gorge",
+    "description": "A short walk from the car park drops you at a permanent waterhole framed by red cliffs, one of the most reliable swimming spots in the Red Centre. The Ghost Gum walk above gives the postcard view down into the gorge. Good picnic tables if you want to linger.",
+    "lat": -23.6167,
+    "lng": 132.7167,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Ormiston Gorge, West MacDonnell (Tjoritja) NP, near Alice Springs",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-simpsons-gap",
+    "title": "Simpsons Gap",
+    "description": "A gentle gap in the range with black-footed rock wallabies often visible on the boulders at dawn and dusk. It's paved and easy most of the way in. Quiet, free, and close to town.",
+    "lat": -23.6811,
+    "lng": 133.6683,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Simpsons Gap, West MacDonnell NP, near Alice Springs",
+    "minTier": 1,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-standley-chasm",
+    "title": "Standley Chasm",
+    "description": "A narrow red-walled chasm that lights up gold for a few minutes either side of midday when the sun drops straight down between the walls. The walk in is short and rocky. Time your visit around noon or you'll miss the show.",
+    "lat": -23.6892,
+    "lng": 133.4794,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Standley Chasm (Angkerle Atwatye), West MacDonnell NP",
+    "minTier": 1,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-palm-valley",
+    "title": "Palm Valley",
+    "description": "A relic palm forest stranded in the desert, reached by grinding a 4WD through the sandy bed of the Finke River, one of the oldest river systems on the planet. The Mpaara walk loops through cycads older than the surrounding sand dunes. Not a track for anything with low clearance.",
+    "lat": -24.0333,
+    "lng": 132.7333,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Palm Valley, Finke Gorge NP, Northern Territory",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "dunes",
+      "forest"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-larapinta-trail-section-1",
+    "title": "Larapinta Trail — Section 1",
+    "description": "The opening leg of Australia's premier desert trek, 24km of ridgelines and dry creek beds out of Alice Springs. It's a fair taste of what the full 12-stage trail demands without committing weeks. Water caches aren't guaranteed this early — plan your own.",
+    "lat": -23.6636,
+    "lng": 133.8828,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Alice Springs Telegraph Station to Simpsons Gap, Larapinta Trail",
+    "minTier": 2,
+    "terrainTags": [
+      "desert",
+      "creek"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-chambers-pillar",
+    "title": "Chambers Pillar",
+    "description": "A sandstone monolith that guided nineteenth-century explorers south, reached by a rough 4WD track that eats half a day each way. Drovers carved their names into the base, a rough visitor's book in stone. Camp for sunset — the pillar turns deep orange and it's worth the isolation.",
+    "lat": -24.8258,
+    "lng": 133.8036,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Chambers Pillar Historical Reserve, south of Alice Springs",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "historic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-rainbow-valley",
+    "title": "Rainbow Valley",
+    "description": "Banded sandstone cliffs run through ochre, white, and rust as clean as a paint chart, best lit at sunset. The walk to the claypan lookout takes twenty minutes. Free camping nearby makes it easy to catch both sunset and sunrise.",
+    "lat": -24.3986,
+    "lng": 133.7256,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Rainbow Valley Conservation Reserve, south of Alice Springs",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "cliff"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-talinguru-nyakunytjaku",
+    "title": "Talinguru Nyakunytjaku",
+    "description": "A purpose-built viewing platform with both Uluru and Kata Tjuta visible in the same frame, the only spot in the park that pulls that off. Arrive well before dawn for a car park spot. The short walking loop keeps you moving to stay warm before sunrise.",
+    "lat": -25.3311,
+    "lng": 131.0928,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Talinguru Nyakunytjaku sunrise viewing area, Uluru-Kata Tjuta NP",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-gunlom-falls",
+    "title": "Gunlom Falls",
+    "description": "The climb to the top is steep and exposed, but the reward is a series of natural infinity pools looking out over the Kakadu escarpment. Swimming at the plunge pool below is the easier option if the heat's already won. Access road closes in the wet season.",
+    "lat": -13.4497,
+    "lng": 132.5033,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Gunlom Falls, Kakadu NP (southern section)",
+    "minTier": 2,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-jim-jim-falls",
+    "title": "Jim Jim Falls",
+    "description": "A rough 4WD track followed by a rock-hop over boulders gets you to a plunge pool beneath a sheer 200m escarpment wall. The falls usually stop flowing early in the dry, leaving a still, cold pool worth the effort regardless. Check ranger updates before committing — the road washes out fast.",
+    "lat": -13.2664,
+    "lng": 132.8461,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Jim Jim Falls, Kakadu NP",
+    "minTier": 3,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-twin-falls",
+    "title": "Twin Falls",
+    "description": "You drive in, then wade or catch the shuttle boat across a narrow gorge to reach a sandy beach beneath twin cascades. Crocodile management means swimming isn't allowed, but the rock amphitheater is reason enough. Combine it with Jim Jim as a full day out from the same turn-off.",
+    "lat": -13.2833,
+    "lng": 132.7967,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Twin Falls, Kakadu NP",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "beach",
+      "rock"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-ubirr-rock-art-site",
+    "title": "Ubirr Rock Art Site",
+    "description": "Layers of rock art here span thousands of years, x-ray fish and long-necked turtles painted over each other by generations of Bininj artists. The short climb to the top lookout gives a 360-degree view over the Nadab floodplain, one of the best sunset spots in the Top End. Fifteen minutes of walking for one of the biggest payoffs in the park.",
+    "lat": -12.5333,
+    "lng": 132.9833,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Ubirr, Kakadu NP",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-nourlangie-rock-burrunggui",
+    "title": "Nourlangie Rock (Burrunggui)",
+    "description": "A shaded loop past rock shelters and painted galleries beneath a sandstone outlier, rich with Anbangbang creation stories on the interpretive signs. The Gunwarddehwardde lookout at the far end adds a view across the stone country. A good option when midday heat rules out anything longer.",
+    "lat": -12.8608,
+    "lng": 132.8069,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Nourlangie, Kakadu NP",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-nitmiluk-katherine-gorge",
+    "title": "Nitmiluk (Katherine) Gorge",
+    "description": "Thirteen sandstone gorges carved by the Katherine River, best explored by canoe between the first two chasms or on foot along the rim tracks above. Freshwater crocodiles sun themselves on the rocks and generally ignore you. Paddling upstream, then drifting back, sees the most gorge for the least effort.",
+    "lat": -14.3339,
+    "lng": 132.4419,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Nitmiluk NP, near Katherine, Northern Territory",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "rock",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-edith-falls-leliyn",
+    "title": "Edith Falls (Leliyn)",
+    "description": "A short walk from the car park to a broad swimming hole beneath a low cascade, with a steeper track climbing to upper pools if you want the view without the crowd. It's a favourite stopover on the Stuart Highway run south from Darwin. Camping is right there if you want to make a night of it.",
+    "lat": -14.1667,
+    "lng": 132.2167,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Edith Falls, Nitmiluk NP",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-wangi-falls",
+    "title": "Wangi Falls",
+    "description": "A twin waterfall dropping into a wide, easy-access swimming hole, the most popular stop in Litchfield for good reason. A rainforest boardwalk loop circles the whole pool if you'd rather look than swim. Closures happen after heavy rain when the plunge pool turns dangerous.",
+    "lat": -13.1583,
+    "lng": 130.6797,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Wangi Falls, Litchfield NP, Northern Territory",
+    "minTier": 1,
+    "terrainTags": [
+      "forest"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-florence-falls",
+    "title": "Florence Falls",
+    "description": "Twin falls drop into a deep monsoon-forest pool reached by a set of stairs that will remind your legs they exist. It's one of the coldest, clearest swims in the Top End. Come early to beat the tour buses out of Darwin.",
+    "lat": -13.1339,
+    "lng": 130.7908,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Florence Falls, Litchfield NP",
+    "minTier": 1,
+    "terrainTags": [
+      "forest"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-tolmer-falls",
+    "title": "Tolmer Falls",
+    "description": "No swimming here, just a lookout track over a plunging waterfall into a gorge that's home to a rare ghost bat colony. The short walk to the platform is shaded and easy. A good stop between Florence and Wangi if you're stringing the park together in a day.",
+    "lat": -13.1258,
+    "lng": 130.8272,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Tolmer Falls, Litchfield NP",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-mataranka-thermal-pool",
+    "title": "Mataranka Thermal Pool",
+    "description": "Crystal-clear, constantly 34-degree spring water threading through paperbark forest lets you float the current from one end to the other. It's an easy detour off the Stuart Highway and a genuine reset after outback driving. Go early before the tour groups arrive.",
+    "lat": -14.9333,
+    "lng": 133.0667,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Bitter Springs / Mataranka Thermal Pool, Elsey NP, Northern Territory",
+    "minTier": 1,
+    "terrainTags": [
+      "forest",
+      "outback"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-bell-gorge",
+    "title": "Bell Gorge",
+    "description": "The signature swimming hole of the Gibb River Road, a tiered waterfall dropping into a deep pool ringed by red cliffs. Getting there means hours of corrugations that shake vehicles apart if you're not careful. Worth every rattle once you're floating under the falls.",
+    "lat": -17.1667,
+    "lng": 125.5833,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Bell Gorge, Gibb River Road, Kimberley, Western Australia",
+    "minTier": 3,
+    "terrainTags": [
+      "cliff",
+      "river"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-windjana-gorge",
+    "title": "Windjana Gorge",
+    "description": "A 3.5km walk along the base of a 100-metre limestone gorge cut by the Lennard River, with dozens of freshwater crocodiles visible from the bank at a comfortable distance. The gorge walls are an ancient Devonian reef, fossil coral still visible in the rock. Bring a hat — there's little shade until the walls close in.",
+    "lat": -17.4167,
+    "lng": 124.9833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Windjana Gorge NP, Kimberley, Western Australia",
+    "minTier": 2,
+    "terrainTags": [
+      "rock",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-tunnel-creek",
+    "title": "Tunnel Creek",
+    "description": "A 750-metre cave tunnel carved straight through the Napier Range by an underground creek, waded in knee-to-waist-deep water in the dark. Bring a proper torch and shoes you don't mind getting wet. This was also the hideout of Jandamarra, the Bunuba resistance leader, told well on the ranger signage.",
+    "lat": -17.5833,
+    "lng": 125.1,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Tunnel Creek NP, Kimberley, Western Australia",
+    "minTier": 2,
+    "terrainTags": [
+      "creek"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-cathedral-gorge-purnululu",
+    "title": "Cathedral Gorge, Purnululu",
+    "description": "The beehive-domed sandstone towers of the Bungle Bungles are one of the most striking landscapes on the continent, and Cathedral Gorge is the natural amphitheater at their heart. Getting there requires a rough 4WD track that only clears in the dry season. The acoustics inside the gorge are a bonus nobody mentions until they hear it.",
+    "lat": -17.5167,
+    "lng": 128.3833,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Cathedral Gorge, Purnululu NP (Bungle Bungles), Kimberley",
+    "minTier": 3,
+    "terrainTags": [
+      "sand"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-mitchell-falls",
+    "title": "Mitchell Falls",
+    "description": "A four-tiered waterfall in one of the most remote corners of the country, reached by a punishing 4WD track and a multi-hour hike, or a helicopter shortcut for the flush and time-poor. Aboriginal rock art sites line the walk in. Few places in Australia feel this far from anywhere.",
+    "lat": -14.8167,
+    "lng": 125.7167,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Mitchell Falls (Punamii-Unpuu), Mitchell River NP, far Kimberley",
+    "minTier": 5,
+    "terrainTags": [
+      "rock",
+      "river",
+      "remote"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-emma-gorge",
+    "title": "Emma Gorge",
+    "description": "An hour's boulder-hop up a narrowing gorge ends at a plunge pool fed by a thin waterfall dripping off an overhang, warm springs feeding in near the base. The rock walls tower overhead the whole way in. Go mid-morning for the best light through the gap.",
+    "lat": -15.9167,
+    "lng": 128.1833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Emma Gorge, El Questro Wilderness Park, Kimberley",
+    "minTier": 2,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-hancock-gorge",
+    "title": "Hancock Gorge",
+    "description": "Karijini's most demanding gorge walk squeezes through Kermit's Pool via a spider-walk across narrow ledges above the water, hands and feet braced on opposite walls. It ends at Regan's Pool, a slot barely wider than your shoulders. Not for anyone uneasy with exposure or cold water.",
+    "lat": -22.4833,
+    "lng": 118.2667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Hancock Gorge, Karijini NP, Pilbara, Western Australia",
+    "minTier": 3,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-dales-gorge-fortescue-falls",
+    "title": "Dales Gorge / Fortescue Falls",
+    "description": "A well-formed track drops into red-walled Dales Gorge and Fortescue Falls, a tiered waterfall with a swimming pool at its base. Circular Pool at the gorge's far end adds a shaded, tucked-away second stop. The easiest way into Karijini's scenery without technical scrambling.",
+    "lat": -22.4644,
+    "lng": 118.5686,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Dales Gorge, Karijini NP, Pilbara",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-hamersley-gorge",
+    "title": "Hamersley Gorge",
+    "description": "Folded, contorted rock layers twist through this gorge like something poured and set mid-motion, a favourite subject for photographers. A short scramble down leads to a swimming hole beneath a small cascade. It sits apart from the rest of the park, so factor in extra driving time.",
+    "lat": -22.5333,
+    "lng": 118.0333,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Hamersley Gorge, Karijini NP, Pilbara",
+    "minTier": 2,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-yardie-creek",
+    "title": "Yardie Creek",
+    "description": "A limestone gorge walk along the rim with black-footed rock wallabies often spotted on the ledges below. Boat tours run along the permanent waterhole for those who'd rather float than walk. It sits right at the southern tip of Ningaloo Reef, so pair it with a snorkel.",
+    "lat": -22.0,
+    "lng": 113.85,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Yardie Creek Gorge, Cape Range NP, Western Australia",
+    "minTier": 1,
+    "terrainTags": [
+      "rock",
+      "creek"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-turquoise-bay",
+    "title": "Turquoise Bay",
+    "description": "One of the few places on earth where you can walk off the beach straight onto a living coral reef. The drift snorkel lets the current carry you along the reef edge before you kick back to shore. Turtles and reef sharks are a common sight in the shallows.",
+    "lat": -22.0964,
+    "lng": 113.8317,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Turquoise Bay, Ningaloo Reef, Cape Range NP",
+    "minTier": 1,
+    "terrainTags": [
+      "beach"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-fran-ois-peron-national-park",
+    "title": "François Peron National Park",
+    "description": "Red dunes drop straight into the turquoise water of Shark Bay along tracks that demand a 4WD and tyre deflation. Cape Peron itself is a lookout where you can often spot rays, sharks, and dolphins from the cliff in the same glance. The old homestead artesian tub makes a strange, warm reward at the end.",
+    "lat": -25.7667,
+    "lng": 113.55,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "François Peron NP, Shark Bay, Western Australia",
+    "minTier": 2,
+    "terrainTags": [
+      "dunes",
+      "cliff"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-pinnacles-desert",
+    "title": "Pinnacles Desert",
+    "description": "Thousands of limestone spires rise out of yellow sand like a forest turned to stone, walkable via a loop trail or drivable in a normal car. Sunrise and sunset light throw long shadows across the whole field. It's an easy day trip north of Perth.",
+    "lat": -30.5992,
+    "lng": 115.1614,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Pinnacles Desert, Nambung NP, Western Australia",
+    "minTier": 1,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "forest"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-wave-rock",
+    "title": "Wave Rock",
+    "description": "A 2.7-billion-year-old granite formation curls into a frozen wave fifteen metres high, striped with mineral streaks like a watercolour wash. The short walk to the top gives a wider view over the wheatbelt. Ten minutes of walking for one of the state's most photographed rocks.",
+    "lat": -32.4364,
+    "lng": 118.9022,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Wave Rock, Hyden, Western Australia",
+    "minTier": 1,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-frenchman-peak",
+    "title": "Frenchman Peak",
+    "description": "A steep scramble up bare granite slabs to a summit cave that frames views over Cape Le Grand's turquoise bays and white sand. The rock gets slick when wet, and wind on the exposed upper section can be brutal. Clear days reward you with a view stretching to the Recherche Archipelago.",
+    "lat": -33.9833,
+    "lng": 122.2167,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Frenchman Peak, Cape Le Grand NP, Western Australia",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "rock"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-bibbulmun-track-albany-terminus",
+    "title": "Bibbulmun Track — Albany Terminus",
+    "description": "The southern end of a 1,000km trail that runs all the way to Kalamunda near Perth, marked here by a simple trailhead post above the Southern Ocean. Even a short stretch along the coastal section gives a sense of the karri forest and granite headlands ahead. A worthwhile stop even if you're not walking the whole thing.",
+    "lat": -35.0275,
+    "lng": 117.8836,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Bibbulmun Track southern trailhead, Albany, Western Australia",
+    "minTier": 1,
+    "terrainTags": [
+      "forest",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-wilpena-pound",
+    "title": "Wilpena Pound",
+    "description": "A natural amphitheater of mountains enclosing a valley, best appreciated from the Wangara Lookout track that climbs the rim in a few hours. The colours shift hard at sunset, ochre to deep red. It's the anchor point for exploring the whole Flinders Ranges.",
+    "lat": -31.5167,
+    "lng": 138.6,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Wilpena Pound, Ikara-Flinders Ranges NP, South Australia",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-st-mary-peak",
+    "title": "St Mary Peak",
+    "description": "The highest point in the Flinders Ranges, a full-day return hike with a steep, rocky final push to the summit. Traditional owners ask visitors use the outer rim route rather than the direct saddle track, out of respect for its significance. The 360-degree view from the top takes in the entire Pound below.",
+    "lat": -31.4667,
+    "lng": 138.6167,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "St Mary Peak, Ikara-Flinders Ranges NP, South Australia",
+    "minTier": 3,
+    "terrainTags": [
+      "rock"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-big-red-dune",
+    "title": "Big Red Dune",
+    "description": "The largest and most famous dune on the Simpson Desert crossing, a 40-metre wall of red sand that's turned back plenty of drivers on the western face. Locals gather at the base most evenings just to watch other vehicles attempt the climb. It's the last dune before Birdsville if you're finishing the crossing eastbound.",
+    "lat": -25.2333,
+    "lng": 140.7667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Big Red, Simpson Desert, near Birdsville, Queensland",
+    "minTier": 3,
+    "terrainTags": [
+      "desert",
+      "sand",
+      "dunes",
+      "river"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-coward-springs",
+    "title": "Coward Springs",
+    "description": "A restored railway siding on the old Ghan line with an artesian spring pool built into palm-shaded wetlands, a genuinely strange oasis on one of Australia's classic outback tracks. The mound springs nearby bubble up from the Great Artesian Basin. A good midpoint break on the run between Marree and William Creek.",
+    "lat": -29.3833,
+    "lng": 136.8167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Coward Springs, Oodnadatta Track, South Australia",
+    "minTier": 2,
+    "terrainTags": [
+      "outback",
+      "creek"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-birdsville-track",
+    "title": "Birdsville Track",
+    "description": "A 517km stock route strung between Marree and Birdsville through some of the most isolated country in Australia, following the old droving path along Sturt's Stony Desert. It's graded and driveable in the dry, but conditions change fast after rain and fuel stops are hours apart. The Birdsville pub at the northern end is the traditional reward.",
+    "lat": -25.8975,
+    "lng": 139.3486,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Birdsville Track, southwest Queensland to South Australia",
+    "minTier": 3,
+    "terrainTags": [
+      "desert"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-lake-eyre-kati-thanda-lookout",
+    "title": "Lake Eyre (Kati Thanda) Lookout",
+    "description": "Australia's largest lake is usually a blinding white salt pan, but every decade or so it floods into an inland sea that draws pelicans by the tens of thousands. The Halligan Bay lookout gets you closest by road, though the full scale only really reads from the air. Check current water levels before making the long drive out.",
+    "lat": -28.9667,
+    "lng": 137.3667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Kati Thanda-Lake Eyre NP, South Australia",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "lake",
+      "saltflat"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-the-breakaways",
+    "title": "The Breakaways",
+    "description": "Striped mesas and moonscape hills rise out of the desert on the edge of opal-mining country, familiar to anyone who's seen Mad Max shot here. A loop drive covers the main lookouts, with short walks at each stop. It pairs naturally with a night in Coober Pedy's underground town.",
+    "lat": -29.0069,
+    "lng": 134.7544,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "The Breakaways Reserve, near Coober Pedy, South Australia",
+    "minTier": 2,
+    "terrainTags": [
+      "desert"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-head-of-bight",
+    "title": "Head of Bight",
+    "description": "Sheer cliffs at the edge of the treeless Nullarbor plain look straight down onto one of the world's most reliable southern right whale nurseries in season. A boardwalk keeps you at a respectful, safe distance above the water. Even outside whale season, the cliff line itself is worth the detour.",
+    "lat": -31.4833,
+    "lng": 131.15,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Head of Bight, Nullarbor, South Australia",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-twelve-apostles",
+    "title": "Twelve Apostles",
+    "description": "Limestone sea stacks rising out of the Southern Ocean, best seen from the boardwalk viewing platforms at dawn or dusk when the crowds thin and the light turns gold. A helicopter option exists if you'd rather see them from above. The stacks are actively eroding, so what you see today won't look the same in a decade.",
+    "lat": -38.6619,
+    "lng": 143.1039,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Twelve Apostles, Port Campbell NP, Great Ocean Road, Victoria",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-grampians-pinnacle-lookout",
+    "title": "Grampians — Pinnacle Lookout",
+    "description": "A rocky climb through a narrow slot known as the Grand Canyon leads to a lookout balanced right on the edge of the range, staring down over Halls Gap and the valley floor. It's one of the more dramatic short hikes in Victoria for the effort involved. Wildflowers carpet the lower slopes in spring.",
+    "lat": -37.15,
+    "lng": 142.5167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "The Pinnacle, Grampians (Gariwerd) NP, Victoria",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-mount-oberon",
+    "title": "Mount Oberon",
+    "description": "A steady climb through granite boulders and coastal heath to a summit with sweeping views over Wilsons Promontory's beaches and Bass Strait islands. It's the most popular hike in 'the Prom' for the view-to-effort ratio. Wombats are a near-guaranteed sighting on the lower track.",
+    "lat": -39.0333,
+    "lng": 146.2833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Mount Oberon summit track, Wilsons Promontory NP, Victoria",
+    "minTier": 2,
+    "terrainTags": [
+      "beach",
+      "coast"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-three-sisters-echo-point",
+    "title": "Three Sisters — Echo Point",
+    "description": "Three sandstone pillars stand guard over the Jamison Valley, viewed from a purpose-built lookout a short walk from central Katoomba. The Giant Stairway drops steeply down beside them for those who want to keep going into the valley floor. Sunrise thins the crowds considerably.",
+    "lat": -33.7333,
+    "lng": 150.3117,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Echo Point, Katoomba, Blue Mountains NP, New South Wales",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "mountain"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-grand-canyon-track-blackheath",
+    "title": "Grand Canyon Track, Blackheath",
+    "description": "A looping track that drops into a narrow, fern-lined slot canyon with a waterfall and a low tunnel section, one of the most atmospheric walks in the Blue Mountains. The circuit takes three to four hours and involves a fair bit of stair climbing on the return. Quieter than the Katoomba side of the range.",
+    "lat": -33.6333,
+    "lng": 150.2833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Grand Canyon Track, Blackheath, Blue Mountains NP",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon",
+      "mountain"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-mt-kosciuszko-summit-trail",
+    "title": "Mt Kosciuszko Summit Trail",
+    "description": "Mainland Australia's highest peak is a relatively gentle grade underfoot, but the length and exposure to alpine weather make it a serious day out regardless of season. Snow can fall even in summer near the summit. The metal walkway across the final stretch protects the fragile alpine vegetation.",
+    "lat": -36.4559,
+    "lng": 148.2633,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Mount Kosciuszko, Kosciuszko NP, New South Wales",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "snow"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-charlotte-pass",
+    "title": "Charlotte Pass",
+    "description": "The starting point for the shorter, steeper route up Kosciuszko, crossing the Snowy River on a footbridge before climbing into the alpine zone. In winter the road closes and it becomes a ski touring base instead. Either season, it's one of the highest settlements in the country.",
+    "lat": -36.4275,
+    "lng": 148.3272,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Charlotte Pass, Kosciuszko NP, New South Wales",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "snow",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-jenolan-caves",
+    "title": "Jenolan Caves",
+    "description": "One of the oldest known cave systems in the world, with limestone chambers strung along an underground river and a natural archway you can drive straight through. Guided tours cover the decorated show caves, while adventure caving trips go further for those who want to crawl rather than walk. The surrounding karst valley has its own short walking tracks too.",
+    "lat": -33.8228,
+    "lng": 150.0231,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Jenolan Caves, Blue Mountains, New South Wales",
+    "minTier": 1,
+    "terrainTags": [
+      "mountain",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-the-breadknife-warrumbungle-np",
+    "title": "The Breadknife, Warrumbungle NP",
+    "description": "A knife-edge volcanic dyke rises 90 metres straight out of the bush, walked past on a steep circuit to the Grand High Tops lookout beyond. The dark-sky reserve status here also makes it one of the best stargazing spots in New South Wales. The full loop is a genuine leg-burner best started early.",
+    "lat": -31.2833,
+    "lng": 149.0,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Breadknife and Grand High Tops walk, Warrumbungle NP, New South Wales",
+    "minTier": 3,
+    "terrainTags": [
+      "volcanic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-cape-byron-lighthouse",
+    "title": "Cape Byron Lighthouse",
+    "description": "The walking track to the easternmost point of mainland Australia loops past whale-watching lookouts and a working 1901 lighthouse. Dolphins and, in season, migrating whales are common sights just offshore. It's an easy loop that still delivers a genuine sense of standing at the edge of the continent.",
+    "lat": -28.6383,
+    "lng": 153.6372,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Cape Byron Lighthouse, Byron Bay, New South Wales",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-lake-mckenzie-k-gari-fraser-island",
+    "title": "Lake McKenzie, K'gari (Fraser Island)",
+    "description": "A perched dune lake filled with rainwater so pure it holds almost no nutrients, giving the white silica sand and turquoise water an almost surreal clarity. Getting there means a 4WD trip across the world's largest sand island. The sand here doubles as an exfoliant if you believe the local lore.",
+    "lat": -25.45,
+    "lng": 153.05,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Lake McKenzie, K'gari (Fraser Island), Queensland",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "dunes",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-whitehaven-beach",
+    "title": "Whitehaven Beach",
+    "description": "Seven kilometres of near-pure silica sand so fine it squeaks underfoot, with the swirling sandbar at Hill Inlet the most photographed viewpoint in the Whitsundays. It's boat-access only, so factor in a charter or tour. The lookout above Hill Inlet is a short, easy climb for the classic shot.",
+    "lat": -20.2833,
+    "lng": 149.0333,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Whitehaven Beach, Whitsunday Island, Queensland",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "beach"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-mossman-gorge",
+    "title": "Mossman Gorge",
+    "description": "Granite boulders and a fast, cold river cut through the world's oldest continuously surviving rainforest, walkable on a well-formed loop from the visitor centre. Guided walks with Kuku Yalanji rangers add a layer most visitors miss on their own. Swimming is allowed in the calmer sections, water levels permitting.",
+    "lat": -16.4667,
+    "lng": 145.3333,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Mossman Gorge, Daintree NP, Queensland",
+    "minTier": 1,
+    "terrainTags": [
+      "forest",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cape-tribulation",
+    "title": "Cape Tribulation",
+    "description": "The point where two World Heritage sites meet, rainforest running straight down to the reef's edge without a break. Boardwalks through the mangroves and along the beach make the whole area accessible on foot. Crocodile warnings are real here — stay off the water's edge at dusk.",
+    "lat": -16.0736,
+    "lng": 145.4531,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Cape Tribulation, Daintree NP, Queensland",
+    "minTier": 1,
+    "terrainTags": [
+      "forest",
+      "beach"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-undara-lava-tubes",
+    "title": "Undara Lava Tubes",
+    "description": "One of the longest lava flows from a single volcano anywhere on earth, leaving behind a network of collapsed tubes now sheltering rainforest pockets and microbat colonies. Access is guided-tour only for safety and conservation. It's a genuinely strange landscape for outback Queensland — rainforest sunk into a crater in dry savanna country.",
+    "lat": -18.2333,
+    "lng": 144.5833,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Undara Volcanic NP, Queensland",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "savanna",
+      "outback",
+      "volcanic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-cape-york-the-tip",
+    "title": "Cape York — The Tip",
+    "description": "A multi-day 4WD expedition up the peninsula, through river crossings and remote communities, ends at a short walk out to a sign marking the northernmost point of mainland Australia. It's less a destination than an achievement — the track itself is the real challenge. Fuel, tyres, and time all run out faster than expected up here.",
+    "lat": -10.6883,
+    "lng": 142.5228,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Pajinka, the northernmost point of mainland Australia, Cape York Peninsula",
+    "minTier": 5,
+    "terrainTags": [
+      "river",
+      "remote"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-dove-lake-circuit-cradle-mountain",
+    "title": "Dove Lake Circuit, Cradle Mountain",
+    "description": "A boardwalked loop around a glacial lake with Cradle Mountain's jagged dolerite peaks reflected on a still day, one of the most photographed views in Tasmania. Ancient pencil pines and buttongrass moorland line the track. Weather flips fast here, so pack layers regardless of forecast.",
+    "lat": -41.6386,
+    "lng": 145.9481,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Dove Lake, Cradle Mountain-Lake St Clair NP, Tasmania",
+    "minTier": 2,
+    "terrainTags": [
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-overland-track-lake-st-clair-terminus",
+    "title": "Overland Track — Lake St Clair Terminus",
+    "description": "The finish line of Australia's most celebrated multi-day walk, 65km through alpine moorland, rainforest, and dolerite peaks between Cradle Mountain and Australia's deepest lake. Bookings are capped and required through the peak walking season. Most walkers finish with a ferry ride across the lake instead of the final road walk.",
+    "lat": -42.1136,
+    "lng": 146.1725,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Lake St Clair, southern end of the Overland Track, Tasmania",
+    "minTier": 5,
+    "terrainTags": [
+      "forest",
+      "alpine",
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-cradle-mountain-summit",
+    "title": "Cradle Mountain Summit",
+    "description": "A steep haul over boulder fields to the summit of Tasmania's most recognisable peak, with the final section requiring hands-on scrambling. Views stretch across the whole national park on a clear day, which isn't a given here. Weather can turn in under an hour, so start early and watch the sky.",
+    "lat": -41.6811,
+    "lng": 145.945,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Cradle Mountain summit track, Cradle Mountain-Lake St Clair NP",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-wineglass-bay-lookout",
+    "title": "Wineglass Bay Lookout",
+    "description": "A steep granite staircase climbs to a saddle with one of the most photographed views in Australia, a perfect white-sand crescent bay curving below pink granite peaks. Continuing down to the beach itself adds another hour each way. The Hazards range behind glows deep pink at sunset.",
+    "lat": -42.1611,
+    "lng": 148.3011,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Wineglass Bay Lookout, Freycinet NP, Tasmania",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "beach"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-south-coast-track-cockle-creek",
+    "title": "South Coast Track — Cockle Creek",
+    "description": "The trailhead for one of the world's great wilderness walks, a week-long trek through some of the most isolated coastline left in Australia. Most walkers fly out from a remote airstrip partway along rather than retrace the route. Tidal creek crossings and total self-sufficiency make this a serious undertaking, not a casual add-on.",
+    "lat": -43.5667,
+    "lng": 146.8833,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Cockle Creek trailhead, South Coast Track, Southwest NP, Tasmania",
+    "minTier": 5,
+    "terrainTags": [
+      "coast",
+      "creek",
+      "remote"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-kunanyi-mount-wellington-summit",
+    "title": "kunanyi / Mount Wellington Summit",
+    "description": "A road runs all the way to the summit, but the walking tracks up through eucalypt forest and dolerite boulder fields are worth the extra effort for the views over Hobart and the Derwent estuary. Weather at the top is often ten degrees colder than the city below. Snow dustings aren't unusual even outside winter.",
+    "lat": -42.8944,
+    "lng": 147.2381,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "kunanyi/Mount Wellington, above Hobart, Tasmania",
+    "minTier": 1,
+    "terrainTags": [
+      "forest",
+      "snow"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-bay-of-fires-binalong-bay",
+    "title": "Bay of Fires — Binalong Bay",
+    "description": "Orange lichen-streaked granite boulders sit against white sand and impossibly clear water along a stretch of coast that lends the region its name. Easy walking tracks link a string of beaches and headlands. It's one of the more understated great coastal drives in the country.",
+    "lat": -41.1667,
+    "lng": 148.3,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Binalong Bay, Bay of Fires, Tasmania",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "beach",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-frenchmans-cap",
+    "title": "Frenchmans Cap",
+    "description": "A quartzite peak rising sheer above the southwest wilderness, reached by a multi-day track infamous for knee-deep mud through the button-grass plains before the final rocky ascent. The summit view over the Franklin River valley is one of the best in the state. Huts along the way have eased what was once a genuinely brutal slog.",
+    "lat": -42.2833,
+    "lng": 145.9333,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Frenchmans Cap, Franklin-Gordon Wild Rivers NP, Tasmania",
+    "minTier": 3,
+    "terrainTags": [
+      "rock",
+      "mud",
+      "river"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-bruny-island-the-neck",
+    "title": "Bruny Island — The Neck",
+    "description": "A narrow sand isthmus joins the two halves of Bruny Island, with a boardwalk and lookout staircase giving a view down both coastlines at once. It's also a nesting site for little penguins and short-tailed shearwaters, viewable at dusk in season. The ferry crossing itself is part of the appeal.",
+    "lat": -43.2833,
+    "lng": 147.35,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "The Neck, Bruny Island, Tasmania",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-mount-anne-circuit",
+    "title": "Mount Anne Circuit",
+    "description": "The highest peak in Tasmania's southwest, walked via a two-to-three day circuit that includes an exposed ridgeline with fixed cables for the trickiest sections. Weather changes here are notoriously fast and unforgiving, even by Tasmanian standards. It sees a fraction of the traffic of Cradle Mountain despite arguably better views.",
+    "lat": -43.0333,
+    "lng": 146.4333,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Mount Anne Circuit, Southwest NP, Tasmania",
+    "minTier": 3,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-nitmiluk-jatbula-trail",
+    "title": "Nitmiluk — Jatbula Trail",
+    "description": "A one-way trek across the Arnhem Land plateau linking Nitmiluk Gorge to Edith Falls, passing sandstone escarpments, rock art galleries, and a string of swimming holes along the way. Bookings are capped and the route only runs one direction, so logistics need planning ahead. It's considered one of the best multi-day walks in the Top End for the swimming-to-effort ratio alone.",
+    "lat": -14.3167,
+    "lng": 132.4167,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Jatbula Trail, Nitmiluk NP to Leliyn (Edith Falls), Northern Territory",
+    "minTier": 3,
+    "terrainTags": [
+      "sand",
+      "plateau",
+      "rock"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-kalbarri-nature-s-window",
+    "title": "Kalbarri — Nature's Window",
+    "description": "A natural rock arch frames the Murchison River gorge below in one of the most-photographed shots in Western Australia. The short walk to the window is flat and easy from the car park. Longer gorge rim trails continue on for those wanting more than the postcard stop.",
+    "lat": -27.6167,
+    "lng": 114.3833,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Nature's Window, Kalbarri NP, Western Australia",
+    "minTier": 1,
+    "terrainTags": [
+      "rock",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-charles-knife-canyon",
+    "title": "Charles Knife Canyon",
+    "description": "A ridge-top drive and walking track cut along the spine of a canyon that plunges hundreds of metres either side, with almost no barriers between you and the drop. The Thomas Carter Lookout at the end gives a full view down both walls. It's a stark contrast to the reef just a short drive away.",
+    "lat": -22.05,
+    "lng": 114.05,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Charles Knife Road and Canyon, Cape Range NP, Western Australia",
+    "minTier": 2,
+    "terrainTags": [
+      "canyon"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-tongariro-alpine-crossing",
+    "title": "Tongariro Alpine Crossing",
+    "description": "Widely rated one of the best one-day hikes on earth, 19.4km across active volcanic terrain past emerald lakes and steaming vents beneath Ngauruhoe's cone. The Devil's Staircase climb and the alpine exposure make it a real day out, not a stroll. Weather on the saddle can turn dangerous fast, even in summer.",
+    "lat": -39.1483,
+    "lng": 175.5644,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Mangatepopo end, Tongariro Alpine Crossing, Tongariro NP, North Island",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine",
+      "volcanic",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-milford-track-glade-wharf",
+    "title": "Milford Track — Glade Wharf",
+    "description": "Often called the finest walk in the world, a four-day trek through Fiordland's rainforest and alpine passes ending at Milford Sound itself. Access to the trailhead is by boat only, and independent walker permits sell out months ahead in peak season. Sutherland Falls, one of the tallest in the country, sits just off the main track.",
+    "lat": -44.9333,
+    "lng": 167.9333,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Glade Wharf trailhead, Milford Track, Fiordland NP, South Island",
+    "minTier": 5,
+    "terrainTags": [
+      "forest",
+      "alpine"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-routeburn-track-routeburn-shelter",
+    "title": "Routeburn Track — Routeburn Shelter",
+    "description": "A high alpine crossing between Fiordland and Mount Aspiring national parks, with the Harris Saddle the scenic and physical high point of the three-day route. Views open up over the Hollyford Valley on a clear day. It's rated among the toughest of New Zealand's Great Walks for the sustained alpine exposure.",
+    "lat": -44.7889,
+    "lng": 168.2181,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Routeburn Shelter trailhead, Routeburn Track, South Island",
+    "minTier": 3,
+    "terrainTags": [
+      "alpine"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-kepler-track-control-gates",
+    "title": "Kepler Track — Control Gates",
+    "description": "A well-graded loop out of Te Anau climbing through beech forest onto an exposed alpine tussock ridge with views across Lake Te Anau and the Kepler Mountains. It can be done as a long day walk to Luxmore Hut and back, or the full multi-day loop. Huts book out fast in summer.",
+    "lat": -45.4189,
+    "lng": 167.6997,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Control Gates trailhead, Kepler Track, near Te Anau, South Island",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "alpine",
+      "mountain",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-abel-tasman-coast-track-marahau",
+    "title": "Abel Tasman Coast Track — Marahau",
+    "description": "New Zealand's most accessible Great Walk, threading golden beaches and estuary crossings along a mild coastal track. Water taxis let you walk one direction and boat back, or skip sections entirely. Kayaking the same coastline is the other popular way to see it.",
+    "lat": -41.0119,
+    "lng": 173.0189,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Marahau trailhead, Abel Tasman Coast Track, South Island",
+    "minTier": 1,
+    "terrainTags": [
+      "beach",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-franz-josef-glacier-viewpoint",
+    "title": "Franz Josef Glacier Viewpoint",
+    "description": "A valley walk over glacial outwash leads toward the retreating face of Franz Josef, with the exact viewing distance shifting year to year as the ice recedes. Helicopter landings on the glacier itself are the alternative for those wanting to actually walk on the ice. The valley's scale is a stark, visible record of climate change in real time.",
+    "lat": -43.4642,
+    "lng": 170.1817,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Franz Josef Glacier valley walk, Westland Tai Poutini NP, South Island",
+    "minTier": 2,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-fox-glacier-viewpoint",
+    "title": "Fox Glacier Viewpoint",
+    "description": "Fox Glacier's valley walk mirrors its neighbour Franz Josef, a rocky approach through a glacially carved valley toward the ice face. Lake Matheson nearby offers the classic still-water reflection shot of the glacier's parent peaks. Weather on the West Coast changes fast, so check conditions before setting out.",
+    "lat": -43.4711,
+    "lng": 170.0125,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Fox Glacier valley walk, Westland Tai Poutini NP, South Island",
+    "minTier": 2,
+    "terrainTags": [
+      "coast",
+      "lake",
+      "rock"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-hooker-valley-track",
+    "title": "Hooker Valley Track",
+    "description": "Three swing bridges lead across braided glacial rivers to a lake dotted with icebergs calved from the Hooker Glacier, with Aoraki/Mount Cook filling the skyline the whole way. It's flat, well-formed, and one of the most rewarding easy walks in the country. Wind on the swing bridges can be stronger than expected.",
+    "lat": -43.734,
+    "lng": 170.098,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Hooker Valley Track, Aoraki/Mount Cook NP, South Island",
+    "minTier": 1,
+    "terrainTags": [
+      "lake",
+      "river"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-roys-peak-track",
+    "title": "Roys Peak Track",
+    "description": "A relentless switchback climb with almost no flat ground for 16km round trip, ending at a summit view over Lake Wanaka that's become one of New Zealand's most photographed vistas. There's no shade or water source on track, so both are essential to carry. The track closes seasonally for lambing on the working farmland it crosses.",
+    "lat": -44.6392,
+    "lng": 169.1394,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Roys Peak Track, near Wanaka, South Island",
+    "minTier": 3,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-ben-lomond-track",
+    "title": "Ben Lomond Track",
+    "description": "A long climb out of Queenstown through beech forest onto open tussock and finally loose scree to a summit with views across the Remarkables, Lake Wakatipu, and Mount Aspiring in the far distance. The final scramble is the crux, loose underfoot and exposed to wind. Most walkers start well before dawn to beat the heat and the crowds.",
+    "lat": -45.0119,
+    "lng": 168.6531,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Ben Lomond Track, above Queenstown, South Island",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "lake"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-milford-sound-mitre-peak-viewpoint",
+    "title": "Milford Sound — Mitre Peak Viewpoint",
+    "description": "The classic view of Mitre Peak rising sheer from the fiord, reachable by a spectacular drive through the Homer Tunnel or by boat cruise once you're there. Rain here is frequent and actually improves the scene, waterfalls appearing off every cliff face. It's worth staying for a cruise rather than just the car park photo stop.",
+    "lat": -44.6167,
+    "lng": 167.9,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Milford Sound foreshore, Fiordland NP, South Island",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-rob-roy-glacier-track",
+    "title": "Rob Roy Glacier Track",
+    "description": "A swing bridge over the Matukituki River opens onto a climb through beech forest to an alpine basin with a hanging glacier and waterfalls visible right across the valley. Avalanches are audible and occasionally visible from the upper viewpoint in season. It's one of the best glacier views in the country for a half-day's effort.",
+    "lat": -44.4833,
+    "lng": 168.75,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Rob Roy Glacier Track, Mount Aspiring NP, South Island",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "alpine",
+      "river"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-lake-tekapo-church-of-the-good-shepherd",
+    "title": "Lake Tekapo — Church of the Good Shepherd",
+    "description": "A small stone church on the shore of a turquoise glacial lake, framed by the Southern Alps and sitting inside one of the world's largest Dark Sky Reserves. Daytime visits are about the lake colour; nighttime is about the stars. Both are worth the stop.",
+    "lat": -44.0064,
+    "lng": 170.4778,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Church of the Good Shepherd, Lake Tekapo, South Island",
+    "minTier": 1,
+    "terrainTags": [
+      "lake"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-mueller-hut-route",
+    "title": "Mueller Hut Route",
+    "description": "A steep, largely unmarked climb of over a thousand vertical metres to a hut perched on a ridge with Aoraki/Mount Cook filling the entire western sky. Snow and ice can be present even in summer, and route-finding in poor visibility has caught out experienced trampers. The sunrise view from the hut over the Hooker Valley is the reason people keep coming back.",
+    "lat": -43.7167,
+    "lng": 170.1,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Mueller Hut Route, Aoraki/Mount Cook NP, South Island",
+    "minTier": 5,
+    "terrainTags": [
+      "sand",
+      "snow"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-tongariro-tama-lakes-track",
+    "title": "Tongariro — Tama Lakes Track",
+    "description": "A quieter alternative to the full Alpine Crossing, climbing to two volcanic crater lakes with views of Ngauruhoe and Ruapehu without the crowds or the shuttle logistics. The upper lake requires a steeper final push than the lower one. It's a solid half-day option when the Crossing is closed for weather.",
+    "lat": -39.2,
+    "lng": 175.6167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Tama Lakes Track, Tongariro NP, North Island",
+    "minTier": 2,
+    "terrainTags": [
+      "alpine",
+      "volcanic",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-waitomo-glowworm-caves",
+    "title": "Waitomo Glowworm Caves",
+    "description": "A boat ride through a limestone cave lit entirely by thousands of bioluminescent glowworms clinging to the ceiling, like a still, silent starfield underground. Tours are guided and run year-round regardless of weather outside. Black-water rafting trips through adjacent cave systems are the adrenaline version of the same idea.",
+    "lat": -38.2606,
+    "lng": 175.1053,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Waitomo Glowworm Caves, North Island",
+    "minTier": 1,
+    "terrainTags": [
+      "sand"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cathedral-cove",
+    "title": "Cathedral Cove",
+    "description": "A sea arch carved through white cliffs opens onto a hidden beach, reachable by an hour's coastal walk or a shorter kayak paddle from Hahei. Erosion has periodically closed sections of the track, so checking current status before heading out is worthwhile. It's one of the most recognisable coastal spots in the North Island.",
+    "lat": -36.8306,
+    "lng": 175.7897,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Cathedral Cove, Coromandel Peninsula, North Island",
+    "minTier": 1,
+    "terrainTags": [
+      "cliff",
+      "beach",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-t-ne-mahuta",
+    "title": "Tāne Mahuta",
+    "description": "New Zealand's largest known kauri tree, over 50 metres tall and an estimated 1,500 to 2,500 years old, reached by a five-minute boardwalk from the road. A footbath at the entrance helps stop the spread of kauri dieback disease — use it. Standing beneath it is a quick, humbling stop on any Northland loop.",
+    "lat": -35.6178,
+    "lng": 173.5461,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Tāne Mahuta, Waipoua Forest, Northland, North Island",
+    "minTier": 1,
+    "terrainTags": [
+      "forest"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-cape-reinga-lighthouse",
+    "title": "Cape Reinga Lighthouse",
+    "description": "The northwestern tip of the North Island, where the Tasman Sea and Pacific Ocean visibly collide in a churn of currents below the lighthouse. In Māori tradition it's the departure point for spirits leaving the world. The short walk out to the point is easy, but the drive up is half the experience.",
+    "lat": -34.43,
+    "lng": 172.6817,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Cape Reinga, Northland, North Island",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-ninety-mile-beach",
+    "title": "Ninety Mile Beach",
+    "description": "A vast, hard-packed beach that doubles as a legal highway at low tide, best experienced on an organised coach tour that also covers the giant sand dunes for sandboarding. Driving it independently requires careful tide timing and the right vehicle — soft sand and incoming tides have claimed plenty of rental cars. The scale of open beach here is hard to match anywhere else in the country.",
+    "lat": -34.7833,
+    "lng": 172.95,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Ninety Mile Beach, Northland, North Island",
+    "minTier": 2,
+    "terrainTags": [
+      "sand",
+      "dunes",
+      "beach"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-rakiura-track",
+    "title": "Rakiura Track",
+    "description": "A three-day loop on New Zealand's third and least-visited main island, through dense podocarp forest and along beaches where kiwi sightings are genuinely possible after dark. Getting to the island itself, by ferry across Foveaux Strait or a short flight, is part of the commitment. Mud is a constant companion regardless of season.",
+    "lat": -46.9,
+    "lng": 168.1167,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Rakiura Track, Stewart Island/Rakiura NP",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "beach",
+      "mud"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-denniston-plateau",
+    "title": "Denniston Plateau",
+    "description": "A former coal-mining town abandoned on an exposed clifftop plateau, its incline railway once the steepest in the world for hauling wagons down to the coast. Walking tracks wind past rusting machinery and building foundations reclaiming the landscape. The Denniston Rose novels put this place on the map for a lot of New Zealanders.",
+    "lat": -41.7333,
+    "lng": 171.7333,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Denniston Plateau, West Coast, South Island",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff",
+      "coast",
+      "plateau"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-heaphy-track-brown-hut",
+    "title": "Heaphy Track — Brown Hut",
+    "description": "New Zealand's longest Great Walk, crossing from beech forest and alpine tussock down through the only nikau palm groves on the South Island's west coast. The full traverse takes four to five days and ends on a wild, remote beach. Mountain bikers can ride it outside the main tramping season.",
+    "lat": -41.1667,
+    "lng": 172.3667,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Brown Hut trailhead, Heaphy Track, Kahurangi NP, South Island",
+    "minTier": 3,
+    "terrainTags": [
+      "forest",
+      "alpine",
+      "beach",
+      "coast"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-punakaiki-pancake-rocks",
+    "title": "Punakaiki Pancake Rocks",
+    "description": "Stacked limestone formations that genuinely resemble piles of pancakes, with blowholes that shoot spray dramatically at high tide in rough seas. A short loop track covers all the viewpoints in twenty minutes. Time it around high tide for the best blowhole action.",
+    "lat": -42.1131,
+    "lng": 171.3306,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Pancake Rocks, Punakaiki, West Coast, South Island",
+    "minTier": 1,
+    "terrainTags": [
+      "coast",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-queenstown-hill",
+    "title": "Queenstown Hill",
+    "description": "A forested climb right from central Queenstown up to a summit with a giant basket sculpture and panoramic views over Lake Wakatipu and the Remarkables. It's shorter and less crowded than Ben Lomond but still delivers a proper Queenstown view. A good option when time or fitness rules out the bigger peaks.",
+    "lat": -45.0367,
+    "lng": 168.6689,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Queenstown Hill Time Walk, Queenstown, South Island",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-waiheke-island-man-o-war-bay",
+    "title": "Waiheke Island — Man O'War Bay",
+    "description": "A quiet vineyard-backed bay at the eastern end of Waiheke Island, a world away from the ferry crowds near the wharf despite being only 40 minutes from downtown Auckland. Coastal walking tracks link it to nearby beaches. Wine tasting at the surrounding vineyards is the local way to finish the walk.",
+    "lat": -36.8231,
+    "lng": 175.0333,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Man O'War Bay, Waiheke Island, Auckland",
+    "minTier": 1,
+    "terrainTags": [
+      "beach",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-tasman-glacier-viewpoint",
+    "title": "Tasman Glacier Viewpoint",
+    "description": "A short, well-formed track leads to a lookout over New Zealand's longest glacier and the iceberg-studded lake at its terminus, boat tours available for a closer look. It's an easier alternative to the Hooker Valley walk with a comparably striking payoff. Rock fall danger keeps you well back from the actual ice.",
+    "lat": -43.6167,
+    "lng": 170.2333,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Tasman Glacier Lake viewpoint, Aoraki/Mount Cook NP, South Island",
+    "minTier": 1,
+    "terrainTags": [
+      "lake",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-kilauea-iki-trail",
+    "title": "Kilauea Iki Trail",
+    "description": "A loop that drops through rainforest and then walks straight across the floor of a solidified lava lake that was a boiling pit in 1959. Steam still vents from cracks in places along the crossing. Check current park alerts — trail access shifts with ongoing volcanic activity.",
+    "lat": 19.4133,
+    "lng": -155.25,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Kilauea Iki Trail, Hawaii Volcanoes NP, Big Island",
+    "minTier": 2,
+    "terrainTags": [
+      "forest",
+      "volcanic",
+      "lake"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-mauna-kea-summit",
+    "title": "Mauna Kea Summit",
+    "description": "The tallest mountain on earth measured from its oceanic base, its bare red summit hosting some of the world's premier astronomical observatories above 4,200 metres. The final stretch requires 4WD and altitude acclimatisation at the visitor centre is strongly advised. The mountain is sacred to Native Hawaiians — visit respectfully and follow current access protocols.",
+    "lat": 19.8207,
+    "lng": -155.4681,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Mauna Kea summit, Big Island",
+    "minTier": 5,
+    "terrainTags": [
+      "mountain"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-haleakal-summit",
+    "title": "Haleakalā Summit",
+    "description": "A massive shield volcano crater over 3,000 metres up, famous for sunrise views above the clouds that require an advance reservation to access. The drive alone climbs from sea level to summit faster than almost anywhere else in the world, which can hit harder than expected. Bring warm layers — it's a different climate entirely from the beach below.",
+    "lat": 20.7097,
+    "lng": -156.2533,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Haleakalā summit, Haleakalā NP, Maui",
+    "minTier": 3,
+    "terrainTags": [
+      "beach",
+      "volcanic"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-waimea-canyon-lookout",
+    "title": "Waimea Canyon Lookout",
+    "description": "Called the 'Grand Canyon of the Pacific,' a mile-wide, deep red gorge cut into Kauai's volcanic rock, viewable from a roadside lookout with minimal walking required. Several hiking trails drop into the canyon itself for those wanting more than the view. Morning light before clouds roll in gives the clearest photos.",
+    "lat": 22.081,
+    "lng": -159.6631,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Waimea Canyon Lookout, Kauai",
+    "minTier": 1,
+    "terrainTags": [
+      "canyon",
+      "volcanic",
+      "rock"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-kalalau-trail",
+    "title": "Kalalau Trail",
+    "description": "An 18km round trip along sheer sea cliffs to a remote, permit-only valley beach accessible by no road anywhere. Crumbling, narrow sections above the ocean have claimed lives, and permits for the full distance are tightly capped. It's widely considered one of the most spectacular and dangerous day-into-overnight hikes in the United States.",
+    "lat": 22.22,
+    "lng": -159.5883,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Kalalau Trail trailhead, Nā Pali Coast, Kauai",
+    "minTier": 5,
+    "terrainTags": [
+      "cliff",
+      "beach",
+      "coast",
+      "remote"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-polol-valley-lookout",
+    "title": "Pololū Valley Lookout",
+    "description": "The end of the road on Big Island's northern coast, looking down a chain of dramatic sea cliffs and green valleys with a black sand beach at the bottom of a short, steep trail. It's far quieter than the island's resort side. Sunset light on the cliffs is the reason most people time their visit here.",
+    "lat": 20.19,
+    "lng": -155.7361,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Pololū Valley Lookout, North Kohala, Big Island",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "cliff",
+      "beach",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-akaka-falls",
+    "title": "Akaka Falls",
+    "description": "A 135-metre waterfall viewed from a paved loop trail through bamboo groves and wild orchids, one of the easiest big-payoff walks on the island. The whole loop takes well under an hour. Rain is frequent on this side of the island, which is exactly why the jungle looks the way it does.",
+    "lat": 19.8558,
+    "lng": -155.1508,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Akaka Falls State Park, Big Island",
+    "minTier": 1,
+    "terrainTags": [
+      "jungle"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-m-noa-falls-trail",
+    "title": "Mānoa Falls Trail",
+    "description": "A short rainforest walk to a 45-metre waterfall, familiar to plenty of visitors as backdrop scenery from various film and TV shoots. The trail is often muddy and rooty even in dry weather. It's an easy add-on for anyone based in Honolulu without a full day to spare.",
+    "lat": 21.3331,
+    "lng": -157.8006,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Mānoa Falls Trail, Honolulu, Oahu",
+    "minTier": 1,
+    "terrainTags": [
+      "forest",
+      "mud"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-rano-raraku-moai-quarry",
+    "title": "Rano Raraku (Moai Quarry)",
+    "description": "The quarry where nearly all of Rapa Nui's moai were carved, dozens of statues left standing half-buried on the volcanic slope exactly where work stopped centuries ago. The walking loop around the crater rim adds a view over the whole site. It's the single most evocative stop on the island for understanding how the moai were actually made.",
+    "lat": -27.1219,
+    "lng": -109.2864,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Rano Raraku, Rapa Nui National Park, Easter Island",
+    "minTier": 2,
+    "terrainTags": [
+      "volcanic"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-orongo-ceremonial-village",
+    "title": "Orongo Ceremonial Village",
+    "description": "A cliff-top stone village perched between the ocean and the flooded crater of Rano Kau, centre of the island's later birdman cult and its petroglyphs. The walk out includes a dramatic crater-rim approach before the village itself. Wind at the site is near-constant, so dress for it.",
+    "lat": -27.1836,
+    "lng": -109.4425,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Orongo, Rapa Nui National Park, Easter Island",
+    "minTier": 2,
+    "terrainTags": [
+      "cliff"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-anakena-beach",
+    "title": "Anakena Beach",
+    "description": "A palm-fringed white coral sand beach with restored moai standing on their ahu right at the water's edge, believed to be near where the island's first settlers landed. It's the easiest, most relaxed stop on the island and doubles as a genuine swimming beach. Food stalls nearby make it a natural lunch stop.",
+    "lat": -27.0722,
+    "lng": -109.3244,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Anakena Beach, Rapa Nui National Park, Easter Island",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "beach"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-sigatoka-sand-dunes",
+    "title": "Sigatoka Sand Dunes",
+    "description": "Fiji's first national park, a wind-sculpted dune system holding some of the oldest archaeological sites in the country, ancient pottery and burial grounds found eroding out of the sand. A loop trail crosses the dunes to a wild, wave-battered beach. It's a striking contrast to the resort coastline nearby.",
+    "lat": -18.1667,
+    "lng": 177.5167,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Sigatoka Sand Dunes National Park, Viti Levu, Fiji",
+    "minTier": 1,
+    "terrainTags": [
+      "sand",
+      "dunes",
+      "beach",
+      "coast"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-bouma-national-heritage-park",
+    "title": "Bouma National Heritage Park",
+    "description": "A community-owned rainforest park on the 'Garden Island' of Taveuni, with a graded track climbing past three waterfalls, each with its own swimming pool. The upper falls require a proper scramble and a bit more fitness than the lower two. Entry fees go directly to the villages that manage the land.",
+    "lat": -16.8167,
+    "lng": 179.9167,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Bouma National Heritage Park, Taveuni, Fiji",
+    "minTier": 2,
+    "terrainTags": [
+      "forest"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-longyearbyen-town-trail",
+    "title": "Longyearbyen Town Trail",
+    "description": "The world's northernmost town of any real size, where reindeer wander the main street and the midnight sun never sets for months at a stretch in summer. Walking within the settlement boundary is safe and unguided; step past the signposted edge and polar bear country begins immediately. The Svalbard Museum is a good primer before heading further out.",
+    "lat": 78.2232,
+    "lng": 15.6267,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Longyearbyen, Svalbard, Norway",
+    "minTier": 1,
+    "terrainTags": [
+      "scenic"
+    ],
+    "radiusMeters": 150
+  },
+  {
+    "id": "q-g-isfjorden-nordenski-ld-glacier-viewpoint",
+    "title": "Isfjorden — Nordenskiöld Glacier Viewpoint",
+    "description": "A glacier front visible by boat in summer or snowmobile in winter across the ice of Isfjorden, retreating visibly year over year. Independent travel outside town requires a guide or serious polar bear precautions. It's one of the most accessible big-glacier views in the high Arctic.",
+    "lat": 78.2,
+    "lng": 15.0,
+    "rewardOlC": 75,
+    "difficulty": "Moderate",
+    "region": "Nordenskiöld Glacier viewpoint, Isfjorden, near Longyearbyen, Svalbard",
+    "minTier": 2,
+    "terrainTags": [
+      "fjord",
+      "arctic",
+      "snow"
+    ],
+    "radiusMeters": 200
+  },
+  {
+    "id": "q-g-pyramiden-abandoned-settlement",
+    "title": "Pyramiden Abandoned Settlement",
+    "description": "An abandoned Soviet coal-mining town frozen mid-departure since 1998, complete with the world's northernmost statue of Lenin and an empty swimming pool. It's reachable only by boat in summer or snowmobile across the sea ice in winter, always with an armed guide given polar bear presence. Few ghost towns anywhere feel this genuinely eerie.",
+    "lat": 78.6549,
+    "lng": 16.3336,
+    "rewardOlC": 150,
+    "difficulty": "Hard",
+    "region": "Pyramiden, former Soviet mining town, Svalbard",
+    "minTier": 3,
+    "terrainTags": [
+      "snow"
+    ],
+    "radiusMeters": 250
+  },
+  {
+    "id": "q-g-neko-harbour",
+    "title": "Neko Harbour",
+    "description": "One of the few true mainland landing sites on the Antarctic Peninsula, a gentoo penguin colony backed by a working tidewater glacier that calves regularly into the bay. Access is entirely through IAATO-regulated expedition cruises, no independent travel permitted. It's often the first spot visitors actually set foot on the Antarctic continent itself, rather than an offshore island.",
+    "lat": -64.85,
+    "lng": -62.5333,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Neko Harbour, Andvord Bay, Antarctic Peninsula",
+    "minTier": 5,
+    "terrainTags": [
+      "arctic"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-whalers-bay-deception-island",
+    "title": "Whalers Bay, Deception Island",
+    "description": "A flooded volcanic caldera you sail directly into through a narrow gap called Neptune's Bellows, landing on a black sand beach littered with rusting whale-oil tanks from an abandoned 1930s station. Steam sometimes rises straight out of the sand where geothermal heat meets the surface. It's one of the strangest, most layered historical sites in the Antarctic tourism circuit.",
+    "lat": -62.9833,
+    "lng": -60.5667,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Whalers Bay, Deception Island, South Shetland Islands",
+    "minTier": 5,
+    "terrainTags": [
+      "sand",
+      "beach",
+      "volcanic",
+      "arctic"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-port-lockroy",
+    "title": "Port Lockroy",
+    "description": "A former British research station turned museum and the world's most remote post office, still staffed each summer and surrounded by a working gentoo penguin colony. Mail posted here genuinely travels back through the UK postal system, stamped accordingly. Like all peninsula landings, it's accessible only through licensed expedition cruise operators.",
+    "lat": -64.8233,
+    "lng": -63.4967,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Port Lockroy, Wiencke Island, Antarctic Peninsula",
+    "minTier": 5,
+    "terrainTags": [
+      "arctic",
+      "remote"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-grytviken",
+    "title": "Grytviken",
+    "description": "A former whaling station turned museum, and the burial site of polar explorer Ernest Shackleton, whose grave visitors traditionally toast with a dram of whisky. King penguins and elephant seals now occupy much of the surrounding beach and rusting station buildings. Reaching South Georgia at all requires a multi-day ocean crossing on an expedition ship — nothing about getting here is casual.",
+    "lat": -54.2811,
+    "lng": -36.5008,
+    "rewardOlC": 400,
+    "difficulty": "Legendary",
+    "region": "Grytviken, South Georgia",
+    "minTier": 5,
+    "terrainTags": [
+      "beach"
+    ],
+    "radiusMeters": 300
+  },
+  {
+    "id": "q-g-cape-otway-lighthouse",
+    "title": "Cape Otway Lighthouse",
+    "description": "Australia's oldest surviving mainland lighthouse, standing on a windswept headland above one of the most treacherous stretches of coast on the continent, once known as the shipwreck coast. A short walk covers the lighthouse, keeper's cottages, and a WWII radar bunker. Koalas are a near-guaranteed sighting in the manna gums along the entry road.",
+    "lat": -38.8567,
+    "lng": 143.5133,
+    "rewardOlC": 25,
+    "difficulty": "Easy",
+    "region": "Cape Otway Lightstation, Great Otway NP, Great Ocean Road, Victoria",
+    "minTier": 1,
+    "terrainTags": [
+      "coast"
+    ],
+    "radiusMeters": 150
+  }
+]

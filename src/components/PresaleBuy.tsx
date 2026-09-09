@@ -996,11 +996,13 @@ function PresaleBuyInner() {
 
     if (selected!.onChain!.kind === "native") {
       const valueWei = parseEther(payStr);
-      // Prefer direct eth_sendTransaction on the active provider (injected / WC).
-      // Wagmi sendTransactionAsync can fail gas/RPC against a stale wallet RPC even after addChain.
+      // Prefer direct eth_sendTransaction on the active injected provider.
+      // WalletConnect (mobile deep-link) needs wagmi's sendTransactionAsync so the
+      // sign request actually reaches the wallet app — the raw eth_sendTransaction
+      // path there opens the wallet but never prompts to sign ("return to app").
       const provider = await resolveBuyProvider();
       const from = address;
-      if (provider?.request && from) {
+      if (provider?.request && from && !isWalletConnectSession()) {
         try {
           return await sendNativeBdagViaProvider(provider, from, treasury, valueWei);
         } catch (directErr) {
@@ -1077,7 +1079,10 @@ function PresaleBuyInner() {
       // before the wallet confirm (that dance was canceling buys). Soft-switch only
       // if we're on the wrong chain; forceRpcRefresh only after a no-send RPC failure.
       const alreadyOnBlockdag = chainId === TOKEN.chainId;
-      if (!alreadyOnBlockdag) {
+      // WalletConnect: send-first — the wallet handles the chain as part of the sign
+      // request. A separate pre-switch deep-link is what shows "return to app" with
+      // no sign prompt on mobile.
+      if (!alreadyOnBlockdag && !isWalletConnectSession()) {
         await ensureOnBlockdag({ forceRpcRefresh: false });
       }
       setProgress("confirm_wallet");

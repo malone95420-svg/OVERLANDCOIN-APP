@@ -8,6 +8,7 @@ import {
   isAddress,
   parseUnits,
   type Hex,
+  verifyMessage,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { blockdag } from "@/lib/chain";
@@ -114,6 +115,8 @@ type ClaimBody = {
   photoHash?: string;
   /** Stable browser device id (localStorage overlandcoin.device.id.v1). */
   deviceId?: string;
+  /** Wallet signature over the canonical claim message — proves the claimant owns `wallet`. */
+  signature?: string;
   /** Ignored if present — amount always comes from quest catalog. */
   amount?: number;
 };
@@ -160,6 +163,32 @@ export async function POST(req: NextRequest) {
       { error: "Too many claim attempts for this wallet. Wait a minute and try again." },
       { status: 429 },
     );
+  }
+
+  // Wallet-verify: require a signature over the canonical claim message proving the
+  // claimant controls `wallet` — prevents claiming rewards to an arbitrary address.
+  const claimMessage = `Claim OLC reward for completion ${completionId}`;
+  const signature = typeof body.signature === "string" ? body.signature.trim() : "";
+  if (!signature || !signature.startsWith("0x")) {
+    return NextResponse.json(
+      { error: "Wallet signature required to claim rewards" },
+      { status: 401 },
+    );
+  }
+  try {
+    const sigValid = await verifyMessage({
+      address: wallet,
+      message: claimMessage,
+      signature: signature as `0x${string}`,
+    });
+    if (!sigValid) {
+      return NextResponse.json(
+        { error: "Wallet signature does not match the claim wallet" },
+        { status: 401 },
+      );
+    }
+  } catch {
+    return NextResponse.json({ error: "Wallet signature is invalid" }, { status: 401 });
   }
 
   const deviceIdRaw = typeof body.deviceId === "string" ? body.deviceId.trim() : "";

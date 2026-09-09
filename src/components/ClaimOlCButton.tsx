@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { claimRewardToWallet } from "@/lib/claimReward";
@@ -31,6 +31,7 @@ export function ClaimOlCButton(props: Props) {
 
 function ClaimOlCButtonInner({ completion, onClaimed, className = "", compact }: Props) {
   const { address, isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [txHash, setTxHash] = useState<string | null>(completion.txHash ?? null);
@@ -43,7 +44,11 @@ function ClaimOlCButtonInner({ completion, onClaimed, className = "", compact }:
     }
     setBusy(true);
     try {
-      const res = await claimRewardToWallet({ completion, wallet: address });
+      const res = await claimRewardToWallet({
+        completion,
+        wallet: address,
+        signMessage: (m) => signMessageAsync({ message: m }),
+      });
       if (!res.ok) {
         setError(res.error);
         return;
@@ -53,7 +58,7 @@ function ClaimOlCButtonInner({ completion, onClaimed, className = "", compact }:
     } finally {
       setBusy(false);
     }
-  }, [address, completion, isConnected, onClaimed]);
+  }, [address, completion, isConnected, onClaimed, signMessageAsync]);
 
   if (completion.status === "claimed" || txHash) {
     const hash = txHash || completion.txHash;

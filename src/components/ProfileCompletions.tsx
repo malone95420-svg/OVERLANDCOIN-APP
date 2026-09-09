@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useAccount } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import { ClaimOlCButton } from "@/components/ClaimOlCButton";
 import { ConnectWallet } from "@/components/ConnectWallet";
@@ -33,6 +33,7 @@ export function ProfileCompletions() {
 
 function ProfileCompletionsInner() {
   const { address, isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
   const [completions, setCompletions] = useState<Completion[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [bulkBusy, setBulkBusy] = useState(false);
@@ -73,7 +74,9 @@ function ProfileCompletionsInner() {
     }
     setBulkBusy(true);
     try {
-      const { claimed: ok, failed } = await claimAllPending(address);
+      const { claimed: ok, failed } = await claimAllPending(address, (m) =>
+        signMessageAsync({ message: m }),
+      );
       refresh();
       if (ok.length && !failed.length) {
         setBulkMsg(`Claimed ${ok.length} reward(s) to your wallet.`);
@@ -87,7 +90,7 @@ function ProfileCompletionsInner() {
     } finally {
       setBulkBusy(false);
     }
-  }, [address, isConnected, refresh]);
+  }, [address, isConnected, refresh, signMessageAsync]);
 
   if (!hydrated) {
     return <div className="card text-sm text-slate-500">Loading adventure ledger…</div>;

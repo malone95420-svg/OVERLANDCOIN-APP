@@ -38,7 +38,14 @@ export type ClaimInput = {
   wallet: string;
   /** Optional photo content hash / metadata (not required for MVP). */
   photoHash?: string;
+  /** Signs the canonical claim message to prove wallet ownership (required by the server). */
+  signMessage?: (message: string) => Promise<string>;
 };
+
+/** Canonical message a claimant signs to prove ownership of the reward wallet. */
+export function claimSignatureMessage(completionId: string): string {
+  return `Claim OLC reward for completion ${completionId}`;
+}
 
 export async function claimRewardToWallet(input: ClaimInput): Promise<ClaimResult> {
   const { completion, wallet, photoHash } = input;
@@ -66,6 +73,19 @@ export async function claimRewardToWallet(input: ClaimInput): Promise<ClaimResul
     };
   }
 
+  const message = claimSignatureMessage(completion.id);
+  let signature: string | undefined;
+  if (input.signMessage) {
+    try {
+      signature = await input.signMessage(message);
+    } catch (e) {
+      return {
+        ok: false,
+        error: e instanceof Error ? e.message : "Wallet signature was rejected or failed.",
+      };
+    }
+  }
+
   try {
     const res = await fetch("/api/rewards/claim", {
       method: "POST",
@@ -81,6 +101,7 @@ export async function claimRewardToWallet(input: ClaimInput): Promise<ClaimResul
         distanceM: completion.distanceM,
         photoHash: photoHash ?? undefined,
         deviceId: getOrCreateDeviceId() || undefined,
+        signature,
       }),
     });
 
@@ -150,7 +171,10 @@ export async function claimRewardToWallet(input: ClaimInput): Promise<ClaimResul
   }
 }
 
-export async function claimAllPending(wallet: string): Promise<{
+export async function claimAllPending(
+  wallet: string,
+  signMessage?: (message: string) => Promise<string>,
+): Promise<{
   claimed: ClaimSuccess[];
   failed: { completionId: string; error: string }[];
 }> {
@@ -171,7 +195,7 @@ export async function claimAllPending(wallet: string): Promise<{
       });
       continue;
     }
-    const res = await claimRewardToWallet({ completion: c, wallet });
+    const res = await claimRewardToWallet({ completion: c, wallet, signMessage });
     if (res.ok) claimed.push(res);
     else failed.push({ completionId: c.id, error: res.error });
   }

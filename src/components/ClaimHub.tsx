@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { ClaimOlCButton } from "@/components/ClaimOlCButton";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
@@ -135,6 +135,7 @@ export function ClaimHub() {
 function ClaimHubInner() {
   const { data: session, status } = useSession();
   const { address, isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
   const [completions, setCompletions] = useState<Completion[]>([]);
   const [purchases, setPurchases] = useState<LocalPurchase[]>([]);
   const [hydrated, setHydrated] = useState(false);
@@ -193,7 +194,9 @@ function ClaimHubInner() {
     }
     setBulkBusy(true);
     try {
-      const { claimed: ok, failed } = await claimAllPending(address);
+      const { claimed: ok, failed } = await claimAllPending(address, (m) =>
+        signMessageAsync({ message: m }),
+      );
       refresh();
       if (ok.length && !failed.length) {
         setBulkMsg(`Claimed ${ok.length} quest reward(s) to your wallet.`);
@@ -207,7 +210,7 @@ function ClaimHubInner() {
     } finally {
       setBulkBusy(false);
     }
-  }, [address, isConnected, refresh]);
+  }, [address, isConnected, refresh, signMessageAsync]);
 
   const onRetryCredit = useCallback(
     async (p: LocalPurchase) => {

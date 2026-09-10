@@ -56,6 +56,8 @@ type Props = {
   hideLocateControl?: boolean;
   /** Increment to fly map to the current GPS position. */
   locateNonce?: number;
+  /** Coords from the locate tap — preferred over a second getCurrentPosition. */
+  locateTo?: { lat: number; lng: number } | null;
   className?: string;
 };
 
@@ -107,36 +109,31 @@ function FlyTo({
 function FlyToUser({
   geo,
   locateNonce,
+  locateTo,
 }: {
   geo: UserGeo;
   locateNonce?: number;
+  locateTo?: { lat: number; lng: number } | null;
 }) {
   const map = useMap();
   const geoRef = useRef(geo);
   geoRef.current = geo;
+  const locateToRef = useRef(locateTo);
+  locateToRef.current = locateTo;
 
   useEffect(() => {
     if (!locateNonce) return;
+    const target = locateToRef.current;
+    if (target) {
+      map.flyTo([target.lat, target.lng], Math.max(map.getZoom(), 14), {
+        duration: 0.85,
+      });
+      return;
+    }
     const g = geoRef.current;
     if (g.status === "watching") {
       map.flyTo([g.lat, g.lng], Math.max(map.getZoom(), 14), { duration: 0.85 });
-      return;
     }
-    // Permission just granted or watch not ready yet — one-shot then fly.
-    if (typeof navigator === "undefined" || !navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        map.flyTo(
-          [pos.coords.latitude, pos.coords.longitude],
-          Math.max(map.getZoom(), 14),
-          { duration: 0.85 },
-        );
-      },
-      () => {
-        /* UserLocationLayer / banner handles denied */
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-    );
     // Only fly when user taps Locate (nonce bump) — never on GPS ticks.
   }, [locateNonce, map]);
   return null;
@@ -271,6 +268,7 @@ export default function QuestMapInner({
   completedIds,
   hideLocateControl,
   locateNonce,
+  locateTo,
   className,
 }: Props) {
   const [basemapId, setBasemapId] = useState<BasemapId>("street");
@@ -324,7 +322,7 @@ export default function QuestMapInner({
         <FlyTo quests={quests} flyToId={flyToId} flyNonce={flyNonce} />
         <FitRoute coords={routeCoords} />
         <UserLocationLayer onGeoChange={handleGeoChange} />
-        <FlyToUser geo={userGeo} locateNonce={locateNonce} />
+        <FlyToUser geo={userGeo} locateNonce={locateNonce} locateTo={locateTo} />
         {routeCoords && routeCoords.length >= 2 && (
           <Polyline
             positions={routeCoords}

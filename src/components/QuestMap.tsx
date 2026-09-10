@@ -25,6 +25,8 @@ type Props = {
   completedIds?: Set<string>;
   hideLocateControl?: boolean;
   locateNonce?: number;
+  /** Coords captured in the locate tap (iOS needs the user-gesture getCurrentPosition). */
+  locateTo?: { lat: number; lng: number } | null;
   className?: string;
 };
 

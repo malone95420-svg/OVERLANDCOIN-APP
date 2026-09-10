@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ExplorerAvatar } from "@/components/ExplorerAvatar";
+import {
+  loadExplorerProfile,
+  PROFILE_CHANGE_EVENT,
+} from "@/lib/explorerProfile";
 
 function shortLabel(name?: string | null, email?: string | null, address?: string | null) {
   if (address) return `${address.slice(0, 6)}…${address.slice(-4)}`;
@@ -15,6 +20,23 @@ export function AccountMenu({ compact = false }: { compact?: boolean }) {
   const { data: session, status } = useSession();
   const [busy, setBusy] = useState(false);
   const [open, setOpen] = useState(false);
+  const [avatar, setAvatar] = useState("");
+  const [displayName, setDisplayName] = useState("");
+
+  useEffect(() => {
+    const load = () => {
+      const p = loadExplorerProfile();
+      setAvatar(p.avatarDataUrl);
+      setDisplayName(p.displayName);
+    };
+    load();
+    window.addEventListener(PROFILE_CHANGE_EVENT, load);
+    window.addEventListener("olc-account-change", load);
+    return () => {
+      window.removeEventListener(PROFILE_CHANGE_EVENT, load);
+      window.removeEventListener("olc-account-change", load);
+    };
+  }, [session?.user?.accountKey]);
 
   if (status === "loading") {
     return (
@@ -35,19 +57,25 @@ export function AccountMenu({ compact = false }: { compact?: boolean }) {
     );
   }
 
-  const label = shortLabel(session.user.name, session.user.email, session.user.address);
+  const label = shortLabel(
+    displayName || session.user.name,
+    session.user.email,
+    session.user.address,
+  );
+  const avatarName = displayName || session.user.name || session.user.email || "Explorer";
 
   return (
     <div className="relative">
       <button
         type="button"
-        className={`btn-secondary truncate !py-1.5 !text-xs ${
-          compact ? "max-w-[5.5rem] !px-2.5 sm:max-w-[9rem] sm:!px-5" : "max-w-[9rem]"
+        className={`btn-secondary inline-flex items-center gap-1.5 truncate !py-1.5 !text-xs ${
+          compact ? "max-w-[7rem] !px-2 sm:max-w-[11rem] sm:!px-4" : "max-w-[11rem]"
         }`}
         title={session.user.accountKey || session.user.email || undefined}
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
       >
+        <ExplorerAvatar src={avatar || undefined} name={avatarName} size={22} />
         {label}
       </button>
       {open && (

@@ -7,13 +7,24 @@
 import { scopedStorageKey } from "@/lib/auth/accountScope";
 
 export const EXPLORER_PROFILE_KEY = "overlandcoin.explorerProfile.v1";
+export const PROFILE_CHANGE_EVENT = "olc-profile-change";
+
+/** JPEG data URL cap — ~256px square stays well under this. */
+export const MAX_AVATAR_DATA_URL_CHARS = 180_000;
 
 export type ExplorerProfile = {
   displayName: string;
   bio: string;
+  avatarDataUrl: string;
 };
 
-const EMPTY: ExplorerProfile = { displayName: "", bio: "" };
+const EMPTY: ExplorerProfile = { displayName: "", bio: "", avatarDataUrl: "" };
+
+export function sanitizeAvatarDataUrl(raw: unknown): string {
+  if (typeof raw !== "string" || !raw.startsWith("data:image/")) return "";
+  if (raw.length > MAX_AVATAR_DATA_URL_CHARS) return "";
+  return raw;
+}
 
 export function loadExplorerProfile(): ExplorerProfile {
   if (typeof window === "undefined") return { ...EMPTY };
@@ -24,6 +35,7 @@ export function loadExplorerProfile(): ExplorerProfile {
     return {
       displayName: typeof parsed.displayName === "string" ? parsed.displayName.slice(0, 48) : "",
       bio: typeof parsed.bio === "string" ? parsed.bio.slice(0, 280) : "",
+      avatarDataUrl: sanitizeAvatarDataUrl(parsed.avatarDataUrl),
     };
   } catch {
     return { ...EMPTY };
@@ -34,9 +46,11 @@ export function saveExplorerProfile(next: ExplorerProfile): ExplorerProfile {
   const clean: ExplorerProfile = {
     displayName: next.displayName.trim().slice(0, 48),
     bio: next.bio.trim().slice(0, 280),
+    avatarDataUrl: sanitizeAvatarDataUrl(next.avatarDataUrl),
   };
   if (typeof window !== "undefined") {
     localStorage.setItem(scopedStorageKey(EXPLORER_PROFILE_KEY), JSON.stringify(clean));
+    window.dispatchEvent(new CustomEvent(PROFILE_CHANGE_EVENT));
   }
   return clean;
 }

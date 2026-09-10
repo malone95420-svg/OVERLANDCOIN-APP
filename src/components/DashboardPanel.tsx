@@ -13,10 +13,12 @@ import {
   WALLET_CHANGE_EVENT,
   type FeedPost,
 } from "@/lib/completions";
+import { ExplorerAvatar } from "@/components/ExplorerAvatar";
 import {
   explorerRank,
   formatOlc,
   loadExplorerProfile,
+  PROFILE_CHANGE_EVENT,
   shortWallet,
 } from "@/lib/explorerProfile";
 import { getQuestById } from "@/lib/quests";
@@ -54,6 +56,7 @@ function DashboardPanelInner() {
   const [purchaseCount, setPurchaseCount] = useState(0);
   const [purchasedOlc, setPurchasedOlc] = useState(0);
   const [displayName, setDisplayName] = useState("");
+  const [avatarDataUrl, setAvatarDataUrl] = useState("");
   const [recentCompletions, setRecentCompletions] = useState<
     ReturnType<typeof loadCompletions>
   >([]);
@@ -79,6 +82,7 @@ function DashboardPanelInner() {
     setRecentCompletions(loadCompletions().slice(0, 5));
     const profile = loadExplorerProfile();
     setDisplayName(profile.displayName);
+    setAvatarDataUrl(profile.avatarDataUrl);
   }, [wallet]);
 
   useEffect(() => {
@@ -87,9 +91,11 @@ function DashboardPanelInner() {
     const onAccount = () => refresh();
     window.addEventListener("olc-account-change", onAccount);
     window.addEventListener(WALLET_CHANGE_EVENT, onAccount);
+    window.addEventListener(PROFILE_CHANGE_EVENT, onAccount);
     return () => {
       window.removeEventListener("olc-account-change", onAccount);
       window.removeEventListener(WALLET_CHANGE_EVENT, onAccount);
+      window.removeEventListener(PROFILE_CHANGE_EVENT, onAccount);
     };
   }, [refresh, address]);
 
@@ -138,13 +144,16 @@ function DashboardPanelInner() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-black text-white sm:text-3xl">Explorer Dashboard</h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Welcome back,{" "}
-            <span className="font-semibold text-gold-bright">{greeting}</span>
-            {session.user.email ? ` · ${session.user.email}` : ""}
-          </p>
+        <div className="flex items-center gap-3">
+          <ExplorerAvatar src={avatarDataUrl || undefined} name={greeting} size={48} />
+          <div>
+            <h2 className="text-2xl font-black text-white sm:text-3xl">Explorer Dashboard</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Welcome back,{" "}
+              <span className="font-semibold text-gold-bright">{greeting}</span>
+              {session.user.email ? ` · ${session.user.email}` : ""}
+            </p>
+          </div>
         </div>
         <div className="rounded-2xl border border-gold/30 bg-bg-card px-5 py-3 shadow-gold">
           <p className="text-xs text-slate-500">Explorer Rank</p>

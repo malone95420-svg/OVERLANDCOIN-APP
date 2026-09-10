@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAccount } from "wagmi";
 import { ConnectWallet } from "@/components/ConnectWallet";
+import { ExplorerAvatar } from "@/components/ExplorerAvatar";
 import { useWeb3Mounted } from "@/components/providers/Web3Provider";
 import {
+  compressImageToDataUrl,
   loadCompletions,
   totalClaimedOlC,
   totalPendingOlC,
@@ -16,6 +18,7 @@ import {
   explorerRank,
   formatOlc,
   loadExplorerProfile,
+  MAX_AVATAR_DATA_URL_CHARS,
   saveExplorerProfile,
   shortWallet,
 } from "@/lib/explorerProfile";
@@ -44,17 +47,22 @@ function ProfilePanelInner() {
   const [hydrated, setHydrated] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
+  const [avatarDataUrl, setAvatarDataUrl] = useState("");
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState("");
   const [draftBio, setDraftBio] = useState("");
   const [completions, setCompletions] = useState(loadCompletions());
   const [purchases, setPurchases] = useState<LocalPurchase[]>([]);
   const [busyOut, setBusyOut] = useState(false);
+  const [avatarBusy, setAvatarBusy] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = useCallback(() => {
     const profile = loadExplorerProfile();
     setDisplayName(profile.displayName);
     setBio(profile.bio);
+    setAvatarDataUrl(profile.avatarDataUrl);
     setCompletions(loadCompletions());
     setPurchases(loadPurchasesForWallet(wallet));
   }, [wallet]);
@@ -79,7 +87,6 @@ function ProfilePanelInner() {
   const sessionName = session?.user?.name?.trim() || "";
   const shownName =
     displayName || sessionName || (wallet ? shortWallet(wallet) : "Explorer");
-  const initial = (shownName[0] || "?").toUpperCase();
 
   function startEdit() {
     setDraftName(displayName || sessionName);
@@ -88,10 +95,49 @@ function ProfilePanelInner() {
   }
 
   function saveEdit() {
-    const saved = saveExplorerProfile({ displayName: draftName, bio: draftBio });
+    const saved = saveExplorerProfile({
+      displayName: draftName,
+      bio: draftBio,
+      avatarDataUrl,
+    });
     setDisplayName(saved.displayName);
     setBio(saved.bio);
+    setAvatarDataUrl(saved.avatarDataUrl);
     setEditing(false);
+  }
+
+  async function onAvatarFile(file: File | null) {
+    setAvatarError(null);
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setAvatarError("Please choose an image file.");
+      return;
+    }
+    setAvatarBusy(true);
+    try {
+      const dataUrl = await compressImageToDataUrl(file, 400, 0.8);
+      if (dataUrl.length > MAX_AVATAR_DATA_URL_CHARS) {
+        setAvatarError("Photo is still too large. Try a simpler image.");
+        return;
+      }
+      const saved = saveExplorerProfile({
+        displayName,
+        bio,
+        avatarDataUrl: dataUrl,
+      });
+      setAvatarDataUrl(saved.avatarDataUrl);
+    } catch {
+      setAvatarError("Could not save that photo. Try another image.");
+    } finally {
+      setAvatarBusy(false);
+      if (avatarInputRef.current) avatarInputRef.current.value = "";
+    }
+  }
+
+  function removeAvatar() {
+    setAvatarError(null);
+    const saved = saveExplorerProfile({ displayName, bio, avatarDataUrl: "" });
+    setAvatarDataUrl(saved.avatarDataUrl);
   }
 
   if (status === "loading" || !hydrated) {
@@ -122,8 +168,41 @@ function ProfilePanelInner() {
     <div className="space-y-6">
       <section className="card">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600/80 to-gold text-3xl font-black text-white shadow-gold">
-            {initial}
+          <div className="flex shrink-0 flex-col items-center gap-1.5">
+            <div className="relative h-20 w-20">
+              <ExplorerAvatar src={avatarDataUrl || undefined} name={shownName} size={80} />
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                aria-label="Upload profile picture"
+                onChange={(e) => void onAvatarFile(e.target.files?.[0] ?? null)}
+              />
+              <button
+                type="button"
+                disabled={avatarBusy}
+                onClick={() => avatarInputRef.current?.click()}
+                className="absolute inset-0 flex items-end justify-center rounded-2xl bg-gradient-to-t from-black/70 via-black/10 to-transparent disabled:opacity-60"
+                aria-label="Change profile picture"
+              >
+                <span className="mb-1.5 rounded-md bg-black/75 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+                  {avatarBusy ? "…" : "Change"}
+                </span>
+              </button>
+            </div>
+            {avatarDataUrl ? (
+              <button
+                type="button"
+                onClick={removeAvatar}
+                className="text-[10px] text-slate-500 hover:text-slate-300"
+              >
+                Remove
+              </button>
+            ) : null}
+            {avatarError ? (
+              <p className="max-w-[7rem] text-center text-[10px] text-amber-300">{avatarError}</p>
+            ) : null}
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">

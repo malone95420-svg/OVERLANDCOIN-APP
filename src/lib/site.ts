@@ -53,13 +53,13 @@ export const SITE = {
   stakingContract: "",
 } as const;
 
-/** Presale batch pricing (USDT) — normalized from Home/Presale/Tokenomics (not FAQ $0.0005 bug). */
+/** Presale batch pricing (USDT) — 900M OLC split evenly across five batches. */
 export const PRESALE_BATCHES = [
-  { batch: 1, priceUsdt: 0.001, status: "LIVE" as const },
-  { batch: 2, priceUsdt: 0.002, status: "Upcoming" as const },
-  { batch: 3, priceUsdt: 0.004, status: "Upcoming" as const },
-  { batch: 4, priceUsdt: 0.007, status: "Upcoming" as const },
-  { batch: 5, priceUsdt: 0.01, status: "TGE" as const, label: "Batch 5 / TGE" },
+  { batch: 1, priceUsdt: 0.001, status: "LIVE" as const, allocationOlC: 180_000_000 },
+  { batch: 2, priceUsdt: 0.002, status: "Upcoming" as const, allocationOlC: 180_000_000 },
+  { batch: 3, priceUsdt: 0.004, status: "Upcoming" as const, allocationOlC: 180_000_000 },
+  { batch: 4, priceUsdt: 0.007, status: "Upcoming" as const, allocationOlC: 180_000_000 },
+  { batch: 5, priceUsdt: 0.01, status: "TGE" as const, label: "Batch 5 / TGE", allocationOlC: 180_000_000 },
 ] as const;
 
 export const PRESALE_META = {
@@ -67,6 +67,10 @@ export const PRESALE_META = {
   allocationOlC: 900_000_000,
   hardCapUsd: 500_000,
 } as const;
+
+export function livePresaleBatch() {
+  return PRESALE_BATCHES.find((b) => b.status === "LIVE") ?? PRESALE_BATCHES[0];
+}
 
 
 export const HOW_IT_WORKS = [

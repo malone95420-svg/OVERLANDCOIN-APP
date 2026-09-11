@@ -45,6 +45,10 @@ const SECTIONS: FaqSection[] = [
         q: "How do I get support?",
         a: `Email ${SITE.supportEmail}`,
       },
+      {
+        q: "I forgot my email password. How do I reset it?",
+        a: "Use Forgot password on the Sign in page. We'll email a one-hour, single-use link. Wallet and Google sign-in don't use a password.",
+      },
     ],
   },
   {

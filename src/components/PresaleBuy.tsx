@@ -45,6 +45,7 @@ import {
 import { friendlyPaymentError, parsePaymentTxRef } from "@/lib/parsePaymentTxRef";
 import { getAnyInjectedProvider, getEthereumPaymentProvider } from "@/lib/injectedWallets";
 import { blockdag } from "@/lib/chain";
+import { LiveBatchRemaining } from "@/components/LiveBatchRemaining";
 import { PRESALE_BATCHES, SITE } from "@/lib/site";
 import { TOKEN, explorerTxUrl, explorerAddressUrl } from "@/lib/token";
 import {
@@ -1848,6 +1849,7 @@ function PresaleBuyInner() {
           <span className="font-semibold text-gold-bright">${batchPrice.toFixed(3)}</span> / OLC.
           Crypto-only checkout — pick how you pay; verified buys deliver OLC to your BlockDAG wallet. No KYC.
         </p>
+        <LiveBatchRemaining compact />
       </div>
 
       {/* Destination only — balances live in site header; no second wallet panel */}

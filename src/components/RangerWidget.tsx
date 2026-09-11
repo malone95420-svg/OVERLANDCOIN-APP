@@ -14,7 +14,14 @@ export function RangerWidget() {
   if (onMiniMap) return null;
   if (pathname === "/tg" || pathname.startsWith("/tg/")) return null;
   // Keep forms / checkout CTAs clear on auth + buy flows
-  if (pathname === "/login" || pathname === "/register" || pathname === "/presale") return null;
+  if (
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password" ||
+    pathname === "/presale"
+  )
+    return null;
 
   return (
     <div

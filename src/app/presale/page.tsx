@@ -4,6 +4,7 @@ import { CopyAddress } from "@/components/CopyAddress";
 import { LiveMarketPrices } from "@/components/LiveMarketPrices";
 import { PresaleBuy } from "@/components/PresaleBuy";
 import { RecentBuysFeed } from "@/components/RecentBuysFeed";
+import { LiveBatchRemaining } from "@/components/LiveBatchRemaining";
 import { PRESALE_BATCHES, PRESALE_META, SITE } from "@/lib/site";
 import { TOKEN, explorerAddressUrl } from "@/lib/token";
 
@@ -70,6 +71,11 @@ export default function PresalePage() {
               </p>
               <p className="text-xs text-slate-500">USDT terms per OLC</p>
               <span className="badge mt-3">{b.status}</span>
+              {b.status === "LIVE" ? <LiveBatchRemaining /> : (
+                <p className="mt-3 text-[11px] text-slate-500">
+                  {b.allocationOlC.toLocaleString("en-US")} OLC in this batch
+                </p>
+              )}
             </div>
           ))}
         </div>

@@ -102,6 +102,11 @@ export default function LoginPage() {
             <button type="submit" className="btn-secondary w-full" disabled={busy || emailOk === false}>
               {busy ? "Signing in…" : "Sign in with email"}
             </button>
+            <p className="text-sm text-slate-400">
+              <Link href="/forgot-password" className="link-accent">
+                Forgot password?
+              </Link>
+            </p>
           </form>
           {googleOk && (
             <button

@@ -84,6 +84,23 @@ export async function createUser(input: {
   return user;
 }
 
+export async function updateUserPassword(
+  email: string,
+  passwordHash: string,
+): Promise<StoredUser | { error: string }> {
+  const existing = await getUserByEmail(email);
+  if (!existing) return { error: "Account not found." };
+  const user: StoredUser = { ...existing, passwordHash };
+  const key = USER_PREFIX + normEmail(email);
+  const r = redisClient();
+  if (r) {
+    await r.set(key, user);
+  } else {
+    memory.set(key, user);
+  }
+  return user;
+}
+
 export function emailAuthAvailable(): { ok: true } | { ok: false; reason: string } {
   if (!process.env.AUTH_SECRET?.trim()) {
     return { ok: false, reason: "Email signup is temporarily unavailable. Use wallet login, or try again shortly." };

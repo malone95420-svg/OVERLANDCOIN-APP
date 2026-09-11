@@ -307,13 +307,13 @@ export default function QuestMapInner({
         zoom={3}
         scrollWheelZoom
         zoomControl={false}
+        attributionControl={false}
         preferCanvas
         className="h-full w-full !bg-[#0a121c]"
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
           key={tileKey}
-          attribution={basemap.attribution}
           url={basemap.url}
           maxZoom={basemap.maxZoom ?? 19}
           {...(basemap.subdomains ? { subdomains: basemap.subdomains } : {})}

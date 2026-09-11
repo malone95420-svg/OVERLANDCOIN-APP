@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function TokenDistributionPage() {
   return (
-    <div className="container-page py-10 sm:py-14">
+    <div className="page-shell">
       <span className="badge">Allocation</span>
       <h1 className="section-title mt-4">Token Distribution</h1>
       <p className="section-sub">

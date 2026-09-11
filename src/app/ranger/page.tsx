@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function RangerPage() {
   return (
-    <div className="container-page py-14">
+    <div className="page-shell">
       <span className="badge">Trail assistant</span>
       <h1 className="section-title mt-4">RANGER</h1>
       <p className="section-sub">

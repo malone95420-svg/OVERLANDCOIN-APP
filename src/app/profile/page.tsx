@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ProfilePage() {
   return (
-    <div className="container-page py-10 sm:py-14">
+    <div className="page-shell">
       <span className="badge">Explorer</span>
       <h1 className="section-title mt-4">Profile</h1>
       <p className="section-sub">

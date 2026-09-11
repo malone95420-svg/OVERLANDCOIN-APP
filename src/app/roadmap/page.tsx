@@ -14,7 +14,7 @@ const statusColor: Record<string, string> = {
 
 export default function RoadmapPage() {
   return (
-    <div className="container-page py-14">
+    <div className="page-shell">
       <span className="badge">Phased plan</span>
       <h1 className="section-title mt-4">Roadmap</h1>
       <p className="section-sub">{ROADMAP_DISCLAIMER}</p>

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function FeedPage() {
   return (
-    <div className="container-page w-full max-w-full overflow-x-hidden py-14">
+    <div className="page-shell w-full max-w-full overflow-x-hidden">
       <span className="badge">Community · GPS verified</span>
       <h1 className="section-title mt-4">Community</h1>
       <p className="section-sub">

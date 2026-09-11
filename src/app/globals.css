@@ -30,7 +30,10 @@ body {
 
 @layer components {
   .container-page {
-    @apply mx-auto w-full max-w-6xl min-w-0 px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-6xl min-w-0 px-5 sm:px-8 lg:px-10;
+  }
+  .page-shell {
+    @apply container-page py-16 sm:py-20;
   }
   .card {
     @apply rounded-2xl border border-border bg-bg-card/90 p-4 shadow-gold backdrop-blur sm:p-6 min-w-0 max-w-full;

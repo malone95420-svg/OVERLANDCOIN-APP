@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function MapPage() {
   return (
-    <div className="relative h-[calc(100dvh-3.5rem-env(safe-area-inset-top,0px))] w-full overflow-hidden sm:h-[calc(100dvh-4rem-env(safe-area-inset-top,0px))]">
+    <div className="relative h-[calc(100dvh-4rem-env(safe-area-inset-top,0px))] w-full overflow-hidden sm:h-[calc(100dvh-4.25rem-env(safe-area-inset-top,0px))]">
       <QuestCards quests={QUESTS} />
     </div>
   );

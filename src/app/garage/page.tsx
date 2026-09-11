@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function GaragePage() {
   return (
-    <div className="container-page py-14">
+    <div className="page-shell">
       <span className="badge">Local garage</span>
       <h1 className="section-title mt-4">Vehicle Garage</h1>
       <p className="section-sub">

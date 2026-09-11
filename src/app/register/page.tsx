@@ -110,7 +110,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="container-page py-14">
+    <div className="page-shell">
       <span className="badge">Account</span>
       <h1 className="section-title mt-4">Create your OVERLANDCOIN profile</h1>
       <p className="section-sub">

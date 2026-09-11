@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function AdminOverviewPage() {
   return (
-    <div className="container-page py-10 sm:py-14">
+    <div className="page-shell">
       <span className="badge">Admin</span>
       <h1 className="section-title mt-4">Balances &amp; sold</h1>
       <p className="section-sub">

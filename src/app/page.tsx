@@ -33,7 +33,7 @@ export default function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden bg-hero-glow">
-        <div className="container-page grid items-center gap-10 py-16 lg:grid-cols-2 lg:py-24">
+        <div className="container-page grid items-center gap-10 py-20 lg:grid-cols-2 lg:py-28">
           <div>
             <span className="badge border-gold/30 text-gold-bright">Explore. Discover. Earn.</span>
             <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">

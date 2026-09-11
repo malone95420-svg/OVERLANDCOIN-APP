@@ -34,7 +34,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-bg/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
-      <div className="container-page flex h-14 min-w-0 items-center justify-between gap-1.5 sm:h-16 sm:gap-4">
+      <div className="container-page flex h-16 min-w-0 items-center justify-between gap-2 sm:h-[4.25rem] sm:gap-4">
         <Link href="/" className="flex min-w-0 shrink items-center gap-1.5 sm:gap-2.5">
           <Image src="/logo.png" alt="OVERLANDCOIN" width={36} height={36} className="h-8 w-8 rounded-full shrink-0 sm:h-9 sm:w-9" priority />
           <span className="truncate text-sm font-bold tracking-wide text-white sm:text-base">

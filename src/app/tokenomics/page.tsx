@@ -13,7 +13,7 @@ export default async function TokenomicsPage() {
   const info = await fetchTokenInfo();
 
   return (
-    <div className="container-page py-14">
+    <div className="page-shell">
       <span className="badge">On-chain supply verified</span>
       <h1 className="section-title mt-4">Tokenomics</h1>
       <p className="section-sub">

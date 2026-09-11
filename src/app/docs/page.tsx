@@ -54,7 +54,7 @@ const DOCS = [
 
 export default function DocsPage() {
   return (
-    <div className="container-page py-14">
+    <div className="page-shell">
       <span className="badge">Documentation</span>
       <h1 className="section-title mt-4">Docs hub</h1>
       <p className="section-sub">

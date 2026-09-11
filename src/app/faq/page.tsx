@@ -130,7 +130,7 @@ const SECTIONS: FaqSection[] = [
 
 export default function FaqPage() {
   return (
-    <div className="container-page py-14">
+    <div className="page-shell">
       <span className="badge">Help</span>
       <h1 className="section-title mt-4">FAQ</h1>
       <p className="section-sub">

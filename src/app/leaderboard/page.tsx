@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function LeaderboardPage() {
   return (
-    <div className="container-page py-14">
+    <div className="page-shell">
       <span className="badge">Season standings</span>
       <h1 className="section-title mt-4">Leaderboard</h1>
       <p className="section-sub">

@@ -45,7 +45,7 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="container-page py-14">
+    <div className="page-shell">
       <span className="badge">Account</span>
       <h1 className="section-title mt-4">Choose a new password</h1>
       <p className="section-sub">This link works once and expires after one hour.</p>
@@ -115,7 +115,7 @@ export default function ResetPasswordPage() {
   return (
     <Suspense
       fallback={
-        <div className="container-page py-14">
+        <div className="page-shell">
           <p className="text-sm text-slate-400">Loading…</p>
         </div>
       }

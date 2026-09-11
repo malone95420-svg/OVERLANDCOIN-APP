@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ClaimPage() {
   return (
-    <div className="container-page py-10 sm:py-14">
+    <div className="page-shell">
       <span className="badge">Rewards</span>
       <h1 className="section-title mt-4">Claim OLC</h1>
       <p className="section-sub">

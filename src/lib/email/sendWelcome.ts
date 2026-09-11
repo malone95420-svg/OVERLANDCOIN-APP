@@ -1,34 +1,22 @@
 /**
- * Welcome email via Resend HTTP API (no SDK).
- * No-ops when RESEND_API_KEY is unset — never invent keys.
+ * Welcome email via Resend.
  */
 
-const RESEND_API = "https://api.resend.com/emails";
-const BRANDED_FROM = "OVERLANDCOIN <onboarding@overlandcoin.tech>";
-/** Resend sandbox / test sender if the production domain is not verified yet. */
-const RESEND_TEST_FROM = "OVERLANDCOIN <beth.t@example.com>";
+import {
+  RESEND_TEST_FROM,
+  sendResendEmail,
+  siteOrigin,
+  type ResendSendResult,
+} from "@/lib/email/sendResend";
 
-export type WelcomeSendResult =
-  | { sent: true; id?: string }
-  | { sent: false; reason: string };
+export type WelcomeSendResult = ResendSendResult;
 
-export function resendApiKey(): string | undefined {
-  const key = process.env.RESEND_API_KEY?.trim();
-  return key || undefined;
-}
-
-export function welcomeFromAddress(): string {
-  const from = process.env.EMAIL_FROM?.trim();
-  if (from) return from;
-  return BRANDED_FROM;
-}
-
-function siteOrigin(): string {
-  const raw =
-    process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
-    process.env.AUTH_URL?.trim() ||
-    "https://overlandcoin-app-kohl.vercel.app";
-  return raw.replace(/\/$/, "");
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function welcomeCopy(name: string, origin: string) {
@@ -82,77 +70,18 @@ function welcomeCopy(name: string, origin: string) {
   </body>
 </html>`;
 
-  return { subject, text, html, mapUrl, presaleUrl, dashboardUrl };
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  return { subject, text, html };
 }
 
 export async function sendWelcomeEmail(input: {
   to: string;
   name?: string;
 }): Promise<WelcomeSendResult> {
-  const key = resendApiKey();
-  if (!key) {
-    return { sent: false, reason: "RESEND_API_KEY is not set" };
-  }
-
   const to = input.to.trim().toLowerCase();
-  if (!to || !to.includes("@")) {
-    return { sent: false, reason: "invalid recipient" };
-  }
-
   const name = input.name?.trim() || to.split("@")[0] || "explorer";
   const { subject, text, html } = welcomeCopy(name, siteOrigin());
-  const from = welcomeFromAddress();
-
-  const ac = new AbortController();
-  const timer = setTimeout(() => ac.abort(), 8000);
-  try {
-    const res = await fetch(RESEND_API, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${key}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from,
-        to: [to],
-        subject,
-        html,
-        text,
-      }),
-      signal: ac.signal,
-    });
-    const data = (await res.json().catch(() => ({}))) as {
-      id?: string;
-      message?: string;
-      name?: string;
-    };
-    if (!res.ok) {
-      return {
-        sent: false,
-        reason: data.message || `Resend HTTP ${res.status}`,
-      };
-    }
-    return { sent: true, id: data.id };
-  } catch (e) {
-    const aborted = e instanceof Error && e.name === "AbortError";
-    const msg = aborted
-      ? "Resend request timed out"
-      : e instanceof Error
-        ? e.message
-        : "send failed";
-    return { sent: false, reason: msg };
-  } finally {
-    clearTimeout(timer);
-  }
+  return sendResendEmail({ to, subject, html, text });
 }
 
-/** Exported so docs/tests can mention the sandbox from without inventing keys. */
+export { resendApiKey, mailConfigured } from "@/lib/email/sendResend";
 export const RESEND_TEST_FROM_ADDRESS = RESEND_TEST_FROM;

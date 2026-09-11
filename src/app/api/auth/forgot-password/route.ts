@@ -49,19 +49,36 @@ export async function POST(req: Request) {
     const token = newResetToken();
     await saveResetToken(user.email, token);
 
-    if (passwordResetConfigured()) {
-      const sent = await sendPasswordResetEmail({
-        to: user.email,
-        token,
-        name: user.name,
-      });
-      if (!sent.sent) {
-        console.warn("[password-reset] email not sent:", sent.reason);
-      }
-    } else {
+    if (!passwordResetConfigured()) {
       console.warn(
         "[password-reset] RESEND_API_KEY unset — token created for local dev only. Reset URL: /reset-password?token=" +
           token,
+      );
+      if (process.env.NODE_ENV === "production") {
+        return NextResponse.json(
+          {
+            error:
+              "Password reset email is temporarily unavailable. Try again shortly, or sign in with wallet.",
+          },
+          { status: 503 },
+        );
+      }
+      return NextResponse.json(GENERIC_OK);
+    }
+
+    const sent = await sendPasswordResetEmail({
+      to: user.email,
+      token,
+      name: user.name,
+    });
+    if (!sent.sent) {
+      console.warn("[password-reset] email not sent:", sent.reason);
+      return NextResponse.json(
+        {
+          error:
+            "We couldn't send the reset email. Check that the address is correct, wait a minute, and try again.",
+        },
+        { status: 503 },
       );
     }
 

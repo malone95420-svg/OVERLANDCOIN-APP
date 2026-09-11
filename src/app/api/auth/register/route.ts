@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { createUser, emailAuthAvailable } from "@/lib/auth/userStore";
-import { sendWelcomeEmail } from "@/lib/email/sendWelcome";
+import { mailConfigured, sendWelcomeEmail } from "@/lib/email/sendWelcome";
 
 export const runtime = "nodejs";
 
@@ -57,6 +57,7 @@ export async function POST(req: Request) {
       ok: true,
       user: { id: result.id, email: result.email, name: result.name },
       welcomeEmailSent,
+      mailConfigured: mailConfigured(),
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Registration failed";
@@ -69,6 +70,7 @@ export async function GET() {
   return NextResponse.json({
     emailAuth: avail.ok,
     reason: avail.ok ? null : avail.reason,
+    mailConfigured: mailConfigured(),
     google: Boolean(
       (process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID) &&
         (process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET),

@@ -1,33 +1,10 @@
 /**
- * Password-reset email via Resend HTTP API (no SDK).
- * No-ops when RESEND_API_KEY is unset — never invent keys.
+ * Password-reset email via Resend.
  */
 
-const RESEND_API = "https://api.resend.com/emails";
-const BRANDED_FROM = "OVERLANDCOIN <onboarding@overlandcoin.tech>";
+import { sendResendEmail, siteOrigin, type ResendSendResult } from "@/lib/email/sendResend";
 
-export type ResetSendResult =
-  | { sent: true; id?: string }
-  | { sent: false; reason: string };
-
-function resendApiKey(): string | undefined {
-  const key = process.env.RESEND_API_KEY?.trim();
-  return key || undefined;
-}
-
-function fromAddress(): string {
-  const from = process.env.EMAIL_FROM?.trim();
-  if (from) return from;
-  return BRANDED_FROM;
-}
-
-function siteOrigin(): string {
-  const raw =
-    process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
-    process.env.AUTH_URL?.trim() ||
-    "https://overlandcoin-app-kohl.vercel.app";
-  return raw.replace(/\/$/, "");
-}
+export type ResetSendResult = ResendSendResult;
 
 function escapeHtml(value: string): string {
   return value
@@ -42,16 +19,7 @@ export async function sendPasswordResetEmail(input: {
   token: string;
   name?: string;
 }): Promise<ResetSendResult> {
-  const key = resendApiKey();
-  if (!key) {
-    return { sent: false, reason: "RESEND_API_KEY is not set" };
-  }
-
   const to = input.to.trim().toLowerCase();
-  if (!to || !to.includes("@")) {
-    return { sent: false, reason: "invalid recipient" };
-  }
-
   const origin = siteOrigin();
   const resetUrl = `${origin}/reset-password?token=${encodeURIComponent(input.token)}`;
   const name = input.name?.trim() || to.split("@")[0] || "explorer";
@@ -97,45 +65,7 @@ export async function sendPasswordResetEmail(input: {
   </body>
 </html>`;
 
-  const ac = new AbortController();
-  const timer = setTimeout(() => ac.abort(), 8000);
-  try {
-    const res = await fetch(RESEND_API, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${key}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: fromAddress(),
-        to: [to],
-        subject,
-        html,
-        text,
-      }),
-      signal: ac.signal,
-    });
-    const data = (await res.json().catch(() => ({}))) as {
-      id?: string;
-      message?: string;
-    };
-    if (!res.ok) {
-      return { sent: false, reason: data.message || `Resend HTTP ${res.status}` };
-    }
-    return { sent: true, id: data.id };
-  } catch (e) {
-    const aborted = e instanceof Error && e.name === "AbortError";
-    const msg = aborted
-      ? "Resend request timed out"
-      : e instanceof Error
-        ? e.message
-        : "send failed";
-    return { sent: false, reason: msg };
-  } finally {
-    clearTimeout(timer);
-  }
+  return sendResendEmail({ to, subject, html, text });
 }
 
-export function passwordResetConfigured(): boolean {
-  return Boolean(resendApiKey());
-}
+export { mailConfigured as passwordResetConfigured } from "@/lib/email/sendResend";

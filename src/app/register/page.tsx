@@ -13,13 +13,15 @@ export default function RegisterPage() {
   const [busy, setBusy] = useState(false);
   const [emailOk, setEmailOk] = useState<boolean | null>(null);
   const [emailHint, setEmailHint] = useState<string | null>(null);
+  const [mailOk, setMailOk] = useState<boolean | null>(null);
 
   useEffect(() => {
     void fetch("/api/auth/register")
       .then((r) => r.json())
-      .then((d: { emailAuth?: boolean; reason?: string | null }) => {
+      .then((d: { emailAuth?: boolean; reason?: string | null; mailConfigured?: boolean }) => {
         setEmailOk(Boolean(d.emailAuth));
         setEmailHint(d.reason ?? null);
+        setMailOk(d.mailConfigured !== false);
       })
       .catch(() => {
         setEmailOk(false);
@@ -83,6 +85,12 @@ export default function RegisterPage() {
             <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-100">
               {emailHint ||
                 "Email signup is temporarily unavailable. Use wallet sign-in, or try again shortly."}
+            </p>
+          )}
+          {emailOk && mailOk === false && (
+            <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-100">
+              Profiles work, but welcome / reset mail is not configured on the server yet. You can still
+              sign in with this password.
             </p>
           )}
           <form onSubmit={onSubmit} className="space-y-3">

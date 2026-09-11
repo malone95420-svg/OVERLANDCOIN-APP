@@ -7,7 +7,8 @@
  */
 import type { CapabilityTier } from "@/lib/vehicle";
 import { rewardForDifficulty } from "@/lib/questRewards";
-import seed from "./seed.json";
+import seed01 from "./seed-01.json";
+import seed02 from "./seed-02.json";
 import globalNorthAmerica from "./global-01-north-america.json";
 import globalLatinAmerica from "./global-02-latin-america.json";
 import globalEurope from "./global-03-europe.json";
@@ -133,7 +134,8 @@ function isTestQuest(q: Quest): boolean {
 }
 
 const RAW_QUESTS: Partial<Quest>[] = [
-  ...(seed as Partial<Quest>[]),
+  ...(seed01 as Partial<Quest>[]),
+  ...(seed02 as Partial<Quest>[]),
   ...(globalNorthAmerica as Partial<Quest>[]),
   ...(globalLatinAmerica as Partial<Quest>[]),
   ...(globalEurope as Partial<Quest>[]),

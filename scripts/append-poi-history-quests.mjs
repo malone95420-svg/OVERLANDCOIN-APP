@@ -15,7 +15,7 @@ const SEED_PATH = join(ROOT, "src/data/quests/seed.json");
 const POI_PATH = join(__dirname, "data/us-canada-poi-quests.json");
 const PRESERVE_ID = "q-test-gale-rs";
 const MIN_KM = 25;
-const REWARD = { Easy: 25, Moderate: 75, Hard: 150, Legendary: 400 };
+const REWARD = { Easy: 225, Moderate: 275, Hard: 350, Legendary: 600 };
 
 const ENRICH_BY_TITLE = {
   "Hell's Revenge Trailhead":

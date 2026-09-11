@@ -5,10 +5,10 @@
 export type DifficultyKey = "Easy" | "Moderate" | "Hard" | "Legendary" | "Medium";
 
 export const REWARD_BY_DIFFICULTY = {
-  Easy: 25,
-  Moderate: 75,
-  Hard: 150,
-  Legendary: 400,
+  Easy: 225,
+  Moderate: 275,
+  Hard: 350,
+  Legendary: 600,
 } as const;
 
 export type CanonicalDifficulty = keyof typeof REWARD_BY_DIFFICULTY;

@@ -337,10 +337,10 @@ const WY_TARGET_MAX = 700;
 
 /** Fixed OLC by difficulty — matches src/lib/questRewards.ts (no random scatter). */
 const REWARD_BY_DIFFICULTY = {
-  Easy: 25,
-  Moderate: 75,
-  Hard: 150,
-  Legendary: 400,
+  Easy: 225,
+  Moderate: 275,
+  Hard: 350,
+  Legendary: 600,
 };
 
 function rewardForDifficulty(d) {

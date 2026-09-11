@@ -137,7 +137,7 @@ export default function HomePage() {
               </div>
               <div className="rounded-xl border border-border bg-bg-panel/80 p-4">
                 <dt className="text-[11px] uppercase tracking-wide text-slate-500">Rewards</dt>
-                <dd className="mt-1 text-sm font-semibold text-white">25–400 OLC</dd>
+                <dd className="mt-1 text-sm font-semibold text-white">225–600 OLC</dd>
               </div>
             </dl>
             <Link href="/map" className="btn-primary mt-8">Explore Quest Map</Link>

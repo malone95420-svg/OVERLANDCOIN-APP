@@ -626,7 +626,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
               {selectedQuest.description ? (
                 <div className="mt-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-cyan-accent/90">
-                    About this place
+                    About this location
                   </p>
                   <p className="mt-1 text-sm leading-relaxed text-slate-200">
                     {selectedQuest.description}

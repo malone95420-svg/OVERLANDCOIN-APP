@@ -55,7 +55,16 @@ export function walletErrorCode(e: unknown): number | undefined {
   return undefined;
 }
 
+/** Wallet RPC for BlockDAG (0x57c) is circuit-breaking — not a user cancel. */
+export function isFlakyBlockdagRpcError(e: unknown): boolean {
+  const raw = formatWalletError(e, "");
+  return /too many errors|different RPC endpoint|eth_getBlockByNumber|retrying in 0\.5|code 5000|0x57c Custom/i.test(
+    raw,
+  );
+}
+
 export function isUserRejection(e: unknown): boolean {
+  if (isFlakyBlockdagRpcError(e)) return false;
   const code = walletErrorCode(e);
   if (code === 4001) return true;
   const msg = formatWalletError(e, "");
@@ -71,6 +80,13 @@ export function plainEnglishWalletError(e: unknown, fallback = "Something went w
   if (/insufficient funds|exceeds balance/i.test(raw)) return "Not enough balance for this payment plus gas.";
   if (/nonce|replacement transaction/i.test(raw)) return "Wallet has a stuck or conflicting transaction — clear it and retry.";
   if (/network changed|chain mismatch/i.test(raw)) return "Wallet switched networks mid-request. Switch back to the right chain and retry.";
+  if (
+    /too many errors|different RPC endpoint|eth_getBlockByNumber|retrying in 0\.5|0x57c Custom|code 5000/i.test(
+      raw,
+    )
+  ) {
+    return "BlockDAG RPC in your wallet is failing. Tap Switch / Fix BlockDAG, then pay again. RPC should be https://rpc.east.bdag-us.org/";
+  }
   if (/sendRawTransaction|method not found|-32601/i.test(raw)) {
     return "Wallet RPC can’t send transactions. Set BlockDAG RPC to https://rpc.east.bdag-us.org/ and retry.";
   }

@@ -1041,7 +1041,7 @@ function PresaleBuyInner() {
 
   function isNoSendRpcError(err: unknown): boolean {
     const raw = formatWalletError(err, "");
-    return /sendRawTransaction|method not found|does not exist\/is not available|Internal JSON-RPC|JSON-RPC error|rpc .*can.?t send|can.?t send tx|cannot send|failed to fetch|network error|http request failed|\-32601|\-32603|\-32005|\-32002/i.test(
+    return /sendRawTransaction|method not found|does not exist\/is not available|Internal JSON-RPC|JSON-RPC error|rpc .*can.?t send|can.?t send tx|cannot send|failed to fetch|network error|http request failed|too many errors|different RPC endpoint|eth_getBlockByNumber|0x57c Custom|\-32601|\-32603|\-32005|\-32002|code 5000/i.test(
       raw,
     );
   }

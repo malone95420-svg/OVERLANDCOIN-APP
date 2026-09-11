@@ -67,13 +67,13 @@ function dedupe(urls: string[]): string[] {
 export function blockdagHttpRpcUrls(): string[] {
   const envPrimary = process.env.NEXT_PUBLIC_BLOCKDAG_RPC?.trim();
   const envFallback = process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK?.trim();
-  // Reads: engineering tip first (after env), then east/west. Never bdagscan.
+  // Reads: east/west first (engineering is often 503). Never bdagscan.
   const candidates = [
     envPrimary,
     envFallback,
-    ENGINEERING_RPC,
     EAST_RPC,
     WEST_RPC,
+    ENGINEERING_RPC,
     TOKEN.rpcAlt,
     TOKEN.rpcFallback,
     TOKEN.rpcUrl,

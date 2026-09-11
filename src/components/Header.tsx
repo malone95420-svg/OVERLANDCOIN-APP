@@ -18,6 +18,13 @@ const MINI_LINKS = [
   { href: "/garage", label: "Garage" },
 ] as const;
 
+const PRIMARY_LINKS = [
+  { href: "/map", label: "Map" },
+  { href: "/presale", label: "Presale" },
+  { href: "/claim", label: "Claim" },
+  { href: "/garage", label: "Garage" },
+] as const;
+
 export function Header() {
   const pathname = usePathname();
   const isTelegram = useTelegramWebApp();
@@ -35,14 +42,14 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {links.map((link) => {
+        <nav className="hidden items-center gap-0.5 md:flex">
+          {(compact ? links : PRIMARY_LINKS).map((link) => {
             const active = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`rounded-lg px-3 py-1.5 text-sm transition ${
+                className={`rounded-lg px-2.5 py-1.5 text-sm transition ${
                   active
                     ? "bg-bg-card text-gold-bright"
                     : "text-slate-300 hover:bg-bg-panel hover:text-white"
@@ -56,18 +63,12 @@ export function Header() {
 
         <div className="flex min-w-0 shrink-0 items-center gap-1 sm:gap-2">
           {!compact && <PendingOlCBadge />}
-          {!compact && (
-            <Link href="/presale" className="btn-secondary hidden sm:inline-flex !py-2 !text-xs">
-              Presale
-            </Link>
-          )}
-          {/* Account stays visible; secondary wallet actions compact on xs */}
           <AccountMenu compact />
-          {!compact && <AddOlcButton compact showStatus={false} className="hidden md:inline-flex" />}
+          {!compact && <AddOlcButton compact showStatus={false} className="hidden lg:inline-flex" />}
           <ConnectWallet compact />
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-lg border border-border p-2 text-slate-200 lg:hidden"
+            className="inline-flex items-center justify-center rounded-lg border border-border p-2 text-slate-200"
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -84,7 +85,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="max-h-[min(70vh,calc(100dvh-env(safe-area-inset-top)-3.5rem))] overflow-y-auto border-t border-border bg-bg-deep pb-[env(safe-area-inset-bottom)] lg:hidden">
+        <div className="max-h-[min(70vh,calc(100dvh-env(safe-area-inset-top)-3.5rem))] overflow-y-auto border-t border-border bg-bg-deep pb-[env(safe-area-inset-bottom)]">
           <nav className="container-page flex flex-col gap-1 py-3">
             {links.map((link) => (
               <Link

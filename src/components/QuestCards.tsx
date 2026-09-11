@@ -56,6 +56,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   const [locateBusy, setLocateBusy] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [listOpen, setListOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -402,53 +403,70 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
             >
               🔔
             </button>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={() => setListOpen((v) => !v)}
-              className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold backdrop-blur-md transition ${
-                listOpen
+              onClick={() => setFiltersOpen((v) => !v)}
+              className={`flex h-10 shrink-0 items-center rounded-xl border px-2.5 text-xs font-semibold shadow-lg backdrop-blur-md ${
+                filtersOpen
                   ? "border-cyan-accent/50 bg-cyan-accent/20 text-cyan-accent"
-                  : "border-white/15 bg-black/70 text-slate-100 hover:border-cyan-accent/40"
+                  : "border-white/15 bg-black/75 text-slate-200"
               }`}
-              aria-pressed={listOpen}
-              aria-label="Toggle quest list"
+              aria-expanded={filtersOpen}
+              aria-label="Map filters"
             >
-              {filtered.length} quests
+              Filters
             </button>
-            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-1 text-[11px] font-semibold text-emerald-300 backdrop-blur-md">
-              {completedCount} completed
-            </span>
-            <button
-              type="button"
-              onClick={() => setShowAll((v) => !v)}
-              className={`rounded-full border px-2.5 py-1 text-[11px] font-medium backdrop-blur-md transition ${
-                showAll
-                  ? "border-amber-400/40 bg-amber-500/15 text-amber-200"
-                  : "border-white/15 bg-black/70 text-slate-300 hover:border-cyan-accent/40"
-              }`}
-              title="Toggle vehicle garage tier filter"
-            >
-              {hydrated
-                ? showAll
-                  ? "All tiers"
-                  : `Tier ${tierLabel(tier)}`
-                : "Garage…"}
-            </button>
-            <Link
-              href="/garage"
-              className="rounded-full border border-white/10 bg-black/50 px-2 py-1 text-[10px] text-cyan-accent/90 hover:text-cyan-accent"
-            >
-              Garage
-            </Link>
           </div>
-          <div className="md:hidden">
-            <DifficultySeg value={difficultyUi} onChange={setDifficultyUi} compact />
-          </div>
-          <div className="md:hidden">
-            <LiveWeatherChip geo={userGeo} />
-          </div>
+          {filtersOpen && (
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setListOpen((v) => !v)}
+                  className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold backdrop-blur-md transition ${
+                    listOpen
+                      ? "border-cyan-accent/50 bg-cyan-accent/20 text-cyan-accent"
+                      : "border-white/15 bg-black/70 text-slate-100 hover:border-cyan-accent/40"
+                  }`}
+                  aria-pressed={listOpen}
+                  aria-label="Toggle quest list"
+                >
+                  {filtered.length} quests
+                </button>
+                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-1 text-[11px] font-semibold text-emerald-300 backdrop-blur-md">
+                  {completedCount} completed
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowAll((v) => !v)}
+                  className={`rounded-full border px-2.5 py-1 text-[11px] font-medium backdrop-blur-md transition ${
+                    showAll
+                      ? "border-amber-400/40 bg-amber-500/15 text-amber-200"
+                      : "border-white/15 bg-black/70 text-slate-300 hover:border-cyan-accent/40"
+                  }`}
+                  title="Toggle vehicle garage tier filter"
+                >
+                  {hydrated
+                    ? showAll
+                      ? "All tiers"
+                      : `Tier ${tierLabel(tier)}`
+                    : "Garage…"}
+                </button>
+                <Link
+                  href="/garage"
+                  className="rounded-full border border-white/10 bg-black/50 px-2 py-1 text-[10px] text-cyan-accent/90 hover:text-cyan-accent"
+                >
+                  Garage
+                </Link>
+              </div>
+              <div className="md:hidden">
+                <DifficultySeg value={difficultyUi} onChange={setDifficultyUi} compact />
+              </div>
+              <div className="md:hidden">
+                <LiveWeatherChip geo={userGeo} />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Top-center: difficulty segmented control */}

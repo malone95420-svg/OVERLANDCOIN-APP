@@ -322,8 +322,8 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
         className="absolute inset-0"
       />
 
-      {/* Overlay chrome — Base44 Quest Map */}
-      <div className="pointer-events-none absolute inset-0 z-[1100]">
+      {/* Overlay chrome — hidden while check-in is open so sheets don't stack */}
+      <div className={`pointer-events-none absolute inset-0 z-[1100] ${checkInQuest ? "hidden" : ""}`}>
         {/* Top-left: search + locate/alerts on mobile, then badges */}
         <div className="pointer-events-auto absolute left-3 top-3 right-3 flex max-w-none flex-col gap-2 sm:right-auto sm:max-w-md">
           <div className="flex items-center gap-2">
@@ -725,7 +725,11 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
                   type="button"
                   className="btn-secondary !py-2 !text-xs disabled:cursor-not-allowed disabled:opacity-40"
                   disabled={!hydrated || isSelectedCompleted}
-                  onClick={() => setCheckInQuest(selectedQuest)}
+                  onClick={() => {
+                    setListOpen(false);
+                    setSearchOpen(false);
+                    setCheckInQuest(selectedQuest);
+                  }}
                 >
                   {isSelectedCompleted ? "Quest Completed!" : "Check in"}
                 </button>

@@ -181,7 +181,7 @@ function CheckInModalInner({
 
   return (
     <div
-      className="fixed inset-0 z-[1000] flex items-end justify-center bg-black/70 p-4 pt-[max(1rem,env(safe-area-inset-top,0px))] pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:items-center"
+      className="fixed inset-0 z-[5000] flex items-end justify-center bg-black/80 p-4 pt-[max(1rem,env(safe-area-inset-top,0px))] pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:items-center"
       role="dialog"
       aria-modal="true"
       aria-labelledby="checkin-title"

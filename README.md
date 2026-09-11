@@ -63,7 +63,7 @@ Admin panels, passwords, auth backends, email systems.
 ## Account login
 
 - **Wallet (primary):** `/login` → Sign in with wallet (sign message “Sign in to OVERLANDCOIN”). No Redis required. Set `AUTH_SECRET` in production.
-- **Email/password:** Needs `AUTH_SECRET` + Upstash `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` in production. Otherwise the UI tells you to use wallet login.
+- **Email/password:** Needs `AUTH_SECRET` + Upstash `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` in production. Signup emails a 6-digit code (15 min) before the account is created. Otherwise the UI tells you to use wallet login.
 - **Forgot password:** `/forgot-password` emails a one-hour, single-use link (`/reset-password?token=…`). Needs `RESEND_API_KEY` + a verified sending domain (`EMAIL_FROM`) in Vercel. Does not reveal whether the email is registered.
 - **Google (optional):** `AUTH_GOOGLE_ID` + `AUTH_GOOGLE_SECRET`.
 - Garage / completions / purchases localStorage keys are namespaced by `accountKey` after login (same device). Cross-device sync needs Redis later.

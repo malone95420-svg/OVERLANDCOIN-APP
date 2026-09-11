@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { createUser, emailAuthAvailable } from "@/lib/auth/userStore";
-import { mailConfigured, sendWelcomeEmail } from "@/lib/email/sendWelcome";
+import { emailAuthAvailable, getUserByEmail } from "@/lib/auth/userStore";
+import {
+  allowCodeSend,
+  getPendingSignup,
+  newVerifyCode,
+  savePendingSignup,
+} from "@/lib/auth/emailVerify";
+import { mailConfigured } from "@/lib/email/sendWelcome";
+import { sendVerifyCodeEmail } from "@/lib/email/sendVerifyCode";
 
 export const runtime = "nodejs";
 
@@ -11,53 +18,78 @@ export async function POST(req: Request) {
     if (!avail.ok) {
       return NextResponse.json({ error: avail.reason }, { status: 503 });
     }
+    if (!mailConfigured() && process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        { error: "Email verification is temporarily unavailable. Use wallet sign-in, or try again shortly." },
+        { status: 503 },
+      );
+    }
 
     const body = (await req.json()) as {
       email?: string;
       password?: string;
       name?: string;
+      resend?: boolean;
     };
     const email = String(body.email ?? "").trim().toLowerCase();
     const password = String(body.password ?? "");
     const name = body.name ? String(body.name).trim() : undefined;
+    const resend = Boolean(body.resend);
 
     if (!email || !email.includes("@")) {
       return NextResponse.json({ error: "Valid email required." }, { status: 400 });
     }
-    if (password.length < 8) {
+
+    const existing = await getUserByEmail(email);
+    if (existing) {
+      return NextResponse.json({ error: "An account with that email already exists." }, { status: 409 });
+    }
+
+    let passwordHash: string;
+    let pendingName = name;
+    if (resend) {
+      const pending = await getPendingSignup(email);
+      if (!pending) {
+        return NextResponse.json(
+          { error: "That code expired. Create your profile again." },
+          { status: 400 },
+        );
+      }
+      passwordHash = pending.passwordHash;
+      pendingName = pending.name;
+    } else {
+      if (password.length < 8) {
+        return NextResponse.json(
+          { error: "Password must be at least 8 characters." },
+          { status: 400 },
+        );
+      }
+      passwordHash = await bcrypt.hash(password, 10);
+    }
+
+    const allowed = await allowCodeSend(email);
+    if (!allowed) {
       return NextResponse.json(
-        { error: "Password must be at least 8 characters." },
-        { status: 400 },
+        { error: "Too many codes sent. Wait a bit and try again." },
+        { status: 429 },
       );
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
-    const result = await createUser({ email, passwordHash, name });
-    if ("error" in result) {
-      const status = result.error.includes("already exists") ? 409 : 503;
-      return NextResponse.json({ error: result.error }, { status });
-    }
-
-    let welcomeEmailSent = false;
-    try {
-      const welcome = await sendWelcomeEmail({
-        to: result.email,
-        name: result.name,
-      });
-      welcomeEmailSent = welcome.sent;
-      if (!welcome.sent) {
-        console.warn("[welcome-email] not sent:", welcome.reason);
-      }
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "unknown";
-      console.warn("[welcome-email] soft error:", msg);
+    const code = newVerifyCode();
+    await savePendingSignup({ email, passwordHash, name: pendingName, code });
+    const sent = await sendVerifyCodeEmail({ to: email, code, name: pendingName });
+    if (!sent.sent) {
+      console.warn("[verify-email] not sent:", sent.reason);
+      return NextResponse.json(
+        { error: "We couldn't send the verification code. Try again in a minute." },
+        { status: 503 },
+      );
     }
 
     return NextResponse.json({
       ok: true,
-      user: { id: result.id, email: result.email, name: result.name },
-      welcomeEmailSent,
-      mailConfigured: mailConfigured(),
+      needsVerification: true,
+      email,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Registration failed";

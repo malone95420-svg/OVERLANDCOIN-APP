@@ -49,6 +49,10 @@ const SECTIONS: FaqSection[] = [
         q: "I forgot my email password. How do I reset it?",
         a: "Use Forgot password on the Sign in page. We'll email a one-hour, single-use link. Wallet and Google sign-in don't use a password.",
       },
+      {
+        q: "How do I verify my email when I sign up?",
+        a: "After you create a password profile we email a 6-digit code. Enter it on the signup page within 15 minutes. Wallet sign-in does not need an email code.",
+      },
     ],
   },
   {

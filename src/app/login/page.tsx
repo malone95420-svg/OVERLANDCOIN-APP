@@ -40,6 +40,16 @@ export default function LoginPage() {
         callbackUrl: "/dashboard",
       });
       if (res?.error) {
+        try {
+          const pending = await fetch(`/api/auth/verify-email?email=${encodeURIComponent(email)}`);
+          const data = (await pending.json()) as { pending?: boolean };
+          if (data.pending) {
+            setError("This email isn’t verified yet. Open Create profile and enter the 6-digit code we sent.");
+            return;
+          }
+        } catch {
+          /* fall through */
+        }
         setError("Invalid email or password.");
         return;
       }

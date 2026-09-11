@@ -85,7 +85,7 @@ export function plainEnglishWalletError(e: unknown, fallback = "Something went w
       raw,
     )
   ) {
-    return "BlockDAG RPC in your wallet is failing. Tap Switch / Fix BlockDAG, then pay again. RPC should be https://rpc.east.bdag-us.org/";
+    return "BlockDAG RPC in your wallet is failing. Tap Switch / Fix BlockDAG, then pay again. RPC must be https://rpc.east.bdag-us.org/ (not west).";
   }
   if (/sendRawTransaction|method not found|-32601/i.test(raw)) {
     return "Wallet RPC can’t send transactions. Set BlockDAG RPC to https://rpc.east.bdag-us.org/ and retry.";

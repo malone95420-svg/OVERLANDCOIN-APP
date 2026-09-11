@@ -6,7 +6,7 @@
  *
  * Transports: known-good read RPCs (east + west + engineering; never bdagscan).
  * Wallet broadcasts use the wallet's own RPC via wallet_addEthereumChain
- * (send-capable east → west only — see blockdagWalletRpcUrls).
+ * (send-capable east only — see blockdagWalletRpcUrls).
  */
 import { createConfig, fallback, http, injected } from "wagmi";
 import { walletConnect } from "@wagmi/connectors/walletConnect";

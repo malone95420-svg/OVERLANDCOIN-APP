@@ -18,7 +18,6 @@ const networkRows = [
   { label: "Chain ID", value: String(TOKEN.chainId) },
   { label: "Currency symbol", value: TOKEN.nativeCurrency.symbol },
   { label: "RPC URL (send)", value: TOKEN.rpcUrl },
-  { label: "RPC fallback (send)", value: TOKEN.rpcFallback },
   { label: "RPC read-only", value: TOKEN.rpcAlt },
   { label: "Block explorer", value: TOKEN.explorers.primary },
 ];
@@ -107,9 +106,9 @@ export default function PresalePage() {
           add manually in OKX / Trust / Rabby / Coinbase / Bitget / MetaMask: Settings → Networks →
           Add network. Any BlockDAG-capable wallet must be on chainId {TOKEN.chainId} with a
           send-capable RPC (
-          <span className="font-mono text-slate-300">rpc.east.bdag-us.org</span> →{" "}
-          <span className="font-mono text-slate-300">rpc.west.bdag-us.org</span>) — never{" "}
-          <span className="font-mono text-slate-300">rpc.bdagscan.com</span> or engineering for
+          <span className="font-mono text-slate-300">rpc.east.bdag-us.org</span>) — never{" "}
+          <span className="font-mono text-slate-300">rpc.west.bdag-us.org</span>,{" "}
+          <span className="font-mono text-slate-300">rpc.bdagscan.com</span>, or engineering for
           broadcasts (empty/wrong state or no-send). No BlockDAG wallet? Use external USDT/ETH/BTC/SOL
           deposits below.
         </p>

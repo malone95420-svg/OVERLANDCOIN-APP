@@ -11,7 +11,7 @@ Adventure Powered. Location Rewarded. Move. Explore. Earn. Fuel for the Journey.
 - Decimals: 18
 - Total supply: 9,000,000,000 OLC
 - Chain: BlockDAG Mainnet, chainId 1404
-- RPC: https://rpc.west.bdag-us.org/ (fallback https://rpc.bdagscan.com/)
+- RPC: https://rpc.east.bdag-us.org/
 - Explorer: https://explorer.blockdag.engineering/address/0x4DF1041EA978fcFF8997f9BFd5302E65100d7f27
 
 OLC exists ONLY on BlockDAG 1404. Same address on Base/Ethereum is an empty EOA.

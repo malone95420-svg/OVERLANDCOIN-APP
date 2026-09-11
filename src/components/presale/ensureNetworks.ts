@@ -1,5 +1,5 @@
 import { blockdagAddChainParams, blockdagChainIdHex } from "@/lib/chain";
-import { EAST_RPC, WEST_RPC } from "@/lib/blockdagRpc";
+import { EAST_RPC } from "@/lib/blockdagRpc";
 import { getAnyInjectedProvider, getEthereumPaymentProvider } from "@/lib/injectedWallets";
 import { TOKEN } from "@/lib/token";
 import { formatWalletError, walletErrorCode } from "./walletErrors";
@@ -20,8 +20,8 @@ function sameChainId(a: string | null | undefined, b: string): boolean {
 
 export type EnsureBlockdagOptions = {
   /**
-   * Always call wallet_addEthereumChain with send-capable RPCs (east → west),
-   * even when already on chain 1404. Fixes wallets stuck on engineering/bdagscan
+   * Always call wallet_addEthereumChain with send-capable RPCs (east only),
+   * even when already on chain 1404. Fixes wallets stuck on engineering/bdagscan/west
    * (read-ok, no eth_sendRawTransaction).
    */
   forceRpcRefresh?: boolean;
@@ -52,14 +52,14 @@ async function addBlockdagWithSendRpcs(eth: Eip1193): Promise<void> {
 
 /** Plain-English guidance when the wallet cannot update BlockDAG RPC. */
 export function blockdagRpcManualFixMessage(isWalletConnect = false): string {
-  const base = `Set BlockDAG Mainnet RPC to ${EAST_RPC} (fallback ${WEST_RPC}). Do not use rpc.bdagscan.com or rpc.blockdag.engineering for sends.`;
+  const base = `Set BlockDAG Mainnet RPC to ${EAST_RPC}. Do not use west, rpc.bdagscan.com, or rpc.blockdag.engineering for sends.`;
   if (isWalletConnect) {
     return `WalletConnect can’t update the RPC for you. In your wallet app → Networks → BlockDAG Mainnet → ${base} Or pay with ETH/USDT/USDC/SOL/BTC deposit instead.`;
   }
   return `Couldn’t update BlockDAG RPC automatically. In your wallet: Settings → Networks → BlockDAG Mainnet → ${base}`;
 }
 
-/** Switch/add BlockDAG 1404 using send-capable RPCs only (east → west). */
+/** Switch/add BlockDAG 1404 using send-capable RPCs only (east). */
 export async function ensureBlockdagNetwork(
   provider?: Eip1193 | null,
   opts?: EnsureBlockdagOptions,
@@ -270,4 +270,4 @@ export function noInjectedProviderMessage(payAsset: string, payAmount: number): 
   return `No Ethereum wallet detected in this browser. Open this page in MetaMask / OKX / Trust in-app browser, or copy the address and send${amountBit} ${payAsset} on Ethereum manually.`;
 }
 
-export { ETHEREUM_MAINNET_HEX, EAST_RPC, WEST_RPC };
+export { ETHEREUM_MAINNET_HEX, EAST_RPC };

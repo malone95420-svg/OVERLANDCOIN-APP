@@ -5,9 +5,9 @@
  *
  * RPC note:
  * - Do NOT use https://rpc.bdagscan.com/ — divergent/stale tip (never for clients/receipts).
- * - https://rpc.east.bdag-us.org/ — send-capable; prefer first for MetaMask / wallet_addEthereumChain.
- * - https://rpc.west.bdag-us.org/ — send-capable fallback (west can be 502-flaky).
- * - https://rpc.blockdag.engineering/ — read-only / no-send (good tip for receipts; NO eth_sendRawTransaction).
+ * - https://rpc.east.bdag-us.org/ — send-capable; the only RPC we add to wallets.
+ * - Do NOT use https://rpc.west.bdag-us.org/ — not used for wallets or broadcasts.
+ * - https://rpc.blockdag.engineering/ — read-only / no-send (NO eth_sendRawTransaction).
  * Explorer https://bdagscan.com is still OK.
  */
 /** Reject empty/wrong-state RPC (never recommend for wallets or broadcasts). */
@@ -18,6 +18,7 @@ function envSendRpc(raw: string | undefined, fallback: string): string {
     const host = new URL(u).hostname.toLowerCase();
     if (host === "rpc.bdagscan.com") return fallback;
     if (host === "rpc.blockdag.engineering") return fallback;
+    if (host === "rpc.west.bdag-us.org") return fallback;
   } catch {
     return fallback;
   }
@@ -49,19 +50,10 @@ export const TOKEN = {
     return preferred;
   })(),
   /**
-   * Fallback send-capable RPC (west).
-   * Engineering remains available via rpcAlt / blockdagHttpRpcUrls for reads only.
-   * Never put engineering or bdagscan in wallet_addEthereumChain rpcUrls.
+   * Second wallet RPC slot — east again (west DAG is not used).
+   * Never put engineering, west, or bdagscan in wallet_addEthereumChain rpcUrls.
    */
-  rpcFallback: (() => {
-    const preferred = "https://rpc.west.bdag-us.org/";
-    const fromEnv = envSendRpc(process.env.NEXT_PUBLIC_BLOCKDAG_RPC_FALLBACK, preferred);
-    try {
-      const h = new URL(fromEnv).hostname.toLowerCase();
-      if (h === "rpc.west.bdag-us.org" || h === "rpc.east.bdag-us.org") return fromEnv;
-    } catch { /* use preferred */ }
-    return preferred;
-  })(),
+  rpcFallback: "https://rpc.east.bdag-us.org/",
   /** Additional read-only RPC (no eth_sendRawTransaction) */
   rpcAlt: "https://rpc.blockdag.engineering/",
   explorers: {

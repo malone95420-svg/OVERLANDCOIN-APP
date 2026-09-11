@@ -63,8 +63,17 @@ export const INJECTED_WALLET_DEFS: InjectedWalletDef[] = [
     id: "okx",
     name: "OKX Wallet",
     provider: (w) => {
-      const okx = asWin(w).okxwallet;
-      return (okx?.ethereum ?? okx) as Eip1193Provider | undefined;
+      const win = asWin(w);
+      const okx = win.okxwallet;
+      const nested = okx?.ethereum ?? okx;
+      if (nested?.request) return nested as Eip1193Provider;
+      const eth = win.ethereum;
+      if (eth?.isOkxWallet && eth.request) return eth;
+      if (Array.isArray(eth?.providers)) {
+        const p = eth.providers.find((x) => Boolean(x?.isOkxWallet && x?.request));
+        if (p) return p;
+      }
+      return undefined;
     },
   },
   {

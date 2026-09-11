@@ -62,6 +62,9 @@ function friendlyConnectError(raw: string): string {
   if (!msg) return "Connection failed. Try again.";
   if (/rejected|denied|canceled|cancelled/i.test(msg)) return "Connection canceled in wallet.";
   if (/already pending|request already/i.test(msg)) return "A wallet request is already open — check your wallet app.";
+  if (/disconnect.*(wallet|metamask|extension)|other wallet|disable.*(metamask|wallet)/i.test(msg)) {
+    return "OKX is fighting another browser wallet. Use the OKX Wallet button here (not Browser wallet), or pause MetaMask/Rabby for this site.";
+  }
   if (/session.*expired|proposal.*expired|QR.*expired/i.test(msg)) {
     return "WalletConnect session expired. Tap Connect again and approve in your wallet.";
   }
@@ -330,6 +333,13 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
 
       setMenuOpen(false);
       try {
+        if (isConnected && activeConnector && activeConnector.id !== connector.id) {
+          try {
+            await disconnectAsync();
+          } catch {
+            /* still try the new connector */
+          }
+        }
         await connectAsync({ connector, chainId: blockdag.id });
         // Payable-session prepare runs via the isConnected effect.
       } catch (e) {
@@ -343,7 +353,7 @@ function ConnectWalletInner({ compact = false }: { compact?: boolean }) {
         }
       }
     },
-    [connectAsync, showNoWalletGuidance],
+    [connectAsync, showNoWalletGuidance, isConnected, activeConnector, disconnectAsync],
   );
 
   const onPrimaryClick = useCallback(async () => {

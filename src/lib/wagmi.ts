@@ -67,7 +67,10 @@ export const wagmiConfig = createConfig({
     [blockdag.id]: fallback(rpcUrls.map((url) => http(url, { batch: true }))),
   },
   ssr: true,
-  multiInjectedProviderDiscovery: true,
+  // Named connectors already cover OKX / Trust / Rabby / etc. EIP-6963 discovery
+  // duplicates them and often binds "OKX" to window.ethereum (MetaMask), which
+  // makes OKX ask the user to disconnect the other wallet.
+  multiInjectedProviderDiscovery: false,
 });
 
 export const walletConnectEnabled = Boolean(wcProjectId);

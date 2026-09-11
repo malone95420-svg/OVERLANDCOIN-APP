@@ -9,6 +9,7 @@ import {
   buildWalletSignInMessage,
   randomNonce,
 } from "@/lib/auth/walletMessage";
+import { detectedInjectedWalletIds } from "@/lib/injectedWallets";
 
 export function WalletSignInButton({
   callbackUrl = "/garage",
@@ -35,14 +36,16 @@ function WalletSignInInner({ callbackUrl }: { callbackUrl: string }) {
 
   const ensureConnected = useCallback(async () => {
     if (isConnected && address) return address;
+    const named = ["okx", "trust", "rabby", "coinbase", "bitget"] as const;
+    const detected = new Set(detectedInjectedWalletIds());
     const inj =
-      connectors.find((c) => c.id === "injected" || c.type === "injected") ?? null;
+      connectors.find(
+        (c) => named.includes(c.id as (typeof named)[number]) && detected.has(c.id as (typeof named)[number]),
+      ) ??
+      connectors.find((c) => c.id === "injected") ??
+      null;
     if (!inj) {
-      throw new Error("No browser wallet found. Install MetaMask or open in a wallet browser.");
-    }
-    const eth = (window as unknown as { ethereum?: unknown }).ethereum;
-    if (!eth) {
-      throw new Error("No browser wallet found. Install MetaMask or open in a wallet browser.");
+      throw new Error("No browser wallet found. Install OKX or MetaMask, or open in a wallet browser.");
     }
     const result = await connectAsync({ connector: inj, chainId: blockdag.id });
     return result.accounts[0];

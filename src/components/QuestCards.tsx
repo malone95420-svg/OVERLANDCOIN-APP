@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import type { Quest } from "@/lib/quests";
 import { filterQuestsByTier } from "@/lib/quests";
@@ -47,6 +47,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [userGeo, setUserGeo] = useState<UserGeo>({ status: "idle" });
   const [routeCoords, setRouteCoords] = useState<[number, number][] | null>(null);
+  const [sheetMin, setSheetMin] = useState(false);
   const [alertsOn, setAlertsOn] = useState(false);
   const [alertsHydrated, setAlertsHydrated] = useState(false);
   const [nearbyToast, setNearbyToast] = useState<string | null>(null);
@@ -170,7 +171,12 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   useEffect(() => {
     setRouteCoords(null);
     setFindingId(undefined);
+    setSheetMin(false);
   }, [selectedId]);
+
+  useEffect(() => {
+    if (routeCoords && routeCoords.length >= 2) setSheetMin(true);
+  }, [routeCoords]);
 
   // Quest Alerts stub — notify when within ~5 km of an incomplete quest
   useEffect(() => {
@@ -211,6 +217,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
   function startDirections(quest: Quest) {
     setFindingId(quest.id);
     requestFlyTo(quest.id);
+    if (userGeo.status !== "watching") goToMyLocation();
   }
 
   function toggleAlerts() {
@@ -221,7 +228,14 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
       } catch {
         /* ignore */
       }
-      if (!next) setNearbyToast(null);
+      if (next) {
+        setNearbyToast("Quest Alerts on — we’ll ping when you’re within 5 km of a quest.");
+        if (typeof Notification !== "undefined" && Notification.permission === "default") {
+          void Notification.requestPermission();
+        }
+      } else {
+        setNearbyToast(null);
+      }
       return next;
     });
   }
@@ -382,7 +396,8 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
                   ? "border-cyan-accent/50 bg-cyan-accent/20 text-cyan-accent"
                   : "border-white/15 bg-black/75 text-slate-200"
               }`}
-              aria-label="Quest Alerts"
+              title="Quest Alerts — ping when you are within 5 km of a quest"
+              aria-label="Quest Alerts — ping when you are within 5 km of a quest"
               aria-pressed={alertsOn}
             >
               🔔
@@ -454,6 +469,7 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
                 ? "border-cyan-accent/50 bg-cyan-accent/20 text-cyan-accent"
                 : "border-white/15 bg-black/75 text-slate-200 hover:bg-white/10"
             }`}
+            title="Ping when you are within 5 km of a quest"
             aria-pressed={alertsHydrated ? alertsOn : false}
           >
             <span aria-hidden>🔔</span>
@@ -597,21 +613,37 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
         {/* Selected quest detail card — bottom-right / mobile bottom sheet */}
         {selectedQuest && (
           <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-20 pb-[env(safe-area-inset-bottom,0px)] sm:inset-x-auto sm:bottom-14 sm:right-3 sm:w-[min(100%-1.5rem,22rem)] sm:pb-0 md:bottom-16">
-            <div className="max-h-[55vh] overflow-y-auto rounded-t-2xl border border-white/15 bg-black/90 p-4 shadow-2xl backdrop-blur-md sm:max-h-[min(70vh,28rem)] sm:rounded-2xl">
+            <div className={`${sheetMin ? "max-h-[7.5rem]" : "max-h-[55vh] sm:max-h-[min(70vh,28rem)]"} overflow-y-auto rounded-t-2xl border border-white/15 bg-black/90 p-4 shadow-2xl backdrop-blur-md sm:rounded-2xl`}>
               <div className="mb-2 flex items-start justify-between gap-2 sm:hidden">
                 <div className="mx-auto h-1 w-10 rounded-full bg-white/25" />
               </div>
               <div className="flex items-start justify-between gap-2">
                 <h3 className="text-base font-semibold text-white">{selectedQuest.title}</h3>
-                <button
-                  type="button"
-                  className="shrink-0 rounded-lg px-2 py-1 text-xs text-slate-400 hover:bg-white/10 hover:text-white"
-                  onClick={() => setSelected(undefined)}
-                  aria-label="Close quest detail"
-                >
-                  ✕
-                </button>
+                <div className="flex shrink-0 items-center gap-1">
+                  {routeCoords && routeCoords.length >= 2 ? (
+                    <button
+                      type="button"
+                      className="rounded-lg px-2 py-1 text-xs text-cyan-accent hover:bg-white/10"
+                      onClick={() => setSheetMin((v) => !v)}
+                    >
+                      {sheetMin ? "Details" : "See map"}
+                    </button>
+                  ) : null}
+                  <button
+                    type="button"
+                    className="rounded-lg px-2 py-1 text-xs text-slate-400 hover:bg-white/10 hover:text-white"
+                    onClick={() => setSelected(undefined)}
+                    aria-label="Close quest detail"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
+              {sheetMin && routeCoords && routeCoords.length >= 2 ? (
+                <p className="mt-1 text-xs text-cyan-accent">Route is on the map — tap Details for turn-by-turn apps.</p>
+              ) : null}
+              {!sheetMin && (
+              <>
               <div className="mt-1.5 flex flex-wrap items-center gap-2">
                 <span
                   className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white"
@@ -714,15 +746,19 @@ export function QuestCards({ quests }: { quests: Quest[] }) {
                   </p>
                 )}
 
+              </>
+              )}
               {finding && (
-                <QuestDirections
-                  quest={selectedQuest}
-                  userGeo={userGeo}
-                  onRouteChange={setRouteCoords}
-                  compact
-                  autoStart
-                  primaryLabel="Directions"
-                />
+                <div className={sheetMin ? "hidden" : undefined}>
+                  <QuestDirections
+                    quest={selectedQuest}
+                    userGeo={userGeo}
+                    onRouteChange={setRouteCoords}
+                    compact
+                    autoStart
+                    primaryLabel="Directions"
+                  />
+                </div>
               )}
             </div>
           </div>

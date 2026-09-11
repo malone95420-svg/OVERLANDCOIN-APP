@@ -153,7 +153,12 @@ function FitRoute({ coords }: { coords: [number, number][] | null | undefined })
     if (key === fittedKeyRef.current) return;
     fittedKeyRef.current = key;
     const bounds = L.latLngBounds(coords.map(([lat, lng]) => L.latLng(lat, lng)));
-    map.fitBounds(bounds, { padding: [48, 48], maxZoom: 14, animate: true });
+    map.fitBounds(bounds, {
+      paddingTopLeft: [40, 88],
+      paddingBottomRight: [40, 140],
+      maxZoom: 14,
+      animate: true,
+    });
   }, [map, coords]);
   return null;
 }

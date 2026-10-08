@@ -73,6 +73,12 @@ function checkRateLimit(ip: string): boolean {
   }
   recent.push(now);
   rateBuckets.set(ip, recent);
+  // Prune stale buckets so the map cannot grow without bound across many IPs.
+  if (rateBuckets.size > 10_000) {
+    for (const [key, hits] of rateBuckets) {
+      if (hits.every((t) => now - t >= RATE_LIMIT_WINDOW_MS)) rateBuckets.delete(key);
+    }
+  }
   return true;
 }
 

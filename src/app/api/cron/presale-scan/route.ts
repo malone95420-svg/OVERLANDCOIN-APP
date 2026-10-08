@@ -24,6 +24,7 @@ import { creditVerifiedPurchase } from "@/lib/presaleCredit";
 import { SITE } from "@/lib/site";
 import { DEFAULT_EVM_DEPOSIT_ADDRESS } from "@/lib/acceptedPayAssets";
 import { presaleReadRpcUrls } from "@/lib/presaleLock";
+import { secureCompare } from "@/lib/secureCompare";
 import {
   hasDeliveredPayment,
   verifyPaymentAndQuote,
@@ -51,9 +52,11 @@ function authorize(req: NextRequest): boolean {
   const secret = process.env.CRON_SECRET?.trim();
   if (!secret) return false;
   const auth = req.headers.get("authorization")?.trim() ?? "";
-  if (auth === `Bearer ${secret}`) return true;
+  if (/^Bearer\s+/i.test(auth) && secureCompare(auth.replace(/^Bearer\s+/i, "").trim(), secret)) {
+    return true;
+  }
   const q = req.nextUrl.searchParams.get("secret");
-  return q === secret;
+  return secureCompare(q ?? "", secret);
 }
 
 function ethereumRpcUrls(): string[] {

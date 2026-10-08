@@ -23,6 +23,7 @@ import { presaleReadRpcUrls } from "@/lib/presaleLock";
 import { TOKEN } from "@/lib/token";
 import { getTotalDeliveredOlc } from "@/lib/verifyPayment";
 import { getTotalClaimedOlc } from "@/lib/claimsLedger";
+import { secureCompare } from "@/lib/secureCompare";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -57,7 +58,7 @@ function requireAdmin(req: NextRequest): NextResponse | null {
   const presented = /^Bearer\s+/i.test(auth)
     ? auth.replace(/^Bearer\s+/i, "").trim()
     : (req.headers.get("x-presale-admin-secret")?.trim() ?? "");
-  if (!presented || presented !== expected) {
+  if (!presented || !secureCompare(presented, expected)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   return null;

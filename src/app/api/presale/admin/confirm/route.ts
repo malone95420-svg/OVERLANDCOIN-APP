@@ -31,6 +31,7 @@ import {
   type VerifiedPayment,
 } from "@/lib/verifyPayment";
 import { fetchAllLivePrices } from "@/lib/livePrices";
+import { secureCompare } from "@/lib/secureCompare";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -70,7 +71,7 @@ function requireAdmin(req: NextRequest): NextResponse | null {
     );
   }
   const presented = extractPresentedSecret(req);
-  if (!presented || presented !== expected) {
+  if (!presented || !secureCompare(presented, expected)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   return null;

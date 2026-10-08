@@ -76,12 +76,12 @@ OLC is never credited from client-only claims.
 - **USDT / USDC / ETH / BTC / SOL:** `POST /api/presale/orders` creates a Pay Order (exact payAmount, buyer, deposit address, ~45 min expiry). User sends exact amount, then `POST /api/presale/orders/:id/confirm` auto-scans for a matching deposit (or accepts pasted tx hash / explorer URL) and credits only after verified payment. Idempotent by payment tx id + orderId.
 - Legacy: `POST /api/presale/confirm-deposit` still works; hash optional when `payAsset` + `payAmount` + `buyer` + `chain` are provided (amount-matched scan).
 
-Orders: in-memory + `/tmp` JSON MVP (`PRESALE_ORDERS_PATH`). Use Redis/Postgres in production. Optional cron: `/api/cron/presale-scan` (`CRON_SECRET`). Optional `ETHEREUM_RPC_URL` / `SOLANA_RPC_URL`.
+Orders: durable on Upstash Redis when `UPSTASH_REDIS_REST_URL`/`TOKEN` are set (in-memory `/tmp` JSON only as a same-instance fallback). Optional cron: `/api/cron/presale-scan` (`CRON_SECRET`). Optional cron: `/api/cron/presale-scan` (`CRON_SECRET`). Optional `ETHEREUM_RPC_URL` / `SOLANA_RPC_URL`.
 
 ## Quest completion (once per device)
 
 - Client device ledger: `overlandcoin.device.completedQuests.v1` (not account-scoped) + stable `overlandcoin.device.id.v1`.
 - `hasCompletedQuest` is true if the account ledger **or** the device ledger has the quest.
 - `POST /api/rewards/claim` accepts optional `deviceId` and rejects duplicates for `completionId`, `wallet+questId`, and `deviceId+questId`.
-- **MVP limit:** claim dedupe is in-memory (+ `/tmp` JSON). Serverless instances do not share memory; cold starts can reset the ledger. Use Redis/DB for production.
+- **Dedup:** claim dedupe checks Upstash Redis (when configured) plus an in-memory + `/tmp` JSON fallback, with a same-instance in-flight reservation. Without Redis, serverless instances do not share memory — set `UPSTASH_REDIS_REST_URL`/`TOKEN` in production.
 

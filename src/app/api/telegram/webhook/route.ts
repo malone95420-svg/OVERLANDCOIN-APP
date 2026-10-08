@@ -5,6 +5,7 @@ import {
   telegramWebhookSecret,
 } from "@/lib/telegram";
 import type { TelegramUpdate } from "@/lib/telegram/types";
+import { secureCompare } from "@/lib/secureCompare";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,7 +14,7 @@ function verifySecret(req: NextRequest): boolean {
   const expected = telegramWebhookSecret();
   if (!expected) return false;
   const got = req.headers.get("x-telegram-bot-api-secret-token") ?? "";
-  return got === expected;
+  return secureCompare(got, expected);
 }
 
 export async function POST(req: NextRequest) {
